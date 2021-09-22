@@ -55,7 +55,6 @@ public class Player extends Object {
     private double friction = 0.5;
     private boolean isFalling = true;
     private boolean isJumping = false;
-    private boolean isSneaking = false;
 
     public Player(double x, double y) {
         super(x, y);
@@ -104,11 +103,11 @@ public class Player extends Object {
         g.drawImage(
                 currentImage.getImage(),
                 pos.x- 40,
-                pos.y - 75,
+                pos.y - 77,
                 observer
         );
         g.setColor(new Color(200, 0, 0));
-        g.drawRect(pos.x - 10, pos.y - 10, 20, 20);
+        g.drawRect(pos.x - 40, pos.y - 77, 80, 77);
     }
 
     public void keyPressed(KeyEvent e) {
@@ -161,17 +160,14 @@ public class Player extends Object {
         if (zIsHeld && velY == 0) {
             velY = velJump;
         }
-        if (rightIsHeld && isSneaking && velX < velSneak) {
+
+        if (rightIsHeld && downIsHeld && velX < velSneak) {
             velX = velSneak;
         } else if (rightIsHeld && velX < velJog) {
             velX = velJog;
         }
 
-        if (downIsHeld) {
-            isSneaking = true;
-        }
-
-        if (leftIsHeld && isSneaking && velX > -velSneak) {
+        if (leftIsHeld && downIsHeld && velX > -velSneak) {
             velX = -velSneak;
         } else if (leftIsHeld && velX > -velJog) {
             velX = -velJog;
@@ -212,8 +208,8 @@ public class Player extends Object {
             super.setX(World.getWorld().getMap().WIDTH - 40);
         }
 
-        if (super.getY() <75) {
-            super.setY(75);
+        if (super.getY() <77) {
+            super.setY(77);
             velY = 1;
         } else if (super.getY() >= World.getWorld().getMap().HEIGHT) {
             super.setY(World.getWorld().getMap().HEIGHT);
@@ -251,39 +247,55 @@ public class Player extends Object {
         String defL = "GiantsSidescroller/src/images/player1/left_";
 
         // Builds image strip for standing facing right
-        imgLocStr.add("stand.png");
+        imgLocStr.add("stand_1.png");
+        imgLocStr.add("stand_2.png");
+        imgLocStr.add("stand_3.png");
+        imgLocStr.add("stand_4.png");
         rightStanding = buildImageList(imgLocStr, images, defR);
+        System.out.println(rightStanding.toString());
         imgLocStr.clear();
         images.clear();
 
         // Builds image strip for jogging facing right
         imgLocStr.add("jog_1.png");
         rightJogging = buildImageList(imgLocStr, images, defR);
+        System.out.println(rightJogging.toString());
         imgLocStr.clear();
         images.clear();
 
         // Builds image strip for standing facing left
-        imgLocStr.add("stand.png");
-        rightStanding = buildImageList(imgLocStr, images, defL);
+        imgLocStr.add("stand_1.png");
+        imgLocStr.add("stand_2.png");
+        imgLocStr.add("stand_3.png");
+        imgLocStr.add("stand_4.png");
+        leftStanding = buildImageList(imgLocStr, images, defL);
+        System.out.println(leftStanding.toString());
         imgLocStr.clear();
         images.clear();
 
         // Builds image strip for jogging facing left
         imgLocStr.add("jog_1.png");
-        rightJogging = buildImageList(imgLocStr, images, defL);
+        leftJogging = buildImageList(imgLocStr, images, defL);
+        System.out.println(leftJogging.toString());
         imgLocStr.clear();
         images.clear();
     }
 
     public ImageStrip buildImageList(ArrayList<String> imgLocStr, ArrayList<BufferedImage> images,
                                      String defaultFileLocation) {
+        String imageFileNames = "";
+        String imageFileSubstring = "";
         for (int i = 0; i < imgLocStr.size(); i++) {
             try {
-                images.add(ImageIO.read(new File(defaultFileLocation + imgLocStr.get(i))));
+                images.add(ImageIO.read(new File(defaultFileLocation + "" + imgLocStr.get(i))));
             } catch (IOException exc) {
                 System.out.println("Could not find image file: " + exc.getMessage());
             }
+            imageFileNames += defaultFileLocation + imgLocStr.get(i) + ", ";
         }
-        return new ImageStrip(images);
+        for (int i = 0; i < imageFileNames.length() - 2; i++) {
+            imageFileSubstring += imageFileNames.charAt(i);
+        }
+        return new ImageStrip(images, imageFileSubstring);
     }
 }

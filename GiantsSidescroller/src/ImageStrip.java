@@ -6,8 +6,9 @@ import java.util.ArrayList;
 public class ImageStrip {
     private ImageFrame head;
     private int length;
+    private String imageFileNames;
 
-    public ImageStrip(ArrayList<BufferedImage> images) {
+    public ImageStrip(ArrayList<BufferedImage> images, String imageFileNames) {
         this.length = images.size();
         head = new ImageFrame(images.get(0));
         ImageFrame nextImage;
@@ -27,7 +28,7 @@ public class ImageStrip {
             head.setNext(head);
         }
 
-
+        this.imageFileNames = imageFileNames;
     }
 
     /**
@@ -55,5 +56,9 @@ public class ImageStrip {
      */
     public int getLength() {
         return length;
+    }
+
+    public String toString() {
+        return imageFileNames;
     }
 }
