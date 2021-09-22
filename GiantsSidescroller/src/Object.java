@@ -1,6 +1,7 @@
 package GiantsSidescroller.src;
 
 public class Object {
+    // The precise position of the object, for use with physics
     private double x, y;
 
     public Object(double x, double y) {

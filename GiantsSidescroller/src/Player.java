@@ -6,19 +6,43 @@ import java.awt.event.KeyEvent;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Player extends Object {
-    private BufferedImage currentImage;
+    // The texture of the player being used in the current frame
+    private ImageFrame currentImage;
+    // The integer representation of the player's current position
     private Point pos;
     private double velX = 0;
     private double velY = 0;
 
     // Preset velocities of player actions
-    public final int velJump = -5;
+    public final int velJump = -10;
     public final int velSneak = 2;
-    public final int velJog = 3;
-    public final int velDash = 10;
+    public final int velJog = 5;
+    public final int velDash = 20;
 
+    // Determines what the player did last frame to help determine what animation to play.
+    private int lastAction = 1;
+    private int landingFrame = 0;
+
+    // Animation strips for player. Action number is next to each.
+    private ImageStrip rightStanding;   // 1
+    private ImageStrip rightJogging;    // 2
+    private ImageStrip rightCrouching;  // 3
+    private ImageStrip rightSneaking;   // 4
+    private ImageStrip rightJumping;    // 5
+    private ImageStrip rightDashing;    // 6
+    private ImageStrip rightLanding;    // 7
+
+    private ImageStrip leftStanding;    // -1
+    private ImageStrip leftJogging;     // -2
+    private ImageStrip leftCrouching;   // -3
+    private ImageStrip leftSneaking;    // -4
+    private ImageStrip leftJumping;     // -5
+    private ImageStrip leftDashing;     // -6
+    private ImageStrip leftLanding;     // -7
+    
     // Coins in the player's inventory
     private int pocketMoney;
     private boolean upIsHeld = false;
@@ -36,7 +60,8 @@ public class Player extends Object {
     public Player(double x, double y) {
         super(x, y);
 
-        loadImage();
+        loadImageStrips();
+        currentImage = rightStanding.getHead();
 
         pos = new Point((int) super.getX(), (int) super.getY());
         pocketMoney = 0;
@@ -44,36 +69,40 @@ public class Player extends Object {
 
     private void loadImage() {
         if(facingRight && !rightIsHeld) {
-            try {
-                currentImage = ImageIO.read(new File("GiantsSidescroller/src/images/player1/right_stand.png"));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
+            if (lastAction == 1) {
+                currentImage = rightStanding.getNext(currentImage);
+            } else {
+                currentImage = rightStanding.getHead();
             }
+            lastAction = 1;
         } else if(!facingRight && !leftIsHeld) {
-            try {
-                currentImage = ImageIO.read(new File("GiantsSidescroller/src/images/player1/left_stand.png"));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
+            if (lastAction == -1) {
+                currentImage = leftStanding.getNext(currentImage);
+            } else {
+                currentImage = leftStanding.getHead();
             }
+            lastAction = -1;
         } else if(facingRight) {
-            try {
-                currentImage = ImageIO.read(new File("GiantsSidescroller/src/images/player1/right_jog_1.png"));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
+            if (lastAction == 2) {
+                currentImage = rightJogging.getNext(currentImage);
+            } else {
+                currentImage = rightJogging.getHead();
             }
+            lastAction = 2;
         } else if(!facingRight) {
-            try {
-                currentImage = ImageIO.read(new File("GiantsSidescroller/src/images/player1/left_jog_1.png"));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
+            if (lastAction == -2) {
+                currentImage = leftJogging.getNext(currentImage);
+            } else {
+                currentImage = leftJogging.getHead();
             }
+            lastAction = -2;
         }
     }
 
     public void draw(Graphics g, ImageObserver observer) {
         loadImage();
         g.drawImage(
-                currentImage,
+                currentImage.getImage(),
                 pos.x- 40,
                 pos.y - 75,
                 observer
@@ -129,7 +158,7 @@ public class Player extends Object {
 
     public void move() {
         // Determine velocities
-        if (zIsHeld) {
+        if (zIsHeld && velY == 0) {
             velY = velJump;
         }
         if (rightIsHeld && isSneaking && velX < velSneak) {
@@ -211,5 +240,50 @@ public class Player extends Object {
 
     public void setJumping(boolean jumping) {
         isJumping = jumping;
+    }
+
+    public void loadImageStrips() {
+        ArrayList<String> imgLocStr = new ArrayList<String>();
+        ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
+
+        // Saves amount of text to be used
+        String defR = "GiantsSidescroller/src/images/player1/right_";
+        String defL = "GiantsSidescroller/src/images/player1/left_";
+
+        // Builds image strip for standing facing right
+        imgLocStr.add("stand.png");
+        rightStanding = buildImageList(imgLocStr, images, defR);
+        imgLocStr.clear();
+        images.clear();
+
+        // Builds image strip for jogging facing right
+        imgLocStr.add("jog_1.png");
+        rightJogging = buildImageList(imgLocStr, images, defR);
+        imgLocStr.clear();
+        images.clear();
+
+        // Builds image strip for standing facing left
+        imgLocStr.add("stand.png");
+        rightStanding = buildImageList(imgLocStr, images, defL);
+        imgLocStr.clear();
+        images.clear();
+
+        // Builds image strip for jogging facing left
+        imgLocStr.add("jog_1.png");
+        rightJogging = buildImageList(imgLocStr, images, defL);
+        imgLocStr.clear();
+        images.clear();
+    }
+
+    public ImageStrip buildImageList(ArrayList<String> imgLocStr, ArrayList<BufferedImage> images,
+                                     String defaultFileLocation) {
+        for (int i = 0; i < imgLocStr.size(); i++) {
+            try {
+                images.add(ImageIO.read(new File(defaultFileLocation + imgLocStr.get(i))));
+            } catch (IOException exc) {
+                System.out.println("Could not find image file: " + exc.getMessage());
+            }
+        }
+        return new ImageStrip(images);
     }
 }
