@@ -7,8 +7,9 @@ import java.awt.event.*;
 public class Map extends JPanel implements ActionListener, KeyListener {
     // delay between each frame
     public final int FRAMEDELAY = 20;
-    public final int WIDTH = 1920;
-    public final int HEIGHT = 1080;
+    public final int WIDTH = 1280;
+    public final int HEIGHT = WIDTH / 16 * 9;
+
 
     private Timer timer;
     private Player player;
@@ -20,7 +21,7 @@ public class Map extends JPanel implements ActionListener, KeyListener {
         timer = new Timer(FRAMEDELAY, this);
         timer.start();
 
-        player = new Player();
+        player = new Player(100, 100);
     }
 
     @Override
@@ -55,5 +56,9 @@ public class Map extends JPanel implements ActionListener, KeyListener {
 
     private void drawBackground(Graphics g) {
 
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }
