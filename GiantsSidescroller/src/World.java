@@ -10,6 +10,10 @@ public class World {
         System.out.println("Map");
     }
 
+    /**
+     * Ensures there can only be one world
+     * @return
+     */
     public static World getWorld() {
         if (theWorld == null)
         {
