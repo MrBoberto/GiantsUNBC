@@ -11,23 +11,26 @@ public class ImageStrip {
     public ImageStrip(ArrayList<BufferedImage> images, String imageFileNames) {
         this.length = images.size();
         head = new ImageFrame(images.get(0));
-        ImageFrame nextImage;
-        ImageFrame newImage = new ImageFrame(images.get(length - 1));
-        newImage.setNext(head);
+        ImageFrame prevImage = head;
+        ImageFrame newImage;
 
-        // To build the list we will walk it backwards,
-        // such that each new image gets the next image from a previous cycle
+        // Make sure head is next for head
         if (length > 1) {
-            for (int i = length - 2; i > 0; i--) {
-                nextImage = newImage;
+            // Set the next for each image we have
+            for (int i = 1; i < length; i++) {
                 newImage = new ImageFrame(images.get(i));
-                newImage.setNext(nextImage);
+                prevImage.setNext(newImage);
+                prevImage = newImage;
             }
+            // We still need to set the last image to point to head
+            prevImage.setNext(head);
         }
+        // Loop head
         else {
             head.setNext(head);
         }
 
+        // In case we want to know all the file names and locations
         this.imageFileNames = imageFileNames;
     }
 

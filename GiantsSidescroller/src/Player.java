@@ -17,7 +17,7 @@ public class Player extends Object {
     private double velY = 0;
 
     // Preset velocities of player actions
-    public final int velJump = -10;
+    public final int velJump = -15;
     public final int velSneak = 2;
     public final int velJog = 5;
     public final int velDash = 20;
@@ -51,7 +51,7 @@ public class Player extends Object {
     private boolean leftIsHeld = false;
     private boolean zIsHeld = false;
     private boolean facingRight = true;
-    private double gravity = 0.5;
+    private double gravity = 0.75;
     private double friction = 0.5;
     private boolean isFalling = true;
     private boolean isJumping = false;

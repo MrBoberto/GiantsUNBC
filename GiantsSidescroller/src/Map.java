@@ -6,7 +6,7 @@ import java.awt.event.*;
 
 public class Map extends JPanel implements ActionListener, KeyListener {
     // delay between each frame
-    public final int FRAMEDELAY = 40;
+    public final int FRAMEDELAY = 20;
     public final int WIDTH = 1280;
     public final int HEIGHT = WIDTH / 16 * 9;
 
@@ -16,7 +16,7 @@ public class Map extends JPanel implements ActionListener, KeyListener {
 
     public Map() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        setBackground(new Color(100, 100, 100));
+        setBackground(new Color(0, 150, 0));
 
         timer = new Timer(FRAMEDELAY, this);
         timer.start();
