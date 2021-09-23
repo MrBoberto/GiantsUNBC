@@ -8,8 +8,8 @@ public class Main {
         JFrame window = new JFrame("Giants");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        window.add(World.getWorld().getMap());
-        window.addKeyListener(World.getWorld().getMap());
+        window.add(World.getWorld().getController());
+        window.addKeyListener(World.getWorld().getController());
 
         window.setResizable(false);
         window.pack();

@@ -1,10 +1,11 @@
 package GiantsSidescroller.src;
 
 import java.awt.*;
+import java.awt.image.ImageObserver;
 
 public interface Creature {
     public void tick();
-    public void render(Graphics g);
+    public void draw(Graphics g, ImageObserver imgObs);
     public Rectangle getBounds();
 
     public double getX();

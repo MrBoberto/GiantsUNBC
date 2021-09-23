@@ -2,12 +2,12 @@ package GiantsSidescroller.src;
 
 public class World {
     private static World theWorld;
-    private Map theMap;
+    private Controller theController;
 
     private World()
     {
-        theMap = new Map();
-        System.out.println("Map");
+        theController = new Controller();
+        System.out.println("Controller");
     }
 
     /**
@@ -22,7 +22,7 @@ public class World {
         return theWorld;
     }
 
-    public Map getMap() {
-        return this.theMap;
+    public Controller getController() {
+        return this.theController;
     }
 }

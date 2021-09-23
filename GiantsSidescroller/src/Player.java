@@ -8,20 +8,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Player extends Object {
+public class Player extends Object implements Creature {
     // The texture of the player being used in the current frame
     private ImageFrame currentImage;
     // The integer representation of the player's current position
     private Point pos;
     private double velX = 0;
     private double velY = 0;
+    private Rectangle boundRect;
 
     // Preset velocities of player actions
-    public final double velJump = -15;
+    public final double velJump = -15.5;
     public final double velSneak = 3;
-    public final double velJog = 5;
-    public final double velDash = 21.75;
-    public final double velSuperDash = 30;
+    public final double velJog = 7;
+    public final double velDash = 25;
+    public final double velSuperDash = 40;
 
     // Determines what the player did last frame to help determine what animation to play.
     private int lastAction = 1;
@@ -61,11 +62,10 @@ public class Player extends Object {
     private boolean cIsHeld = false;
     private boolean sIsHeld = false;
     private boolean facingRight = true;
-    private double gravity = 0.75;
-    private double friction = 1.125;
     private boolean isFalling = true;
     private boolean isJumping = false;
     private boolean isSneaking = false;
+    // Prevents dash from being held
     private boolean canDash = true;
 
     public Player(double x, double y) {
@@ -76,6 +76,7 @@ public class Player extends Object {
 
         pos = new Point((int) super.getX(), (int) super.getY());
         pocketMoney = 0;
+        boundRect = new Rectangle(pos.x - 40, pos.y - 95, 80, 95);
     }
 
     private void loadImage() {
@@ -102,6 +103,7 @@ public class Player extends Object {
         } else if (velY != 0 && facingRight && (jumpTimer > 0 || lastAction == 5 || lastAction == -5)) {
             if (jumpTimer == rightJumping.getLength()) {
                 currentImage = rightJumping.getHead();
+                jumpTimer--;
             } else if (lastAction == 5 && jumpTimer > 0) {
                 currentImage = rightJumping.getNext(currentImage);
                 jumpTimer--;
@@ -112,6 +114,7 @@ public class Player extends Object {
         } else if (velY != 0 && !facingRight && (jumpTimer > 0 || lastAction == -5 || lastAction == 5)) {
             if (jumpTimer == leftJumping.getLength()) {
                 currentImage = leftJumping.getHead();
+                jumpTimer--;
             } else if (lastAction == -5 && jumpTimer > 0) {
                 currentImage = leftJumping.getNext(currentImage);
                 jumpTimer--;
@@ -150,16 +153,16 @@ public class Player extends Object {
         }
     }
 
-    public void draw(Graphics g, ImageObserver observer) {
+    public void draw(Graphics g, ImageObserver imgObs) {
         loadImage();
         g.drawImage(
                 currentImage.getImage(),
-                pos.x- 40,
-                pos.y - 77,
-                observer
+                pos.x- 50,
+                pos.y - 96,
+                imgObs
         );
-        g.setColor(new Color(0, 0, 0));
-        g.drawRect(pos.x - 40, pos.y - 77, 80, 77);
+        g.setColor(new Color(0, 100, 0));
+        g.drawRect(pos.x - 40, pos.y - 95, 80, 95);
     }
 
     public void keyPressed(KeyEvent e) {
@@ -242,7 +245,7 @@ public class Player extends Object {
                 isJumping = false;
                 superDashTimer -= 1;
                 if (rightIsHeld) {
-                    velX = velSneak;
+                    velX = velSneak / 2;
                 } else {
                     velX = 0;
                 }
@@ -294,31 +297,32 @@ public class Player extends Object {
         }
         // Apply gravity
         if(isFalling || isJumping) {
-            velY += gravity;
+            velY += World.getWorld().getController().GRAVITY;
         }
-        // Apply friction
-        if (velX > friction) {
-            velX -= friction;
-        } else if (velX < -friction) {
-            velX += friction;
+        // Apply World.getWorld().getController().FRICTION
+        if (velX > World.getWorld().getController().FRICTION) {
+            velX -= World.getWorld().getController().FRICTION;
+        } else if (velX < -World.getWorld().getController().FRICTION) {
+            velX += World.getWorld().getController().FRICTION;
         } else if (velX != 0) {
             velX = 0;
         }
 
-        if (super.getX() <= 40) {
-            super.setX(40);
-        } else if (super.getX() >= World.getWorld().getMap().WIDTH - 40) {
-            super.setX(World.getWorld().getMap().WIDTH - 40);
+        if (super.getX() <= 50) {
+            super.setX(50);
+        } else if (super.getX() >= World.getWorld().getController().WIDTH - 50) {
+            super.setX(World.getWorld().getController().WIDTH - 50);
         }
 
-        if (super.getY() <= 77) {
-            super.setY(77);
+        if (super.getY() <= 96) {
+            super.setY(96);
             velY = 1;
-        } else if (super.getY() >= World.getWorld().getMap().HEIGHT) {
-            super.setY(World.getWorld().getMap().HEIGHT);
+        } else if (super.getY() >= World.getWorld().getController().HEIGHT) {
+            super.setY(World.getWorld().getController().HEIGHT);
             velY = 0;
             isFalling = false;
         }
+        boundRect = new Rectangle(pos.x - 40, pos.y - 95, 80, 95);
     }
 
     public Point getPos() {
@@ -339,6 +343,10 @@ public class Player extends Object {
 
     public void setJumping(boolean jumping) {
         isJumping = jumping;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle();
     }
 
     public void loadImageStrips() {

@@ -1,5 +1,4 @@
 package GiantsSidescroller.src;
-
 import java.util.*;
 
 public class EntityCollision {
