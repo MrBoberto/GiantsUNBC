@@ -17,14 +17,18 @@ public class Player extends Object {
     private double velY = 0;
 
     // Preset velocities of player actions
-    public final int velJump = -15;
-    public final int velSneak = 2;
-    public final int velJog = 5;
-    public final int velDash = 20;
+    public final double velJump = -15;
+    public final double velSneak = 3;
+    public final double velJog = 5;
+    public final double velDash = 21.75;
+    public final double velSuperDash = 30;
 
     // Determines what the player did last frame to help determine what animation to play.
     private int lastAction = 1;
-    private int landingFrame = 0;
+    public final int LANDINGTIMERMAX = 20;
+    public final int SUPERDASHTIMERMAX = 50;
+    private int landingTimer = LANDINGTIMERMAX;
+    private int superDashTimer = SUPERDASHTIMERMAX;
 
     // Animation strips for player. Action number is next to each.
     private ImageStrip rightStanding;   // 1
@@ -44,17 +48,21 @@ public class Player extends Object {
     private ImageStrip leftLanding;     // -7
     
     // Coins in the player's inventory
-    private int pocketMoney;
+    private int pocketMoney = 0;
     private boolean upIsHeld = false;
     private boolean rightIsHeld = false;
     private boolean downIsHeld = false;
     private boolean leftIsHeld = false;
     private boolean zIsHeld = false;
+    private boolean cIsHeld = false;
+    private boolean sIsHeld = false;
     private boolean facingRight = true;
     private double gravity = 0.75;
-    private double friction = 0.5;
+    private double friction = 1.125;
     private boolean isFalling = true;
     private boolean isJumping = false;
+    private boolean isSneaking = false;
+    private boolean canDash = true;
 
     public Player(double x, double y) {
         super(x, y);
@@ -119,18 +127,29 @@ public class Player extends Object {
         }
         if (key == KeyEvent.VK_RIGHT) {
             rightIsHeld = true;
-            facingRight = true;
+            if (!sIsHeld) {
+                facingRight = true;
+            }
         }
         if (key == KeyEvent.VK_DOWN) {
             downIsHeld = true;
+            isSneaking = true;
         }
         if (key == KeyEvent.VK_LEFT) {
             leftIsHeld = true;
-            facingRight = false;
+            if (!sIsHeld) {
+                facingRight = false;
+            }
         }
         if (key == KeyEvent.VK_Z) {
             zIsHeld = true;
             isJumping = true;
+        }
+        if (key == KeyEvent.VK_C) {
+            cIsHeld = true;
+        }
+        if (key == KeyEvent.VK_S) {
+            sIsHeld = true;
         }
     }
 
@@ -146,12 +165,21 @@ public class Player extends Object {
         }
         if (key == KeyEvent.VK_DOWN) {
             downIsHeld = false;
+            isSneaking = false;
         }
         if (key == KeyEvent.VK_LEFT) {
             leftIsHeld = false;
         }
         if (key == KeyEvent.VK_Z) {
             zIsHeld = false;
+        }
+        if (key == KeyEvent.VK_C) {
+            cIsHeld = false;
+            canDash = true;
+        }
+        if (key == KeyEvent.VK_S) {
+            sIsHeld = false;
+            superDashTimer = SUPERDASHTIMERMAX;
         }
     }
 
@@ -161,16 +189,46 @@ public class Player extends Object {
             velY = velJump;
         }
 
-        if (rightIsHeld && downIsHeld && velX < velSneak) {
+        if (sIsHeld && facingRight) {
+            if (superDashTimer <= 0) {
+                velX = velSuperDash;
+                velY = 0;
+            } else {
+                isJumping = false;
+                superDashTimer -= 1;
+                if (rightIsHeld) {
+                    velX = velSneak;
+                } else {
+                    velX = 0;
+                }
+            }
+        } else if (sIsHeld && !facingRight) {
+            if (superDashTimer <= 0) {
+                velX = -velSuperDash;
+                velY = 0;
+            } else {
+                isJumping = false;
+                superDashTimer -= 1;
+                if (leftIsHeld) {
+                    velX = -velSneak;
+                } else {
+                    velX = 0;
+                }
+            }
+        } else if (cIsHeld && facingRight && canDash && velX <= velJog) {
+            velX = velDash;
+        } else if (cIsHeld && !facingRight && canDash && velX >= -velJog) {
+            velX = -velDash;
+        } else if (rightIsHeld && downIsHeld) {
             velX = velSneak;
-        } else if (rightIsHeld && velX < velJog) {
+        } else if (rightIsHeld && !downIsHeld && velX < velJog) {
             velX = velJog;
-        }
-
-        if (leftIsHeld && downIsHeld && velX > -velSneak) {
+        } else if (leftIsHeld && downIsHeld) {
             velX = -velSneak;
-        } else if (leftIsHeld && velX > -velJog) {
+        } else if (leftIsHeld && !downIsHeld && velX > -velJog) {
             velX = -velJog;
+        } else if (downIsHeld) {
+            velX = 0;
         }
 
         // Determine distance travelled
@@ -191,24 +249,22 @@ public class Player extends Object {
         if(isFalling || isJumping) {
             velY += gravity;
         }
-        // Apply friction is the player is not being commanded to move
-        if (!rightIsHeld && ! leftIsHeld) {
-            if (velX > friction) {
-                velX -= friction;
-            } else if (velX < -friction) {
-                velX += friction;
-            } else if (velX != 0) {
-                velX = 0;
-            }
+        // Apply friction
+        if (velX > friction) {
+            velX -= friction;
+        } else if (velX < -friction) {
+            velX += friction;
+        } else if (velX != 0) {
+            velX = 0;
         }
 
-        if (super.getX() < 40) {
+        if (super.getX() <= 40) {
             super.setX(40);
         } else if (super.getX() >= World.getWorld().getMap().WIDTH - 40) {
             super.setX(World.getWorld().getMap().WIDTH - 40);
         }
 
-        if (super.getY() <77) {
+        if (super.getY() <= 77) {
             super.setY(77);
             velY = 1;
         } else if (super.getY() >= World.getWorld().getMap().HEIGHT) {
@@ -247,34 +303,36 @@ public class Player extends Object {
         String defL = "GiantsSidescroller/src/images/player1/left_";
 
         // Builds image strip for standing facing right
-        imgLocStr.add("stand_1.png");
-        imgLocStr.add("stand_2.png");
-        imgLocStr.add("stand_3.png");
-        imgLocStr.add("stand_4.png");
+        for (int i = 1; i <= 4; i++) {
+            imgLocStr.add("stand (" + i + ").png");
+        }
         rightStanding = buildImageList(imgLocStr, images, defR);
         System.out.println(rightStanding.toString());
         imgLocStr.clear();
         images.clear();
 
         // Builds image strip for jogging facing right
-        imgLocStr.add("jog_1.png");
+        for (int i = 1; i <= 20; i++) {
+            imgLocStr.add("jog (" + i + ").png");
+        }
         rightJogging = buildImageList(imgLocStr, images, defR);
         System.out.println(rightJogging.toString());
         imgLocStr.clear();
         images.clear();
 
         // Builds image strip for standing facing left
-        imgLocStr.add("stand_1.png");
-        imgLocStr.add("stand_2.png");
-        imgLocStr.add("stand_3.png");
-        imgLocStr.add("stand_4.png");
+        for (int i = 1; i <= 4; i++) {
+            imgLocStr.add("stand (" + i + ").png");
+        }
         leftStanding = buildImageList(imgLocStr, images, defL);
         System.out.println(leftStanding.toString());
         imgLocStr.clear();
         images.clear();
 
         // Builds image strip for jogging facing left
-        imgLocStr.add("jog_1.png");
+        for (int i = 1; i <= 20; i++) {
+            imgLocStr.add("jog (" + i + ").png");
+        }
         leftJogging = buildImageList(imgLocStr, images, defL);
         System.out.println(leftJogging.toString());
         imgLocStr.clear();
