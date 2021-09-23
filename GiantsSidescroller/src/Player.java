@@ -27,8 +27,10 @@ public class Player extends Object {
     private int lastAction = 1;
     public final int LANDINGTIMERMAX = 20;
     public final int SUPERDASHTIMERMAX = 50;
+    public final int DASHTIMERMAX = 8;
     private int landingTimer = LANDINGTIMERMAX;
     private int superDashTimer = SUPERDASHTIMERMAX;
+    private int dashTimer = 0;
 
     // Animation strips for player. Action number is next to each.
     private ImageStrip rightStanding;   // 1
@@ -75,7 +77,23 @@ public class Player extends Object {
     }
 
     private void loadImage() {
-        if(facingRight && !rightIsHeld) {
+        if (facingRight && dashTimer > 0) {
+            if (lastAction == 6) {
+                currentImage = rightDashing.getNext(currentImage);
+            } else {
+                currentImage = rightDashing.getHead();
+            }
+            lastAction = 6;
+            dashTimer--;
+        } else if (!facingRight && dashTimer > 0) {
+            if (lastAction == -6) {
+                currentImage = leftDashing.getNext(currentImage);
+            } else {
+                currentImage = leftDashing.getHead();
+            }
+            lastAction = -6;
+            dashTimer--;
+        } else if(facingRight && !rightIsHeld) {
             if (lastAction == 1) {
                 currentImage = rightStanding.getNext(currentImage);
             } else {
@@ -114,7 +132,7 @@ public class Player extends Object {
                 pos.y - 77,
                 observer
         );
-        g.setColor(new Color(200, 0, 0));
+        g.setColor(new Color(0, 0, 0));
         g.drawRect(pos.x - 40, pos.y - 77, 80, 77);
     }
 
@@ -217,8 +235,10 @@ public class Player extends Object {
             }
         } else if (cIsHeld && facingRight && canDash && velX <= velJog) {
             velX = velDash;
+            dashTimer = DASHTIMERMAX;
         } else if (cIsHeld && !facingRight && canDash && velX >= -velJog) {
             velX = -velDash;
+            dashTimer = DASHTIMERMAX;
         } else if (rightIsHeld && downIsHeld) {
             velX = velSneak;
         } else if (rightIsHeld && !downIsHeld && velX < velJog) {
@@ -320,6 +340,15 @@ public class Player extends Object {
         imgLocStr.clear();
         images.clear();
 
+        // Builds image strip for dashing facing right
+        for (int i = 1; i <= 8; i++) {
+            imgLocStr.add("dash (" + i + ").png");
+        }
+        rightDashing = buildImageList(imgLocStr, images, defR);
+        System.out.println(rightDashing.toString());
+        imgLocStr.clear();
+        images.clear();
+
         // Builds image strip for standing facing left
         for (int i = 1; i <= 4; i++) {
             imgLocStr.add("stand (" + i + ").png");
@@ -335,6 +364,15 @@ public class Player extends Object {
         }
         leftJogging = buildImageList(imgLocStr, images, defL);
         System.out.println(leftJogging.toString());
+        imgLocStr.clear();
+        images.clear();
+
+        // Builds image strip for dashing facing left
+        for (int i = 1; i <= 8; i++) {
+            imgLocStr.add("dash (" + i + ").png");
+        }
+        leftDashing = buildImageList(imgLocStr, images, defL);
+        System.out.println(leftDashing.toString());
         imgLocStr.clear();
         images.clear();
     }

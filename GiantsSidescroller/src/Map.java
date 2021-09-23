@@ -16,7 +16,7 @@ public class Map extends JPanel implements ActionListener, KeyListener {
 
     public Map() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        setBackground(new Color(0, 150, 0));
+        setBackground(new Color(0, 0, 0));
 
         timer = new Timer(FRAMEDELAY, this);
         timer.start();
