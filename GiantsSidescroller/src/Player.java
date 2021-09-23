@@ -27,10 +27,10 @@ public class Player extends Object {
     private int lastAction = 1;
     public final int LANDINGTIMERMAX = 20;
     public final int SUPERDASHTIMERMAX = 50;
-    public final int DASHTIMERMAX = 8;
     private int landingTimer = LANDINGTIMERMAX;
     private int superDashTimer = SUPERDASHTIMERMAX;
     private int dashTimer = 0;
+    private int jumpTimer = 0;
 
     // Animation strips for player. Action number is next to each.
     private ImageStrip rightStanding;   // 1
@@ -38,6 +38,7 @@ public class Player extends Object {
     private ImageStrip rightCrouching;  // 3
     private ImageStrip rightSneaking;   // 4
     private ImageStrip rightJumping;    // 5
+    private ImageStrip rightJumped;     // 5 Animation loop at end of jump
     private ImageStrip rightDashing;    // 6
     private ImageStrip rightLanding;    // 7
 
@@ -46,6 +47,7 @@ public class Player extends Object {
     private ImageStrip leftCrouching;   // -3
     private ImageStrip leftSneaking;    // -4
     private ImageStrip leftJumping;     // -5
+    private ImageStrip leftJumped;      // -5 Animation loop at end of jump
     private ImageStrip leftDashing;     // -6
     private ImageStrip leftLanding;     // -7
     
@@ -84,6 +86,8 @@ public class Player extends Object {
                 currentImage = rightDashing.getHead();
             }
             lastAction = 6;
+            // Don't continue jump animation even if in midair
+            jumpTimer = 0;
             dashTimer--;
         } else if (!facingRight && dashTimer > 0) {
             if (lastAction == -6) {
@@ -92,7 +96,29 @@ public class Player extends Object {
                 currentImage = leftDashing.getHead();
             }
             lastAction = -6;
+            // Don't continue jump animation even if in midair
+            jumpTimer = 0;
             dashTimer--;
+        } else if (velY != 0 && facingRight && (jumpTimer > 0 || lastAction == 5 || lastAction == -5)) {
+            if (jumpTimer == rightJumping.getLength()) {
+                currentImage = rightJumping.getHead();
+            } else if (lastAction == 5 && jumpTimer > 0) {
+                currentImage = rightJumping.getNext(currentImage);
+                jumpTimer--;
+            } else {
+                currentImage = rightJumped.getHead();
+            }
+            lastAction = 5;
+        } else if (velY != 0 && !facingRight && (jumpTimer > 0 || lastAction == -5 || lastAction == 5)) {
+            if (jumpTimer == leftJumping.getLength()) {
+                currentImage = leftJumping.getHead();
+            } else if (lastAction == -5 && jumpTimer > 0) {
+                currentImage = leftJumping.getNext(currentImage);
+                jumpTimer--;
+            } else {
+                currentImage = leftJumped.getHead();
+            }
+            lastAction = -5;
         } else if(facingRight && !rightIsHeld) {
             if (lastAction == 1) {
                 currentImage = rightStanding.getNext(currentImage);
@@ -203,8 +229,9 @@ public class Player extends Object {
 
     public void move() {
         // Determine velocities
-        if (zIsHeld && velY == 0) {
+        if (zIsHeld && velY == 0 && !sIsHeld) {
             velY = velJump;
+            jumpTimer = rightJumping.getLength();
         }
 
         if (sIsHeld && facingRight) {
@@ -235,10 +262,10 @@ public class Player extends Object {
             }
         } else if (cIsHeld && facingRight && canDash && velX <= velJog) {
             velX = velDash;
-            dashTimer = DASHTIMERMAX;
+            dashTimer = rightDashing.getLength();
         } else if (cIsHeld && !facingRight && canDash && velX >= -velJog) {
             velX = -velDash;
-            dashTimer = DASHTIMERMAX;
+            dashTimer = leftDashing.getLength();
         } else if (rightIsHeld && downIsHeld) {
             velX = velSneak;
         } else if (rightIsHeld && !downIsHeld && velX < velJog) {
@@ -349,6 +376,24 @@ public class Player extends Object {
         imgLocStr.clear();
         images.clear();
 
+        // Builds image strip for jumping facing right
+        for (int i = 1; i <= 12; i++) {
+            imgLocStr.add("jump (" + i + ").png");
+        }
+        rightJumping = buildImageList(imgLocStr, images, defR);
+        System.out.println(rightJumping.toString());
+        imgLocStr.clear();
+        images.clear();
+
+        // Builds image strip for jump loop facing right
+        for (int i = 1; i <= 1; i++) {
+            imgLocStr.add("jumped (" + i + ").png");
+        }
+        rightJumped = buildImageList(imgLocStr, images, defR);
+        System.out.println(rightJumped.toString());
+        imgLocStr.clear();
+        images.clear();
+
         // Builds image strip for standing facing left
         for (int i = 1; i <= 4; i++) {
             imgLocStr.add("stand (" + i + ").png");
@@ -373,6 +418,24 @@ public class Player extends Object {
         }
         leftDashing = buildImageList(imgLocStr, images, defL);
         System.out.println(leftDashing.toString());
+        imgLocStr.clear();
+        images.clear();
+
+        // Builds image strip for jumping facing left
+        for (int i = 1; i <= 12; i++) {
+            imgLocStr.add("jump (" + i + ").png");
+        }
+        leftJumping = buildImageList(imgLocStr, images, defL);
+        System.out.println(leftJumping.toString());
+        imgLocStr.clear();
+        images.clear();
+
+        // Builds image strip for jump loop facing left
+        for (int i = 1; i <= 1; i++) {
+            imgLocStr.add("jumped (" + i + ").png");
+        }
+        leftJumped = buildImageList(imgLocStr, images, defL);
+        System.out.println(leftJumped.toString());
         imgLocStr.clear();
         images.clear();
     }
