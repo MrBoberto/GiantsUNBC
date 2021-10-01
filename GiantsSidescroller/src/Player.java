@@ -3,6 +3,7 @@ package GiantsSidescroller.src;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +19,11 @@ public class Player extends Object implements Creature {
     private Rectangle boundRect;
 
     // Preset velocities of player actions
-    public final double velJump = -15.5;
-    public final double velSneak = 3;
-    public final double velJog = 7;
-    public final double velDash = 25;
-    public final double velSuperDash = 40;
+    public final double VELJUMP = -15.5;
+    public final double VELSNEAK = 3;
+    public final double VELJOG = 7;
+    public final double VELDASH = 25;
+    public final double VELSUPERDASH = 40;
 
     // Determines what the player did last frame to help determine what animation to play.
     private int lastAction = 1;
@@ -34,34 +35,26 @@ public class Player extends Object implements Creature {
     private int jumpTimer = 0;
 
     // Animation strips for player. Action number is next to each.
-    private ImageStrip rightStanding;   // 1
-    private ImageStrip rightJogging;    // 2
-    private ImageStrip rightCrouching;  // 3
-    private ImageStrip rightSneaking;   // 4
-    private ImageStrip rightJumping;    // 5
-    private ImageStrip rightJumped;     // 5 Animation loop at end of jump
-    private ImageStrip rightDashing;    // 6
-    private ImageStrip rightLanding;    // 7
-
-    private ImageStrip leftStanding;    // -1
-    private ImageStrip leftJogging;     // -2
-    private ImageStrip leftCrouching;   // -3
-    private ImageStrip leftSneaking;    // -4
-    private ImageStrip leftJumping;     // -5
-    private ImageStrip leftJumped;      // -5 Animation loop at end of jump
-    private ImageStrip leftDashing;     // -6
-    private ImageStrip leftLanding;     // -7
+    private ImageStrip standing;   // 1
+    private ImageStrip jogging;    // 2
+    private ImageStrip crouching;  // 3
+    private ImageStrip sneaking;   // 4
+    private ImageStrip jumping;    // 5
+    private ImageStrip jumped;     // 5 Animation loop at end of jump
+    private ImageStrip dashing;    // 6
+    private ImageStrip landing;    // 7
     
     // Coins in the player's inventory
     private int pocketMoney = 0;
-    private boolean upIsHeld = false;
-    private boolean rightIsHeld = false;
-    private boolean downIsHeld = false;
-    private boolean leftIsHeld = false;
-    private boolean zIsHeld = false;
-    private boolean cIsHeld = false;
+    private boolean wIsHeld = false;
+    private boolean dIsHeld = false;
     private boolean sIsHeld = false;
-    private boolean facingRight = true;
+    private boolean aIsHeld = false;
+    private boolean shiftIsHeld = false;
+    private boolean spaceIsHeld = false;
+    private boolean ctrlIsHeld = false;
+    private boolean tIsHeld = false;
+    private double angle = 0;
     private boolean isFalling = true;
     private boolean isJumping = false;
     private boolean isSneaking = false;
@@ -72,212 +65,242 @@ public class Player extends Object implements Creature {
         super(x, y);
 
         loadImageStrips();
-        currentImage = rightStanding.getHead();
+        currentImage = standing.getHead();
 
         pos = new Point((int) super.getX(), (int) super.getY());
         pocketMoney = 0;
-        boundRect = new Rectangle(pos.x - 40, pos.y - 95, 80, 95);
+        boundRect = new Rectangle(pos.x - 60, pos.y - 60, 120, 120);
     }
 
     private void loadImage() {
-        if (facingRight && dashTimer > 0) {
+        if (dashTimer > 0) {
             if (lastAction == 6) {
-                currentImage = rightDashing.getNext(currentImage);
+                currentImage = dashing.getNext(currentImage);
             } else {
-                currentImage = rightDashing.getHead();
+                currentImage = dashing.getHead();
             }
             lastAction = 6;
             // Don't continue jump animation even if in midair
             jumpTimer = 0;
             dashTimer--;
-        } else if (!facingRight && dashTimer > 0) {
-            if (lastAction == -6) {
-                currentImage = leftDashing.getNext(currentImage);
-            } else {
-                currentImage = leftDashing.getHead();
-            }
-            lastAction = -6;
-            // Don't continue jump animation even if in midair
-            jumpTimer = 0;
-            dashTimer--;
-        } else if (velY != 0 && facingRight && (jumpTimer > 0 || lastAction == 5 || lastAction == -5)) {
-            if (jumpTimer == rightJumping.getLength()) {
-                currentImage = rightJumping.getHead();
+        } else if (velY != 0 && (jumpTimer > 0 || lastAction == 5 || lastAction == -5)) {
+            if (jumpTimer == jumping.getLength()) {
+                currentImage = jumping.getHead();
                 jumpTimer--;
             } else if (lastAction == 5 && jumpTimer > 0) {
-                currentImage = rightJumping.getNext(currentImage);
+                currentImage = jumping.getNext(currentImage);
                 jumpTimer--;
             } else {
-                currentImage = rightJumped.getHead();
+                currentImage = jumped.getHead();
             }
             lastAction = 5;
-        } else if (velY != 0 && !facingRight && (jumpTimer > 0 || lastAction == -5 || lastAction == 5)) {
-            if (jumpTimer == leftJumping.getLength()) {
-                currentImage = leftJumping.getHead();
-                jumpTimer--;
-            } else if (lastAction == -5 && jumpTimer > 0) {
-                currentImage = leftJumping.getNext(currentImage);
-                jumpTimer--;
-            } else {
-                currentImage = leftJumped.getHead();
-            }
-            lastAction = -5;
-        } else if(facingRight && !rightIsHeld) {
-            if (lastAction == 1) {
-                currentImage = rightStanding.getNext(currentImage);
-            } else {
-                currentImage = rightStanding.getHead();
-            }
-            lastAction = 1;
-        } else if(!facingRight && !leftIsHeld) {
-            if (lastAction == -1) {
-                currentImage = leftStanding.getNext(currentImage);
-            } else {
-                currentImage = leftStanding.getHead();
-            }
-            lastAction = -1;
-        } else if(facingRight) {
+        } else if(wIsHeld || dIsHeld || sIsHeld || aIsHeld) {
             if (lastAction == 2) {
-                currentImage = rightJogging.getNext(currentImage);
+                currentImage = jogging.getNext(currentImage);
             } else {
-                currentImage = rightJogging.getHead();
+                currentImage = jogging.getHead();
             }
             lastAction = 2;
-        } else if(!facingRight) {
-            if (lastAction == -2) {
-                currentImage = leftJogging.getNext(currentImage);
+        } else {
+            if (lastAction == 1) {
+                currentImage = standing.getNext(currentImage);
             } else {
-                currentImage = leftJogging.getHead();
+                currentImage = standing.getHead();
             }
-            lastAction = -2;
+            lastAction = 1;
         }
     }
 
     public void draw(Graphics g, ImageObserver imgObs) {
         loadImage();
+
+        AffineTransform affTra = AffineTransform.getTranslateInstance(pos.x- 60, pos.y - 60);
+        affTra.rotate(angle, currentImage.getImage().getWidth() / 2,
+                currentImage.getImage().getHeight() / 2);
+        Graphics2D g2d = (Graphics2D) g;
+
+        g2d.drawImage(currentImage.getImage(), affTra, imgObs);
+
+        /*
         g.drawImage(
                 currentImage.getImage(),
-                pos.x- 50,
-                pos.y - 96,
+                pos.x- 60,
+                pos.y - 60,
                 imgObs
         );
+        */
+
         g.setColor(new Color(0, 100, 0));
-        g.drawRect(pos.x - 40, pos.y - 95, 80, 95);
+        g.drawRect(pos.x - 60, pos.y - 60, 120, 120);
     }
 
     public void keyPressed(KeyEvent e) {
         // Determine key code so it can be compared to a key recognized by humans
         int key = e.getKeyCode();
 
-        if (key == KeyEvent.VK_UP) {
-            upIsHeld = true;
+        if (key == KeyEvent.VK_W) {
+            wIsHeld = true;
         }
-        if (key == KeyEvent.VK_RIGHT) {
-            rightIsHeld = true;
-            if (!sIsHeld) {
-                facingRight = true;
-            }
-        }
-        if (key == KeyEvent.VK_DOWN) {
-            downIsHeld = true;
-            isSneaking = true;
-        }
-        if (key == KeyEvent.VK_LEFT) {
-            leftIsHeld = true;
-            if (!sIsHeld) {
-                facingRight = false;
-            }
-        }
-        if (key == KeyEvent.VK_Z) {
-            zIsHeld = true;
-            isJumping = true;
-        }
-        if (key == KeyEvent.VK_C) {
-            cIsHeld = true;
+        if (key == KeyEvent.VK_D) {
+            dIsHeld = true;
         }
         if (key == KeyEvent.VK_S) {
             sIsHeld = true;
         }
+        if (key == KeyEvent.VK_A) {
+            aIsHeld = true;
+        }
+        if (key == KeyEvent.VK_SHIFT) {
+            shiftIsHeld = true;
+            isSneaking = true;
+        }
+        if (key == KeyEvent.VK_SPACE) {
+            spaceIsHeld = true;
+            isJumping = true;
+        }
+        if (key == KeyEvent.VK_CONTROL) {
+            ctrlIsHeld = true;
+        }
+        if (key == KeyEvent.VK_T) {
+            tIsHeld = true;
+        }
+
+        setAngle();
     }
 
     public void keyReleased(KeyEvent e) {
         // Determine key code so that it can be compared to a key recognized by humans
         int key = e.getKeyCode();
 
-        if (key == KeyEvent.VK_UP) {
-            upIsHeld = false;
+        if (key == KeyEvent.VK_W) {
+            wIsHeld = false;
         }
-        if (key == KeyEvent.VK_RIGHT) {
-            rightIsHeld = false;
-        }
-        if (key == KeyEvent.VK_DOWN) {
-            downIsHeld = false;
-            isSneaking = false;
-        }
-        if (key == KeyEvent.VK_LEFT) {
-            leftIsHeld = false;
-        }
-        if (key == KeyEvent.VK_Z) {
-            zIsHeld = false;
-        }
-        if (key == KeyEvent.VK_C) {
-            cIsHeld = false;
-            canDash = true;
+        if (key == KeyEvent.VK_D) {
+            dIsHeld = false;
         }
         if (key == KeyEvent.VK_S) {
             sIsHeld = false;
+        }
+        if (key == KeyEvent.VK_A) {
+            aIsHeld = false;
+        }
+        if (key == KeyEvent.VK_SHIFT) {
+            shiftIsHeld = false;
+            isSneaking = false;
+        }
+        if (key == KeyEvent.VK_SPACE) {
+            spaceIsHeld = false;
+        }
+        if (key == KeyEvent.VK_CONTROL) {
+            ctrlIsHeld = false;
+            canDash = true;
+        }
+        if (key == KeyEvent.VK_T) {
+            tIsHeld = false;
             superDashTimer = SUPERDASHTIMERMAX;
         }
+
+        setAngle();
+    }
+
+    public void setAngle() {
+        System.out.println("Player 1 Prev Angle: " + Math.toDegrees(angle));
+        int avgX = 0;
+        int avgY = 0;
+
+        if (wIsHeld) {
+            avgY++;
+        }
+        if (dIsHeld) {
+            avgX++;
+        }
+        if (sIsHeld) {
+            avgY--;
+        }
+        if (aIsHeld) {
+            avgX--;
+        }
+        if (avgX == 0 && avgY == 0) {
+            return;
+        } else if (avgX == 0) {
+            if (avgY == 1) {
+                angle = 0;
+                return;
+            } else {
+                angle = Math.PI;
+                return;
+            }
+        } else if (avgY == 0) {
+            if (avgX == 1) {
+                angle = Math.PI / 2;
+                return;
+            } else {
+                angle = 3 * Math.PI / 2;
+                return;
+            }
+        }
+
+        double acuteAngle = Math.atan(avgY/avgX);
+        System.out.println("Player 1 Acute Angle: " + Math.toDegrees(acuteAngle));
+
+        if (avgY < 0) {
+            acuteAngle += Math.PI;
+        }
+
+        angle = acuteAngle;
+    }
+
+    public void setVelocity(double speed) {
+        if (angle == 0) {
+            velY = -speed;
+            velX = 0;
+        } else if (angle == Math.PI / 2) {
+            velX = speed;
+            velY = 0;
+        } else if (angle == Math.PI) {
+            velY = speed;
+            velX = 0;
+        } else if (angle == 3 * Math.PI / 2) {
+            velX = -speed;
+            velY = 0;
+        } else {
+            velX = speed * Math.cos(angle);
+            velY = -speed * Math.sin(angle);
+            System.out.println("Player 1 Current Angle: " + angle);
+            if ((angle > (Math.PI / 2) && angle < Math.PI)
+                    || (angle < 0 && angle > -Math.PI / 2)) {
+                velX *= -1;
+                velY *= -1;
+            }
+        }
+    }
+
+    public double getVelocity() {
+        return Math.sqrt(Math.pow(velX, 2) + Math.pow(velY, 2)) * Math.cos(angle);
     }
 
     public void move() {
         // Determine velocities
-        if (zIsHeld && velY == 0 && !sIsHeld) {
-            velY = velJump;
-            jumpTimer = rightJumping.getLength();
-        }
-
-        if (sIsHeld && facingRight) {
+        if (tIsHeld) {
             if (superDashTimer <= 0) {
-                velX = velSuperDash;
-                velY = 0;
+                setVelocity(VELSUPERDASH);
             } else {
                 isJumping = false;
                 superDashTimer -= 1;
-                if (rightIsHeld) {
-                    velX = velSneak / 2;
+                if (wIsHeld || dIsHeld || sIsHeld || aIsHeld) {
+                    setVelocity(VELSNEAK / 2);
                 } else {
                     velX = 0;
                 }
             }
-        } else if (sIsHeld && !facingRight) {
-            if (superDashTimer <= 0) {
-                velX = -velSuperDash;
-                velY = 0;
-            } else {
-                isJumping = false;
-                superDashTimer -= 1;
-                if (leftIsHeld) {
-                    velX = -velSneak;
-                } else {
-                    velX = 0;
-                }
-            }
-        } else if (cIsHeld && facingRight && canDash && velX <= velJog) {
-            velX = velDash;
-            dashTimer = rightDashing.getLength();
-        } else if (cIsHeld && !facingRight && canDash && velX >= -velJog) {
-            velX = -velDash;
-            dashTimer = leftDashing.getLength();
-        } else if (rightIsHeld && downIsHeld) {
-            velX = velSneak;
-        } else if (rightIsHeld && !downIsHeld && velX < velJog) {
-            velX = velJog;
-        } else if (leftIsHeld && downIsHeld) {
-            velX = -velSneak;
-        } else if (leftIsHeld && !downIsHeld && velX > -velJog) {
-            velX = -velJog;
-        } else if (downIsHeld) {
+        } else if (ctrlIsHeld && canDash && getVelocity() <= VELJOG) {
+            setVelocity(VELDASH);
+            dashTimer = dashing.getLength();
+        } else if (shiftIsHeld && (wIsHeld || dIsHeld || sIsHeld || aIsHeld)) {
+            setVelocity(VELSNEAK);
+        } else if ((wIsHeld || dIsHeld || sIsHeld || aIsHeld) && !shiftIsHeld && getVelocity() < VELJOG) {
+            setVelocity(VELJOG);
+        } else if (shiftIsHeld) {
             velX = 0;
         }
 
@@ -290,16 +313,15 @@ public class Player extends Object implements Creature {
     public void tick() {
         move();
 
-        // Switch from jumping to falling
-        if (velY < 0) {
-            isFalling = true;
-            isJumping = false;
+        // Apply vertical friction
+        if (velY > World.getWorld().getController().FRICTION) {
+            velY -= World.getWorld().getController().FRICTION;
+        } else if (velY < -World.getWorld().getController().FRICTION) {
+            velY += World.getWorld().getController().FRICTION;
+        } else if (velY != 0) {
+            velY = 0;
         }
-        // Apply gravity
-        if(isFalling || isJumping) {
-            velY += World.getWorld().getController().GRAVITY;
-        }
-        // Apply World.getWorld().getController().FRICTION
+        // Apply horizontal friction
         if (velX > World.getWorld().getController().FRICTION) {
             velX -= World.getWorld().getController().FRICTION;
         } else if (velX < -World.getWorld().getController().FRICTION) {
@@ -308,21 +330,21 @@ public class Player extends Object implements Creature {
             velX = 0;
         }
 
-        if (super.getX() <= 50) {
-            super.setX(50);
-        } else if (super.getX() >= World.getWorld().getController().WIDTH - 50) {
-            super.setX(World.getWorld().getController().WIDTH - 50);
+        if (super.getX() <= 60) {
+            super.setX(60);
+        } else if (super.getX() >= World.getWorld().getController().WIDTH - 60) {
+            super.setX(World.getWorld().getController().WIDTH - 60);
         }
 
-        if (super.getY() <= 96) {
-            super.setY(96);
+        if (super.getY() <= 60) {
+            super.setY(60);
             velY = 1;
         } else if (super.getY() >= World.getWorld().getController().HEIGHT) {
             super.setY(World.getWorld().getController().HEIGHT);
             velY = 0;
             isFalling = false;
         }
-        boundRect = new Rectangle(pos.x - 40, pos.y - 95, 80, 95);
+        boundRect = new Rectangle(pos.x - 60, pos.y - 60, 120, 120);
     }
 
     public Point getPos() {
@@ -354,96 +376,41 @@ public class Player extends Object implements Creature {
         ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
 
         // Saves amount of text to be used
-        String defR = "GiantsSidescroller/src/images/player1/right_";
-        String defL = "GiantsSidescroller/src/images/player1/left_";
+        String defLocStr = "GiantsSidescroller/src/images/player1/";
 
         // Builds image strip for standing facing right
         for (int i = 1; i <= 4; i++) {
             imgLocStr.add("stand (" + i + ").png");
         }
-        rightStanding = buildImageList(imgLocStr, images, defR);
-        System.out.println(rightStanding.toString());
+        standing = buildImageList(imgLocStr, images, defLocStr);
+        System.out.println(standing.toString());
         imgLocStr.clear();
         images.clear();
 
-        // Builds image strip for jogging facing right
+        // Builds image strip for jogging
         for (int i = 1; i <= 20; i++) {
             imgLocStr.add("jog (" + i + ").png");
         }
-        rightJogging = buildImageList(imgLocStr, images, defR);
-        System.out.println(rightJogging.toString());
+        jogging = buildImageList(imgLocStr, images, defLocStr);
+        System.out.println(jogging.toString());
         imgLocStr.clear();
         images.clear();
 
-        // Builds image strip for dashing facing right
+        // Builds image strip for dashing
         for (int i = 1; i <= 8; i++) {
             imgLocStr.add("dash (" + i + ").png");
         }
-        rightDashing = buildImageList(imgLocStr, images, defR);
-        System.out.println(rightDashing.toString());
+        dashing = buildImageList(imgLocStr, images, defLocStr);
+        System.out.println(dashing.toString());
         imgLocStr.clear();
         images.clear();
 
-        // Builds image strip for jumping facing right
-        for (int i = 1; i <= 12; i++) {
-            imgLocStr.add("jump (" + i + ").png");
-        }
-        rightJumping = buildImageList(imgLocStr, images, defR);
-        System.out.println(rightJumping.toString());
-        imgLocStr.clear();
-        images.clear();
-
-        // Builds image strip for jump loop facing right
-        for (int i = 1; i <= 1; i++) {
-            imgLocStr.add("jumped (" + i + ").png");
-        }
-        rightJumped = buildImageList(imgLocStr, images, defR);
-        System.out.println(rightJumped.toString());
-        imgLocStr.clear();
-        images.clear();
-
-        // Builds image strip for standing facing left
-        for (int i = 1; i <= 4; i++) {
-            imgLocStr.add("stand (" + i + ").png");
-        }
-        leftStanding = buildImageList(imgLocStr, images, defL);
-        System.out.println(leftStanding.toString());
-        imgLocStr.clear();
-        images.clear();
-
-        // Builds image strip for jogging facing left
-        for (int i = 1; i <= 20; i++) {
-            imgLocStr.add("jog (" + i + ").png");
-        }
-        leftJogging = buildImageList(imgLocStr, images, defL);
-        System.out.println(leftJogging.toString());
-        imgLocStr.clear();
-        images.clear();
-
-        // Builds image strip for dashing facing left
+        // Builds image strip for jumping
         for (int i = 1; i <= 8; i++) {
-            imgLocStr.add("dash (" + i + ").png");
-        }
-        leftDashing = buildImageList(imgLocStr, images, defL);
-        System.out.println(leftDashing.toString());
-        imgLocStr.clear();
-        images.clear();
-
-        // Builds image strip for jumping facing left
-        for (int i = 1; i <= 12; i++) {
             imgLocStr.add("jump (" + i + ").png");
         }
-        leftJumping = buildImageList(imgLocStr, images, defL);
-        System.out.println(leftJumping.toString());
-        imgLocStr.clear();
-        images.clear();
-
-        // Builds image strip for jump loop facing left
-        for (int i = 1; i <= 1; i++) {
-            imgLocStr.add("jumped (" + i + ").png");
-        }
-        leftJumped = buildImageList(imgLocStr, images, defL);
-        System.out.println(leftJumped.toString());
+        jumping = buildImageList(imgLocStr, images, defLocStr);
+        System.out.println(jumping.toString());
         imgLocStr.clear();
         images.clear();
     }
