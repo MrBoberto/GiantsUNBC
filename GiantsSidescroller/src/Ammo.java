@@ -1,13 +1,14 @@
 package GiantsSidescroller.src;
 
-public class Object {
+public class Ammo {
     // The precise position of the object, for use with physics
-    private double x, y, angle;
+    private double x, y;
+    private Weapon weapon;
 
-    public Object(double x, double y, double angle) {
+    public Ammo(double x, double y, Weapon weapon) {
         this.x = x;
         this.y = y;
-        this.angle = angle;
+        this.weapon = weapon;
     }
 
     public double getX() {
@@ -26,11 +27,11 @@ public class Object {
         this.y = y;
     }
 
-    public double getAngle() {
-        return angle;
+    public Weapon getWeapon() {
+        return weapon;
     }
 
-    public void setAngle(double angle) {
-        this.angle = angle;
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
     }
 }

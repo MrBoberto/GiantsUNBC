@@ -2,7 +2,9 @@ package GiantsSidescroller.src;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.File;
@@ -54,15 +56,20 @@ public class Player extends Object implements Creature {
     private boolean spaceIsHeld = false;
     private boolean ctrlIsHeld = false;
     private boolean tIsHeld = false;
-    private double angle = 0;
+    private boolean mouseInside = true;
+    private boolean mouseHeld = false;
     private boolean isFalling = true;
     private boolean isJumping = false;
     private boolean isSneaking = false;
+
     // Prevents dash from being held
     private boolean canDash = true;
+    private Arsenal weapons = new Arsenal();
+    // Can be 0 = primary or 1 = secondary
+    private int selectedWeapon = 0;
 
-    public Player(double x, double y) {
-        super(x, y);
+    public Player(double x, double y, double angle) {
+        super(x, y, angle);
 
         loadImageStrips();
         currentImage = standing.getHead();
@@ -70,6 +77,8 @@ public class Player extends Object implements Creature {
         pos = new Point((int) super.getX(), (int) super.getY());
         pocketMoney = 0;
         boundRect = new Rectangle(pos.x - 60, pos.y - 60, 120, 120);
+
+        weapons.add(new Shotgun(this));
     }
 
     private void loadImage() {
@@ -114,8 +123,9 @@ public class Player extends Object implements Creature {
     public void draw(Graphics g, ImageObserver imgObs) {
         loadImage();
 
-        AffineTransform affTra = AffineTransform.getTranslateInstance(pos.x- 60, pos.y - 60);
-        affTra.rotate(angle, currentImage.getImage().getWidth() / 2,
+        AffineTransform affTra = AffineTransform.getTranslateInstance(
+                pos.x - currentImage.getImage().getWidth() / 2, pos.y - currentImage.getImage().getHeight() / 2);
+        affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2,
                 currentImage.getImage().getHeight() / 2);
         Graphics2D g2d = (Graphics2D) g;
 
@@ -131,7 +141,9 @@ public class Player extends Object implements Creature {
         */
 
         g.setColor(new Color(0, 100, 0));
-        g.drawRect(pos.x - 60, pos.y - 60, 120, 120);
+        g.drawRect(pos.x - currentImage.getImage().getWidth() / 2,
+                pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+                currentImage.getImage().getHeight());
     }
 
     public void keyPressed(KeyEvent e) {
@@ -203,8 +215,30 @@ public class Player extends Object implements Creature {
         setAngle();
     }
 
+    public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            if (mouseInside) {
+                mouseHeld = true;
+            }
+        }
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            mouseHeld = false;
+        }
+    }
+
+    public void mouseEntered(MouseEvent e) {
+        mouseInside = true;
+    }
+
+    public void mouseExited(MouseEvent e) {
+        mouseInside = false;
+    }
+
     public void setAngle() {
-        System.out.println("Player 1 Prev Angle: " + Math.toDegrees(angle));
+        System.out.println("Player 1 Prev super.getAngle(): " + Math.toDegrees(super.getAngle()));
         int avgX = 0;
         int avgY = 0;
 
@@ -224,51 +258,51 @@ public class Player extends Object implements Creature {
             return;
         } else if (avgX == 0) {
             if (avgY == 1) {
-                angle = 0;
+                super.setAngle(0);
                 return;
             } else {
-                angle = Math.PI;
+                super.setAngle(Math.PI);
                 return;
             }
         } else if (avgY == 0) {
             if (avgX == 1) {
-                angle = Math.PI / 2;
+                super.setAngle(Math.PI / 2);
                 return;
             } else {
-                angle = 3 * Math.PI / 2;
+                super.setAngle(-Math.PI / 2);
                 return;
             }
         }
 
         double acuteAngle = Math.atan(avgY/avgX);
-        System.out.println("Player 1 Acute Angle: " + Math.toDegrees(acuteAngle));
+        System.out.println("Player 1 Acute super.getAngle(): " + Math.toDegrees(acuteAngle));
 
         if (avgY < 0) {
             acuteAngle += Math.PI;
         }
 
-        angle = acuteAngle;
+        super.setAngle(acuteAngle);
     }
 
     public void setVelocity(double speed) {
-        if (angle == 0) {
+        if (super.getAngle() == 0) {
             velY = -speed;
             velX = 0;
-        } else if (angle == Math.PI / 2) {
+        } else if (super.getAngle() == Math.PI / 2) {
             velX = speed;
             velY = 0;
-        } else if (angle == Math.PI) {
+        } else if (super.getAngle() == Math.PI) {
             velY = speed;
             velX = 0;
-        } else if (angle == 3 * Math.PI / 2) {
+        } else if (super.getAngle() == -Math.PI / 2) {
             velX = -speed;
             velY = 0;
         } else {
-            velX = speed * Math.cos(angle);
-            velY = -speed * Math.sin(angle);
-            System.out.println("Player 1 Current Angle: " + angle);
-            if ((angle > (Math.PI / 2) && angle < Math.PI)
-                    || (angle < 0 && angle > -Math.PI / 2)) {
+            velX = speed * Math.cos(super.getAngle());
+            velY = -speed * Math.sin(super.getAngle());
+            System.out.println("Player 1 Current super.getAngle(): " + super.getAngle());
+            if ((super.getAngle() > (Math.PI / 2) && super.getAngle() < Math.PI)
+                    || (super.getAngle() < 0 && super.getAngle() > -Math.PI / 2)) {
                 velX *= -1;
                 velY *= -1;
             }
@@ -276,7 +310,7 @@ public class Player extends Object implements Creature {
     }
 
     public double getVelocity() {
-        return Math.sqrt(Math.pow(velX, 2) + Math.pow(velY, 2)) * Math.cos(angle);
+        return Math.sqrt(Math.pow(velX, 2) + Math.pow(velY, 2)) * Math.cos(super.getAngle());
     }
 
     public void move() {
@@ -310,7 +344,7 @@ public class Player extends Object implements Creature {
         pos.setLocation(super.getX(), super.getY());
     }
 
-    public void tick() {
+    public void tick(Point mouseLoc) {
         move();
 
         // Apply vertical friction
@@ -330,21 +364,29 @@ public class Player extends Object implements Creature {
             velX = 0;
         }
 
-        if (super.getX() <= 60) {
-            super.setX(60);
-        } else if (super.getX() >= World.getWorld().getController().WIDTH - 60) {
-            super.setX(World.getWorld().getController().WIDTH - 60);
+        if (super.getX() <= currentImage.getImage().getWidth() / 2) {
+            super.setX(currentImage.getImage().getWidth() / 2);
+        } else if (super.getX() >= World.getWorld().getController().WIDTH - currentImage.getImage().getWidth() / 2) {
+            super.setX(World.getWorld().getController().WIDTH - currentImage.getImage().getWidth() / 2);
         }
 
-        if (super.getY() <= 60) {
-            super.setY(60);
+        if (super.getY() <= currentImage.getImage().getHeight() / 2) {
+            super.setY(currentImage.getImage().getHeight() / 2);
             velY = 1;
-        } else if (super.getY() >= World.getWorld().getController().HEIGHT) {
-            super.setY(World.getWorld().getController().HEIGHT);
+        } else if (super.getY() >= World.getWorld().getController().HEIGHT - currentImage.getImage().getHeight() / 2) {
+            super.setY(World.getWorld().getController().HEIGHT - currentImage.getImage().getHeight() / 2);
             velY = 0;
             isFalling = false;
         }
-        boundRect = new Rectangle(pos.x - 60, pos.y - 60, 120, 120);
+        boundRect = new Rectangle(pos.x - currentImage.getImage().getWidth() / 2,
+                pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+                currentImage.getImage().getHeight());
+
+        if (mouseHeld) {
+            if (selectedWeapon == 0) {
+                weapons.getPrimary().shoot(mouseLoc.x, mouseLoc.y);
+            }
+        }
     }
 
     public Point getPos() {
@@ -368,7 +410,7 @@ public class Player extends Object implements Creature {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle();
+        return boundRect;
     }
 
     public void loadImageStrips() {

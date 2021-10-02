@@ -10,6 +10,7 @@ public class Main {
 
         window.add(World.getWorld().getController());
         window.addKeyListener(World.getWorld().getController());
+        window.addMouseListener(World.getWorld().getController());
 
         window.setResizable(false);
         window.pack();

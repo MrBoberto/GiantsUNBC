@@ -1,13 +1,15 @@
 package GiantsSidescroller.src;
 
+import java.security.SecureRandom;
+
 public class World {
     private static World theWorld;
     private Controller theController;
+    public SecureRandom sRandom = new SecureRandom();
 
     private World()
     {
         theController = new Controller();
-        System.out.println("Controller");
     }
 
     /**
@@ -24,5 +26,55 @@ public class World {
 
     public Controller getController() {
         return this.theController;
+    }
+
+    public double atan(double x, double y, double angle) {
+        if (x == 0 && y == 0) {
+            return angle;
+        } else if (x == 0) {
+            if (y > 0) {
+                return 0;
+            } else {
+                return Math.PI;
+            }
+        } else if (y == 0) {
+            if (x > 0) {
+                return Math.PI / 2;
+            } else {
+                return 3 * Math.PI / 2;
+            }
+        } else if (x > 0 && y < 0) {
+            return (Math.atan(-y / x) + Math.PI / 2);
+        } else if (x < 0 && y < 0) {
+            return (Math.atan(-x / -y) - Math.PI);
+        } else if (x < 0 && y > 0) {
+            return (Math.atan(y / -x) - Math.PI / 2);
+        } else {
+            return (Math.atan(x / y));
+        }
+    }
+
+    public double cosAdj(double hyp, double angle) {
+        if (angle >= Math.PI / 2) {
+            return hyp * Math.cos(angle - Math.PI / 2);
+        } else if (angle >= 0) {
+            return hyp * Math.cos(angle);
+        } else if (angle >= -Math.PI / 2) {
+            return hyp * Math.cos(angle + Math.PI / 2);
+        } else {
+            return hyp * Math.cos(angle + Math.PI);
+        }
+    }
+
+    public double sinOpp(double hyp, double angle) {
+        if (angle >= Math.PI / 2) {
+            return hyp * Math.sin(angle - Math.PI / 2);
+        } else if (angle >= 0) {
+            return hyp * Math.sin(angle);
+        } else if (angle >= -Math.PI / 2) {
+            return hyp * Math.sin(angle + Math.PI / 2);
+        } else {
+            return hyp * Math.sin(angle + Math.PI);
+        }
     }
 }
