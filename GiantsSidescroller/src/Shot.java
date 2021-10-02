@@ -22,17 +22,24 @@ public class Shot extends Ammo implements Projectile {
         super(weapon.getParent().getX(), weapon.getParent().getY(), weapon);
 
         loadImage();
+        World.getWorld().getController().movingAmmo.add(this);
 
         angle = World.getWorld().atan(aimX - super.getWeapon().getParent().getX(),
-                aimY - super.getWeapon().getParent().getY(), 0) + World.getWorld().sRandom.nextInt(7);
+                aimY - super.getWeapon().getParent().getY(), 0) + 0.4 * World.getWorld().sRandom.nextDouble();
+
+        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
-            velX = World.getWorld().cosAdj((weapon.getMomentum() / MASS), angle);
-            velY = World.getWorld().sinOpp((weapon.getMomentum() / MASS), angle);
+            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
+            velX = World.getWorld().cosAdj((weapon.getMOMENTUM() / MASS), angle);
+            velY = World.getWorld().sinOpp((weapon.getMOMENTUM() / MASS), angle);
         } else {
-            velX = World.getWorld().sinOpp((weapon.getMomentum() / MASS), angle);
-            velY = World.getWorld().cosAdj((weapon.getMomentum() / MASS), angle);
+            System.out.print(", Positive, speed = " + weapon.getMOMENTUM() / MASS);
+            velX = World.getWorld().sinOpp((weapon.getMOMENTUM() / MASS), angle);
+            velY = World.getWorld().cosAdj((weapon.getMOMENTUM() / MASS), angle);
         }
+
+        System.out.println(", velX = " + velX + ", velY = " + velY);
 
         pos = new Point((int) super.getX(), (int) super.getY());
         boundRect = new Rectangle(pos.x - texture.getWidth() / 2, pos.y - texture.getHeight() / 2,
@@ -77,7 +84,7 @@ public class Shot extends Ammo implements Projectile {
 
     @Override
     public void draw(Graphics g, ImageObserver imgObs) {
-        loadImage();
+        System.out.println("Draw shot from " + super.getWeapon().getSERIAL());
 
         AffineTransform affTra = AffineTransform.getTranslateInstance(
                 pos.x - texture.getWidth() / 2, pos.y - texture.getHeight() / 2);

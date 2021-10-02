@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Shotgun implements Weapon {
     private Object parent;
-    private final double MOMENTUM = 0.4;
-    private final int ROUNDCOUNT = 10;
+    private final double MOMENTUM = 0.5;
+    private final int ROUNDCOUNT = 5;
     private final int DELAY = 50;
     // Identifies type of gun
     private final int SERIAL = 000;
@@ -34,8 +34,8 @@ public class Shotgun implements Weapon {
     }
 
     @Override
-    public double getMomentum() {
-        return 0;
+    public double getMOMENTUM() {
+        return MOMENTUM;
     }
 
     @Override
