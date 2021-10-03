@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
+    private ImageIcon img;
+
     public static void startupGui() {
         JFrame window = new JFrame("The Boyz");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,6 +36,4 @@ public class Main {
             }
         });
     }
-
-    ImageIcon img;
 }

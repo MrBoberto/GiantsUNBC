@@ -5,5 +5,8 @@ public interface Weapon {
     public Object getParent();
     // Measured in kg * pixels / sec
     public double getMOMENTUM();
+    public double getINACCURACY();
     public int getSERIAL();
+    // Returns the name of the weapon
+    public String toString();
 }

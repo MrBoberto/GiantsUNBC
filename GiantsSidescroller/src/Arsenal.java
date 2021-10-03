@@ -54,6 +54,26 @@ public class Arsenal {
         System.out.println("Weapon " + weapon.getSERIAL() + " not found.");
     }
 
+    public void setSecondary(Weapon weapon) {
+        if (weapon.getSERIAL() == secondary.getSERIAL()) {
+            // Do nothing
+        } else if (weapon.getSERIAL() == primary.getSERIAL()) {
+            // Switch primary and secondary
+            primary = secondary;
+            secondary = weapon;
+            return;
+        } else {
+            for (int i = 0; i < weapons.size(); i++) {
+                if (weapons.get(i).getSERIAL() == weapon.getSERIAL()) {
+                    weapons.add(secondary);
+                    secondary = weapon;
+                    return;
+                }
+            }
+        }
+        System.out.println("Weapon " + weapon.getSERIAL() + " not found.");
+    }
+
     public Weapon getPrimary() {
         return primary;
     }

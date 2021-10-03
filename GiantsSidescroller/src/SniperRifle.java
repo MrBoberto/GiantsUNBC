@@ -2,16 +2,16 @@ package GiantsSidescroller.src;
 
 import java.util.ArrayList;
 
-public class Shotgun implements Weapon {
+public class SniperRifle implements Weapon {
     private Object parent;
-    private final double MOMENTUM = 0.75;
-    private final int ROUNDCOUNT = 10;
-    private final double INACCURACY = 0.1;
-    private final int DELAY = 50;
+    private final double MOMENTUM = 15;
+    private final int ROUNDCOUNT = 1;
+    private final double INACCURACY = 0;
+    private final int DELAY = 400;
     // Identifies type of gun
-    private final int SERIAL = 000;
+    private final int SERIAL = 001;
 
-    public Shotgun(Object parent) {
+    public SniperRifle(Object parent) {
         this.parent = parent;
     }
 
@@ -22,10 +22,10 @@ public class Shotgun implements Weapon {
      */
     @Override
     public void shoot(double x, double y) {
-        ArrayList<Shot> shell = new ArrayList<Shot>(ROUNDCOUNT);
+        ArrayList<Nato> shell = new ArrayList<Nato>(ROUNDCOUNT);
         for (int i = 0; i < ROUNDCOUNT; i++) {
-            shell.add(new Shot(x, y, this));
-            System.out.println("Fired shot " + (i + 1));
+            shell.add(new Nato(x, y, this));
+            System.out.println("Fired nato " + (i + 1));
         }
     }
 
@@ -51,6 +51,6 @@ public class Shotgun implements Weapon {
 
     @Override
     public String toString() {
-        return SERIAL + ", Shotgun";
+        return SERIAL + ", Sniper Rifle";
     }
 }

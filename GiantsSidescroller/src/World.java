@@ -1,11 +1,16 @@
 package GiantsSidescroller.src;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 
 public class World {
     private static World theWorld;
     private Controller theController;
-    public SecureRandom sRandom = new SecureRandom();
+    private SecureRandom sRandom = new SecureRandom();
 
     private World()
     {
@@ -55,26 +60,34 @@ public class World {
     }
 
     public double cosAdj(double hyp, double angle) {
-        if (angle >= Math.PI / 2) {
+        if (angle == Math.PI || angle == Math.PI / 2 || angle == 0 || angle == -Math.PI / 2) {
+            return hyp;
+        } else if (angle > Math.PI / 2) {
             return hyp * Math.cos(angle - Math.PI / 2);
-        } else if (angle >= 0) {
+        } else if (angle > 0) {
             return hyp * Math.cos(angle);
-        } else if (angle >= -Math.PI / 2) {
-            return hyp * Math.cos(angle + Math.PI / 2);
+        } else if (angle > -Math.PI / 2) {
+            return -hyp * Math.cos(angle + Math.PI / 2);
         } else {
-            return hyp * Math.cos(angle + Math.PI);
+            return -hyp * Math.cos(angle + Math.PI);
         }
     }
 
     public double sinOpp(double hyp, double angle) {
-        if (angle >= Math.PI / 2) {
-            return hyp * Math.sin(angle - Math.PI / 2);
-        } else if (angle >= 0) {
+        if (angle == Math.PI || angle == Math.PI / 2 || angle == 0 || angle == -Math.PI / 2) {
+            return 0;
+        } else if (angle > Math.PI / 2) {
+            return -hyp * Math.sin(angle - Math.PI / 2);
+        } else if (angle > 0) {
             return hyp * Math.sin(angle);
-        } else if (angle >= -Math.PI / 2) {
+        } else if (angle > -Math.PI / 2) {
             return hyp * Math.sin(angle + Math.PI / 2);
         } else {
-            return hyp * Math.sin(angle + Math.PI);
+            return -hyp * Math.sin(angle + Math.PI);
         }
+    }
+
+    public SecureRandom getSRandom() {
+        return sRandom;
     }
 }

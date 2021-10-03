@@ -7,10 +7,10 @@ import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 
-public class Shot extends Ammo implements Projectile {
+public class Fireball extends Ammo implements Projectile {
 
     private Rectangle boundRect;
-    private final double MASS = 0.02;
+    private final double MASS = 0.01;
     private BufferedImage texture;
     private AffineTransform affTra;
     private Point pos;
@@ -18,7 +18,7 @@ public class Shot extends Ammo implements Projectile {
     private double velX;
     private double velY;
 
-    public Shot(double aimX, double aimY, Weapon weapon) {
+    public Fireball(double aimX, double aimY, Weapon weapon) {
         super(weapon.getParent().getX(), weapon.getParent().getY(), weapon);
 
         loadImage();
@@ -29,7 +29,7 @@ public class Shot extends Ammo implements Projectile {
                 + super.getWeapon().getINACCURACY() * World.getWorld().getSRandom().nextDouble();
 
         System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = weapon.getMOMENTUM() / MASS - 10*World.getWorld().getSRandom().nextDouble();
+        double speed = weapon.getMOMENTUM() / MASS - 0.5 * (weapon.getMOMENTUM() / MASS) * World.getWorld().getSRandom().nextDouble();
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
             System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
@@ -81,8 +81,9 @@ public class Shot extends Ammo implements Projectile {
     }
 
     public void loadImage() {
+        int textureNum = 1 + World.getWorld().getSRandom().nextInt(5);
         try {
-            texture = ImageIO.read(new File("GiantsSidescroller/src/images/projectile/shot.png"));
+            texture = ImageIO.read(new File("GiantsSidescroller/src/images/projectile/fireball (" + textureNum + ").png"));
         } catch (IOException exc) {
             System.out.println("Could not find image file: " + exc.getMessage());
         }

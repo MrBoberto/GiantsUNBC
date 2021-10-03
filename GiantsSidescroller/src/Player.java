@@ -21,16 +21,16 @@ public class Player extends Object implements Creature {
     private Rectangle boundRect;
 
     // Preset velocities of player actions
-    public final double VELJUMP = -15.5;
-    public final double VELSNEAK = 3;
-    public final double VELJOG = 7;
-    public final double VELDASH = 25;
-    public final double VELSUPERDASH = 40;
+    public final double VELJUMP = -12;
+    public final double VELSNEAK = 2.2;
+    public final double VELJOG = 5.2;
+    public final double VELDASH = 19;
+    public final double VELSUPERDASH = 30;
 
     // Determines what the player did last frame to help determine what animation to play.
     private int lastAction = 1;
-    public final int LANDINGTIMERMAX = 20;
-    public final int SUPERDASHTIMERMAX = 50;
+    public final int LANDINGTIMERMAX = 27;
+    public final int SUPERDASHTIMERMAX = 67;
     private int landingTimer = LANDINGTIMERMAX;
     private int superDashTimer = SUPERDASHTIMERMAX;
     private int dashTimer = 0;
@@ -57,11 +57,12 @@ public class Player extends Object implements Creature {
     private boolean ctrlIsHeld = false;
     private boolean tIsHeld = false;
     private boolean mouseInside = true;
-    private boolean mouseHeld = false;
+    private boolean button1Held = false;
     private boolean isFalling = true;
     private boolean isJumping = false;
     private boolean isSneaking = false;
 
+    // Prevents dash from being held
     // Prevents dash from being held
     private boolean canDash = true;
     private Arsenal weapons = new Arsenal();
@@ -76,11 +77,18 @@ public class Player extends Object implements Creature {
 
         pos = new Point((int) super.getX(), (int) super.getY());
         pocketMoney = 0;
-        boundRect = new Rectangle(pos.x - 60, pos.y - 60, 120, 120);
+        boundRect = new Rectangle(pos.x - currentImage.getImage().getWidth() / 2,
+                pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+                currentImage.getImage().getHeight());
 
         weapons.add(new Shotgun(this));
+        weapons.add(new FlameThrower(this));
+        weapons.add(new SniperRifle(this));
     }
 
+    /**
+     * Determines which animation is being played and which frame should currently be played
+     */
     private void loadImage() {
         if (dashTimer > 0) {
             if (lastAction == 6) {
@@ -120,26 +128,27 @@ public class Player extends Object implements Creature {
         }
     }
 
+    /**
+     * Gets the current frame from loadImage() and rotates it based on the player's angle
+     * @param g
+     * @param imgObs
+     */
     public void draw(Graphics g, ImageObserver imgObs) {
         loadImage();
 
+        // Sets up the axis of rotation
         AffineTransform affTra = AffineTransform.getTranslateInstance(
-                pos.x - currentImage.getImage().getWidth() / 2, pos.y - currentImage.getImage().getHeight() / 2);
+                pos.x - currentImage.getImage().getWidth() / 2,
+                pos.y - currentImage.getImage().getHeight() / 2);
+        // Rotates the frame
         affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2,
                 currentImage.getImage().getHeight() / 2);
         Graphics2D g2d = (Graphics2D) g;
 
+        // Draws the rotated image
         g2d.drawImage(currentImage.getImage(), affTra, imgObs);
 
-        /*
-        g.drawImage(
-                currentImage.getImage(),
-                pos.x- 60,
-                pos.y - 60,
-                imgObs
-        );
-        */
-
+        // Draws the player's hitbox
         g.setColor(new Color(0, 100, 0));
         g.drawRect(pos.x - currentImage.getImage().getWidth() / 2,
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
@@ -167,6 +176,7 @@ public class Player extends Object implements Creature {
             isSneaking = true;
         }
         if (key == KeyEvent.VK_SPACE) {
+            // Will eventually be removed
             spaceIsHeld = true;
             isJumping = true;
         }
@@ -201,6 +211,7 @@ public class Player extends Object implements Creature {
             isSneaking = false;
         }
         if (key == KeyEvent.VK_SPACE) {
+            // Will eventually be removed
             spaceIsHeld = false;
         }
         if (key == KeyEvent.VK_CONTROL) {
@@ -218,14 +229,31 @@ public class Player extends Object implements Creature {
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (mouseInside) {
-                mouseHeld = true;
+                button1Held = true;
             }
         }
     }
 
     public void mouseReleased(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            mouseHeld = false;
+            button1Held = false;
+        }
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            if (mouseInside) {
+                // Switch between primary and secondary
+                if (selectedWeapon < 1) {
+                    if (selectedWeapon == 0 && weapons.getSecondary() != null) {
+                        selectedWeapon ++;
+                    }
+                } else {
+                    if (selectedWeapon == 1 && weapons.getSecondary() != null) {
+                        selectedWeapon = 0;
+                    }
+                }
+            }
         }
     }
 
@@ -237,6 +265,9 @@ public class Player extends Object implements Creature {
         mouseInside = false;
     }
 
+    /**
+     * Determines the angle in which the player is facing
+     */
     public void setAngle() {
         System.out.println("Player 1 Prev super.getAngle(): " + Math.toDegrees(super.getAngle()));
         int avgX = 0;
@@ -284,6 +315,10 @@ public class Player extends Object implements Creature {
         super.setAngle(acuteAngle);
     }
 
+    /**
+     * Determines horizontal and vertical velocities
+     * @param speed The net speed at which the player should move
+     */
     public void setVelocity(double speed) {
         if (super.getAngle() == 0) {
             velY = -speed;
@@ -313,6 +348,10 @@ public class Player extends Object implements Creature {
         return Math.sqrt(Math.pow(velX, 2) + Math.pow(velY, 2)) * Math.cos(super.getAngle());
     }
 
+    /**
+     * Determines what speed to move at based on the controls being used and them translates the player
+     * based on the horizontal and vertical velocities
+     */
     public void move() {
         // Determine velocities
         if (tIsHeld) {
@@ -344,6 +383,11 @@ public class Player extends Object implements Creature {
         pos.setLocation(super.getX(), super.getY());
     }
 
+    /**
+     * Translates the player using move(), applies friction, prevents the player from leaving the window,
+     * updates the player's hitbox, and shoots weapons
+     * @param mouseLoc
+     */
     public void tick(Point mouseLoc) {
         move();
 
@@ -382,9 +426,12 @@ public class Player extends Object implements Creature {
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
 
-        if (mouseHeld) {
+        // Shoot at the selected point
+        if (button1Held) {
             if (selectedWeapon == 0) {
                 weapons.getPrimary().shoot(mouseLoc.x, mouseLoc.y);
+            } else {
+                weapons.getSecondary().shoot(mouseLoc.x, mouseLoc.y);
             }
         }
     }
@@ -413,52 +460,58 @@ public class Player extends Object implements Creature {
         return boundRect;
     }
 
+    /**
+     * Loads the image files into the image strips based upon their names
+     */
     public void loadImageStrips() {
         ArrayList<String> imgLocStr = new ArrayList<String>();
-        ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
 
-        // Saves amount of text to be used
+       // Saves amount of text to be used
         String defLocStr = "GiantsSidescroller/src/images/player1/";
 
         // Builds image strip for standing facing right
         for (int i = 1; i <= 4; i++) {
             imgLocStr.add("stand (" + i + ").png");
         }
-        standing = buildImageList(imgLocStr, images, defLocStr);
+        standing = buildImageStrip(imgLocStr, defLocStr);
         System.out.println(standing.toString());
         imgLocStr.clear();
-        images.clear();
 
         // Builds image strip for jogging
         for (int i = 1; i <= 20; i++) {
             imgLocStr.add("jog (" + i + ").png");
         }
-        jogging = buildImageList(imgLocStr, images, defLocStr);
+        jogging = buildImageStrip(imgLocStr, defLocStr);
         System.out.println(jogging.toString());
         imgLocStr.clear();
-        images.clear();
 
         // Builds image strip for dashing
         for (int i = 1; i <= 8; i++) {
             imgLocStr.add("dash (" + i + ").png");
         }
-        dashing = buildImageList(imgLocStr, images, defLocStr);
+        dashing = buildImageStrip(imgLocStr, defLocStr);
         System.out.println(dashing.toString());
         imgLocStr.clear();
-        images.clear();
 
         // Builds image strip for jumping
         for (int i = 1; i <= 8; i++) {
             imgLocStr.add("jump (" + i + ").png");
         }
-        jumping = buildImageList(imgLocStr, images, defLocStr);
+        jumping = buildImageStrip(imgLocStr, defLocStr);
         System.out.println(jumping.toString());
         imgLocStr.clear();
-        images.clear();
     }
 
-    public ImageStrip buildImageList(ArrayList<String> imgLocStr, ArrayList<BufferedImage> images,
-                                     String defaultFileLocation) {
+    /**
+     * Builds the ImageStrip for a specific animation
+     * @param imgLocStr All file names to be loaded into the ImageStrip for animation
+     * @param defaultFileLocation The file path of the images
+     * @return An ImageStrip for animation
+     */
+    public ImageStrip buildImageStrip(ArrayList<String> imgLocStr, String defaultFileLocation) {
+        // The ArrayList of image files to be put into the ImageStrip
+        ArrayList<BufferedImage> images = new ArrayList<>();
+        // Used to track images that are loaded
         String imageFileNames = "";
         String imageFileSubstring = "";
         for (int i = 0; i < imgLocStr.size(); i++) {
@@ -469,6 +522,7 @@ public class Player extends Object implements Creature {
             }
             imageFileNames += defaultFileLocation + imgLocStr.get(i) + ", ";
         }
+        // Used for the toString() method of this ImageStrip
         for (int i = 0; i < imageFileNames.length() - 2; i++) {
             imageFileSubstring += imageFileNames.charAt(i);
         }
