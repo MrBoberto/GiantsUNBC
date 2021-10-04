@@ -6,6 +6,9 @@ public interface Weapon {
     // Measured in kg * pixels / sec
     public double getMOMENTUM();
     public double getINACCURACY();
+    public int getMAX_DELAY();
+    public int getCurrentDelay();
+    public void setCurrentDelay(int currentDelay);
     public int getSERIAL();
     // Returns the name of the weapon
     public String toString();

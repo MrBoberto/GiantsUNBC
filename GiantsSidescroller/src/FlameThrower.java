@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 public class FlameThrower implements Weapon {
     private Object parent;
-    private final double MOMENTUM = 0.4;
-    private final int ROUNDCOUNT = 20;
-    private final double INACCURACY = 0.4;
-    private final int DELAY = 0;
+    private final double MOMENTUM = 0.28;
+    private final int ROUNDCOUNT = 40;
+    private final double INACCURACY = 0.5;
+    public final int MAX_DELAY = 0;
+    private int currentDelay = 0;
     // Identifies type of gun
     private final int SERIAL = 002;
 
@@ -42,6 +43,21 @@ public class FlameThrower implements Weapon {
     @Override
     public double getINACCURACY() {
         return INACCURACY;
+    }
+
+    @Override
+    public int getMAX_DELAY() {
+        return MAX_DELAY;
+    }
+
+    @Override
+    public int getCurrentDelay() {
+        return currentDelay;
+    }
+
+    @Override
+    public void setCurrentDelay(int currentDelay) {
+        this.currentDelay = currentDelay;
     }
 
     @Override

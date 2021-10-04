@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 public class Shotgun implements Weapon {
     private Object parent;
-    private final double MOMENTUM = 0.75;
+    private final double MOMENTUM = 0.85;
     private final int ROUNDCOUNT = 10;
     private final double INACCURACY = 0.1;
-    private final int DELAY = 50;
+    public final int MAX_DELAY = 4;
+    private int currentDelay = 0;
     // Identifies type of gun
     private final int SERIAL = 000;
 
@@ -42,6 +43,21 @@ public class Shotgun implements Weapon {
     @Override
     public double getINACCURACY() {
         return INACCURACY;
+    }
+
+    @Override
+    public int getMAX_DELAY() {
+        return MAX_DELAY;
+    }
+
+    @Override
+    public int getCurrentDelay() {
+        return currentDelay;
+    }
+
+    @Override
+    public void setCurrentDelay(int currentDelay) {
+        this.currentDelay = currentDelay;
     }
 
     @Override

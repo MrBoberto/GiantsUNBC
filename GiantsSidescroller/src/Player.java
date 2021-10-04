@@ -149,7 +149,7 @@ public class Player extends Object implements Creature {
         g2d.drawImage(currentImage.getImage(), affTra, imgObs);
 
         // Draws the player's hitbox
-        g.setColor(new Color(0, 100, 0));
+        g.setColor(new Color(0, 0, 200));
         g.drawRect(pos.x - currentImage.getImage().getWidth() / 2,
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
@@ -426,12 +426,22 @@ public class Player extends Object implements Creature {
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
 
+        if (weapons.getPrimary().getCurrentDelay() > 0) {
+            weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getCurrentDelay() - 1);
+        }
+        if (weapons.getSecondary().getCurrentDelay() > 0) {
+            weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getCurrentDelay() - 1);
+        }
+
+
         // Shoot at the selected point
         if (button1Held) {
-            if (selectedWeapon == 0) {
+            if (selectedWeapon == 0 && weapons.getPrimary().getCurrentDelay() == 0) {
                 weapons.getPrimary().shoot(mouseLoc.x, mouseLoc.y);
-            } else {
+                weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getMAX_DELAY());
+            } else if (selectedWeapon == 1 && weapons.getPrimary().getCurrentDelay() == 0) {
                 weapons.getSecondary().shoot(mouseLoc.x, mouseLoc.y);
+                weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getMAX_DELAY());
             }
         }
     }

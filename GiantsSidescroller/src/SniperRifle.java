@@ -7,7 +7,8 @@ public class SniperRifle implements Weapon {
     private final double MOMENTUM = 15;
     private final int ROUNDCOUNT = 1;
     private final double INACCURACY = 0;
-    private final int DELAY = 400;
+    public final int MAX_DELAY = 400;
+    private int currentDelay = 0;
     // Identifies type of gun
     private final int SERIAL = 001;
 
@@ -42,6 +43,21 @@ public class SniperRifle implements Weapon {
     @Override
     public double getINACCURACY() {
         return INACCURACY;
+    }
+
+    @Override
+    public int getMAX_DELAY() {
+        return MAX_DELAY;
+    }
+
+    @Override
+    public int getCurrentDelay() {
+        return currentDelay;
+    }
+
+    @Override
+    public void setCurrentDelay(int currentDelay) {
+        this.currentDelay = currentDelay;
     }
 
     @Override
