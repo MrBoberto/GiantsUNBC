@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 
 public interface Creature {
-    public void tick(Point MouseLoc);
+    public void tick(Point mouseLoc);
     public void draw(Graphics g, ImageObserver imgObs);
     public Rectangle getBounds();
 

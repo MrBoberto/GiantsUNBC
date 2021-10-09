@@ -33,6 +33,13 @@ public class World {
         return this.theController;
     }
 
+    /**
+     * Returns an angle based on the opposite and adjacent side lengths. If this fails, returns the given angle.
+     * @param x
+     * @param y
+     * @param angle
+     * @return
+     */
     public double atan(double x, double y, double angle) {
         if (x == 0 && y == 0) {
             return angle;
@@ -59,6 +66,12 @@ public class World {
         }
     }
 
+    /**
+     * Returns the length of the adjacent side based on the hypotenuse length and the angle
+     * @param hyp
+     * @param angle
+     * @return
+     */
     public double cosAdj(double hyp, double angle) {
         if (angle == Math.PI || angle == Math.PI / 2 || angle == 0 || angle == -Math.PI / 2) {
             return hyp;
@@ -73,6 +86,12 @@ public class World {
         }
     }
 
+    /**
+     * Returns the length of the opposite side based on the hypotenuse length and the angle
+     * @param hyp
+     * @param angle
+     * @return
+     */
     public double sinOpp(double hyp, double angle) {
         if (angle == Math.PI || angle == Math.PI / 2 || angle == 0 || angle == -Math.PI / 2) {
             return 0;

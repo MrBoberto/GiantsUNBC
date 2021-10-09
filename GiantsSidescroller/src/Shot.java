@@ -18,6 +18,13 @@ public class Shot extends Ammo implements Projectile {
     private double velX;
     private double velY;
 
+    /**
+     * Takes a target location and a weapon, then sets the velocity of the projectile
+     * to launch toward that target location from the player
+     * @param aimX The x position of the player's mouse
+     * @param aimY The y position of the player's mouse
+     * @param weapon The weapon from which the projectile is being fired
+     */
     public Shot(double aimX, double aimY, Weapon weapon) {
         super(weapon.getParent().getX(), weapon.getParent().getY(), weapon);
 
