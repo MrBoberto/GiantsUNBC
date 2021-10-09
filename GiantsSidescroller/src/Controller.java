@@ -15,12 +15,13 @@ public class Controller extends JPanel implements ActionListener, KeyListener, M
     public final int WIDTH = 1280;
     public final int HEIGHT = WIDTH / 16 * 9;
     public final double GRAVITY = 0.6;
-    public final double FRICTION = 1.1;
+    public final double FRICTION = 1.1; // Friction acting on objects
     public ArrayList<Creature> livingPlayers = new ArrayList<Creature>();
     public ArrayList<Projectile> movingAmmo = new ArrayList<Projectile>();
+    private JPanel arsenalPanel = new JPanel();
     private ImageStrip arsenalSlots;
-    //private static JButton primaryButton;
-    //private static JButton secondaryButton;
+    private JButton primaryButton;
+    private JButton secondaryButton;
 
     private BufferedImage background;
     private Timer timer;
@@ -31,12 +32,13 @@ public class Controller extends JPanel implements ActionListener, KeyListener, M
         setBackground(new Color(0, 0, 0));
         loadImageStrips();
 
-        //primaryButton = new JButton("(Primary)");
-        //secondaryButton = new JButton("(Secondary)");
-        //primaryButton.addActionListener(World.getWorld().getController());
-        //secondaryButton.addActionListener(World.getWorld().getController());
-        //add(primaryButton);
-        //add(secondaryButton);
+        primaryButton = new JButton("(Primary)", new ImageIcon(arsenalSlots.getHead().getImage()));
+        secondaryButton = new JButton("(Secondary)", new ImageIcon(arsenalSlots.getHead().getImage()));
+        primaryButton.addActionListener(this);
+        secondaryButton.addActionListener(this);
+        arsenalPanel.add(primaryButton);
+        arsenalPanel.add(secondaryButton);
+        this.add(arsenalPanel);
 
         timer = new Timer(FRAMEDELAY, this);
         timer.start();
