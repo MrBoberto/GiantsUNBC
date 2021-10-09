@@ -7,7 +7,7 @@ public class Shotgun implements Weapon {
     private final double MOMENTUM = 0.85;
     private final int ROUNDCOUNT = 10;
     private final double INACCURACY = 0.1;
-    public final int MAX_DELAY = 4;
+    public final int MAX_DELAY = 40;
     private int currentDelay = 0;
     // Identifies type of gun
     private final int SERIAL = 000;
