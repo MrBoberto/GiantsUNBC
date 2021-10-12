@@ -1,6 +1,6 @@
 # Multiplayer Example | Tic Tac Toe
 ## Introduction
-This programs is an example of multiplayer, that uses packages and local area network communication to allow sincronous gameplay.
+This programs is an example of multiplayer, that uses packages and local area network communication to allow synchronous gameplay.
 
 WE HAVE NOT MADE THIS, the original author can be found here: https://www.youtube.com/c/PROJECTJoza100
 
