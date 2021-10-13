@@ -30,7 +30,7 @@ public class Shotgun implements Weapon {
         ArrayList<Shot> shell = new ArrayList<Shot>(ROUNDCOUNT);
         for (int i = 0; i < ROUNDCOUNT; i++) {
             shell.add(new Shot(x, y, this));
-            System.out.println("Fired shot " + (i + 1));
+//            System.out.println("Fired shot " + (i + 1));
         }
     }
 

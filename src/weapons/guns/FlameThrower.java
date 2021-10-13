@@ -31,7 +31,7 @@ public class FlameThrower implements Weapon {
         ArrayList<Fireball> shell = new ArrayList<Fireball>(ROUNDCOUNT);
         for (int i = 0; i < ROUNDCOUNT; i++) {
             shell.add(new Fireball(x, y, this));
-            System.out.println("Fired fireball " + (i + 1));
+//            System.out.println("Fired fireball " + (i + 1));
         }
     }
 

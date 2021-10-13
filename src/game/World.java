@@ -14,8 +14,10 @@ public class World {
 
         if(choice==1){
             controller = new ServerController();
+            System.out.println("IM SERVER");
         } else if(choice == 2){
             controller = new ClientController();
+            System.out.println("IM CLIENT");
         }
 
     }

@@ -30,7 +30,7 @@ public class SniperRifle implements Weapon {
         ArrayList<Nato> shell = new ArrayList<Nato>(ROUNDCOUNT);
         for (int i = 0; i < ROUNDCOUNT; i++) {
             shell.add(new Nato(x, y, this));
-            System.out.println("Fired nato " + (i + 1));
+//            System.out.println("Fired nato " + (i + 1));
         }
     }
 

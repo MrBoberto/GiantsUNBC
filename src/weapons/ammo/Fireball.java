@@ -32,20 +32,20 @@ public class Fireball extends Ammo implements Projectile {
                 aimY - super.getWeapon().getParent().getY(), 0) - super.getWeapon().getINACCURACY() / 2
                 + super.getWeapon().getINACCURACY() * World.getWorld().getSRandom().nextDouble();
 
-        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
+//        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
         double speed = weapon.getMOMENTUM() / MASS - 0.5 * (weapon.getMOMENTUM() / MASS) * World.getWorld().getSRandom().nextDouble();
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
-            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
+//            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
             velX = World.getWorld().cosAdj(speed, angle);
             velY = World.getWorld().sinOpp(speed, angle);
         } else {
-            System.out.print(", Positive, speed = " + weapon.getMOMENTUM() / MASS);
+//            System.out.print(", Positive, speed = " + weapon.getMOMENTUM() / MASS);
             velX = World.getWorld().sinOpp(speed, angle);
             velY = World.getWorld().cosAdj(speed, angle);
         }
 
-        System.out.println(", velX = " + velX + ", velY = " + velY);
+//        System.out.println(", velX = " + velX + ", velY = " + velY);
 
         pos = new Point((int) super.getX(), (int) super.getY());
         boundRect = new Rectangle(pos.x - texture.getWidth() / 2, pos.y - texture.getHeight() / 2,

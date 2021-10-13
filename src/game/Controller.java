@@ -2,6 +2,7 @@ package game;
 
 import animation.ImageStrip;
 import player.Creature;
+import player.MainPlayer;
 import player.Player;
 import weapons.Projectile;
 
@@ -27,7 +28,7 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
     protected BufferedImage background;
     protected Timer timer;
-    protected Player player;
+    protected MainPlayer player;
 
     public Controller(){
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -36,8 +37,6 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
         timer = new Timer(FRAMEDELAY, this);
         timer.start();
-
-        this.player = new Player(0,WIDTH / 2, HEIGHT / 2, 0);
 
         loadBackground();
     }
@@ -48,13 +47,16 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
         drawBackground(g);
 
-        player.draw(g, this);
-        for (int i = 0; i < livingPlayers.size(); i++) {
-            livingPlayers.get(i).draw(g, this);
+        if(player != null){
+            player.draw(g, this);
+            for (int i = 0; i < livingPlayers.size(); i++) {
+                livingPlayers.get(i).draw(g, this);
+            }
+            for (int j = 0; j < movingAmmo.size(); j++) {
+                movingAmmo.get(j).draw(g, this);
+            }
         }
-        for (int j = 0; j < movingAmmo.size(); j++) {
-            movingAmmo.get(j).draw(g, this);
-        }
+
 
         Toolkit.getDefaultToolkit().sync();
     }
@@ -65,36 +67,45 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if(player!=null)
         player.keyPressed(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        if(player!=null)
         player.keyReleased(e);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if(player!=null)
         player.mouseClicked(e);
+
+        System.out.println(this.getClass().toString());
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if(player!=null)
         player.mousePressed(e);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if(player!=null)
         player.mouseReleased(e);
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        if(player!=null)
         player.mouseEntered(e);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+        if(player!=null)
         player.mouseExited(e);
     }
 

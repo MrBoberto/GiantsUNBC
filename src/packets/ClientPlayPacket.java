@@ -6,11 +6,13 @@ public class ClientPlayPacket implements Serializable {
     private int playerNumber;
     private double x;
     private double y;
+    private double angle;
 
-    public ClientPlayPacket(int playerNumber,double x, double y) {
+    public ClientPlayPacket(int playerNumber,double x, double y, double angle) {
         this.playerNumber = playerNumber;
         this.x = x;
         this.y = y;
+        this.angle = angle;
     }
 
     public int getPlayerNumber() {
@@ -23,5 +25,9 @@ public class ClientPlayPacket implements Serializable {
 
     public double getY() {
         return y;
+    }
+
+    public double getAngle() {
+        return angle;
     }
 }

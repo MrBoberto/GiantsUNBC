@@ -7,19 +7,31 @@ import java.util.ArrayList;
 
 public class ClientStartPacket implements Serializable {
 
-    ArrayList<Player> livingPlayers;
     int playerNumber;
+    private double x;
+    private double y;
+    private double angle;
 
-    public ClientStartPacket(ArrayList<Player> livingPlayers, int playerNumber) {
-        this.livingPlayers = livingPlayers;
+    public ClientStartPacket(int playerNumber, double x, double y, double angle) {
         this.playerNumber = playerNumber;
-    }
-
-    public ArrayList<Player> getLivingPlayers() {
-        return livingPlayers;
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
     }
 
     public int getPlayerNumber() {
         return playerNumber;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getAngle() {
+        return angle;
     }
 }

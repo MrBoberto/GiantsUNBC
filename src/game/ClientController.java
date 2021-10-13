@@ -4,6 +4,8 @@ import packets.ClientPlayPacket;
 import packets.ClientStartPacket;
 import packets.ClientStartPacketRequest;
 import packets.UpdatePacket;
+import player.MainPlayer;
+import player.OtherPlayer;
 import player.Player;
 
 import java.awt.*;
@@ -20,7 +22,7 @@ public class ClientController extends Controller{
         try {
             socket = new Socket("localhost", Controller.PORT);
             connection = new Connection(this, socket);
-            connection.sendPacket(new ClientStartPacketRequest(player));
+            connection.sendPacket(new ClientStartPacketRequest());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,13 +33,29 @@ public class ClientController extends Controller{
         if(object instanceof ClientStartPacket){
             ClientStartPacket packet = (ClientStartPacket) object;
 
-            livingPlayers = packet.getLivingPlayers();
-            player.setPlayerNumber(packet.getPlayerNumber());
-            livingPlayers.set(player.getPlayerNumber(), player);
+            player = new MainPlayer(packet.getPlayerNumber(),packet.getX(), packet.getY(), packet.getAngle());
+
+            for (int i = 0; i < packet.getPlayerNumber(); i++) {
+                livingPlayers.add(i,new OtherPlayer(i,WIDTH / 2, HEIGHT / 2, 0));
+            }
+            livingPlayers.add(player);
+            repaint();
+
+
+
         } else if(object instanceof  UpdatePacket){
             UpdatePacket packet = (UpdatePacket) object;
 
-            livingPlayers.get(packet.getPlayerNumber()).getPos().setLocation(packet.getX(),packet.getY());
+            for (int i = 0; i < livingPlayers.size(); i++) {
+
+                if(i != player.getPlayerNumber()){
+                    livingPlayers.get(i).getPos().setLocation(packet.getX()[i],packet.getY()[i]);
+                    livingPlayers.get(i).setAngle(packet.getAngle()[i]);
+                }
+            }
+
+
+            repaint();
         }
     }
 
@@ -54,12 +72,15 @@ public class ClientController extends Controller{
     @Override
     public void actionPerformed(ActionEvent e) {
         Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
-        player.tick(mouseLoc);
-        for (int j = 0; j < movingAmmo.size(); j++) {
-            movingAmmo.get(j).tick();
+        if(player!=null){
+            player.tick(mouseLoc);
+            for (int j = 0; j < movingAmmo.size(); j++) {
+                movingAmmo.get(j).tick();
+            }
+
+            connection.sendPacket(new ClientPlayPacket(player.getPlayerNumber(),player.getX(),player.getY(), player.getAngle()));
         }
 
-        connection.sendPacket(new ClientPlayPacket(player.getPlayerNumber(),player.getPos().getX(),player.getPos().getY()));
         repaint();
     }
 }

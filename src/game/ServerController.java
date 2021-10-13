@@ -4,6 +4,9 @@ import packets.ClientPlayPacket;
 import packets.ClientStartPacket;
 import packets.ClientStartPacketRequest;
 import packets.UpdatePacket;
+import player.MainPlayer;
+import player.OtherPlayer;
+import player.Player;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +24,7 @@ public class ServerController extends Controller {
     public ServerController() {
         super();
 
-        player.setPlayerNumber(0);
+        player = new MainPlayer(0,WIDTH / 2, HEIGHT / 2, 0);
         livingPlayers.add(player);
 
         if(livingPlayers.indexOf(player) != player.getPlayerNumber()){
@@ -39,24 +42,30 @@ public class ServerController extends Controller {
 
     @Override
     public void packetReceived(Object object) {
-        if(object instanceof ClientPlayPacket){
-            ClientPlayPacket packet = (ClientPlayPacket) object;
-
-            updateField(packet.getPlayerNumber(), packet.getX(),packet.getY());
+        if(object instanceof ClientPlayPacket packet){
+            livingPlayers.get(packet.getPlayerNumber()).getPos().setLocation(packet.getX(), packet.getY());
+            livingPlayers.get(packet.getPlayerNumber()).setAngle(packet.getAngle());
+            updateField();
         } else if(object instanceof ClientStartPacketRequest){
-            ClientStartPacketRequest packet = (ClientStartPacketRequest) object;
 
-            livingPlayers.add(packet.getPlayer());
-            int newPlayerNumber = livingPlayers.indexOf(packet.getPlayer());
-            livingPlayers.get(newPlayerNumber).setPlayerNumber(newPlayerNumber);
-            connection.sendPacket(new ClientStartPacket(livingPlayers, newPlayerNumber));
+            OtherPlayer otherPlayer = new OtherPlayer(livingPlayers.size(),10,10,0);
+            livingPlayers.add(otherPlayer);
+            connection.sendPacket(new ClientStartPacket(otherPlayer.getPlayerNumber(),10,10,0));
         }
     }
 
-    private void updateField(int playerNumber, double x, double y) {
-        connection.sendPacket(new UpdatePacket(playerNumber, x, y));
+    private void updateField() {
+         double[] x = new double[livingPlayers.size()];
+         double[] y = new double[livingPlayers.size()];
+        double[] angle = new double[livingPlayers.size()];
+        for (int i = 0; i < livingPlayers.size(); i++) {
+                x[i]=livingPlayers.get(i).getX();
+            y[i]=livingPlayers.get(i).getY();
+            angle[i]=livingPlayers.get(i).getAngle();
 
-        livingPlayers.get(playerNumber).getPos().setLocation(x,y);
+        }
+        connection.sendPacket(new UpdatePacket(x, y, angle));
+        repaint();
     }
 
     @Override
@@ -76,6 +85,7 @@ public class ServerController extends Controller {
         for (int j = 0; j < movingAmmo.size(); j++) {
             movingAmmo.get(j).tick();
         }
+
         repaint();
     }
 

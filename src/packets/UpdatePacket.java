@@ -6,25 +6,26 @@ import java.io.Serializable;
 
 public class UpdatePacket implements Serializable {
 
-    private int playerNumber;
-    private double x;
-    private double y;
+    private double[] x;
+    private double[] y;
+    double[] angle;
 
-    public UpdatePacket(int playerNumber, double x, double y) {
-        this.playerNumber = playerNumber;
+    public UpdatePacket( double[] x, double[] y, double[] angle) {
         this.x = x;
         this.y = y;
+        this.angle = angle;
     }
 
-    public int getPlayerNumber() {
-        return playerNumber;
-    }
 
-    public double getX() {
+    public double[] getX() {
         return x;
     }
 
-    public double getY() {
+    public double[] getY() {
         return y;
+    }
+
+    public double[] getAngle() {
+        return angle;
     }
 }
