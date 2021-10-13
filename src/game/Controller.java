@@ -14,60 +14,32 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Controller extends JPanel implements ActionListener, KeyListener, MouseListener {
-    // delay between each frame
+public abstract class Controller extends JPanel implements ActionListener, KeyListener, MouseListener {
+    public static final int PORT = 55555;
+
     public final int FRAMEDELAY = 15;
     public final int WIDTH = 1280;
     public final int HEIGHT = WIDTH / 16 * 9;
     public final double GRAVITY = 0.6;
     public final double FRICTION = 1.1; // Friction acting on objects
-    public ArrayList<Creature> livingPlayers = new ArrayList<Creature>();
-    public ArrayList<Projectile> movingAmmo = new ArrayList<Projectile>();
-    private JPanel arsenalPanel = new JPanel();
-    private ImageStrip arsenalSlots;
-    private JButton primaryButton;
-    private JButton secondaryButton;
+    public static ArrayList<Player> livingPlayers = new ArrayList<Player>();
+    public static ArrayList<Projectile> movingAmmo = new ArrayList<Projectile>();
 
-    private BufferedImage background;
-    private Timer timer;
-    private Player player;
+    protected BufferedImage background;
+    protected Timer timer;
+    protected Player player;
 
-    public Controller() {
+    public Controller(){
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
         loadImageStrips();
 
-        primaryButton = new JButton("(Primary)", new ImageIcon(arsenalSlots.getHead().getImage()));
-        secondaryButton = new JButton("(Secondary)", new ImageIcon(arsenalSlots.getHead().getImage()));
-        primaryButton.addActionListener(this);
-        secondaryButton.addActionListener(this);
-        arsenalPanel.add(primaryButton);
-        arsenalPanel.add(secondaryButton);
-        this.add(arsenalPanel);
-
         timer = new Timer(FRAMEDELAY, this);
         timer.start();
 
-        player = new Player(WIDTH / 2, HEIGHT / 2, 0);
-        livingPlayers.add(player);
+        this.player = new Player(0,WIDTH / 2, HEIGHT / 2, 0);
 
         loadBackground();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
-        for (int i = 0; i < livingPlayers.size(); i++) {
-            livingPlayers.get(i).tick(mouseLoc);
-        }
-        for (int j = 0; j < movingAmmo.size(); j++) {
-            movingAmmo.get(j).tick();
-        }
-        repaint();
-    }
-
-    private void loadImage() {
-
     }
 
     @Override
@@ -86,6 +58,7 @@ public class Controller extends JPanel implements ActionListener, KeyListener, M
 
         Toolkit.getDefaultToolkit().sync();
     }
+
 
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -157,8 +130,8 @@ public class Controller extends JPanel implements ActionListener, KeyListener, M
         for (int i = -1; i <= -1; i++) {
             imgLocStr.add("weapon (" + i + ").png");
         }
-        arsenalSlots = buildImageStrip(imgLocStr, defLocStr);
-        System.out.println(arsenalSlots.toString());
+//        arsenalSlots = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(arsenalSlots.toString());
         imgLocStr.clear();
     }
 
@@ -188,4 +161,8 @@ public class Controller extends JPanel implements ActionListener, KeyListener, M
         }
         return new ImageStrip(images, imageFileSubstring);
     }
+
+    public abstract void packetReceived(Object object);
+
+    public abstract void close();
 }

@@ -27,6 +27,8 @@ public class Player extends Thing implements Creature {
     private double velY = 0;
     private Rectangle boundRect;
 
+    private int playerNumber;
+
     // Preset velocities of player actions
     public final double VELJUMP = -12;
     public final double VELSNEAK = 2.2;
@@ -76,12 +78,12 @@ public class Player extends Thing implements Creature {
     // Can be 0 = primary or 1 = secondary
     private int selectedWeapon = 0;
 
-    public Player(double x, double y, double angle) {
+    public Player(int playerNumber, double x, double y, double angle) {
         super(x, y, angle);
 
+        this.playerNumber = playerNumber;
         loadImageStrips();
         currentImage = standing.getHead();
-
         pos = new Point((int) super.getX(), (int) super.getY());
         pocketMoney = 0;
         boundRect = new Rectangle(pos.x - currentImage.getImage().getWidth() / 2,
@@ -91,6 +93,14 @@ public class Player extends Thing implements Creature {
         weapons.add(new Shotgun(this));
         weapons.add(new FlameThrower(this));
         weapons.add(new SniperRifle(this));
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
+    }
+
+    public void setPlayerNumber(int playerNumber) {
+        this.playerNumber = playerNumber;
     }
 
     /**

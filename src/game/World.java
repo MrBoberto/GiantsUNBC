@@ -1,15 +1,23 @@
 package game;
 
+import javax.swing.*;
 import java.security.SecureRandom;
 
 public class World {
     private static World theWorld;
-    private Controller theController;
+    private Controller controller;
     private SecureRandom sRandom = new SecureRandom();
 
     private World()
     {
-        theController = new Controller();
+        int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client"));
+
+        if(choice==1){
+            controller = new ServerController();
+        } else if(choice == 2){
+            controller = new ClientController();
+        }
+
     }
 
     /**
@@ -25,7 +33,7 @@ public class World {
     }
 
     public Controller getController() {
-        return this.theController;
+        return this.controller;
     }
 
     public double atan(double x, double y, double angle) {
