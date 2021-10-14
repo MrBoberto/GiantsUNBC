@@ -1,0 +1,28 @@
+package ThreadsLearn;
+
+import static ThreadsLearn.ThreadColor.ANSI_RED;
+/*
+Once we extend thread class now we can use all the methods that are provided by the thread class
+ */
+public class AnotheThread extends Thread{
+
+    @Override
+    public void run() {
+        System.out.println(ANSI_RED + "Hello from ."+ currentThread().getName());
+
+       /*
+       We are making thread to sleep for three seconds.
+       We can use this to make the thread sleep and let other thread do the job or fetch the data
+       so i think after sleep command it just shuts down and let other thread run first.
+        */
+        try{
+            Thread.sleep(5000);
+        }catch (InterruptedException e){
+            System.out.println(ANSI_RED+" Another thread woke me up");
+            return;
+        }
+
+        System.out.println(ANSI_RED+"Three seconds have passed and i am awake");
+
+    }
+}
