@@ -1,8 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Window extends JFrame {
+public class Window extends JFrame implements Runnable{
     public Expo expo;
+
     public Window(int width, int height){
         this.expo = new Expo();
         setTitle("Your Mom");// title of the main window
@@ -15,5 +16,11 @@ public class Window extends JFrame {
         setVisible(true);// to make our window visible
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// close the program when the window is close
+    }
+
+    @Override
+    public synchronized void run() {
+        System.out.println(Thread.currentThread().getName());
+       add(expo);
     }
 }
