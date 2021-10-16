@@ -31,8 +31,8 @@ public class Controller extends JPanel implements ActionListener, KeyListener, M
 
         //primaryButton = new JButton("(Primary)");
         //secondaryButton = new JButton("(Secondary)");
-        //primaryButton.addActionListener(World.getWorld().getController());
-        //secondaryButton.addActionListener(World.getWorld().getController());
+        //primaryButton.addActionListener(this);
+        //secondaryButton.addActionListener(this);
         //add(primaryButton);
         //add(secondaryButton);
 

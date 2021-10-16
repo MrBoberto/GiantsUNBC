@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class FlameThrower implements Weapon {
     private Object parent;
     private final double MOMENTUM = 0.28;
-    private final int ROUNDCOUNT = 40;
+    private final int ROUNDCOUNT = 20;
     private final double INACCURACY = 0.5;
     public final int MAX_DELAY = 0;
     private int currentDelay = 0;
