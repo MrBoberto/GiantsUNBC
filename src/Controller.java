@@ -12,7 +12,7 @@ public class Controller extends JPanel implements ActionListener, KeyListener, M
     public final int FRAMEDELAY = 15;
     public final int WIDTH = 1280;
     public final int HEIGHT = WIDTH / 16 * 9;
-    public final double GRAVITY = 0.6;
+    public final double GRAVITY = 0.6;  // Unnecessary in top-down view
     public final double FRICTION = 1.1;
     public ArrayList<Creature> livingPlayers = new ArrayList<Creature>();
     public ArrayList<Projectile> movingAmmo = new ArrayList<Projectile>();
