@@ -2,9 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Window extends JFrame {
+
+    private ServerGame game;
     public Expo expo;
-    public Window(int width, int height){
-        this.expo = new Expo();
+    public Window(ServerGame game, int width, int height){
+        this.game = game;
+
         setTitle("Your Mom");// title of the main window
         setResizable(false);
         getContentPane().setPreferredSize(new Dimension(width, height));// set the size of the window

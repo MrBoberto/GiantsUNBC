@@ -18,6 +18,8 @@ public class Expo extends JPanel {
     int x = 0;
     int y = 0;
 
+    ServerGame game;
+
     public enum VerticalKey {
 
         UP, DOWN, NONE;
@@ -31,7 +33,9 @@ public class Expo extends JPanel {
     private VerticalKey verticalKeyState = VerticalKey.NONE;
     private HorizontalKey horizontalKeyState = HorizontalKey.NONE;
 
-    public Expo() {
+    public Expo(ServerGame game) {
+        this.game =game;
+
         bindKeyStrokeTo(WHEN_IN_FOCUSED_WINDOW, "pressed.down", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), new VerticalAction(VerticalKey.DOWN));
         bindKeyStrokeTo(WHEN_IN_FOCUSED_WINDOW, "released.down", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, true), new VerticalAction(VerticalKey.NONE));
         bindKeyStrokeTo(WHEN_IN_FOCUSED_WINDOW, "pressed.up", KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), new VerticalAction(VerticalKey.UP));
@@ -76,6 +80,7 @@ public class Expo extends JPanel {
                 }
 
                 repaint();
+                game.inputReceived(x,y);
             }
         });
         timer.start();
@@ -94,6 +99,12 @@ public class Expo extends JPanel {
         super.paintComponent(g);
         g.setColor(Color.BLUE);
         g.drawRect(x, y, 100, 100);
+
+        for (int i = 0; i < Game.playersPositions.length; i++) {
+            if(Game.playersPositions[i][0] != 0 && Game.playersPositions[i][1] != 0){
+                g.drawRect(Game.playersPositions[i][0] , Game.playersPositions[i][1] , 100, 100);
+            }
+        }
     }
 
     public void setVerticalKeyState(VerticalKey verticalKeyState) {
