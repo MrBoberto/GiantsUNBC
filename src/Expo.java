@@ -37,6 +37,12 @@ public class Expo extends JPanel {
         bindKeyStrokeTo(WHEN_IN_FOCUSED_WINDOW, "pressed.up", KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), new VerticalAction(VerticalKey.UP));
         bindKeyStrokeTo(WHEN_IN_FOCUSED_WINDOW, "released.up", KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, true), new VerticalAction(VerticalKey.NONE));
 
+        bindKeyStrokeTo(WHEN_IN_FOCUSED_WINDOW, "pressed.left", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), new HorizontalAction(HorizontalKey.LEFT));
+        bindKeyStrokeTo(WHEN_IN_FOCUSED_WINDOW, "released.left", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true), new HorizontalAction(HorizontalKey.NONE));
+        bindKeyStrokeTo(WHEN_IN_FOCUSED_WINDOW, "pressed.right", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), new HorizontalAction(HorizontalKey.RIGHT));
+        bindKeyStrokeTo(WHEN_IN_FOCUSED_WINDOW, "released.right", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true), new HorizontalAction(HorizontalKey.NONE));
+
+
         Timer timer = new Timer(40, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -48,10 +54,25 @@ public class Expo extends JPanel {
                         y += 2;
                         break;
                 }
+
+                switch (horizontalKeyState) {
+                    case LEFT:
+                        x -= 2;
+                        break;
+                    case RIGHT:
+                        x += 2;
+                        break;
+                }
+
                 if (y + 100 > getHeight()) {
                     y = getHeight() - 100;
                 } else if (y < 0) {
                     y = 0;
+                }
+                if (x + 100 > getWidth()) {
+                    x = getWidth() - 100;
+                } else if (x < 0) {
+                    x = 0;
                 }
 
                 repaint();
@@ -82,6 +103,7 @@ public class Expo extends JPanel {
 
     public void setHorizontalKeyState(HorizontalKey horizontalKeyState) {
         this.horizontalKeyState = horizontalKeyState;
+        System.out.println(horizontalKeyState);
     }
 
     public class VerticalAction extends AbstractAction {
@@ -95,6 +117,20 @@ public class Expo extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             setVerticalKeyState(verticalKey);
+        }
+
+    }
+    public class HorizontalAction extends AbstractAction {
+
+        private HorizontalKey horizontalKey;
+
+        public HorizontalAction(HorizontalKey horizontalKey) {
+            this.horizontalKey = horizontalKey;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            setHorizontalKeyState(horizontalKey);
         }
 
     }
