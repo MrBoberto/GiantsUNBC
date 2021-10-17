@@ -17,7 +17,9 @@ public class Expo extends JPanel {
 
     int x = 0;
     int y = 0;
-
+/*
+this enum just contains the constants
+ */
     public enum VerticalKey {
 
         UP, DOWN, NONE;
@@ -43,7 +45,7 @@ public class Expo extends JPanel {
         bindKeyStrokeTo(WHEN_IN_FOCUSED_WINDOW, "released.right", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true), new HorizontalAction(HorizontalKey.NONE));
 
 
-        Timer timer = new Timer(40, new ActionListener() {
+        Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switch (verticalKeyState) {
@@ -94,6 +96,7 @@ public class Expo extends JPanel {
         super.paintComponent(g);
         g.setColor(Color.BLUE);
         g.drawRect(x, y, 100, 100);
+        g.drawRect(x+50, y+50, 100, 100);
     }
 
     public void setVerticalKeyState(VerticalKey verticalKeyState) {
