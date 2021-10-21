@@ -1,12 +1,10 @@
 package game;
 
-import packets.ClientPlayPacket;
-import packets.ClientStartPacket;
-import packets.ClientStartPacketRequest;
-import packets.UpdatePacket;
+import packets.ClientUpdatePacket;
+import packets.StartPacket;
+import packets.StartRequest;
 import player.MainPlayer;
 import player.OtherPlayer;
-import player.Player;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,61 +17,63 @@ public class ServerController extends Controller {
     private ServerSocket serverSocket;
     private Socket socket;
 
-    private Connection connection;
+    private InputConnection inputConnection;
+    private OutputConnection outputConnection;
 
     public ServerController() {
         super();
 
-        player = new MainPlayer(0,WIDTH / 2, HEIGHT / 2, 0);
+        player = new MainPlayer(0, WIDTH / 2, HEIGHT / 2, 0);
         livingPlayers.add(player);
 
-        if(livingPlayers.indexOf(player) != player.getPlayerNumber()){
+
+        if (livingPlayers.indexOf(player) != player.getPlayerNumber()) {
             System.out.println("Error: Player " + player.getPlayerNumber() + " not matching its index.");
         }
         try {
             serverSocket = new ServerSocket(Controller.PORT);
+            System.out.println("waiting for connection...");
             socket = serverSocket.accept();
-            connection = new Connection(this, socket);
-        }catch (IOException e){
+            System.out.println("connection accepted");
+            outputConnection = new OutputConnection(this, socket);
+            System.out.println("output connection complete");
+            inputConnection = new InputConnection(this, socket);
+            System.out.println("input connection complete");
+
+  //          outputConnection.setGameRunning(true);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println("server + client connected.");
 
     }
 
     @Override
     public void packetReceived(Object object) {
-        if(object instanceof ClientPlayPacket packet){
+        if (object instanceof ClientUpdatePacket) {
+            ClientUpdatePacket packet = (ClientUpdatePacket) object;
             livingPlayers.get(packet.getPlayerNumber()).getPos().setLocation(packet.getX(), packet.getY());
             livingPlayers.get(packet.getPlayerNumber()).setAngle(packet.getAngle());
-            updateField();
-        } else if(object instanceof ClientStartPacketRequest){
 
-            OtherPlayer otherPlayer = new OtherPlayer(livingPlayers.size(),10,10,0);
+            System.out.println("Received update packet");
+            repaint();
+        } else if (object instanceof StartRequest) {
+
+            OtherPlayer otherPlayer = new OtherPlayer(livingPlayers.size(), 10, 10, 0);
             livingPlayers.add(otherPlayer);
-            connection.sendPacket(new ClientStartPacket(otherPlayer.getPlayerNumber(),10,10,0));
+            outputConnection.sendPacket(new StartPacket(otherPlayer.getPlayerNumber(), 10, 10, 0));
+            System.out.println("Start request received and resent.");
         }
-    }
-
-    private void updateField() {
-         double[] x = new double[livingPlayers.size()];
-         double[] y = new double[livingPlayers.size()];
-        double[] angle = new double[livingPlayers.size()];
-        for (int i = 0; i < livingPlayers.size(); i++) {
-                x[i]=livingPlayers.get(i).getX();
-            y[i]=livingPlayers.get(i).getY();
-            angle[i]=livingPlayers.get(i).getAngle();
-
-        }
-        connection.sendPacket(new UpdatePacket(x, y, angle));
-        repaint();
     }
 
     @Override
     public void close() {
-        try{
-            connection.close();
+        try {
+            inputConnection.close();
+            outputConnection.close();
             serverSocket.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
