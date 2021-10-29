@@ -21,6 +21,7 @@ public class Fireball extends Ammo implements Projectile {
     private double angle;
     private double velX;
     private double velY;
+    private final int SERIAL = 002;
 
     public Fireball(double aimX, double aimY, Weapon weapon) {
         super(weapon.getParent().getX(), weapon.getParent().getY(), weapon);
@@ -113,5 +114,10 @@ public class Fireball extends Ammo implements Projectile {
     @Override
     public Rectangle getBounds() {
         return boundRect;
+    }
+
+    @Override
+    public int getSERIAL() {
+        return SERIAL;
     }
 }

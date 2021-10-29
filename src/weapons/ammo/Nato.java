@@ -22,6 +22,7 @@ public class Nato extends Ammo implements Projectile {
     private double angle;
     private double velX;
     private double velY;
+    private final int SERIAL = 001;
 
     /**
      *
@@ -124,5 +125,10 @@ public class Nato extends Ammo implements Projectile {
     @Override
     public Rectangle getBounds() {
         return boundRect;
+    }
+
+    @Override
+    public int getSERIAL() {
+        return SERIAL;
     }
 }
