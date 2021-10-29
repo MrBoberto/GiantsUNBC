@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-public class MainPlayer extends  Player {
+public class MainPlayer extends Player {
 
     public MainPlayer(int playerNumber, double x, double y, double angle) {
         super(playerNumber, x, y, angle);
