@@ -26,9 +26,9 @@ public abstract class Player extends Thing implements Creature {
     protected double velX = 0;
     protected double velY = 0;
     protected Rectangle boundRect;
-    protected int health = 100;
+    protected double health = 100;
     protected int killCount = 0;
-    protected int damageMultiplier = 1;
+    protected double damageMultiplier = 1;
 
     protected int playerNumber;
 
@@ -208,18 +208,18 @@ public abstract class Player extends Thing implements Creature {
         return boundRect;
     }
 
-    public int getHealth() {
+    public double getHealth() {
         return health;
     }
 
-    public void modifyHealth(int healthMod) {
+    public void modifyHealth(double healthMod) {
         this.health += healthMod;
         if (health < 0) {
             health = 0;
         }
     }
 
-    public int getDamageMultiplier() {
+    public double getDamageMultiplier() {
         return damageMultiplier;
     }
 

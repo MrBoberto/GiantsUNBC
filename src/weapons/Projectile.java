@@ -11,4 +11,5 @@ public interface Projectile {
      double getX();
      double getY();
      int getSERIAL();
+     Weapon getWeapon();
 }

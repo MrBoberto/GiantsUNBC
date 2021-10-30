@@ -5,6 +5,9 @@ import packets.StartPacket;
 import packets.StartRequest;
 import player.MainPlayer;
 import player.OtherPlayer;
+import player.Player;
+import weapons.Projectile;
+import weapons.ammo.Ammo;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -84,6 +87,22 @@ public class ServerController extends Controller {
         player.tick(mouseLoc);
         for (int j = 0; j < movingAmmo.size(); j++) {
             movingAmmo.get(j).tick();
+            // Player who was hit (null if no one was hit)
+            Player victim = EntityCollision.getVictim(movingAmmo.get(j));
+            if (victim != null && victim != movingAmmo.get(j).getWeapon().getParent()) {
+                Projectile ammo = movingAmmo.get(j);
+                if (ammo.getSERIAL() != 002) {
+                    movingAmmo.remove(j);
+                }
+                victim.modifyHealth(-1 * ammo.getWeapon().getDamage());
+                if (victim.getHealth() == 0) {
+                    livingPlayers.remove(victim);
+                    Player killer = ammo.getWeapon().getParent();
+                    killer.incrementKillCount();
+                    System.out.println(victim.getPlayerNumber() + " was memed by " +
+                            killer.getPlayerNumber());
+                }
+            }
         }
 
         repaint();
