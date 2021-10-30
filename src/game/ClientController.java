@@ -22,7 +22,7 @@ public class ClientController extends Controller{
         try {
             System.out.println("waiting for connection...");
 
-            socket = new Socket("localhost", Controller.PORT);
+            socket = new Socket("142.207.59.140", Controller.PORT);
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socket);

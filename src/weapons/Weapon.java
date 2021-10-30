@@ -1,10 +1,11 @@
 package weapons;
 
 import game.Thing;
+import player.Player;
 
 public interface Weapon {
      void shoot(double x, double y);
-     Thing getParent();
+     Player getParent();
     // Measured in kg * pixels / sec
      double getMOMENTUM();
      double getINACCURACY();
@@ -12,6 +13,8 @@ public interface Weapon {
      int getCurrentDelay();
      void setCurrentDelay(int currentDelay);
      int getSERIAL();
-    // Returns the name of the weapon
+     // Returns the name of the weapon
      String toString();
+     // Returns the damage each bullet does
+     double getDamage();
 }

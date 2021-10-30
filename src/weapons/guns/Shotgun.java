@@ -1,13 +1,14 @@
 package weapons.guns;
 
 import game.Thing;
+import player.Player;
 import weapons.Weapon;
 import weapons.ammo.Shot;
 
 import java.util.ArrayList;
 
 public class Shotgun implements Weapon {
-    private Thing parent;
+    private Player parent;
     private final double MOMENTUM = 0.85;
     private final int ROUNDCOUNT = 10;
     private final double INACCURACY = 0.1;
@@ -15,8 +16,9 @@ public class Shotgun implements Weapon {
     private int currentDelay = 0;
     // Identifies type of gun
     private final int SERIAL = 000;
+    private final double DAMAGE = 10;
 
-    public Shotgun(Thing parent) {
+    public Shotgun(Player parent) {
         this.parent = parent;
     }
 
@@ -35,7 +37,7 @@ public class Shotgun implements Weapon {
     }
 
     @Override
-    public Thing getParent() {
+    public Player getParent() {
         return parent;
     }
 
@@ -72,5 +74,10 @@ public class Shotgun implements Weapon {
     @Override
     public String toString() {
         return SERIAL + ", weapons.guns.Shotgun";
+    }
+
+    @Override
+    public double getDamage() {
+        return DAMAGE * parent.getDamageMultiplier();
     }
 }

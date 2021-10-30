@@ -33,4 +33,8 @@ public class Thing {
     public void setAngle(double angle) {
         this.angle = angle;
     }
+
+    public double getDamageMultiplier() {
+        return
+    }
 }

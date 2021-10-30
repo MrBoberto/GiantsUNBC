@@ -26,6 +26,9 @@ public abstract class Player extends Thing implements Creature {
     protected double velX = 0;
     protected double velY = 0;
     protected Rectangle boundRect;
+    protected int health = 100;
+    protected int killCount = 0;
+    protected int damageMultiplier = 1;
 
     protected int playerNumber;
 
@@ -104,6 +107,14 @@ public abstract class Player extends Thing implements Creature {
         this.playerNumber = playerNumber;
     }
 
+    public int getKillCount() {
+        return killCount;
+    }
+
+    public void incrementKillCount() {
+        this.killCount++;
+    }
+
     /**
      * Determines which animation is being played and which frame should currently be played
      */
@@ -173,8 +184,6 @@ public abstract class Player extends Thing implements Creature {
                 currentImage.getImage().getHeight());
     }
 
-
-
     public Point getPos() {
         return pos;
     }
@@ -197,6 +206,25 @@ public abstract class Player extends Thing implements Creature {
 
     public Rectangle getBounds() {
         return boundRect;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void modifyHealth(int healthMod) {
+        this.health += healthMod;
+        if (health < 0) {
+            health = 0;
+        }
+    }
+
+    public int getDamageMultiplier() {
+        return damageMultiplier;
+    }
+
+    public void setDamageMultiplier(int damageMultiplier) {
+        this.damageMultiplier = damageMultiplier;
     }
 
     /**

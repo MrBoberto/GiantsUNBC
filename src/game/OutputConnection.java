@@ -62,7 +62,7 @@ public class OutputConnection implements Runnable {
 
             }
             try {
-                Thread.sleep(10);
+                Thread.sleep(5);
             } catch(InterruptedException e) {
                 e.printStackTrace();
             }

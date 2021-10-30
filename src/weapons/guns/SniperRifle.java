@@ -1,13 +1,14 @@
 package weapons.guns;
 
 import game.Thing;
+import player.Player;
 import weapons.Weapon;
 import weapons.ammo.Nato;
 
 import java.util.ArrayList;
 
 public class SniperRifle implements Weapon {
-    private Thing parent;
+    private Player parent;
     private final double MOMENTUM = 15;
     private final int ROUNDCOUNT = 1;
     private final double INACCURACY = 0;
@@ -15,8 +16,9 @@ public class SniperRifle implements Weapon {
     private int currentDelay = 0;
     // Identifies type of gun
     private final int SERIAL = 001;
+    private final double DAMAGE = 100;
 
-    public SniperRifle(Thing parent) {
+    public SniperRifle(Player parent) {
         this.parent = parent;
     }
 
@@ -35,7 +37,7 @@ public class SniperRifle implements Weapon {
     }
 
     @Override
-    public Thing getParent() {
+    public Player getParent() {
         return parent;
     }
 
@@ -72,5 +74,10 @@ public class SniperRifle implements Weapon {
     @Override
     public String toString() {
         return SERIAL + ", Sniper Rifle";
+    }
+
+    @Override
+    public double getDamage() {
+        return DAMAGE * parent.getDamageMultiplier();
     }
 }
