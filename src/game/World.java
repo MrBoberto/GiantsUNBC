@@ -13,12 +13,12 @@ public class World {
     {
         boolean isValidPlayerName = false;
         while (!isValidPlayerName) {
-            name = (JOptionPane.showInputDialog("Enter your username"));
-            if (name != null && name != "") {
+            name = (JOptionPane.showInputDialog("Enter your username")) + "";
+            if (!name.equals("")) {
+                System.out.println("Your username is: " + name);
                 isValidPlayerName = true;
             }
         }
-
 
         int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client"));
 
