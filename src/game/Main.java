@@ -36,7 +36,7 @@ public class Main {
         try {
             String ipAddress = String.valueOf(InetAddress.getLocalHost());
             String[] ipAddressClean = ipAddress.split("/", 2);
-            System.out.println("The ip address: "+ipAddressClean[1]);
+            System.out.println("The ip address: "+ipAddress);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
