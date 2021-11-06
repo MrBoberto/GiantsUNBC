@@ -51,7 +51,7 @@ public class MainMenuTest {
         startButton.setForeground(Color.RED);
         startButton.setFont(button);
         startButton.setBounds(300,400,100,400);
-        startButton.add(ActionListener(buttonListener));
+        //startButton.add(ActionListener(buttonListener));
 
 
 

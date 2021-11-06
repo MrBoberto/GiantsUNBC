@@ -219,6 +219,10 @@ public abstract class Player extends Thing implements Creature {
         g.drawRect(pos.x - currentImage.getImage().getWidth() / 2,
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.drawString(playerName, pos.x,
+                pos.y - currentImage.getImage().getHeight() / 2);
     }
 
     public Point getPos() {
