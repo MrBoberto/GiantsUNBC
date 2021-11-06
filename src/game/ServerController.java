@@ -65,7 +65,8 @@ public class ServerController extends Controller {
 
             OtherPlayer otherPlayer = new OtherPlayer(livingPlayers.size(), 10, 10, 0);
             livingPlayers.add(otherPlayer);
-            outputConnection.sendPacket(new StartPacket(otherPlayer.getPlayerNumber(), 10, 10, 0));
+            outputConnection.sendPacket(new StartPacket(otherPlayer.getPlayerNumber(), 10, 10, 0,
+                    otherPlayer.getPlayerName()));
             System.out.println("Start request received and resent.");
         }
     }

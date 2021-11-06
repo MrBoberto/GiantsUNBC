@@ -128,7 +128,7 @@ public abstract class Player extends Thing implements Creature {
      */
     public void incrementKillCount() {
         this.killCount++;
-        // kdr stays at -1 as long as there are no deaths so it is easy to identify
+        // kdr stays at -1 as long as there are no deaths so that it is easy to identify
         if (deathCount != 0) {
             kdr = killCount / deathCount;
         } else {
