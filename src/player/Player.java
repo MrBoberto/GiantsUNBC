@@ -1,5 +1,6 @@
 package player;
 
+import StartMenu.MainMenuTest;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.Thing;
@@ -89,6 +90,15 @@ public abstract class Player extends Thing implements Creature {
         super(x, y, angle);
 
         this.playerNumber = playerNumber;
+        if (MainMenuTest.playerName.equals("")) {
+            if (playerNumber == 0) {
+                playerName = "Host";
+            } else {
+                playerName = "Guest";
+            }
+        } else {
+            playerName = MainMenuTest.playerName;
+        }
 
         // Graphics-related
         setColour();
@@ -224,8 +234,10 @@ public abstract class Player extends Thing implements Creature {
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
 
-        Font font = new Font("Arial", Font.BOLD, 15);
-
+        Font font = new Font("Arial", Font.BOLD, 20);
+        FontMetrics stringSize = g2d.getFontMetrics(font);
+        g2d.drawString(playerName, pos.x - (stringSize.stringWidth(playerName)) / 2,
+                pos.y - currentImage.getImage().getHeight() / 2);
     }
 
     public Point getPos() {

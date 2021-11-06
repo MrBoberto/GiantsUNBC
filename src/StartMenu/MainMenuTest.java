@@ -12,7 +12,7 @@ public class MainMenuTest {
     JPanel titleNamePanel;
     JLabel titleNameLabel;
     JPanel startButtonPanel;
-    String playerName = "";
+    public static String playerName = "";
 
     ButtonListener buttonListener = new ButtonListener();
 
@@ -110,7 +110,9 @@ public class MainMenuTest {
                         isValidPlayerName = true;
                     }
                 }
-
+                if (playerName == null) {
+                    playerName = "";
+                }
             }
         });
 
