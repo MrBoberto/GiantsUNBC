@@ -15,7 +15,9 @@ public class World {
         boolean isValidPlayerName = false;
         while (!isValidPlayerName) {
             name = (JOptionPane.showInputDialog("Enter your username")) + "";
-            if (!name.equals("")) {
+            if (name == null) {
+                System.out.println("Your Mum");
+            } else if (!name.equals("")) {
                 System.out.println("Your username is: " + name);
                 isValidPlayerName = true;
             }
