@@ -94,10 +94,14 @@ public class ServerController extends Controller {
                 if (ammo.getSERIAL() != 002) {
                     movingAmmo.remove(j);
                 }
+                // Player
+                Player killer = ammo.getWeapon().getParent();
                 victim.modifyHealth(-1 * ammo.getWeapon().getDamage());
+                killer.addTDO(-1 * ammo.getWeapon().getDamage());
+
                 if (victim.getHealth() == 0) {
+                    victim.incrementDeathCount();
                     livingPlayers.remove(victim);
-                    Player killer = ammo.getWeapon().getParent();
                     killer.incrementKillCount();
                     System.out.println(victim.getPlayerNumber() + " was memed by " +
                             killer.getPlayerNumber());
