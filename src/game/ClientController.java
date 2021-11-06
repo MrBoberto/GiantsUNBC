@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class ClientController extends Controller{
 
@@ -21,8 +22,11 @@ public class ClientController extends Controller{
         super();
         try {
             System.out.println("waiting for connection...");
+            Scanner inputReader = new Scanner(System.in);
+            System.out.println("Please ip address: ");
+            String ipAddress = inputReader.nextLine(); //get file name
 
-            socket = new Socket("142.207.59.140", Controller.PORT);
+            socket = new Socket(ipAddress, Controller.PORT);
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socket);
