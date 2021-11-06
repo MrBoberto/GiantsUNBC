@@ -10,6 +10,8 @@ public class Main {
         JFrame window = new JFrame("The Boyz");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
+
         window.add(World.getWorld().getController());
         window.addKeyListener(World.getWorld().getController());
         window.addMouseListener(World.getWorld().getController());
