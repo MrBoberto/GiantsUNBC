@@ -23,7 +23,7 @@ public class ClientController extends Controller{
         super();
         try {
             System.out.println("waiting for connection...");
-            Scanner inputReader = new Scanner(System.in);
+            //Scanner inputReader = new Scanner(System.in);
 
             socket = new Socket("142.207.59.6", Controller.PORT);
             socket = new Socket("142.207.59.140", Controller.PORT);

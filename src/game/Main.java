@@ -10,8 +10,6 @@ public class Main {
         JFrame window = new JFrame("The Boyz");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
-
         window.add(World.getWorld().getController());
         window.addKeyListener(World.getWorld().getController());
         window.addMouseListener(World.getWorld().getController());
@@ -30,7 +28,9 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            System.out.println("The ip address: "+InetAddress.getLocalHost());
+            String ipAddress = String.valueOf(InetAddress.getLocalHost());
+            String[] ipAddressClean = ipAddress.split("/", 2);
+            System.out.println("The ip address: "+ipAddressClean[1]);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
