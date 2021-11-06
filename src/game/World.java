@@ -19,7 +19,6 @@ public class World {
             controller = new ClientController();
             System.out.println("IM CLIENT");
         }
-
     }
 
     /**

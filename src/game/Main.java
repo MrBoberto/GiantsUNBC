@@ -1,10 +1,12 @@
 package game;
 
 import javax.swing.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class Main {
 
-    public static void startupGui() {
+    public static void startupGui()  {
         JFrame window = new JFrame("The Boyz");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -25,6 +27,13 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        try {
+            String ipAddress = String.valueOf(InetAddress.getLocalHost());
+            String[] ipAddressClean = ipAddress.split("/", 2);
+            System.out.println("The ip address: "+ipAddressClean[1]);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         SwingUtilities.invokeLater(Main::startupGui);
     }
 }
