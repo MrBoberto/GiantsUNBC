@@ -1,6 +1,5 @@
 package StartMenu;
 
-import javax.naming.Name;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,10 +31,12 @@ public class MainMenuTest {
     public MainMenuTest(){
         wow = new JFrame("Your Mom");
         wow.setSize(800,600);
+        //wow.setExtendedState(JFrame.MAXIMIZED_BOTH);
         wow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         wow.getContentPane().setBackground(Color.BLACK);
         wow.setLayout(null);
-        wow.setVisible(true);// to make window appear on the screen
+        // to make window appear on the screen
         con  = wow.getContentPane();
 
         titleNamePanel = new JPanel();
@@ -96,6 +97,7 @@ public class MainMenuTest {
 
         con.add(startButtonPanel);
         con.add(titleNamePanel);
+        wow.setVisible(true);
 
     }
 
