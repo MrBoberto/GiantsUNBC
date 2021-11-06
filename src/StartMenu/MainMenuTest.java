@@ -3,6 +3,7 @@ package StartMenu;
 import javax.naming.Name;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class MainMenuTest {
 
@@ -12,12 +13,13 @@ public class MainMenuTest {
     JLabel titleNameLabel;
     JPanel startButtonPanel;
 
+    ButtonListener buttonListener = new ButtonListener();
+
     Font titleFont = new Font("Times New Roman",Font.PLAIN,90);
     Font button = new Font("Times New Roman",Font.PLAIN,30);
     JButton startButton, quit, name;
     public static void main(String[] args) {
         new MainMenuTest();
-
 
     }
 
@@ -40,38 +42,39 @@ public class MainMenuTest {
 
 
 
-
-
         startButtonPanel = new JPanel();
         startButtonPanel.setBackground(Color.BLACK);
-        startButtonPanel.setBounds(300,400,300,200);
+        startButtonPanel.setBounds(300,400,100,200);
 
         startButton = new JButton("Start");
         startButton.setBackground(Color.black);
         startButton.setForeground(Color.RED);
         startButton.setFont(button);
+        startButton.setBounds(300,400,100,400);
+        startButton.add(ActionListener(buttonListener));
+
+
 
         quit = new JButton("quit");
         quit.setBackground(Color.black);
         quit.setForeground(Color.RED);
         quit.setFont(button);
-        quit.setBounds(300,400,200,400);
+        quit.setBounds(300,400,100,400);
 
         name = new JButton("Name");
         name.setBackground(Color.black);
         name.setForeground(Color.RED);
         name.setFont(button);
-        name.setBounds(300,400,300,300);
+        name.setBounds(300,400,100,300);
 
 
         titleNamePanel.add(titleNameLabel);
         startButtonPanel.add(startButton);
-        startButtonPanel.add(quit);
         startButtonPanel.add(name);
+        startButtonPanel.add(quit);
 
         con.add(startButtonPanel);
         con.add(titleNamePanel);
-
 
     }
 

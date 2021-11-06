@@ -24,6 +24,12 @@ public class ClientController extends Controller{
         try {
             System.out.println("waiting for connection...");
 
+            socket = new Socket("142.207.59.6", Controller.PORT);
+            socket = new Socket("142.207.59.140", Controller.PORT);
+            //String ipAddress= JOptionPane.showInputDialog ("Please ip address:");
+            //System.out.println("You entered" + ipAddress + ".");
+            System.out.println("Please enter ip address: ");
+            String ipAddress = inputReader.nextLine(); //get file name
 
             //socket = new Socket("142.207.59.6", Controller.PORT);
             //socket = new Socket("142.207.59.140", Controller.PORT);
