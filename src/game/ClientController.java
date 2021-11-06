@@ -7,6 +7,7 @@ import packets.ServerUpdatePacket;
 import player.MainPlayer;
 import player.OtherPlayer;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -23,8 +24,11 @@ public class ClientController extends Controller{
         try {
             System.out.println("waiting for connection...");
             Scanner inputReader = new Scanner(System.in);
-            System.out.println("Please ip address: ");
-            String ipAddress = inputReader.nextLine(); //get file name
+
+            String ipAddress= JOptionPane.showInputDialog ("Please ip address:");
+            //System.out.println("You entered" + ipAddress + ".");
+            //System.out.println("Please enter ip address: ");
+            //String ipAddress = inputReader.nextLine(); //get file name
 
             socket = new Socket(ipAddress, Controller.PORT);
             System.out.println("connection accepted");
