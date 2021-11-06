@@ -3,17 +3,19 @@ package StartMenu;
 import javax.naming.Name;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainMenuTest {
 
-    public static JFrame window;
+    public static JFrame wow;
     Container con;
     JPanel titleNamePanel;
     JLabel titleNameLabel;
     JPanel startButtonPanel;
 
     ButtonListener buttonListener = new ButtonListener();
+
 
     Font titleFont = new Font("Times New Roman",Font.PLAIN,90);
     Font button = new Font("Times New Roman",Font.PLAIN,30);
@@ -23,14 +25,18 @@ public class MainMenuTest {
 
     }
 
+    public ButtonListener getButtonListener() {
+        return buttonListener;
+    }
+
     public MainMenuTest(){
-        window = new JFrame("Your Mom");
-        window.setSize(800,600);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.getContentPane().setBackground(Color.BLACK);
-        window.setLayout(null);
-        window.setVisible(true);// to make window appear on the screen
-        con  = window.getContentPane();
+        wow = new JFrame("Your Mom");
+        wow.setSize(800,600);
+        wow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        wow.getContentPane().setBackground(Color.BLACK);
+        wow.setLayout(null);
+        wow.setVisible(true);// to make window appear on the screen
+        con  = wow.getContentPane();
 
         titleNamePanel = new JPanel();
         titleNamePanel.setBounds(100,100,600,150);
@@ -51,8 +57,9 @@ public class MainMenuTest {
         startButton.setForeground(Color.RED);
         startButton.setFont(button);
         startButton.setBounds(300,400,100,400);
-        startButton.add(ActionListener(buttonListener));
 
+        //System.out.println(buttonListener.getNumber());
+        startButton.addActionListener(buttonListener);
 
 
         quit = new JButton("quit");
@@ -61,11 +68,25 @@ public class MainMenuTest {
         quit.setFont(button);
         quit.setBounds(300,400,100,400);
 
+        quit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("The game has ended");
+            }
+        });
+
         name = new JButton("Name");
         name.setBackground(Color.black);
         name.setForeground(Color.RED);
         name.setFont(button);
         name.setBounds(300,400,100,300);
+
+        name.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(" Please enter your name");
+            }
+        });
 
 
         titleNamePanel.add(titleNameLabel);
