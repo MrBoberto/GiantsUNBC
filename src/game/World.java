@@ -6,10 +6,13 @@ import java.security.SecureRandom;
 public class World {
     private static World theWorld;
     private Controller controller;
+    private String name;
     private SecureRandom sRandom = new SecureRandom();
 
     private World()
     {
+        name = (JOptionPane.showInputDialog("Enter your username"));
+
         int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client"));
 
         if(choice==1){
@@ -93,5 +96,9 @@ public class World {
 
     public SecureRandom getSRandom() {
         return sRandom;
+    }
+
+    public String getName() {
+        return name;
     }
 }

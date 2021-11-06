@@ -10,6 +10,7 @@ public class MainPlayer extends Player {
 
     public MainPlayer(int playerNumber, double x, double y, double angle) {
         super(playerNumber, x, y, angle);
+        super.setPlayerName(World.getWorld().getName());
     }
 
     public void keyPressed(KeyEvent e) {

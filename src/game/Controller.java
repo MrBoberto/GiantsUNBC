@@ -21,7 +21,6 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
     public final int FRAMEDELAY = 15;
     public final int WIDTH = 1280;
     public final int HEIGHT = WIDTH / 16 * 9;
-    public final double GRAVITY = 0.6;
     public final double FRICTION = 1.1; // Friction acting on objects
     public static ArrayList<Player> livingPlayers = new ArrayList<Player>();
     public static ArrayList<Projectile> movingAmmo = new ArrayList<Projectile>();
@@ -39,6 +38,18 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
         timer.start();
 
         loadBackground();
+    }
+
+    public void play() {
+        if (!timer.isRunning()) {
+            timer.start();
+        }
+    }
+
+    public void pause() {
+        if (timer.isRunning()) {
+            timer.stop();
+        }
     }
 
     @Override
