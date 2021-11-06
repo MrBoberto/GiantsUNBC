@@ -2,16 +2,13 @@ package player;
 
 import animation.ImageFrame;
 import animation.ImageStrip;
+import game.ServerController;
 import game.Thing;
 import game.World;
-import weapons.guns.FlameThrower;
 import weapons.guns.Shotgun;
-import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.File;
@@ -29,8 +26,6 @@ public abstract class Player extends Thing implements Creature {
     protected double health = 100;
     protected int killCount = 0;
     protected double damageMultiplier = 1;
-
-    protected int playerNumber;
 
     // Preset velocities of player actions
     protected final double VELJUMP = -12;
@@ -81,12 +76,12 @@ public abstract class Player extends Thing implements Creature {
     // Can be 0 = primary or 1 = secondary
     protected int selectedWeapon = 0;
 
-    public Player(int playerNumber, double x, double y, double angle) {
+    public static final int SERVER_PLAYER = 0, CLIENT_PLAYER = 1;
+
+    public Player(double x, double y, double angle) {
         super(x, y, angle);
 
-        this.playerNumber = playerNumber;
-
-        loadImageStrips(playerNumber);
+        loadImageStrips();
         currentImage = standing.getHead();
         pos = new Point((int) super.getX(), (int) super.getY());
         pocketMoney = 0;
@@ -95,16 +90,6 @@ public abstract class Player extends Thing implements Creature {
                 currentImage.getImage().getHeight());
 
         weapons.add(new Shotgun(this));
-        weapons.add(new FlameThrower(this));
-        weapons.add(new SniperRifle(this));
-    }
-
-    public int getPlayerNumber() {
-        return playerNumber;
-    }
-
-    public void setPlayerNumber(int playerNumber) {
-        this.playerNumber = playerNumber;
     }
 
     public int getKillCount() {
@@ -230,14 +215,24 @@ public abstract class Player extends Thing implements Creature {
     /**
      * Loads the image files into the image strips based upon their names
      */
-    public void loadImageStrips(int playerNumber) {
-        ArrayList<String> imgLocStr = new ArrayList<String>();
+    public void loadImageStrips() {
+        ArrayList<String> imgLocStr = new ArrayList<>();
         String defLocStr = "resources/Textures/PLAYER_ONE/";;
        // Saves amount of text to be used
-        switch (playerNumber) {
-            case 0 -> defLocStr = "resources/Textures/PLAYER_ONE/";
-            case 1 -> defLocStr = "resources/Textures/PLAYER_TWO/";
+        if(World.controller instanceof ServerController){
+            if (this instanceof MainPlayer) {
+                defLocStr = "resources/Textures/PLAYER_ONE/";
+            } else if (this instanceof OtherPlayer) {
+                defLocStr = "resources/Textures/PLAYER_TWO/";
+            }
+        } else {
+            if (this instanceof OtherPlayer) {
+                defLocStr = "resources/Textures/PLAYER_ONE/";
+            } else if (this instanceof MainPlayer) {
+                defLocStr = "resources/Textures/PLAYER_TWO/";
+            }
         }
+
 
 
         // Builds image strip for standing facing right

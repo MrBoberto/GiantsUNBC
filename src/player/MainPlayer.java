@@ -8,8 +8,8 @@ import java.awt.event.MouseEvent;
 
 public class MainPlayer extends Player {
 
-    public MainPlayer(int playerNumber, double x, double y, double angle) {
-        super(playerNumber, x, y, angle);
+    public MainPlayer(double x, double y, double angle) {
+        super(x, y, angle);
     }
 
     public void keyPressed(KeyEvent e) {
@@ -249,18 +249,18 @@ public class MainPlayer extends Player {
         move();
 
         // Apply vertical friction
-        if (velY > World.getWorld().getController().FRICTION) {
-            velY -= World.getWorld().getController().FRICTION;
-        } else if (velY < -World.getWorld().getController().FRICTION) {
-            velY += World.getWorld().getController().FRICTION;
+        if (velY > World.controller.FRICTION) {
+            velY -= World.controller.FRICTION;
+        } else if (velY < -World.controller.FRICTION) {
+            velY += World.controller.FRICTION;
         } else if (velY != 0) {
             velY = 0;
         }
         // Apply horizontal friction
-        if (velX > World.getWorld().getController().FRICTION) {
-            velX -= World.getWorld().getController().FRICTION;
-        } else if (velX < -World.getWorld().getController().FRICTION) {
-            velX += World.getWorld().getController().FRICTION;
+        if (velX > World.controller.FRICTION) {
+            velX -= World.controller.FRICTION;
+        } else if (velX < -World.controller.FRICTION) {
+            velX += World.controller.FRICTION;
         } else if (velX != 0) {
             velX = 0;
         }
@@ -268,22 +268,21 @@ public class MainPlayer extends Player {
         //images
         if (super.getX() <= currentImage.getImage().getWidth() / 2) {
             super.setX(currentImage.getImage().getWidth() / 2);
-        } else if (super.getX() >= World.getWorld().getController().WIDTH - currentImage.getImage().getWidth() / 2) {
-            super.setX(World.getWorld().getController().WIDTH - currentImage.getImage().getWidth() / 2);
+        } else if (super.getX() >= World.controller.WIDTH - currentImage.getImage().getWidth() / 2) {
+            super.setX(World.controller.WIDTH - currentImage.getImage().getWidth() / 2);
         }
 
         if (super.getY() <= currentImage.getImage().getHeight() / 2) {
             super.setY(currentImage.getImage().getHeight() / 2);
             velY = 1;
-        } else if (super.getY() >= World.getWorld().getController().HEIGHT - currentImage.getImage().getHeight() / 2) {
-            super.setY(World.getWorld().getController().HEIGHT - currentImage.getImage().getHeight() / 2);
+        } else if (super.getY() >= World.controller.HEIGHT - currentImage.getImage().getHeight() / 2) {
+            super.setY(World.controller.HEIGHT - currentImage.getImage().getHeight() / 2);
             velY = 0;
             isFalling = false;
         }
         boundRect = new Rectangle(pos.x - currentImage.getImage().getWidth() / 2,
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
-
         if (weapons.getPrimary().getCurrentDelay() > 0) {
             weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getCurrentDelay() - 1);
         }

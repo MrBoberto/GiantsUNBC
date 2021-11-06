@@ -3,12 +3,12 @@ package game;
 import javax.swing.*;
 import java.security.SecureRandom;
 
-public class World {
-    private static World theWorld;
-    private Controller controller;
-    private SecureRandom sRandom = new SecureRandom();
+public final class World {
+    private static World theWorld = new World();
+    public static Controller controller;
+    private static SecureRandom sRandom = new SecureRandom();
 
-    private World()
+    public World()
     {
         int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client"));
 
@@ -22,23 +22,8 @@ public class World {
 
     }
 
-    /**
-     * Ensures there can only be one world
-     * @return
-     */
-    public static World getWorld() {
-        if (theWorld == null)
-        {
-            theWorld = new World();
-        }
-        return theWorld;
-    }
 
-    public Controller getController() {
-        return this.controller;
-    }
-
-    public double atan(double x, double y, double angle) {
+    public static double atan(double x, double y, double angle) {
         if (x == 0 && y == 0) {
             return angle;
         } else if (x == 0) {
@@ -64,7 +49,7 @@ public class World {
         }
     }
 
-    public double cosAdj(double hyp, double angle) {
+    public static double cosAdj(double hyp, double angle) {
         if (angle == Math.PI || angle == Math.PI / 2 || angle == 0 || angle == -Math.PI / 2) {
             return hyp;
         } else if (angle > Math.PI / 2) {
@@ -78,7 +63,7 @@ public class World {
         }
     }
 
-    public double sinOpp(double hyp, double angle) {
+    public static double sinOpp(double hyp, double angle) {
         if (angle == Math.PI || angle == Math.PI / 2 || angle == 0 || angle == -Math.PI / 2) {
             return 0;
         } else if (angle > Math.PI / 2) {
@@ -92,7 +77,7 @@ public class World {
         }
     }
 
-    public SecureRandom getSRandom() {
+    public static SecureRandom getSRandom() {
         return sRandom;
     }
 }

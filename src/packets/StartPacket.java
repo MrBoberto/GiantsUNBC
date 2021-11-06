@@ -1,26 +1,17 @@
 package packets;
 
-import player.Player;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class StartPacket implements Serializable {
 
-    int playerNumber;
     private double x;
     private double y;
     private double angle;
 
-    public StartPacket(int playerNumber, double x, double y, double angle) {
-        this.playerNumber = playerNumber;
+    public StartPacket(double x, double y, double angle) {
         this.x = x;
         this.y = y;
         this.angle = angle;
-    }
-
-    public int getPlayerNumber() {
-        return playerNumber;
     }
 
     public double getX() {

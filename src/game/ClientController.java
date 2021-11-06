@@ -1,28 +1,27 @@
 package game;
 
-import packets.ClientUpdatePacket;
-import packets.StartPacket;
-import packets.StartRequest;
-import packets.ServerUpdatePacket;
+import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
+import weapons.ammo.Bullet;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ClientController extends Controller{
 
     private Socket socket;
-    private InputConnection inputConnection;
-    private OutputConnection outputConnection;
+
     public ClientController(){
         super();
         try {
             System.out.println("waiting for connection...");
 
-            socket = new Socket("142.207.59.140", Controller.PORT);
+            socket = new Socket("localhost", Controller.PORT);
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socket);
@@ -38,32 +37,22 @@ public class ClientController extends Controller{
 
     @Override
     public void packetReceived(Object object) {
-        if(object instanceof StartPacket){
+        if(object instanceof StartPacket packet){
 
-            StartPacket packet = (StartPacket) object;
-            player = new MainPlayer(packet.getPlayerNumber(),packet.getX(), packet.getY(), packet.getAngle());
-
-            for (int i = 0; i < packet.getPlayerNumber(); i++) {
-                livingPlayers.add(i,new OtherPlayer(i,WIDTH / 2, HEIGHT / 2, 0));
-            }
-            livingPlayers.add(player);
+            thisPlayer = new MainPlayer(packet.getX(), packet.getY(), packet.getAngle());
+            otherPlayer = new OtherPlayer(WIDTH / 2, HEIGHT / 2, 0);
     //        outputConnection.setGameRunning(true);
             repaint();
-
-
-
-        } else if(object instanceof ServerUpdatePacket ){
-            ServerUpdatePacket packet = (ServerUpdatePacket) object;
-            for (int i = 0; i < livingPlayers.size(); i++) {
-
-                if(i != player.getPlayerNumber()){
-                    livingPlayers.get(i).getPos().setLocation(packet.getX()[i],packet.getY()[i]);
-                    livingPlayers.get(i).setAngle(packet.getAngle()[i]);
-                }
+        } else if(object instanceof ServerUpdatePacket packet){
+            if(otherPlayer != null) {
+                otherPlayer.getPos().setLocation(packet.getX(), packet.getY());
+                otherPlayer.setAngle(packet.getAngle());
             }
 
 
             repaint();
+        } else if(object instanceof ServerBulletPacket packet){
+            movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
         }
     }
 
@@ -81,8 +70,8 @@ public class ClientController extends Controller{
     @Override
     public void actionPerformed(ActionEvent e) {
         Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
-        if(player!=null){
-            player.tick(mouseLoc);
+        if(thisPlayer !=null){
+            thisPlayer.tick(mouseLoc);
             for (int j = 0; j < movingAmmo.size(); j++) {
                 movingAmmo.get(j).tick();
             }

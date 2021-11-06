@@ -1,16 +1,18 @@
 package game;
 
 import animation.ImageStrip;
-import player.Creature;
 import player.MainPlayer;
+import player.OtherPlayer;
 import player.Player;
-import weapons.Projectile;
+import weapons.ammo.Bullet;
+import weapons.ammo.Projectile;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,19 +20,26 @@ import java.util.ArrayList;
 public abstract class Controller extends JPanel implements ActionListener, KeyListener, MouseListener {
     public static final int PORT = 55555;
 
-    public final int FRAMEDELAY = 15;
-    public final int WIDTH = 1280;
-    public final int HEIGHT = WIDTH / 16 * 9;
-    public final double GRAVITY = 0.6;
-    public final double FRICTION = 1.1; // Friction acting on objects
-    public static ArrayList<Player> livingPlayers = new ArrayList<Player>();
-    public static ArrayList<Projectile> movingAmmo = new ArrayList<Projectile>();
+    public static final int FRAMEDELAY = 15;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = WIDTH / 16 * 9;
+    public static final double GRAVITY = 0.6;
+    public static final double FRICTION = 1.1; // Friction acting on objects
+    public static ArrayList<Bullet> movingAmmo = new ArrayList<>();
 
     protected BufferedImage background;
     protected Timer timer;
-    protected MainPlayer player;
+    public static MainPlayer thisPlayer = new MainPlayer(WIDTH, HEIGHT, 0);
+    public static OtherPlayer otherPlayer = new OtherPlayer(50,50,0);
 
-    public Controller(){
+    //Multiplayer
+    protected InputConnection inputConnection;
+    protected OutputConnection outputConnection;
+    public static int PLAYER_COUNT = 2;
+
+    public enum Type{Fireball, Nato, Shot}
+
+    protected Controller(){
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
         loadImageStrips();
@@ -47,13 +56,12 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
         drawBackground(g);
 
-        if(player != null){
-            player.draw(g, this);
-            for (int i = 0; i < livingPlayers.size(); i++) {
-                livingPlayers.get(i).draw(g, this);
-            }
-            for (int j = 0; j < movingAmmo.size(); j++) {
-                movingAmmo.get(j).draw(g, this);
+        if(thisPlayer != null){
+            thisPlayer.draw(g, this);
+                Controller.thisPlayer.draw(g, this);
+                Controller.otherPlayer.draw(g, this);
+            for (Bullet bullet : movingAmmo) {
+                bullet.draw(g, this);
             }
         }
 
@@ -67,46 +75,46 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(player!=null)
-        player.keyPressed(e);
+        if(thisPlayer !=null)
+        thisPlayer.keyPressed(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if(player!=null)
-        player.keyReleased(e);
+        if(thisPlayer !=null)
+        thisPlayer.keyReleased(e);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(player!=null)
-        player.mouseClicked(e);
+        if(thisPlayer !=null)
+        thisPlayer.mouseClicked(e);
 
         System.out.println(this.getClass().toString());
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if(player!=null)
-        player.mousePressed(e);
+        if(thisPlayer !=null)
+        thisPlayer.mousePressed(e);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if(player!=null)
-        player.mouseReleased(e);
+        if(thisPlayer !=null)
+        thisPlayer.mouseReleased(e);
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if(player!=null)
-        player.mouseEntered(e);
+        if(thisPlayer !=null)
+        thisPlayer.mouseEntered(e);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if(player!=null)
-        player.mouseExited(e);
+        if(thisPlayer !=null)
+        thisPlayer.mouseExited(e);
     }
 
     private void loadBackground() {
@@ -125,7 +133,7 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
     }
 
     public Player getPlayer() {
-        return player;
+        return thisPlayer;
     }
 
     /**
@@ -176,4 +184,8 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
     public abstract void packetReceived(Object object);
 
     public abstract void close();
+
+    public OutputConnection getOutputConnection() {
+        return outputConnection;
+    }
 }

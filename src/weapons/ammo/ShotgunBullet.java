@@ -1,9 +1,11 @@
 package weapons.ammo;
 
+import game.Controller;
+import game.ServerController;
 import game.World;
-import weapons.Projectile;
-import weapons.Weapon;
-import weapons.ammo.Ammo;
+import player.Player;
+import weapons.guns.Shotgun;
+import weapons.guns.Weapon;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,7 +14,7 @@ import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 
-public class Shot extends Ammo implements Projectile {
+public class ShotgunBullet extends Bullet {
 
     private Rectangle boundRect;
     private final double MASS = 0.02;
@@ -24,27 +26,26 @@ public class Shot extends Ammo implements Projectile {
     private double velY;
     private final int SERIAL = 000;
 
-    public Shot(double aimX, double aimY, Weapon weapon) {
-        super(weapon.getParent().getX(), weapon.getParent().getY(), weapon);
-
+    public ShotgunBullet(Player player, double aimX, double aimY) {
+        super(player.getX(), player.getY(), player);
+        TYPE = Type.ShotgunBullet;
         loadImage();
-        World.getWorld().getController().movingAmmo.add(this);
+        Controller.movingAmmo.add(this);
 
-        angle = World.getWorld().atan(aimX - super.getWeapon().getParent().getX(),
-                aimY - super.getWeapon().getParent().getY(), 0) - super.getWeapon().getINACCURACY() / 2
-                + super.getWeapon().getINACCURACY() * World.getWorld().getSRandom().nextDouble();
+        angle = World.atan(aimX - playerIBelongTo.getX(),
+                aimY - playerIBelongTo.getY(), 0);
 
 //        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = weapon.getMOMENTUM() / MASS - 10* World.getWorld().getSRandom().nextDouble();
+        double speed = Shotgun.MOMENTUM / MASS - 10* World.getSRandom().nextDouble();
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
 //            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
-            velX = World.getWorld().cosAdj(speed, angle);
-            velY = World.getWorld().sinOpp(speed, angle);
+            velX = World.cosAdj(speed, angle);
+            velY = World.sinOpp(speed, angle);
         } else {
 //            System.out.print(", Positive, speed = " + weapon.getMOMENTUM() / MASS);
-            velX = World.getWorld().sinOpp(speed, angle);
-            velY = World.getWorld().cosAdj(speed, angle);
+            velX = World.sinOpp(speed, angle);
+            velY = World.cosAdj(speed, angle);
         }
 
 //        System.out.println(", velX = " + velX + ", velY = " + velY);
@@ -61,18 +62,18 @@ public class Shot extends Ammo implements Projectile {
         pos.setLocation(super.getX(), super.getY());
 
         // Apply vertical friction
-        if (velY > World.getWorld().getController().FRICTION) {
-            velY -= World.getWorld().getController().FRICTION;
-        } else if (velY < -World.getWorld().getController().FRICTION) {
-            velY += World.getWorld().getController().FRICTION;
+        if (velY > World.controller.FRICTION) {
+            velY -= World.controller.FRICTION;
+        } else if (velY < -World.controller.FRICTION) {
+            velY += World.controller.FRICTION;
         } else if (velY != 0) {
             velY = 0;
         }
         // Apply horizontal friction
-        if (velX > World.getWorld().getController().FRICTION) {
-            velX -= World.getWorld().getController().FRICTION;
-        } else if (velX < -World.getWorld().getController().FRICTION) {
-            velX += World.getWorld().getController().FRICTION;
+        if (velX > World.controller.FRICTION) {
+            velX -= World.controller.FRICTION;
+        } else if (velX < -World.controller.FRICTION) {
+            velX += World.controller.FRICTION;
         } else if (velX != 0) {
             velX = 0;
         }
@@ -82,7 +83,7 @@ public class Shot extends Ammo implements Projectile {
                 texture.getHeight());
 
         if (velX == 0 && velY == 0) {
-            World.getWorld().getController().movingAmmo.remove(this);
+            Controller.movingAmmo.remove(this);
         }
     }
 
@@ -119,5 +120,14 @@ public class Shot extends Ammo implements Projectile {
     @Override
     public int getSERIAL() {
         return SERIAL;
+    }
+
+    @Override
+    public double getAngle() {
+        return angle;
+    }
+    @Override
+    public int getID() {
+        return ID;
     }
 }

@@ -1,6 +1,6 @@
 package player;
 
-import weapons.Weapon;
+import weapons.guns.Weapon;
 
 import java.util.ArrayList;
 
@@ -53,7 +53,7 @@ public class Arsenal {
                 }
             }
         }
-        System.out.println("weapons.Weapon " + weapon.getSERIAL() + " not found.");
+        System.out.println("weapons.guns.Weapon " + weapon.getSERIAL() + " not found.");
     }
 
     public void setSecondary(Weapon weapon) {
@@ -73,7 +73,7 @@ public class Arsenal {
                 }
             }
         }
-        System.out.println("weapons.Weapon " + weapon.getSERIAL() + " not found.");
+        System.out.println("weapons.guns.Weapon " + weapon.getSERIAL() + " not found.");
     }
 
     public Weapon getPrimary() {

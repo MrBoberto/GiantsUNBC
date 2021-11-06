@@ -1,25 +1,26 @@
 package weapons.guns;
 
-import game.Thing;
+import game.ServerController;
+import game.World;
+import packets.ClientBulletPacket;
 import player.Player;
-import weapons.Weapon;
-import weapons.ammo.Shot;
-
-import java.util.ArrayList;
+import weapons.ammo.Projectile;
+import weapons.ammo.ShotgunBullet;
 
 public class Shotgun implements Weapon {
-    private Player parent;
-    private final double MOMENTUM = 0.85;
-    private final int ROUNDCOUNT = 10;
-    private final double INACCURACY = 0.1;
-    public final int MAX_DELAY = 40;
+    private Player playerIBelongTo;
+    public static final double MOMENTUM = 0.85;
+    public static final int ROUNDCOUNT = 10;
+    public static final double INACCURACY = 0.1;
+    public static final int MAX_DELAY = 40;
     private int currentDelay = 0;
     // Identifies type of gun
-    private final int SERIAL = 000;
-    private final double DAMAGE = 10;
+    public static final int SERIAL = 000;
+    public static final double DAMAGE = 10;
+    public static final Type TYPE = Type.Shotgun;
 
-    public Shotgun(Player parent) {
-        this.parent = parent;
+    public Shotgun(Player playerIBelongTo) {
+        this.playerIBelongTo = playerIBelongTo;
     }
 
     /**
@@ -28,17 +29,18 @@ public class Shotgun implements Weapon {
      * @param y The horizontal line passing through the selected location
      */
     @Override
-    public void shoot(double x, double y) {
-        ArrayList<Shot> shell = new ArrayList<Shot>(ROUNDCOUNT);
-        for (int i = 0; i < ROUNDCOUNT; i++) {
-            shell.add(new Shot(x, y, this));
-//            System.out.println("Fired shot " + (i + 1));
+    public void shoot(double mouseX, double mouseY) {
+        if(World.controller instanceof ServerController){
+            new ShotgunBullet(playerIBelongTo, mouseX, mouseY);
+        } else {
+            World.controller.getOutputConnection().sendPacket(new ClientBulletPacket(playerIBelongTo.getX(), playerIBelongTo.getY(), mouseX, mouseY, Projectile.Type.ShotgunBullet));
         }
+
     }
 
     @Override
-    public Player getParent() {
-        return parent;
+    public Player getPlayerIBelongTo() {
+        return playerIBelongTo;
     }
 
     @Override
@@ -78,6 +80,6 @@ public class Shotgun implements Weapon {
 
     @Override
     public double getDamage() {
-        return DAMAGE * parent.getDamageMultiplier();
+        return DAMAGE * playerIBelongTo.getDamageMultiplier();
     }
 }
