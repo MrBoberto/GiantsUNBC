@@ -28,9 +28,13 @@ public abstract class Player extends Thing implements Creature {
     protected Rectangle boundRect;
     protected double health = 100;
     protected int killCount = 0;
+    protected int deathCount = 0;
+    protected double kdr = -1;
+    protected double tdo = 0;
     protected double damageMultiplier = 1;
 
     protected int playerNumber;
+    protected String playerName;
 
     // Preset velocities of player actions
     protected final double VELJUMP = -12;
@@ -107,12 +111,45 @@ public abstract class Player extends Thing implements Creature {
         this.playerNumber = playerNumber;
     }
 
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
     public int getKillCount() {
         return killCount;
     }
 
+    /**
+     * Increases killCount by 1 and updates kdr if there are more than 0 deaths
+     */
     public void incrementKillCount() {
         this.killCount++;
+        // kdr stays at -1 as long as there are no deaths so it is easy to identify
+        if (deathCount != 0) {
+            kdr = killCount / deathCount;
+        } else {
+            kdr = -1;
+        }
+    }
+
+    public int getDeathCount() {
+        return deathCount;
+    }
+
+    /**
+     * Increases deathCount by 1 and updates kdr
+     */
+    public void incrementDeathCount() {
+        this.deathCount++;
+        kdr = killCount / deathCount;
+    }
+
+    public double getKdr() {
+        return kdr;
     }
 
     /**
@@ -216,6 +253,18 @@ public abstract class Player extends Thing implements Creature {
         this.health += healthMod;
         if (health < 0) {
             health = 0;
+        }
+    }
+
+    /**
+     * Increase total damage output of the player
+     * @param tdoMod Damage value to add
+     */
+    public void addTDO(double tdoMod) {
+        if (this.tdo > 1.6*(10^308) || this.tdo < -1.6*(10^308)) {
+            System.out.println("ERROR: TDO overflow");
+        } else {
+            this.tdo += tdoMod;
         }
     }
 
