@@ -104,8 +104,8 @@ public class ServerController extends Controller {
                     victim.incrementDeathCount();
                     livingPlayers.remove(victim);
                     killer.incrementKillCount();
-                    System.out.println(victim.getPlayerNumber() + " was memed by " +
-                            killer.getPlayerNumber());
+                    System.out.println(victim.getPlayerName() + " was memed by " +
+                            killer.getPlayerName());
                 }
             }
         }

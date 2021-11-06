@@ -12,6 +12,7 @@ public class MainMenuTest {
     JPanel titleNamePanel;
     JLabel titleNameLabel;
     JPanel startButtonPanel;
+    String playerName = "";
 
     ButtonListener buttonListener = new ButtonListener();
 
@@ -102,7 +103,14 @@ public class MainMenuTest {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println(" Please enter your name");
-                String names = (JOptionPane.showInputDialog("Name for server 1 | Name for server 2"));
+                boolean isValidPlayerName = false;
+                while (!isValidPlayerName && playerName != null) {
+                    playerName = (JOptionPane.showInputDialog("Name for server 1 | Name for server 2"));
+                    if (!playerName.equals("")) {
+                        isValidPlayerName = true;
+                    }
+                }
+
             }
         });
 
