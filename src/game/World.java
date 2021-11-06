@@ -11,6 +11,7 @@ public class World {
 
     private World()
     {
+        // Get own playerName
         boolean isValidPlayerName = false;
         while (!isValidPlayerName) {
             name = (JOptionPane.showInputDialog("Enter your username")) + "";
@@ -20,6 +21,7 @@ public class World {
             }
         }
 
+        // Get own playerNumber
         int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client"));
 
         if(choice==1){

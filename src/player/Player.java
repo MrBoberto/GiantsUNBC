@@ -18,6 +18,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Assignment 1 Fall 2021
+ *
+ * Abstract Player class with methods to be used by MainPlayer and OtherPlayer
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 public abstract class Player extends Thing implements Creature {
     // The texture of the player being used in the current frame
     protected ImageFrame currentImage;
