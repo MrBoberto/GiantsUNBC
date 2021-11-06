@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class SniperRifle implements Weapon {
     private Player parent;
-    private final double MOMENTUM = 15;
+    private final double MOMENTUM = 10;
     private final int ROUNDCOUNT = 1;
     private final double INACCURACY = 0;
     public final int MAX_DELAY = 400;
