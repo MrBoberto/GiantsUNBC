@@ -23,14 +23,15 @@ public class ClientController extends Controller{
         super();
         try {
             System.out.println("waiting for connection...");
-            //Scanner inputReader = new Scanner(System.in);
 
-            socket = new Socket("142.207.59.6", Controller.PORT);
-            socket = new Socket("142.207.59.140", Controller.PORT);
-            String ipAddress= JOptionPane.showInputDialog ("Please ip address:");
-            //System.out.println("You entered" + ipAddress + ".");
-            //System.out.println("Please enter ip address: ");
-            //String ipAddress = inputReader.nextLine(); //get file name
+
+            //socket = new Socket("142.207.59.6", Controller.PORT);
+            //socket = new Socket("142.207.59.140", Controller.PORT);
+            String ipAddress= JOptionPane.showInputDialog ("Please enter the server's ip address:");
+            /*Scanner inputReader = new Scanner(System.in);
+            System.out.println("Please enter ip address: ");
+            String ipAddress = inputReader.nextLine(); //get file name
+            System.out.println("You entered" + ipAddress + ".");*/
 
             socket = new Socket(ipAddress, Controller.PORT);
             System.out.println("connection accepted");
