@@ -19,7 +19,6 @@ public class MainMenuTest {
     Font titleFont = new Font("Times New Roman",Font.PLAIN,90);
     Font button = new Font("Times New Roman",Font.PLAIN,30);
     JButton startButton, quit, name;
-    String playerName;
     public static void main(String[] args) {
         new MainMenuTest();
 
@@ -31,8 +30,13 @@ public class MainMenuTest {
 
     public MainMenuTest(){
         wow = new JFrame("Your Mom");
-        wow.setSize(800,600);
-        //wow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //wow.setSize(800,600);
+        int width = wow.getWidth();
+        int length = wow.getHeight();
+        wow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        wow.setMinimumSize(new Dimension(800, 800));
+        System.out.println(JFrame.MAXIMIZED_BOTH);
         wow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         wow.getContentPane().setBackground(Color.BLACK);
@@ -74,6 +78,17 @@ public class MainMenuTest {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("The game has ended");
+                JPanel quitPanel = new JPanel();
+                quitPanel.setBounds(300,300,1000,1000);
+                //titleNamePanel.setBounds(100,100,600,150);
+                quitPanel.setBackground(Color.black);
+                JLabel quitLabel = new JLabel("Thanks For Playing" );
+                quitLabel.setFont(titleFont);
+                quitLabel.setForeground(Color.RED);
+                quitPanel.add(quitLabel);
+                con.add(quitPanel);
+                wow.add(titleNamePanel);
+                SwingUtilities.updateComponentTreeUI(wow);
             }
         });
 
@@ -87,7 +102,7 @@ public class MainMenuTest {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println(" Please enter your name");
-
+                String names = (JOptionPane.showInputDialog("Name for server 1 | Name for server 2"));
             }
         });
 
