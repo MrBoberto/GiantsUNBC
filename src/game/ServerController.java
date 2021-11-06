@@ -61,7 +61,7 @@ public class ServerController extends Controller {
             System.out.println("Start request received and resent.");
         } else if (object instanceof ClientBulletPacket packet){
             if(packet.getType() == Projectile.Type.ShotgunBullet){
-                movingAmmo.add(new ShotgunBullet(otherPlayer, packet.getPlayerX(), packet.getPlayerY()));
+                movingAmmo.add(new ShotgunBullet(Player.CLIENT_PLAYER, packet.getPlayerX(), packet.getPlayerY()));
             }
 
         }
@@ -83,6 +83,7 @@ public class ServerController extends Controller {
         Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
         thisPlayer.tick(mouseLoc);
         for (int j = 0; j < movingAmmo.size(); j++) {
+            if(movingAmmo.get(j) != null)
             movingAmmo.get(j).tick();
             // Player who was hit (null if no one was hit)
             //TODO: Player hitbox.

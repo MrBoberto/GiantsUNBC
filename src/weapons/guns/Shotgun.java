@@ -31,7 +31,7 @@ public class Shotgun implements Weapon {
     @Override
     public void shoot(double mouseX, double mouseY) {
         if(World.controller instanceof ServerController){
-            new ShotgunBullet(playerIBelongTo, mouseX, mouseY);
+            new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY);
         } else {
             World.controller.getOutputConnection().sendPacket(new ClientBulletPacket(playerIBelongTo.getX(), playerIBelongTo.getY(), mouseX, mouseY, Projectile.Type.ShotgunBullet));
         }

@@ -13,6 +13,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public abstract class Player extends Thing implements Creature {
@@ -89,6 +90,7 @@ public abstract class Player extends Thing implements Creature {
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
 
+        weapons.add(new Shotgun(this));
         weapons.add(new Shotgun(this));
     }
 

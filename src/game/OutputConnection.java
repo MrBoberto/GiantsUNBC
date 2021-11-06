@@ -4,11 +4,13 @@ import packets.ServerBulletPacket;
 import packets.ClientUpdatePacket;
 import packets.ServerUpdatePacket;
 import weapons.ammo.Bullet;
+import weapons.ammo.Projectile;
 import weapons.ammo.ShotgunBullet;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class OutputConnection implements Runnable {
     private ObjectOutputStream outputStream;
@@ -54,7 +56,19 @@ public class OutputConnection implements Runnable {
 //                    angle[1] = Controller.otherPlayer.getAngle();
 
                     sendPacket(new ServerUpdatePacket(Controller.thisPlayer.getX(), Controller.thisPlayer.getY(), Controller.thisPlayer.getAngle()));
-
+//
+//                    double x[] = new double[Controller.movingAmmo.size()];
+//                    double y[] = new double[Controller.movingAmmo.size()];
+//                    int ID[] = new int[Controller.movingAmmo.size()];
+//                    int playerIBelongTo[] = new int[Controller.movingAmmo.size()];
+//                    Projectile.Type[] types = new Projectile.Type[Controller.movingAmmo.size()];
+//                    for (int i = 0; i < Controller.movingAmmo.size(); i++) {
+//                        x[i] = Controller.movingAmmo.get(i).getX();
+//                        y[i] = Controller.movingAmmo.get(i).getY();
+//                        ID[i] = Controller.movingAmmo.get(i).getID();
+//                        playerIBelongTo[i] = Controller.movingAmmo.get(i).getPlayerIBelongTo();
+//                        types[i] = Controller.movingAmmo.get(i).getTYPE();
+//                    }
                     sendPacket(new ServerBulletPacket(Controller.movingAmmo.toArray(new Bullet[0])));
                 } else {
                     if (controller.getPlayer() != null) {

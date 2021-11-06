@@ -52,6 +52,7 @@ public class ClientController extends Controller{
 
             repaint();
         } else if(object instanceof ServerBulletPacket packet){
+
             movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
         }
     }
@@ -73,6 +74,7 @@ public class ClientController extends Controller{
         if(thisPlayer !=null){
             thisPlayer.tick(mouseLoc);
             for (int j = 0; j < movingAmmo.size(); j++) {
+                if(movingAmmo.get(j) != null)
                 movingAmmo.get(j).tick();
             }
         }

@@ -9,15 +9,13 @@ public abstract class Bullet implements Projectile {
     private double x, y;
     protected int ID;
     private static int nextID = 0;
-    Player playerIBelongTo;
+    int playerIBelongTo;
     Type TYPE = null;
 
 
-    protected Bullet(double x, double y, Player player) {
-        this.x = x;
-        this.y = y;
+    protected Bullet() {
         ID = nextID++;
-        playerIBelongTo = player;
+
     }
 
     public double getX() {
@@ -40,7 +38,11 @@ public abstract class Bullet implements Projectile {
         return ID;
     }
 
-    public Player getPlayerIBelongTo() {
+    public int getPlayerIBelongTo() {
         return playerIBelongTo;
+    }
+
+    public Type getTYPE() {
+        return TYPE;
     }
 }
