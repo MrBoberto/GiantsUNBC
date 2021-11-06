@@ -56,6 +56,27 @@ public class Arsenal {
         System.out.println("weapons.Weapon " + weapon.getSERIAL() + " not found.");
     }
 
+    public void setPrimary(int inventoryNum) {
+        if (inventoryNum >= 1 && weapons.size() >= inventoryNum) {
+            if (weapons.get(inventoryNum - 1).getSERIAL() == primary.getSERIAL()) {
+                // Do nothing
+            } else if (weapons.get(inventoryNum - 1).getSERIAL() == secondary.getSERIAL()) {
+                // Switch primary and secondary
+                secondary = primary;
+                primary = weapons.get(inventoryNum - 1);
+                return;
+            } else {
+                weapons.add(primary);
+                secondary = weapons.get(inventoryNum - 1);
+                weapons.remove(inventoryNum - 1);
+                return;
+            }
+            System.out.println("weapons.Weapon " + weapons.get(inventoryNum - 1).getSERIAL() + " not found.");
+            return;
+        }
+        System.out.println("Weapon inventory index " + inventoryNum + " DNE.");
+    }
+
     public void setSecondary(Weapon weapon) {
         if (weapon.getSERIAL() == secondary.getSERIAL()) {
             // Do nothing
@@ -74,6 +95,27 @@ public class Arsenal {
             }
         }
         System.out.println("weapons.Weapon " + weapon.getSERIAL() + " not found.");
+    }
+
+    public void setSecondary(int inventoryNum) {
+        if (inventoryNum >= 1 && weapons.size() >= inventoryNum) {
+            if (weapons.get(inventoryNum - 1).getSERIAL() == secondary.getSERIAL()) {
+                // Do nothing
+            } else if (weapons.get(inventoryNum - 1).getSERIAL() == primary.getSERIAL()) {
+                // Switch primary and secondary
+                primary = secondary;
+                secondary = weapons.get(inventoryNum - 1);
+                return;
+            } else {
+                weapons.add(secondary);
+                secondary = weapons.get(inventoryNum - 1);
+                weapons.remove(inventoryNum - 1);
+                return;
+            }
+            System.out.println("weapons.Weapon " + weapons.get(inventoryNum - 1).getSERIAL() + " not found.");
+            return;
+        }
+        System.out.println("Weapon inventory index " + inventoryNum + " DNE.");
     }
 
     public Weapon getPrimary() {

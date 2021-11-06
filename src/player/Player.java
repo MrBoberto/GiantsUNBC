@@ -33,8 +33,10 @@ public abstract class Player extends Thing implements Creature {
     protected double tdo = 0;
     protected double damageMultiplier = 1;
 
+
     protected int playerNumber;
     protected String playerName;
+    protected Color playerColour;
 
     // Preset velocities of player actions
     protected final double VELJUMP = -12;
@@ -61,9 +63,7 @@ public abstract class Player extends Thing implements Creature {
     protected ImageStrip jumped;     // 5 Animation loop at end of jump
     protected ImageStrip dashing;    // 6
     protected ImageStrip landing;    // 7
-    
-    // Coins in the player's inventory
-    protected int pocketMoney = 0;
+
     protected boolean wIsHeld = false;
     protected boolean dIsHeld = false;
     protected boolean sIsHeld = false;
@@ -90,10 +90,14 @@ public abstract class Player extends Thing implements Creature {
 
         this.playerNumber = playerNumber;
 
+        // Graphics-related
+        setColour();
         loadImageStrips(playerNumber);
         currentImage = standing.getHead();
+
         pos = new Point((int) super.getX(), (int) super.getY());
-        pocketMoney = 0;
+
+        // Hitbox
         boundRect = new Rectangle(pos.x - currentImage.getImage().getWidth() / 2,
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
@@ -215,10 +219,13 @@ public abstract class Player extends Thing implements Creature {
         g2d.drawImage(currentImage.getImage(), affTra, imgObs);
 
         // Draws the player's hitbox
-        g.setColor(new Color(0, 0, 200));
+        g.setColor(playerColour);
         g.drawRect(pos.x - currentImage.getImage().getWidth() / 2,
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
+
+        Font font = new Font("Arial", Font.BOLD, 15);
+
     }
 
     public Point getPos() {
@@ -274,6 +281,14 @@ public abstract class Player extends Thing implements Creature {
 
     public void setDamageMultiplier(int damageMultiplier) {
         this.damageMultiplier = damageMultiplier;
+    }
+
+    public void setColour() {
+        if (playerNumber == 0) {
+            playerColour = new Color(0, 0, 200);
+        } else {
+            playerColour = new Color(200, 0, 0);
+        }
     }
 
     /**

@@ -19,6 +19,7 @@ public class MainMenuTest {
     Font titleFont = new Font("Times New Roman",Font.PLAIN,90);
     Font button = new Font("Times New Roman",Font.PLAIN,30);
     JButton startButton, quit, name;
+    String playerName;
     public static void main(String[] args) {
         new MainMenuTest();
 
@@ -86,6 +87,7 @@ public class MainMenuTest {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println(" Please enter your name");
+
             }
         });
 
