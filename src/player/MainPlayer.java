@@ -86,6 +86,7 @@ public class MainPlayer extends Player {
             else {
                 weapons.setSecondary(1);
             }
+            System.out.println(weapons);
         }
         if (key == KeyEvent.VK_2 || key == KeyEvent.VK_NUMPAD2) {
             if (selectedWeapon == 0) {
@@ -94,6 +95,7 @@ public class MainPlayer extends Player {
             else {
                 weapons.setSecondary(2);
             }
+            System.out.println(weapons);
         }
         if (key == KeyEvent.VK_3 || key == KeyEvent.VK_NUMPAD3) {
             if (selectedWeapon == 0) {
@@ -102,6 +104,7 @@ public class MainPlayer extends Player {
             else {
                 weapons.setSecondary(3);
             }
+            System.out.println(weapons);
         }
         if (key == KeyEvent.VK_4 || key == KeyEvent.VK_NUMPAD4) {
             if (selectedWeapon == 0) {
@@ -110,6 +113,7 @@ public class MainPlayer extends Player {
             else {
                 weapons.setSecondary(4);
             }
+            System.out.println(weapons);
         }
         if (key == KeyEvent.VK_5 || key == KeyEvent.VK_NUMPAD5) {
             if (selectedWeapon == 0) {
@@ -118,6 +122,7 @@ public class MainPlayer extends Player {
             else {
                 weapons.setSecondary(5);
             }
+            System.out.println(weapons);
         }
 
         setAngle();

@@ -57,9 +57,11 @@ public class Arsenal {
     }
 
     public void setPrimary(int inventoryNum) {
+        System.out.println("setPrimary");
         if (inventoryNum >= 1 && weapons.size() >= inventoryNum) {
             if (weapons.get(inventoryNum - 1).getSERIAL() == primary.getSERIAL()) {
                 // Do nothing
+                return;
             } else if (weapons.get(inventoryNum - 1).getSERIAL() == secondary.getSERIAL()) {
                 // Switch primary and secondary
                 secondary = primary;
@@ -67,12 +69,10 @@ public class Arsenal {
                 return;
             } else {
                 weapons.add(primary);
-                secondary = weapons.get(inventoryNum - 1);
+                primary = weapons.get(inventoryNum - 1);
                 weapons.remove(inventoryNum - 1);
                 return;
             }
-            System.out.println("weapons.Weapon " + weapons.get(inventoryNum - 1).getSERIAL() + " not found.");
-            return;
         }
         System.out.println("Weapon inventory index " + inventoryNum + " DNE.");
     }
@@ -98,9 +98,11 @@ public class Arsenal {
     }
 
     public void setSecondary(int inventoryNum) {
+        System.out.println("setSecondary");
         if (inventoryNum >= 1 && weapons.size() >= inventoryNum) {
             if (weapons.get(inventoryNum - 1).getSERIAL() == secondary.getSERIAL()) {
                 // Do nothing
+                return;
             } else if (weapons.get(inventoryNum - 1).getSERIAL() == primary.getSERIAL()) {
                 // Switch primary and secondary
                 primary = secondary;
@@ -112,8 +114,6 @@ public class Arsenal {
                 weapons.remove(inventoryNum - 1);
                 return;
             }
-            System.out.println("weapons.Weapon " + weapons.get(inventoryNum - 1).getSERIAL() + " not found.");
-            return;
         }
         System.out.println("Weapon inventory index " + inventoryNum + " DNE.");
     }
@@ -124,5 +124,21 @@ public class Arsenal {
 
     public Weapon getSecondary() {
         return secondary;
+    }
+
+    @Override
+    public String toString() {
+        String string = "Primary: " + primary + ", Secondary: " + secondary + ",\nInventory: {";
+        for (int i = 0; i < weapons.size(); i++) {
+            string += weapons.get(i);
+            if (i < weapons.size() - 1) {
+                string += ", ";
+            }
+            else {
+                string += "}";
+            }
+        }
+        return string;
+
     }
 }

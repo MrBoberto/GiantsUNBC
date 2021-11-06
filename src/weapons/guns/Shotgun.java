@@ -73,7 +73,7 @@ public class Shotgun implements Weapon {
 
     @Override
     public String toString() {
-        return SERIAL + ", weapons.guns.Shotgun";
+        return SERIAL + ", Shotgun";
     }
 
     @Override
