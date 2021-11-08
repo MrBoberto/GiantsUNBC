@@ -95,7 +95,7 @@ public class ShotgunBullet extends Bullet {
         } else if (velX != 0) {
             velX = 0;
         }
-        if(texture!= null){
+        if(texture!= null && pos != null){
             boundRect = new Rectangle(pos.x - texture.getWidth() / 2,
                     pos.y - texture.getHeight() / 2, texture.getWidth(),
                     texture.getHeight());
@@ -117,7 +117,7 @@ public class ShotgunBullet extends Bullet {
 
     @Override
     public void draw(Graphics g, ImageObserver imgObs) {
-        if(texture != null){
+        if(texture != null && pos != null){
             AffineTransform affTra = AffineTransform.getTranslateInstance(
                     pos.x - texture.getWidth() / 2, pos.y - texture.getHeight() / 2);
             affTra.rotate(angle, texture.getWidth() / 2,

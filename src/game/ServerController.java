@@ -61,7 +61,7 @@ public class ServerController extends Controller {
             System.out.println("Start request received and resent.");
         } else if (object instanceof ClientBulletPacket packet){
             if(packet.getType() == Projectile.Type.ShotgunBullet){
-                movingAmmo.add(new ShotgunBullet(Player.CLIENT_PLAYER, packet.getPlayerX(), packet.getPlayerY()));
+                movingAmmo.add(new ShotgunBullet(Player.CLIENT_PLAYER, packet.getMouseXLocation(), packet.getMouseYLocation()));
             }
 
         }
