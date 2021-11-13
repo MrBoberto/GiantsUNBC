@@ -33,6 +33,7 @@ public abstract class Player extends Thing implements Creature {
     protected double kdr = -1;
     protected double tdo = 0;
     protected double damageMultiplier = 1;
+    public MainMenuTest mainMenuTest;
 
 
     protected int playerNumber;
@@ -92,9 +93,12 @@ public abstract class Player extends Thing implements Creature {
         this.playerNumber = playerNumber;
         if (MainMenuTest.playerName.equals("")) {
             if (playerNumber == 0) {
-                playerName = "Host";
+                playerName = mainMenuTest.getPlayerName();
             } else {
-                playerName = "Guest";
+                if(mainMenuTest.getPlayerName() == ""){
+                    playerName = "Guest";
+                }else
+                playerName = mainMenuTest.getPlayerName();
             }
         } else {
             playerName = MainMenuTest.playerName;
