@@ -342,9 +342,10 @@ public class MainPlayer extends Player {
             if (selectedWeapon == 0 && weapons.getPrimary().getCurrentDelay() == 0) {
                 weapons.getPrimary().shoot(mouseLoc.x, mouseLoc.y);
                 weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getMAX_DELAY());
-            } else if (selectedWeapon == 1 && weapons.getPrimary().getCurrentDelay() == 0) {
+            } else if (selectedWeapon == 1 && weapons.getSecondary().getCurrentDelay() == 0) {
                 weapons.getSecondary().shoot(mouseLoc.x, mouseLoc.y);
                 weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getMAX_DELAY());
+
             }
         }
     }

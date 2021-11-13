@@ -112,9 +112,9 @@ public abstract class Player extends Thing implements Creature {
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
 
+        weapons.add(new SniperRifle(this));
         weapons.add(new Shotgun(this));
         weapons.add(new FlameThrower(this));
-        weapons.add(new SniperRifle(this));
     }
 
     public int getPlayerNumber() {
@@ -236,7 +236,7 @@ public abstract class Player extends Thing implements Creature {
 
         Font font = new Font("Arial", Font.BOLD, 20);
         FontMetrics stringSize = g2d.getFontMetrics(font);
-        g2d.drawString(playerName, pos.x - (stringSize.stringWidth(playerName)) / 2,
+        g2d.drawString(playerName, pos.x - (stringSize.stringWidth(playerName)) / 4,
                 pos.y - currentImage.getImage().getHeight() / 2);
     }
 
