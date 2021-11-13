@@ -12,6 +12,7 @@ public final class World {
     {
         int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client"));
 
+
         if(choice==1){
             controller = new ServerController();
             System.out.println("IM SERVER");
@@ -19,7 +20,6 @@ public final class World {
             controller = new ClientController();
             System.out.println("IM CLIENT");
         }
-
     }
 
 

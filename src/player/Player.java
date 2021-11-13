@@ -1,5 +1,6 @@
 package player;
 
+import StartMenu.MainMenuTest;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.ServerController;
@@ -26,7 +27,15 @@ public abstract class Player extends Thing implements Creature {
     protected Rectangle boundRect;
     protected double health = 100;
     protected int killCount = 0;
+    protected int deathCount = 0;
+    protected double kdr = -1;
+    protected double tdo = 0;
     protected double damageMultiplier = 1;
+
+
+    protected int playerNumber;
+    protected String playerName;
+    protected Color playerColour;
 
     // Preset velocities of player actions
     protected final double VELJUMP = -12;
@@ -53,9 +62,7 @@ public abstract class Player extends Thing implements Creature {
     protected ImageStrip jumped;     // 5 Animation loop at end of jump
     protected ImageStrip dashing;    // 6
     protected ImageStrip landing;    // 7
-    
-    // Coins in the player's inventory
-    protected int pocketMoney = 0;
+
     protected boolean wIsHeld = false;
     protected boolean dIsHeld = false;
     protected boolean sIsHeld = false;
@@ -83,9 +90,23 @@ public abstract class Player extends Thing implements Creature {
         super(x, y, angle);
 
         loadImageStrips();
+        this.playerNumber = playerNumber;
+        if (MainMenuTest.playerName.equals("")) {
+            if (playerNumber == 0) {
+                playerName = "Host";
+            } else {
+                playerName = "Guest";
+            }
+        } else {
+            playerName = MainMenuTest.playerName;
+        }
+
+        // Graphics-related
+        setColour();
+        loadImageStrips(playerNumber);
         currentImage = standing.getHead();
        // pos = new Point((int) super.getX(), (int) super.getY());
-        pocketMoney = 0;
+      //  pocketMoney = 0;
         boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 2,
                 (int)this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
@@ -94,12 +115,45 @@ public abstract class Player extends Thing implements Creature {
         weapons.add(new Shotgun(this));
     }
 
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
     public int getKillCount() {
         return killCount;
     }
 
+    /**
+     * Increases killCount by 1 and updates kdr if there are more than 0 deaths
+     */
     public void incrementKillCount() {
         this.killCount++;
+        // kdr stays at -1 as long as there are no deaths so that it is easy to identify
+        if (deathCount != 0) {
+            kdr = killCount / deathCount;
+        } else {
+            kdr = -1;
+        }
+    }
+
+    public int getDeathCount() {
+        return deathCount;
+    }
+
+    /**
+     * Increases deathCount by 1 and updates kdr
+     */
+    public void incrementDeathCount() {
+        this.deathCount++;
+        kdr = killCount / deathCount;
+    }
+
+    public double getKdr() {
+        return kdr;
     }
 
     /**
@@ -165,10 +219,15 @@ public abstract class Player extends Thing implements Creature {
         g2d.drawImage(currentImage.getImage(), affTra, imgObs);
 
         // Draws the player's hitbox
-        g.setColor(new Color(0, 0, 200));
+        g.setColor(playerColour);
         g.drawRect((int)x - currentImage.getImage().getWidth() / 2,
                 (int)y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
+
+        Font font = new Font("Arial", Font.BOLD, 20);
+        FontMetrics stringSize = g2d.getFontMetrics(font);
+        g2d.drawString(playerName, pos.x - (stringSize.stringWidth(playerName)) / 2,
+                pos.y - currentImage.getImage().getHeight() / 2);
     }
 
 //    public Point getPos() {
@@ -206,12 +265,32 @@ public abstract class Player extends Thing implements Creature {
         }
     }
 
+    /**
+     * Increase total damage output of the player
+     * @param tdoMod Damage value to add
+     */
+    public void addTDO(double tdoMod) {
+        if (this.tdo > 1.6*(10^308) || this.tdo < -1.6*(10^308)) {
+            System.out.println("ERROR: TDO overflow");
+        } else {
+            this.tdo += tdoMod;
+        }
+    }
+
     public double getDamageMultiplier() {
         return damageMultiplier;
     }
 
     public void setDamageMultiplier(int damageMultiplier) {
         this.damageMultiplier = damageMultiplier;
+    }
+
+    public void setColour() {
+        if (playerNumber == 0) {
+            playerColour = new Color(0, 0, 200);
+        } else {
+            playerColour = new Color(200, 0, 0);
+        }
     }
 
     /**

@@ -1,6 +1,10 @@
 package game;
 
+import StartMenu.MainMenuTest;
+
 import javax.swing.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class Main {
 
@@ -14,9 +18,9 @@ public class Main {
 
         window.setResizable(false);
         window.pack();
+    public static JFrame window = new JFrame("The Boyz");
+    public static void startGame()  {
 
-        ImageIcon icon = new ImageIcon("resources/GUI/icon/icon.png");
-        window.setIconImage(icon.getImage());
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
@@ -25,6 +29,18 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(Main::startupGui);
+        MainMenuTest mainMenuTest = new MainMenuTest();
+         int check=   mainMenuTest.getButtonListener().getNumber();
+
+
+        try {
+            String ipAddress = String.valueOf(InetAddress.getLocalHost());
+            String[] ipAddressClean = ipAddress.split("/", 2);
+            System.out.println("The ip address: "+ipAddress);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        SwingUtilities.invokeLater(Main::startGame);
     }
 }

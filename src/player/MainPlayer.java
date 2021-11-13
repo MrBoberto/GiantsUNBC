@@ -79,6 +79,51 @@ public class MainPlayer extends Player {
             tIsHeld = false;
             superDashTimer = SUPERDASHTIMERMAX;
         }
+        if (key == KeyEvent.VK_1 || key == KeyEvent.VK_NUMPAD1) {
+            if (selectedWeapon == 0) {
+                weapons.setPrimary(1);
+            }
+            else {
+                weapons.setSecondary(1);
+            }
+            System.out.println(weapons);
+        }
+        if (key == KeyEvent.VK_2 || key == KeyEvent.VK_NUMPAD2) {
+            if (selectedWeapon == 0) {
+                weapons.setPrimary(2);
+            }
+            else {
+                weapons.setSecondary(2);
+            }
+            System.out.println(weapons);
+        }
+        if (key == KeyEvent.VK_3 || key == KeyEvent.VK_NUMPAD3) {
+            if (selectedWeapon == 0) {
+                weapons.setPrimary(3);
+            }
+            else {
+                weapons.setSecondary(3);
+            }
+            System.out.println(weapons);
+        }
+        if (key == KeyEvent.VK_4 || key == KeyEvent.VK_NUMPAD4) {
+            if (selectedWeapon == 0) {
+                weapons.setPrimary(4);
+            }
+            else {
+                weapons.setSecondary(4);
+            }
+            System.out.println(weapons);
+        }
+        if (key == KeyEvent.VK_5 || key == KeyEvent.VK_NUMPAD5) {
+            if (selectedWeapon == 0) {
+                weapons.setPrimary(5);
+            }
+            else {
+                weapons.setSecondary(5);
+            }
+            System.out.println(weapons);
+        }
 
         setAngle();
     }

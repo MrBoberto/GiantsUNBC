@@ -5,12 +5,14 @@ import player.MainPlayer;
 import player.OtherPlayer;
 import weapons.ammo.Bullet;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class ClientController extends Controller{
 
@@ -21,7 +23,17 @@ public class ClientController extends Controller{
         try {
             System.out.println("waiting for connection...");
 
-            socket = new Socket("localhost", Controller.PORT);
+
+
+            //socket = new Socket("142.207.59.6", Controller.PORT);
+            //socket = new Socket("142.207.59.140", Controller.PORT);
+            String ipAddress= JOptionPane.showInputDialog ("Please enter the server's ip address:");
+            /*Scanner inputReader = new Scanner(System.in);
+            System.out.println("Please enter ip address: ");
+            String ipAddress = inputReader.nextLine(); //get file name
+            System.out.println("You entered" + ipAddress + ".");*/
+
+            socket = new Socket(ipAddress, Controller.PORT);
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socket);
