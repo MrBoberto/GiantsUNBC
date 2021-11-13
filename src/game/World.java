@@ -3,6 +3,8 @@ package game;
 import javax.swing.*;
 import java.security.SecureRandom;
 
+import static java.lang.Integer.parseInt;
+
 public class World {
     private static World theWorld;
     private Controller controller;
@@ -10,8 +12,17 @@ public class World {
 
     private World()
     {
-        int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client"));
+        boolean isValidInput = false;
+        String choiceString = "";
+        int choice = -1;
 
+        while(!isValidInput && choiceString != null) {
+            choiceString = JOptionPane.showInputDialog("1 for server | 2 for client");
+            if (choiceString != null && (choiceString.equals("1") || choiceString.equals("2"))) {
+                choice = parseInt(choiceString);
+                isValidInput = true;
+            }
+        }
 
         if(choice==1){
             controller = new ServerController();

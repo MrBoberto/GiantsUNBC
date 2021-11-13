@@ -144,15 +144,18 @@ public class MainMenuTest {
         name.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(" Please enter your name");
                 boolean isValidPlayerName = false;
+
+                // While there is no valid input and user has not pressed cancel
                 while (!isValidPlayerName && playerName != null) {
                     playerName = (JOptionPane.showInputDialog("Name for server 1 | Name for server 2"));
-                    if (!playerName.equals("")) {
+                    // If user did not press cancel, and they typed something before pressing "Ok"
+                    if (playerName != null && !playerName.equals("")) {
                         isValidPlayerName = true;
                         System.out.println("playerName " +playerName);
                     }
                 }
+                // If user pressed "Ok" without typing anything
                 if (playerName == null) {
                     playerName = "";
                 }
