@@ -20,7 +20,7 @@ public abstract class Player extends Thing implements Creature {
     // The texture of the player being used in the current frame
     protected ImageFrame currentImage;
     // The integer representation of the player's current position
-    protected Point pos;
+//    protected Point pos;
     protected double velX = 0;
     protected double velY = 0;
     protected Rectangle boundRect;
@@ -84,10 +84,10 @@ public abstract class Player extends Thing implements Creature {
 
         loadImageStrips();
         currentImage = standing.getHead();
-        pos = new Point((int) super.getX(), (int) super.getY());
+       // pos = new Point((int) super.getX(), (int) super.getY());
         pocketMoney = 0;
-        boundRect = new Rectangle(pos.x - currentImage.getImage().getWidth() / 2,
-                pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+        boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 2,
+                (int)this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
 
         weapons.add(new Shotgun(this));
@@ -154,8 +154,8 @@ public abstract class Player extends Thing implements Creature {
 
         // Sets up the axis of rotation
         AffineTransform affTra = AffineTransform.getTranslateInstance(
-                pos.x - currentImage.getImage().getWidth() / 2,
-                pos.y - currentImage.getImage().getHeight() / 2);
+                x - currentImage.getImage().getWidth() / 2,
+                y - currentImage.getImage().getHeight() / 2);
         // Rotates the frame
         affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2,
                 currentImage.getImage().getHeight() / 2);
@@ -166,14 +166,14 @@ public abstract class Player extends Thing implements Creature {
 
         // Draws the player's hitbox
         g.setColor(new Color(0, 0, 200));
-        g.drawRect(pos.x - currentImage.getImage().getWidth() / 2,
-                pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+        g.drawRect((int)x - currentImage.getImage().getWidth() / 2,
+                (int)y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
     }
 
-    public Point getPos() {
-        return pos;
-    }
+//    public Point getPos() {
+//        return pos;
+//    }
 
     public boolean isFalling() {
         return isFalling;

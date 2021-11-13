@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public abstract class Bullet implements Projectile {
     // The precise position of the object, for use with physics
-    private double x, y;
+    protected double x, y;
     protected int ID;
     private static int nextID = 0;
     int playerIBelongTo;
@@ -38,11 +38,24 @@ public abstract class Bullet implements Projectile {
         return ID;
     }
 
+    public abstract boolean hasStopped();
+
     public int getPlayerIBelongTo() {
         return playerIBelongTo;
     }
 
     public Type getTYPE() {
         return TYPE;
+    }
+
+    @Override
+    public String toString() {
+        return "Bullet{" +
+                "x=" + x +
+                ", y=" + y +
+                ", ID=" + ID +
+                ", playerIBelongTo=" + playerIBelongTo +
+                ", TYPE=" + TYPE +
+                '}';
     }
 }

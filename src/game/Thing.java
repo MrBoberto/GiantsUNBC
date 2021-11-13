@@ -2,7 +2,7 @@ package game;
 
 public class Thing {
     // The precise position of the object, for use with physics
-    private double x, y, angle;
+    protected double x, y, angle;
 
     public Thing(double x, double y, double angle) {
         this.x = x;

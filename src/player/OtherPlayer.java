@@ -25,8 +25,8 @@ public class OtherPlayer extends Player{
             velY = 0;
             isFalling = false;
         }
-        boundRect = new Rectangle(pos.x - currentImage.getImage().getWidth() / 2,
-                pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+        boundRect = new Rectangle((int)x - currentImage.getImage().getWidth() / 2,
+                (int)y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
     }
 }

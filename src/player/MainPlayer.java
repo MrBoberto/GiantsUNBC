@@ -237,7 +237,7 @@ public class MainPlayer extends Player {
         // Determine distance travelled
         super.setX(super.getX() + velX);
         super.setY(super.getY() + velY);
-        pos.setLocation(super.getX(), super.getY());
+ //       pos.setLocation(super.getX(), super.getY());
     }
 
     /**
@@ -280,8 +280,8 @@ public class MainPlayer extends Player {
             velY = 0;
             isFalling = false;
         }
-        boundRect = new Rectangle(pos.x - currentImage.getImage().getWidth() / 2,
-                pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+        boundRect = new Rectangle((int)x - currentImage.getImage().getWidth() / 2,
+                (int)y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
         if (weapons.getPrimary().getCurrentDelay() > 0) {
             weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getCurrentDelay() - 1);

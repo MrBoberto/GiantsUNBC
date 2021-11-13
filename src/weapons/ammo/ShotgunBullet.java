@@ -12,10 +12,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 
 public class ShotgunBullet extends Bullet {
@@ -23,7 +20,7 @@ public class ShotgunBullet extends Bullet {
     private Rectangle boundRect;
     private final double MASS = 0.02;
     transient private BufferedImage texture;
-    private Point pos;
+    //private Point pos;
     private double angle;
     private double velX;
     private double velY;
@@ -68,8 +65,8 @@ public class ShotgunBullet extends Bullet {
 
 //        System.out.println(", velX = " + velX + ", velY = " + velY);
 
-        pos = new Point((int) super.getX(), (int) super.getY());
-        boundRect = new Rectangle(pos.x - texture.getWidth() / 2, pos.y - texture.getHeight() / 2,
+        //pos = new Point((int) super.getX(), (int) super.getY());
+        boundRect = new Rectangle((int)x - texture.getWidth() / 2, (int)y - texture.getHeight() / 2,
                 texture.getWidth(), texture.getHeight());
     }
 
@@ -77,7 +74,10 @@ public class ShotgunBullet extends Bullet {
     public void tick() {
         super.setX(super.getX() + velX);
         super.setY(super.getY() + velY);
-        pos.setLocation(super.getX(), super.getY());
+        if(x == 0 || y == 0){
+            return;
+        }
+       // pos.setLocation(super.getX(), super.getY());
 
         // Apply vertical friction
         if (velY > World.controller.FRICTION) {
@@ -95,9 +95,9 @@ public class ShotgunBullet extends Bullet {
         } else if (velX != 0) {
             velX = 0;
         }
-        if(texture!= null && pos != null){
-            boundRect = new Rectangle(pos.x - texture.getWidth() / 2,
-                    pos.y - texture.getHeight() / 2, texture.getWidth(),
+        if(texture!= null){
+            boundRect = new Rectangle((int)x - texture.getWidth() / 2,
+                    (int)y- texture.getHeight() / 2, texture.getWidth(),
                     texture.getHeight());
         }
 
@@ -117,9 +117,12 @@ public class ShotgunBullet extends Bullet {
 
     @Override
     public void draw(Graphics g, ImageObserver imgObs) {
-        if(texture != null && pos != null){
+        if(texture == null){
+            loadImage();
+        }
+        if(texture != null && (x != 0 && y!=0)){
             AffineTransform affTra = AffineTransform.getTranslateInstance(
-                    pos.x - texture.getWidth() / 2, pos.y - texture.getHeight() / 2);
+                    x - texture.getWidth() / 2, y - texture.getHeight() / 2);
             affTra.rotate(angle, texture.getWidth() / 2,
                     texture.getHeight() / 2);
             Graphics2D g2d = (Graphics2D) g;
@@ -154,6 +157,12 @@ public class ShotgunBullet extends Bullet {
         return ID;
     }
 
+    @Override
+    public boolean hasStopped() {
+        return (velX == 0 && velY == 0);
+    }
+
+    @Serial
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         out.writeInt(1); // how many images are serialized?
@@ -161,6 +170,7 @@ public class ShotgunBullet extends Bullet {
             ImageIO.write(texture, "png", out); // png is lossless
     }
 
+    @Serial
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         texture = ImageIO.read(in);

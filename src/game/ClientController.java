@@ -45,7 +45,9 @@ public class ClientController extends Controller{
             repaint();
         } else if(object instanceof ServerUpdatePacket packet){
             if(otherPlayer != null) {
-                otherPlayer.getPos().setLocation(packet.getX(), packet.getY());
+                //otherPlayer.getPos().setLocation(packet.getX(), packet.getY());
+                otherPlayer.setX(packet.getX());
+                otherPlayer.setY(packet.getY());
                 otherPlayer.setAngle(packet.getAngle());
             }
 
@@ -54,6 +56,10 @@ public class ClientController extends Controller{
         } else if(object instanceof ServerBulletPacket packet){
 
             movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
+
+            if(movingAmmo.size() != 0) {
+                System.out.println(movingAmmo);
+            }
         }
     }
 
