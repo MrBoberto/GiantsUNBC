@@ -1,9 +1,16 @@
 package StartMenu;
 
+import tile.TileManager;
+import tile.Tiles;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Objects;
 
 public class MainMenuTest {
 
@@ -12,9 +19,12 @@ public class MainMenuTest {
     JPanel titleNamePanel;
     JLabel titleNameLabel;
     JPanel startButtonPanel;
+    JPanel backGround ;
     public static String playerName = "";
+    BufferedImage backGroundMain ;
 
     ButtonListener buttonListener = new ButtonListener();
+    TileManager tileManager = new TileManager(this);
 
 
     Font titleFont = new Font("Times New Roman",Font.PLAIN,90);
@@ -37,16 +47,48 @@ public class MainMenuTest {
         wow.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         wow.setMinimumSize(new Dimension(800, 800));
-        System.out.println(JFrame.MAXIMIZED_BOTH);
+
         wow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        wow.getContentPane().setBackground(Color.BLACK);
+        wow.getContentPane().setBackground(Color.BLUE);
         wow.setLayout(null);
         // to make window appear on the screen
         con  = wow.getContentPane();
+        Dimension d= wow.getMaximumSize();
+        wow.setSize(d.width, d.height);
+        System.out.println("Size" +wow.getWidth()+"width"+ d.height);
+        try{
 
-        titleNamePanel = new JPanel();
-        titleNamePanel.setBounds(100,100,600,150);
+            backGroundMain = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/imageRes/textBack.png")));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        backGround = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                Graphics2D g2 = (Graphics2D)g;
+                draw(g2);
+
+            }
+        };
+        backGround.setBounds(0,0,wow.getWidth(),wow.getHeight());
+       backGround.setBackground(Color.BLACK);
+
+
+        titleNamePanel = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+
+                    Graphics2D g2 = (Graphics2D)g;
+                    tileManager.draw(g2);
+            }
+        };
+        titleNamePanel.setBounds(480,100,600,150);
         titleNamePanel.setBackground(Color.black);
 
         titleNameLabel = new JLabel("THE BOYZ");
@@ -57,7 +99,7 @@ public class MainMenuTest {
 
         startButtonPanel = new JPanel();
         startButtonPanel.setBackground(Color.BLACK);
-        startButtonPanel.setBounds(300,400,100,200);
+        startButtonPanel.setBounds(700,400,100,200);
 
         startButton = new JButton("Start");
         startButton.setBackground(Color.black);
@@ -117,15 +159,23 @@ public class MainMenuTest {
         });
 
 
+        backGround.add(titleNamePanel);
         titleNamePanel.add(titleNameLabel);
         startButtonPanel.add(startButton);
         startButtonPanel.add(name);
         startButtonPanel.add(quit);
-
         con.add(startButtonPanel);
         con.add(titleNamePanel);
+        con.add(backGround);
+
+        wow.setResizable(false);
         wow.setVisible(true);
 
     }
+    public void draw(Graphics2D g2){
+        g2.drawImage(backGroundMain,0,0,wow.getWidth(),wow.getHeight(),null);
+    }
+
+
 
 }
