@@ -98,7 +98,7 @@ public class Fireball extends Ammo implements Projectile {
     public void draw(Graphics g, ImageObserver imgObs) {
         AffineTransform affTra = AffineTransform.getTranslateInstance(
                 pos.x - texture.getWidth() / 2, pos.y - texture.getHeight() / 2);
-        affTra.rotate(angle, texture.getWidth() / 2,
+        affTra.rotate(-angle, texture.getWidth() / 2,
                 texture.getHeight() / 2);
         Graphics2D g2d = (Graphics2D) g;
 
