@@ -37,7 +37,7 @@ public class ClientController extends Controller{
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socket);
-            outputConnection.sendPacket(new StartRequest());
+            outputConnection.sendPacket(new StartRequest(thisPlayer.getPlayerName()));
             inputConnection = new InputConnection(this, socket);
 
         } catch (Exception e) {
@@ -52,6 +52,7 @@ public class ClientController extends Controller{
         if(object instanceof StartPacket packet){
 
             thisPlayer = new MainPlayer(packet.getX(), packet.getY(), packet.getAngle());
+            thisPlayer.setPlayerName(packet.getPlayerName());
             otherPlayer = new OtherPlayer(WIDTH / 2, HEIGHT / 2, 0);
     //        outputConnection.setGameRunning(true);
             repaint();

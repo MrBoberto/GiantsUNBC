@@ -26,7 +26,7 @@ public class ShotgunBullet extends Bullet {
     private double velY;
     private final int SERIAL = 000;
 
-    public ShotgunBullet(int player, double aimX, double aimY) {
+    public ShotgunBullet(int player, double aimX, double aimY, int damage) {
         super();
         playerIBelongTo = player;
         if((playerIBelongTo == Player.SERVER_PLAYER && World.controller instanceof ServerController)
@@ -44,6 +44,7 @@ public class ShotgunBullet extends Bullet {
                     aimY - Controller.thisPlayer.getY(), 0);
         }
         TYPE = Type.ShotgunBullet;
+        this.damage = damage;
         loadImage();
         Controller.movingAmmo.add(this);
 

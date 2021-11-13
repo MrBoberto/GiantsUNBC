@@ -49,22 +49,21 @@ public class ServerController extends Controller {
 
     @Override
     public void packetReceived(Object object) {
-        if (object instanceof ClientUpdatePacket) {
-            ClientUpdatePacket packet = (ClientUpdatePacket) object;
+        if (object instanceof ClientUpdatePacket packet) {
             //otherPlayer.getPos().setLocation(packet.getX(), packet.getY());
             otherPlayer.setX(packet.getX());
             otherPlayer.setY(packet.getY());
             otherPlayer.setAngle(packet.getAngle());
 
             repaint();
-        } else if (object instanceof StartRequest) {
+        } else if (object instanceof StartRequest packet) {
 
-            outputConnection.sendPacket(new StartPacket( 10, 10, 0));
-            otherPlayer.getPlayerName()));
+            outputConnection.sendPacket(new StartPacket( 10, 10, 0, thisPlayer.getPlayerName()));
+            otherPlayer.setPlayerName(packet.getClientName());
             System.out.println("Start request received and resent.");
         } else if (object instanceof ClientBulletPacket packet){
             if(packet.getType() == Projectile.Type.ShotgunBullet){
-                movingAmmo.add(new ShotgunBullet(Player.CLIENT_PLAYER, packet.getMouseXLocation(), packet.getMouseYLocation()));
+                movingAmmo.add(new ShotgunBullet(Player.CLIENT_PLAYER, packet.getMouseXLocation(), packet.getMouseYLocation(), packet.getDamage()));
             }
 
         }
@@ -96,21 +95,29 @@ public class ServerController extends Controller {
                 }
 
             }
-            // Player who was hit (null if no one was hit)
-            Player victim = EntityCollision.getVictim(movingAmmo.get(j));
-            if (victim != null && victim != movingAmmo.get(j).getWeapon().getParent()) {
-                Projectile ammo = movingAmmo.get(j);
-                if (ammo.getSERIAL() != 002) {
+            // Player who was hit (-1 if no one was hit)
+            int victimNumber = EntityCollision.getVictim(movingAmmo.get(j));
+            if (victimNumber != -1 && victimNumber != movingAmmo.get(j).getPlayerIBelongTo()) {
+                Projectile bullet = movingAmmo.get(j);
+                if (bullet.getSERIAL() != 002) {
                     movingAmmo.remove(j);
                 }
                 // Player
-                Player killer = ammo.getWeapon().getParent();
-                victim.modifyHealth(-1 * ammo.getWeapon().getDamage());
-                killer.addTDO(-1 * ammo.getWeapon().getDamage());
+                Player killer;
+                Player victim;
+                if(movingAmmo.get(j).getPlayerIBelongTo() == Player.SERVER_PLAYER){
+                    killer = thisPlayer;
+                    victim = otherPlayer;
+                } else {
+                    killer = otherPlayer;
+                    victim = thisPlayer;
+                }
+
+                victim.modifyHealth(-1 * bullet.getDamage());
+                killer.addTDO(-1 * bullet.getDamage());
 
                 if (victim.getHealth() == 0) {
                     victim.incrementDeathCount();
-                    livingPlayers.remove(victim);
                     killer.incrementKillCount();
                     System.out.println(victim.getPlayerName() + " was memed by " +
                             killer.getPlayerName());

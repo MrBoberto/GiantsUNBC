@@ -11,6 +11,7 @@ public abstract class Bullet implements Projectile {
     private static int nextID = 0;
     int playerIBelongTo;
     Type TYPE = null;
+    protected int damage;
 
 
     protected Bullet() {
@@ -57,5 +58,8 @@ public abstract class Bullet implements Projectile {
                 ", playerIBelongTo=" + playerIBelongTo +
                 ", TYPE=" + TYPE +
                 '}';
+    }
+    public int getDamage() {
+        return damage;
     }
 }

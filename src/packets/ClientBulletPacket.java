@@ -11,13 +11,15 @@ public class ClientBulletPacket implements Serializable {
     double mouseXLocation;
     double mouseYLocation;
     Projectile.Type type;
+    int damage;
 
-    public ClientBulletPacket(double playerX, double playerY, double mouseXLocation, double mouseYLocation, Projectile.Type type) {
+    public ClientBulletPacket(double playerX, double playerY, double mouseXLocation, double mouseYLocation, Projectile.Type type, int damage) {
         this.playerX = playerX;
         this.playerY = playerY;
         this.mouseXLocation = mouseXLocation;
         this.mouseYLocation = mouseYLocation;
         this.type = type;
+        this.damage = damage;
     }
 
     public double getPlayerX() {
@@ -38,5 +40,9 @@ public class ClientBulletPacket implements Serializable {
 
     public Projectile.Type getType() {
         return type;
+    }
+
+    public int getDamage() {
+        return damage;
     }
 }

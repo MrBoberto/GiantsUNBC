@@ -16,7 +16,7 @@ public class Shotgun implements Weapon {
     private int currentDelay = 0;
     // Identifies type of gun
     public static final int SERIAL = 000;
-    public static final double DAMAGE = 10;
+    public static int DAMAGE = 10;
     public static final Type TYPE = Type.Shotgun;
 
     public Shotgun(Player playerIBelongTo) {
@@ -31,9 +31,9 @@ public class Shotgun implements Weapon {
     @Override
     public void shoot(double mouseX, double mouseY) {
         if(World.controller instanceof ServerController){
-            new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY);
+            new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
         } else {
-            World.controller.getOutputConnection().sendPacket(new ClientBulletPacket(playerIBelongTo.getX(), playerIBelongTo.getY(), mouseX, mouseY, Projectile.Type.ShotgunBullet));
+            World.controller.getOutputConnection().sendPacket(new ClientBulletPacket(playerIBelongTo.getX(), playerIBelongTo.getY(), mouseX, mouseY, Projectile.Type.ShotgunBullet, DAMAGE));
         }
 
     }

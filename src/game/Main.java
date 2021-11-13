@@ -18,6 +18,7 @@ public class Main {
 
         window.setResizable(false);
         window.pack();
+    }
     public static JFrame window = new JFrame("The Boyz");
     public static void startGame()  {
 

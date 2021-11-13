@@ -89,8 +89,6 @@ public abstract class Player extends Thing implements Creature {
     public Player(double x, double y, double angle) {
         super(x, y, angle);
 
-        loadImageStrips();
-        this.playerNumber = playerNumber;
         if (MainMenuTest.playerName.equals("")) {
             if (playerNumber == 0) {
                 playerName = "Host";
@@ -103,7 +101,7 @@ public abstract class Player extends Thing implements Creature {
 
         // Graphics-related
         setColour();
-        loadImageStrips(playerNumber);
+        loadImageStrips();
         currentImage = standing.getHead();
        // pos = new Point((int) super.getX(), (int) super.getY());
       //  pocketMoney = 0;
@@ -226,8 +224,8 @@ public abstract class Player extends Thing implements Creature {
 
         Font font = new Font("Arial", Font.BOLD, 20);
         FontMetrics stringSize = g2d.getFontMetrics(font);
-        g2d.drawString(playerName, pos.x - (stringSize.stringWidth(playerName)) / 2,
-                pos.y - currentImage.getImage().getHeight() / 2);
+        g2d.drawString(playerName, (int)x - (stringSize.stringWidth(playerName)) / 2,
+                (int)y - currentImage.getImage().getHeight() / 2);
     }
 
 //    public Point getPos() {

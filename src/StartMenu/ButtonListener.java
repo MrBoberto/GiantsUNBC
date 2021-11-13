@@ -23,9 +23,9 @@ private int number;
         wow.dispose();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        window.add(World.getWorld().getController());
-        window.addKeyListener(World.getWorld().getController());
-        window.addMouseListener(World.getWorld().getController());
+        window.add(World.controller);
+        window.addKeyListener(World.controller);
+        window.addMouseListener(World.controller);
 
         window.setResizable(false);
         window.pack();
@@ -35,7 +35,7 @@ private int number;
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-        System.out.println(Math.toDegrees(World.getWorld().atan(1, -2, 0)));
+        System.out.println(Math.toDegrees(World.atan(1, -2, 0)));
 
 
     }
