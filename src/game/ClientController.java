@@ -57,9 +57,9 @@ public class ClientController extends Controller{
 
             movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
 
-            if(movingAmmo.size() != 0) {
-                System.out.println(movingAmmo);
-            }
+//            if(movingAmmo.size() != 0) {
+//                System.out.println(movingAmmo);
+//            }
         }
     }
 

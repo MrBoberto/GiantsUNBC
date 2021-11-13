@@ -115,9 +115,9 @@ public class ServerController extends Controller {
 ////                }
 //            }
         }
-        if(movingAmmo.size() != 0) {
-            System.out.println(movingAmmo);
-        }
+//        if(movingAmmo.size() != 0) {
+//            System.out.println(movingAmmo);
+//        }
 
         repaint();
     }
