@@ -31,7 +31,7 @@ public class MainMenuTest {
     Font button = new Font("Times New Roman",Font.PLAIN,30);
     JButton startButton, quit, name;
     public static void main(String[] args) {
-        new MainMenuTest();
+        new MainMenuTest();//comments
 
     }
 
