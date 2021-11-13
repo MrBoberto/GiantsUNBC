@@ -92,37 +92,38 @@ public class ServerController extends Controller {
                     movingAmmo.remove(null);
                 } else {
                     movingAmmo.get(j).tick();
+                    // Player who was hit (-1 if no one was hit)
+                    int victimNumber = EntityCollision.getVictim(movingAmmo.get(j));
+                    if (victimNumber != -1 && victimNumber != movingAmmo.get(j).getPlayerIBelongTo()) {
+                        Projectile bullet = movingAmmo.get(j);
+                        if (bullet.getSERIAL() != 002) {
+                            movingAmmo.remove(j);
+                        }
+                        // Player
+                        Player killer;
+                        Player victim;
+                        if(movingAmmo.get(j).getPlayerIBelongTo() == Player.SERVER_PLAYER){
+                            killer = thisPlayer;
+                            victim = otherPlayer;
+                        } else {
+                            killer = otherPlayer;
+                            victim = thisPlayer;
+                        }
+
+                        victim.modifyHealth(-1 * bullet.getDamage());
+                        killer.addTDO(-1 * bullet.getDamage());
+
+                        if (victim.getHealth() == 0) {
+                            victim.incrementDeathCount();
+                            killer.incrementKillCount();
+                            System.out.println(victim.getPlayerName() + " was memed by " +
+                                    killer.getPlayerName());
+                        }
+                    }
                 }
 
             }
-            // Player who was hit (-1 if no one was hit)
-            int victimNumber = EntityCollision.getVictim(movingAmmo.get(j));
-            if (victimNumber != -1 && victimNumber != movingAmmo.get(j).getPlayerIBelongTo()) {
-                Projectile bullet = movingAmmo.get(j);
-                if (bullet.getSERIAL() != 002) {
-                    movingAmmo.remove(j);
-                }
-                // Player
-                Player killer;
-                Player victim;
-                if(movingAmmo.get(j).getPlayerIBelongTo() == Player.SERVER_PLAYER){
-                    killer = thisPlayer;
-                    victim = otherPlayer;
-                } else {
-                    killer = otherPlayer;
-                    victim = thisPlayer;
-                }
 
-                victim.modifyHealth(-1 * bullet.getDamage());
-                killer.addTDO(-1 * bullet.getDamage());
-
-                if (victim.getHealth() == 0) {
-                    victim.incrementDeathCount();
-                    killer.incrementKillCount();
-                    System.out.println(victim.getPlayerName() + " was memed by " +
-                            killer.getPlayerName());
-                }
-            }
         }
 //        if(movingAmmo.size() != 0) {
 //            System.out.println(movingAmmo);

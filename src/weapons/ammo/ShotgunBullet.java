@@ -101,11 +101,6 @@ public class ShotgunBullet extends Bullet {
                     (int)y- texture.getHeight() / 2, texture.getWidth(),
                     texture.getHeight());
         }
-
-
-        if (velX == 0 && velY == 0) {
-            Controller.movingAmmo.remove(this);
-        }
     }
 
     public void loadImage() {
