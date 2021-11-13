@@ -92,12 +92,9 @@ public abstract class Player extends Thing implements Creature {
 
         if (MainMenuTest.playerName.equals("")) {
             if (playerNumber == 0) {
-                playerName = mainMenuTest.getPlayerName();
+                playerName = "Host";
             } else {
-                if(mainMenuTest.getPlayerName() == ""){
-                    playerName = "Guest";
-                }else
-                playerName = mainMenuTest.getPlayerName();
+                playerName = "Guest";
             }
         } else {
             playerName = MainMenuTest.playerName;
