@@ -150,6 +150,7 @@ public class MainMenuTest {
                     playerName = (JOptionPane.showInputDialog("Name for server 1 | Name for server 2"));
                     if (!playerName.equals("")) {
                         isValidPlayerName = true;
+                        System.out.println("playerName " +playerName);
                     }
                 }
                 if (playerName == null) {
@@ -176,6 +177,7 @@ public class MainMenuTest {
         g2.drawImage(backGroundMain,0,0,wow.getWidth(),wow.getHeight(),null);
     }
 
-
-
+    public  String getPlayerName() {
+        return playerName;
+    }
 }
