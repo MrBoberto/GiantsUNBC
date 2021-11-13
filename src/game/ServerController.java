@@ -55,6 +55,8 @@ public class ServerController extends Controller {
             otherPlayer.setY(packet.getY());
             otherPlayer.setAngle(packet.getAngle());
 
+            otherPlayer.tick();
+
             repaint();
         } else if (object instanceof StartRequest packet) {
 
@@ -84,6 +86,7 @@ public class ServerController extends Controller {
     public void actionPerformed(ActionEvent e) {
         Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
         thisPlayer.tick(mouseLoc);
+
         for (int j = 0; j < movingAmmo.size(); j++) {
             if(movingAmmo.get(j) != null) {
 
@@ -95,14 +98,14 @@ public class ServerController extends Controller {
                     // Player who was hit (-1 if no one was hit)
                     int victimNumber = EntityCollision.getVictim(movingAmmo.get(j));
                     if (victimNumber != -1 && victimNumber != movingAmmo.get(j).getPlayerIBelongTo()) {
-                        Projectile bullet = movingAmmo.get(j);
+                        Bullet bullet = movingAmmo.get(j);
                         if (bullet.getSERIAL() != 002) {
                             movingAmmo.remove(j);
                         }
                         // Player
                         Player killer;
                         Player victim;
-                        if(movingAmmo.get(j).getPlayerIBelongTo() == Player.SERVER_PLAYER){
+                        if(bullet.getPlayerIBelongTo() == Player.SERVER_PLAYER){
                             killer = thisPlayer;
                             victim = otherPlayer;
                         } else {

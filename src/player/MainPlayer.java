@@ -325,8 +325,8 @@ public class MainPlayer extends Player {
             velY = 0;
             isFalling = false;
         }
-        boundRect = new Rectangle((int)x - currentImage.getImage().getWidth() / 2,
-                (int)y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+        boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 2,
+                (int)this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
         if (weapons.getPrimary().getCurrentDelay() > 0) {
             weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getCurrentDelay() - 1);

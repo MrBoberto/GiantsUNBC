@@ -52,8 +52,9 @@ public class ClientController extends Controller{
         if(object instanceof StartPacket packet){
 
             thisPlayer = new MainPlayer(packet.getX(), packet.getY(), packet.getAngle());
-            thisPlayer.setPlayerName(packet.getPlayerName());
+
             otherPlayer = new OtherPlayer(WIDTH / 2, HEIGHT / 2, 0);
+            otherPlayer.setPlayerName(packet.getPlayerName());
     //        outputConnection.setGameRunning(true);
             repaint();
         } else if(object instanceof ServerUpdatePacket packet){
@@ -62,6 +63,8 @@ public class ClientController extends Controller{
                 otherPlayer.setX(packet.getX());
                 otherPlayer.setY(packet.getY());
                 otherPlayer.setAngle(packet.getAngle());
+
+                otherPlayer.tick();
             }
 
 

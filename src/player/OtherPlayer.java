@@ -4,9 +4,16 @@ import game.World;
 
 import java.awt.*;
 
-public class OtherPlayer extends Player{
+public class OtherPlayer extends Player {
     public OtherPlayer(double x, double y, double angle) {
-        super( x, y, angle);
+        super(x, y, angle);
+    }
+
+    public void tick() {
+
+        boundRect = new Rectangle((int) this.x - currentImage.getImage().getWidth() / 2,
+                (int) this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+                currentImage.getImage().getHeight());
     }
 
     @Override
@@ -25,8 +32,8 @@ public class OtherPlayer extends Player{
             velY = 0;
             isFalling = false;
         }
-        boundRect = new Rectangle((int)x - currentImage.getImage().getWidth() / 2,
-                (int)y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+        boundRect = new Rectangle((int) this.x - currentImage.getImage().getWidth() / 2,
+                (int) this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
     }
 }
