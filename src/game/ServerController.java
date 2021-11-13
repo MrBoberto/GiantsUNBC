@@ -11,6 +11,7 @@ import weapons.ammo.Ammo;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,6 +23,9 @@ public class ServerController extends Controller {
 
     private InputConnection inputConnection;
     private OutputConnection outputConnection;
+
+    Point mouseLoc = new Point(0, 0);
+    private boolean isMouseOnScreen = false;
 
     public ServerController() {
         super();
@@ -71,6 +75,14 @@ public class ServerController extends Controller {
         }
     }
 
+    public void mouseEntered(MouseEvent e) {
+        isMouseOnScreen = true;
+    }
+
+    public void mouseExited(MouseEvent e) {
+        isMouseOnScreen = false;
+    }
+
     @Override
     public void close() {
         try {
@@ -84,21 +96,32 @@ public class ServerController extends Controller {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
+        Point mouseLocRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
+        if (isMouseOnScreen) {
+            double mouseX = mouseLocRelativeToScreen.getX() - this.getLocationOnScreen().getX();
+            double mouseY = mouseLocRelativeToScreen.getY() - this.getLocationOnScreen().getY();
+            mouseLoc = new Point((int) mouseX, (int) mouseY);
+        }
+
         player.tick(mouseLoc);
         for (int j = 0; j < movingAmmo.size(); j++) {
             movingAmmo.get(j).tick();
             // Player who was hit (null if no one was hit)
             Player victim = EntityCollision.getVictim(movingAmmo.get(j));
-            if (victim != null && victim != movingAmmo.get(j).getWeapon().getParent()) {
+            if (victim != null && victim.getPlayerNumber() != movingAmmo.get(j).getPlayerNumber()) {
                 Projectile ammo = movingAmmo.get(j);
-                if (ammo.getSERIAL() != 002) {
+                if (ammo.getSERIAL() != 001) {
                     movingAmmo.remove(j);
                 }
                 // Player
-                Player killer = ammo.getWeapon().getParent();
-                victim.modifyHealth(-1 * ammo.getWeapon().getDamage());
-                killer.addTDO(-1 * ammo.getWeapon().getDamage());
+                Player killer = victim;
+                for (int k = 0; k < livingPlayers.size(); k++) {
+                    if (livingPlayers.get(k).getPlayerNumber() == ammo.getPlayerNumber()) {
+                        killer = livingPlayers.get(k);
+                    }
+                }
+                victim.modifyHealth(-1 * ammo.getDamage());
+                killer.addTDO(ammo.getDamage());
 
                 if (victim.getHealth() == 0) {
                     victim.incrementDeathCount();

@@ -1,5 +1,6 @@
 package weapons.guns;
 
+import game.World;
 import player.Player;
 import weapons.Weapon;
 import weapons.ammo.Fireball;
@@ -7,6 +8,7 @@ import weapons.ammo.Fireball;
 import java.util.ArrayList;
 
 import game.Thing;
+import weapons.ammo.Nato;
 
 public class FlameThrower implements Weapon {
     private Player parent;
@@ -17,7 +19,6 @@ public class FlameThrower implements Weapon {
     private int currentDelay = 0;
     // Identifies type of gun
     private final int SERIAL = 002;
-    private final double DAMAGE = 1.0;
 
     public FlameThrower(Player parent) {
         this.parent = parent;
@@ -25,14 +26,18 @@ public class FlameThrower implements Weapon {
 
     /**
      * Constructs an ArrayList of shells and labels this as the bullets' parent
-     * @param x The vertical line passing through the selected location
-     * @param y The horizontal line passing through the selected location
+     * @param aimX The vertical line passing through the selected location
+     * @param aimY The horizontal line passing through the selected location
      */
     @Override
-    public void shoot(double x, double y) {
+    public void shoot(double aimX, double aimY) {
         ArrayList<Fireball> shell = new ArrayList<Fireball>(ROUNDCOUNT);
         for (int i = 0; i < ROUNDCOUNT; i++) {
-            shell.add(new Fireball(x, y, this));
+            shell.add(new Fireball(parent.getX(), parent.getY(), aimX, aimY, parent.getPlayerNumber(),
+                    MOMENTUM, parent.getDamageMultiplier(),
+                    World.getWorld().atan(aimX - getParent().getX(),
+                            aimY - getParent().getY(), 0) - INACCURACY / 2
+                            + getINACCURACY() * World.getWorld().getSRandom().nextDouble()));
 //            System.out.println("Fired fireball " + (i + 1));
         }
     }
@@ -75,10 +80,5 @@ public class FlameThrower implements Weapon {
     @Override
     public String toString() {
         return SERIAL + ", Flame Thrower";
-    }
-
-    @Override
-    public double getDamage() {
-        return this.DAMAGE * parent.getDamageMultiplier();
     }
 }

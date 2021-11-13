@@ -15,6 +15,8 @@ public class Fireball extends Ammo implements Projectile {
 
     private Rectangle boundRect;
     private final double MASS = 0.01;
+    private final double DAMAGE = 1.0;
+    private double damage = 0;
     private BufferedImage texture;
     private AffineTransform affTra;
     private Point pos;
@@ -23,18 +25,34 @@ public class Fireball extends Ammo implements Projectile {
     private double velY;
     private final int SERIAL = 002;
 
-    public Fireball(double aimX, double aimY, Weapon weapon) {
-        super(weapon.getParent().getX(), weapon.getParent().getY(), weapon);
+    /**
+     *
+     * @param x
+     * @param y
+     * @param aimX
+     * @param aimY
+     * @param playerNumber
+     * @param momentum
+     * @param multiplier
+     * @param angle
+     */
+    public Fireball(double x, double y, double aimX, double aimY, int playerNumber, double momentum, double multiplier, double angle) {
+        super(x, y, playerNumber);
 
         loadImage();
         World.getWorld().getController().movingAmmo.add(this);
 
-        angle = World.getWorld().atan(aimX - super.getWeapon().getParent().getX(),
-                aimY - super.getWeapon().getParent().getY(), 0) - super.getWeapon().getINACCURACY() / 2
-                + super.getWeapon().getINACCURACY() * World.getWorld().getSRandom().nextDouble();
+        this.angle = angle;
+        if (angle <= -Math.PI) {
+            angle += 2 * Math.PI;
+        } else if (angle > Math.PI) {
+            angle -= 2 * Math.PI;
+        }
+
+        damage = DAMAGE * multiplier;
 
 //        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = weapon.getMOMENTUM() / MASS - 0.5 * (weapon.getMOMENTUM() / MASS) * World.getWorld().getSRandom().nextDouble();
+        double speed = momentum / MASS - (momentum / (MASS * 2)) * World.getWorld().getSRandom().nextDouble();
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
 //            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
@@ -119,5 +137,10 @@ public class Fireball extends Ammo implements Projectile {
     @Override
     public int getSERIAL() {
         return SERIAL;
+    }
+
+    @Override
+    public double getDamage() {
+        return damage;
     }
 }

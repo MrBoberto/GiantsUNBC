@@ -5,12 +5,12 @@ import weapons.Weapon;
 public class Ammo {
     // The precise position of the object, for use with physics
     private double x, y;
-    private Weapon weapon;
+    private final int PLAYERNUMBER;
 
-    public Ammo(double x, double y, Weapon weapon) {
+    public Ammo(double x, double y, int playerNumber) {
         this.x = x;
         this.y = y;
-        this.weapon = weapon;
+        this.PLAYERNUMBER = playerNumber;
     }
 
     public double getX() {
@@ -29,11 +29,7 @@ public class Ammo {
         this.y = y;
     }
 
-    public Weapon getWeapon() {
-        return weapon;
-    }
-
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
+    public int getPlayerNumber() {
+        return PLAYERNUMBER;
     }
 }
