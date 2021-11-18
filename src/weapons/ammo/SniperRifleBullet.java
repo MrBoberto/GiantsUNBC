@@ -99,6 +99,12 @@ public class SniperRifleBullet extends Bullet {
             velX = 0;
         }
 
+        if(texture!= null){
+            boundRect = new Rectangle((int)x - texture.getWidth() / 2,
+                    (int)y- texture.getHeight() / 2, texture.getWidth(),
+                    texture.getHeight());
+        }
+
     }
 
     @Override

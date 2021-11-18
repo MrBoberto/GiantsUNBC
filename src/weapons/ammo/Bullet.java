@@ -13,6 +13,7 @@ public abstract class Bullet extends GameObject implements Projectile {
     protected int playerIBelongToNumber;
     protected ProjectileType ProjectileTYPE = null;
     protected int damage;
+    Rectangle boundRect;
 
 
     protected Bullet(double x, double y, double angle) {
@@ -46,6 +47,12 @@ public abstract class Bullet extends GameObject implements Projectile {
         } else if (velX != 0) {
             velX = 0;
         }
+
+        if(texture!= null){
+            boundRect = new Rectangle((int)x - texture.getWidth() / 2,
+                    (int)y- texture.getHeight() / 2, texture.getWidth(),
+                    texture.getHeight());
+        }
     }
 
 
@@ -77,5 +84,10 @@ public abstract class Bullet extends GameObject implements Projectile {
     }
     public int getDamage() {
         return damage;
+    }
+
+    @Override
+    public Rectangle getBounds() {
+        return boundRect;
     }
 }

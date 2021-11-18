@@ -271,6 +271,11 @@ public abstract class Player extends GameObject {
         imageLoaded = true;
     }
 
+    @Override
+    public Rectangle getBounds() {
+        return boundRect;
+    }
+
     /**
      * Builds the animation.ImageStrip for a specific animation
      *
@@ -318,4 +323,6 @@ public abstract class Player extends GameObject {
     public void setWalking(boolean walking) {
         isWalking = walking;
     }
+
+
 }

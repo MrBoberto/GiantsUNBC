@@ -15,18 +15,7 @@ public abstract class GameObject implements Serializable {
 
     public abstract void tick();
     public abstract void render(Graphics g);
-    public Rectangle getBounds() {
-        if(texture != null) {
-            return new Rectangle(
-                    (int) x - texture.getWidth() / 2,
-                    (int) y - texture.getHeight() / 2,
-                    texture.getWidth(),
-                    texture.getHeight()
-            );
-        }else{
-            return  new Rectangle(-10,-10,0,0);
-        }
-    }
+    public abstract Rectangle getBounds();
 
     public GameObject(double x, double y, double angle) {
         this.x = x;
