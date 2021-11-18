@@ -40,8 +40,8 @@ public class ShotgunBullet extends Bullet {
                 || (playerIBelongTo == Player.CLIENT_PLAYER && World.controller instanceof ServerController)){
             setX(Controller.otherPlayer.getX());
             setY(Controller.otherPlayer.getY());
-            angle = World.atan(aimX - Controller.thisPlayer.getX(),
-                    aimY - Controller.thisPlayer.getY(), 0);
+            angle = World.atan(aimX - Controller.otherPlayer.getX(),
+                    aimY - Controller.otherPlayer.getY(), 0);
         }
         TYPE = Type.ShotgunBullet;
         this.damage = damage;

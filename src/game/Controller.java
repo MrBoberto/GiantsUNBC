@@ -30,16 +30,16 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
     protected BufferedImage background;
     protected Timer timer;
     public static MainPlayer thisPlayer = new MainPlayer(WIDTH, HEIGHT, 0);
-    public static OtherPlayer otherPlayer = new OtherPlayer(50,50,0);
+    public static OtherPlayer otherPlayer = new OtherPlayer(50, 50, 0);
 
     //Multiplayer
     protected InputConnection inputConnection;
     protected OutputConnection outputConnection;
     public static int PLAYER_COUNT = 2;
 
-    public enum Type{Fireball, Nato, Shot}
+    public enum Type {Fireball, Nato, Shot}
 
-    protected Controller(){
+    protected Controller() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
         loadImageStrips();
@@ -56,11 +56,14 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
         drawBackground(g);
 
-        if(thisPlayer != null){
+        if (thisPlayer != null) {
             thisPlayer.draw(g, this);
-                Controller.thisPlayer.draw(g, this);
-                Controller.otherPlayer.draw(g, this);
-            for (Bullet bullet : movingAmmo) {
+            Controller.thisPlayer.draw(g, this);
+            Controller.otherPlayer.draw(g, this);
+
+
+            for (int i = 0; i < movingAmmo.size(); i++) {
+                Bullet bullet = movingAmmo.get(i);
                 bullet.draw(g, this);
             }
         }
@@ -71,50 +74,51 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(thisPlayer !=null)
-        thisPlayer.keyPressed(e);
+        if (thisPlayer != null)
+            thisPlayer.keyPressed(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if(thisPlayer !=null)
-        thisPlayer.keyReleased(e);
+        if (thisPlayer != null)
+            thisPlayer.keyReleased(e);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(thisPlayer !=null)
-        thisPlayer.mouseClicked(e);
+        if (thisPlayer != null)
+            thisPlayer.mouseClicked(e);
 
         System.out.println(this.getClass().toString());
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if(thisPlayer !=null)
-        thisPlayer.mousePressed(e);
+        if (thisPlayer != null)
+            thisPlayer.mousePressed(e);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if(thisPlayer !=null)
-        thisPlayer.mouseReleased(e);
+        if (thisPlayer != null)
+            thisPlayer.mouseReleased(e);
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if(thisPlayer !=null)
-        thisPlayer.mouseEntered(e);
+        if (thisPlayer != null)
+            thisPlayer.mouseEntered(e);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if(thisPlayer !=null)
-        thisPlayer.mouseExited(e);
+        if (thisPlayer != null)
+            thisPlayer.mouseExited(e);
     }
 
     private void loadBackground() {
@@ -156,7 +160,8 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
     /**
      * Builds the animation.ImageStrip for a specific animation
-     * @param imgLocStr All file names to be loaded into the animation.ImageStrip for animation
+     *
+     * @param imgLocStr           All file names to be loaded into the animation.ImageStrip for animation
      * @param defaultFileLocation The file path of the images
      * @return An animation.ImageStrip for animation
      */

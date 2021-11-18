@@ -6,7 +6,7 @@ import packets.ClientBulletPacket;
 import game.World;
 import player.Player;
 import weapons.ammo.Projectile;
-import weapons.ammo.Nato;
+//import weapons.ammo.Nato;
 import weapons.ammo.ShotgunBullet;
 
 public class Shotgun implements Weapon {
@@ -33,21 +33,23 @@ public class Shotgun implements Weapon {
     //TODO: MERGEEEEEEEE
     @Override
     public void shoot(double mouseX, double mouseY) {
-        if(World.controller instanceof ServerController){
+        if (World.controller instanceof ServerController) {
             new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
         } else {
             World.controller.getOutputConnection().sendPacket(new ClientBulletPacket(playerIBelongTo.getX(), playerIBelongTo.getY(), mouseX, mouseY, Projectile.Type.ShotgunBullet, DAMAGE));
-    public void shoot(double aimX, double aimY) {
-        ArrayList<Shot> shell = new ArrayList<Shot>(ROUNDCOUNT);
-        for (int i = 0; i < ROUNDCOUNT; i++) {
-            shell.add(new Shot(parent.getX(), parent.getY(), aimX, aimY, parent.getPlayerNumber(),
-                    MOMENTUM, parent.getDamageMultiplier(),
-                    World.getWorld().atan(aimX - getParent().getX(),
-                            aimY - getParent().getY(), 0) - INACCURACY / 2
-                            + getINACCURACY() * World.getWorld().getSRandom().nextDouble()));
-//            System.out.println("Fired shot " + (i + 1));
         }
     }
+//            public void shoot(double aimX, double aimY) {
+//        ArrayList<Shot> shell = new ArrayList<Shot>(ROUNDCOUNT);
+//        for (int i = 0; i < ROUNDCOUNT; i++) {
+//            shell.add(new Shot(parent.getX(), parent.getY(), aimX, aimY, parent.getPlayerNumber(),
+//                    MOMENTUM, parent.getDamageMultiplier(),
+//                    World.getWorld().atan(aimX - getParent().getX(),
+//                            aimY - getParent().getY(), 0) - INACCURACY / 2
+//                            + getINACCURACY() * World.getWorld().getSRandom().nextDouble()));
+////            System.out.println("Fired shot " + (i + 1));
+//        }
+//    }
 
     @Override
     public Player getPlayerIBelongTo() {

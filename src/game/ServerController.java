@@ -43,7 +43,7 @@ public class ServerController extends Controller {
             inputConnection = new InputConnection(this, socket);
             System.out.println("input connection complete");
 
-  //          outputConnection.setGameRunning(true);
+            //          outputConnection.setGameRunning(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,11 +65,11 @@ public class ServerController extends Controller {
             repaint();
         } else if (object instanceof StartRequest packet) {
 
-            outputConnection.sendPacket(new StartPacket( 10, 10, 0, thisPlayer.getPlayerName()));
+            outputConnection.sendPacket(new StartPacket(10, 10, 0, thisPlayer.getPlayerName()));
             otherPlayer.setPlayerName(packet.getClientName());
             System.out.println("Start request received and resent.");
-        } else if (object instanceof ClientBulletPacket packet){
-            if(packet.getType() == Projectile.Type.ShotgunBullet){
+        } else if (object instanceof ClientBulletPacket packet) {
+            if (packet.getType() == Projectile.Type.ShotgunBullet) {
                 movingAmmo.add(new ShotgunBullet(Player.CLIENT_PLAYER, packet.getMouseXLocation(), packet.getMouseYLocation(), packet.getDamage()));
             }
 
@@ -106,7 +106,7 @@ public class ServerController extends Controller {
 
         thisPlayer.tick(mouseLoc);
         for (int j = 0; j < movingAmmo.size(); j++) {
-            if(movingAmmo.get(j) != null) {
+            if (movingAmmo.get(j) != null) {
 
                 if (movingAmmo.get(j).hasStopped()) {
                     movingAmmo.set(j, null);
@@ -123,7 +123,7 @@ public class ServerController extends Controller {
                         // Player
                         Player killer;
                         Player victim;
-                        if(bullet.getPlayerIBelongTo() == Player.SERVER_PLAYER){
+                        if (bullet.getPlayerIBelongTo() == Player.SERVER_PLAYER) {
                             killer = thisPlayer;
                             victim = otherPlayer;
                         } else {
@@ -143,8 +143,10 @@ public class ServerController extends Controller {
                     }
                 }
 
-        repaint();
+                repaint();
+            }
+
+
+        }
     }
-
-
 }
