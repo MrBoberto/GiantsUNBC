@@ -15,7 +15,6 @@ import java.io.*;
 
 public class ShotgunBullet extends Bullet {
 
-    private Rectangle boundRect;
     private final double MASS = 0.02;
     transient private BufferedImage texture;
     //private Point pos;
@@ -67,41 +66,9 @@ public class ShotgunBullet extends Bullet {
 //        System.out.println(", velX = " + velX + ", velY = " + velY);
 
         //pos = new Point((int) super.getX(), (int) super.getY());
-        boundRect = new Rectangle((int)x - texture.getWidth() / 2, (int)y - texture.getHeight() / 2,
-                texture.getWidth(), texture.getHeight());
     }
 
-    @Override
-    public void tick() {
-        super.setX(super.getX() + velX);
-        super.setY(super.getY() + velY);
-        if(x == 0 || y == 0){
-            return;
-        }
-       // pos.setLocation(super.getX(), super.getY());
 
-        // Apply vertical friction
-        if (velY > Controller.FRICTION) {
-            velY -= Controller.FRICTION;
-        } else if (velY < -Controller.FRICTION) {
-            velY += Controller.FRICTION;
-        } else if (velY != 0) {
-            velY = 0;
-        }
-        // Apply horizontal friction
-        if (velX > Controller.FRICTION) {
-            velX -= Controller.FRICTION;
-        } else if (velX < -Controller.FRICTION) {
-            velX += Controller.FRICTION;
-        } else if (velX != 0) {
-            velX = 0;
-        }
-        if(texture!= null){
-            boundRect = new Rectangle((int)x - texture.getWidth() / 2,
-                    (int)y- texture.getHeight() / 2, texture.getWidth(),
-                    texture.getHeight());
-        }
-    }
 
     public void loadImage() {
         try {
@@ -113,6 +80,7 @@ public class ShotgunBullet extends Bullet {
 
     @Override
     public void draw(Graphics g, ImageObserver imgObs) {
+
         if(texture == null){
             loadImage();
         }
@@ -136,7 +104,17 @@ public class ShotgunBullet extends Bullet {
 
     @Override
     public Rectangle getBounds() {
-        return boundRect;
+        if(texture != null){
+            return  new Rectangle(
+                    (int)x - texture.getWidth() / 2,
+                    (int)y - texture.getHeight() / 2,
+                    texture.getWidth(),
+                    texture.getHeight()
+            );
+        } else {
+            System.out.println("ERROR");
+            return null;
+        }
     }
 
     @Override

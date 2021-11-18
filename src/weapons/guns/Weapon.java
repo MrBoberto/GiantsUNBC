@@ -1,6 +1,5 @@
 package weapons.guns;
 
-import game.Thing;
 import player.Player;
 
 import java.io.Serializable;

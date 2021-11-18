@@ -11,15 +11,15 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public abstract class Controller extends JPanel implements ActionListener, KeyListener, MouseListener {
+public abstract class Controller extends Canvas implements Runnable {
     public static final int PORT = 55555;
-
     public static final int FRAMEDELAY = 15;
     public static final int WIDTH = 1280;
     public static final int HEIGHT = WIDTH / 16 * 9;
@@ -28,97 +28,97 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
     public static ArrayList<Bullet> movingAmmo = new ArrayList<>();
 
     protected BufferedImage background;
-    protected Timer timer;
     public static MainPlayer thisPlayer = new MainPlayer(WIDTH, HEIGHT, 0);
     public static OtherPlayer otherPlayer = new OtherPlayer(50, 50, 0);
+
+
 
     //Multiplayer
     protected InputConnection inputConnection;
     protected OutputConnection outputConnection;
-    public static int PLAYER_COUNT = 2;
 
-    public enum Type {Fireball, Nato, Shot}
+    private boolean isRunning = false;
+    private Thread thread;
+
+    //All GameObjects
+    public static final ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     protected Controller() {
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        setBackground(new Color(0, 0, 0));
-        loadImageStrips();
+        new GameWindow(WIDTH, HEIGHT, "THE BOYZ: The Game", this);
+        start();
 
-        timer = new Timer(FRAMEDELAY, this);
-        timer.start();
-
-        loadBackground();
+        this.addKeyListener(new KeyInput());
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    private void start(){
+        isRunning = true;
+        thread = new Thread(this);
+        thread.start();
+    }
 
-        drawBackground(g);
+    private void stop(){
+        isRunning = false;
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-        if (thisPlayer != null) {
-            thisPlayer.draw(g, this);
-            Controller.thisPlayer.draw(g, this);
-            Controller.otherPlayer.draw(g, this);
+    public void run(){
+        this.requestFocus();
+        long lastTime = System.nanoTime();
+        double amountOfTicks = 60.0;
+        double ns = 1000000000 / amountOfTicks;
+        double delta = 0;
+        long timer = System.currentTimeMillis();
+        int frames = 0;
+        while(isRunning){
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            while(delta >= 1){
+                tick();
+                delta--;
+            }
+            render();
+            frames++;
 
-
-            for (int i = 0; i < movingAmmo.size(); i++) {
-                Bullet bullet = movingAmmo.get(i);
-                bullet.draw(g, this);
+            if(System.currentTimeMillis() - timer > 1000){
+                timer += 1000;
+                frames = 0;
             }
         }
+        stop();
+    }
 
+    public void tick(){
+        for (int i = 0; i < gameObjects.size(); i++) {
+            gameObjects.get(i).tick();
+        }
+    }
+
+    public void render(){
+        BufferStrategy bs = this.getBufferStrategy();
+        if(bs == null){
+            this.createBufferStrategy(3);
+            return;
+        }
+
+        Graphics g = bs.getDrawGraphics();
+
+        // Update graphics in this section:
+        //////////////////////////////////////
+        drawBackground(g);
+
+        for (int i = 0; i < gameObjects.size(); i++) {
+            gameObjects.get(i).render(g);
+        }
 
         Toolkit.getDefaultToolkit().sync();
-    }
-
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (thisPlayer != null)
-            thisPlayer.keyPressed(e);
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        if (thisPlayer != null)
-            thisPlayer.keyReleased(e);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (thisPlayer != null)
-            thisPlayer.mouseClicked(e);
-
-        System.out.println(this.getClass().toString());
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        if (thisPlayer != null)
-            thisPlayer.mousePressed(e);
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        if (thisPlayer != null)
-            thisPlayer.mouseReleased(e);
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        if (thisPlayer != null)
-            thisPlayer.mouseEntered(e);
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        if (thisPlayer != null)
-            thisPlayer.mouseExited(e);
+        //////////////////////////////////////
+        g.dispose();
+        bs.show();
     }
 
     private void loadBackground() {
@@ -130,10 +130,7 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
     }
 
     private void drawBackground(Graphics g) {
-        g.drawImage(
-                background,
-                0, 0, this
-        );
+        g.drawImage(background, 0, 0, this);
     }
 
     public Player getPlayer() {
@@ -193,4 +190,6 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
     public OutputConnection getOutputConnection() {
         return outputConnection;
     }
+
+
 }

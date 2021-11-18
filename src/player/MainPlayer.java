@@ -1,5 +1,6 @@
 package player;
 
+import game.Controller;
 import game.World;
 
 import java.awt.*;
@@ -7,6 +8,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class MainPlayer extends Player {
+
+    //Main Player movement directions
+    private boolean up = false, down = false,right = false,left = false;
 
     public MainPlayer(double x, double y, double angle) {
         super(x, y, angle);
@@ -44,7 +48,7 @@ public class MainPlayer extends Player {
             tIsHeld = true;
         }
 
-        setAngle();
+        //setAngle();
     }
 
     public void keyReleased(KeyEvent e) {
@@ -125,9 +129,8 @@ public class MainPlayer extends Player {
             System.out.println(weapons);
         }
 
-        setAngle();
+        //setAngle();
     }
-
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (mouseInside) {
@@ -141,6 +144,7 @@ public class MainPlayer extends Player {
             button1Held = false;
         }
     }
+
 
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON3) {
@@ -175,18 +179,11 @@ public class MainPlayer extends Player {
         int avgX = 0;
         int avgY = 0;
 
-        if (wIsHeld) {
-            avgY++;
-        }
-        if (dIsHeld) {
-            avgX++;
-        }
-        if (sIsHeld) {
-            avgY--;
-        }
-        if (aIsHeld) {
-            avgX--;
-        }
+        if (up) avgY++;
+        if (right) avgX++;
+        if (down) avgY--;
+        if (left) avgX--;
+
         if (avgX == 0 && avgY == 0) {
             return;
         } else if (avgX == 0) {
@@ -282,7 +279,6 @@ public class MainPlayer extends Player {
         // Determine distance travelled
         super.setX(super.getX() + velX);
         super.setY(super.getY() + velY);
- //       pos.setLocation(super.getX(), super.getY());
     }
 
     /**
@@ -290,38 +286,40 @@ public class MainPlayer extends Player {
      * updates the player's hitbox, and shoots weapons
      * @param mouseLoc
      */
-    public void tick(Point mouseLoc) {
+    @Override
+    public void tick() {
+        setAngle();
         move();
 
         // Apply vertical friction
-        if (velY > World.controller.FRICTION) {
-            velY -= World.controller.FRICTION;
-        } else if (velY < -World.controller.FRICTION) {
-            velY += World.controller.FRICTION;
+        if (velY > Controller.FRICTION) {
+            velY -= Controller.FRICTION;
+        } else if (velY < -Controller.FRICTION) {
+            velY += Controller.FRICTION;
         } else if (velY != 0) {
             velY = 0;
         }
         // Apply horizontal friction
-        if (velX > World.controller.FRICTION) {
-            velX -= World.controller.FRICTION;
-        } else if (velX < -World.controller.FRICTION) {
-            velX += World.controller.FRICTION;
+        if (velX > Controller.FRICTION) {
+            velX -= Controller.FRICTION;
+        } else if (velX < -Controller.FRICTION) {
+            velX += Controller.FRICTION;
         } else if (velX != 0) {
             velX = 0;
         }
 
         //images
-        if (super.getX() <= currentImage.getImage().getWidth() / 2) {
-            super.setX(currentImage.getImage().getWidth() / 2);
-        } else if (super.getX() >= World.controller.WIDTH - currentImage.getImage().getWidth() / 2) {
-            super.setX(World.controller.WIDTH - currentImage.getImage().getWidth() / 2);
+        if (super.getX() <= currentImage.getImage().getWidth() / 2.0) {
+            super.setX(currentImage.getImage().getWidth() / 2.0);
+        } else if (super.getX() >= Controller.WIDTH - currentImage.getImage().getWidth() / 2.0) {
+            super.setX(Controller.WIDTH - currentImage.getImage().getWidth() / 2.0);
         }
 
-        if (super.getY() <= currentImage.getImage().getHeight() / 2) {
-            super.setY(currentImage.getImage().getHeight() / 2);
+        if (super.getY() <= currentImage.getImage().getHeight() / 2.0) {
+            super.setY(currentImage.getImage().getHeight() / 2.0);
             velY = 1;
-        } else if (super.getY() >= World.controller.HEIGHT - currentImage.getImage().getHeight() / 2) {
-            super.setY(World.controller.HEIGHT - currentImage.getImage().getHeight() / 2);
+        } else if (super.getY() >= Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0) {
+            super.setY(Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0);
             velY = 0;
             isFalling = false;
         }
@@ -336,16 +334,98 @@ public class MainPlayer extends Player {
         }
 
 
-        // Shoot at the selected point
-        if (button1Held) {
-            if (selectedWeapon == 0 && weapons.getPrimary().getCurrentDelay() == 0) {
-                weapons.getPrimary().shoot(mouseLoc.x, mouseLoc.y);
-                weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getMAX_DELAY());
-            } else if (selectedWeapon == 1 && weapons.getSecondary().getCurrentDelay() == 0) {
-                weapons.getSecondary().shoot(mouseLoc.x, mouseLoc.y);
-                weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getMAX_DELAY());
-
-            }
-        }
+//        // Shoot at the selected point
+//        if (button1Held) {
+//            if (selectedWeapon == 0 && weapons.getPrimary().getCurrentDelay() == 0) {
+//                weapons.getPrimary().shoot(mouseLoc.x, mouseLoc.y);
+//                weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getMAX_DELAY());
+//            } else if (selectedWeapon == 1 && weapons.getSecondary().getCurrentDelay() == 0) {
+//                weapons.getSecondary().shoot(mouseLoc.x, mouseLoc.y);
+//                weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getMAX_DELAY());
+//
+//            }
+//        }
     }
+
+    public boolean isUp() {
+        return up;
+    }
+
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+
+    public boolean isDown() {
+        return down;
+    }
+
+    public void setDown(boolean down) {
+        this.down = down;
+    }
+
+    public boolean isRight() {
+        return right;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+    public boolean isLeft() {
+        return left;
+    }
+
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+    public boolean isShiftIsHeld() {
+        return shiftIsHeld;
+    }
+
+    public void setShiftIsHeld(boolean shiftIsHeld) {
+        this.shiftIsHeld = shiftIsHeld;
+    }
+
+    public boolean isSpaceIsHeld() {
+        return spaceIsHeld;
+    }
+
+    public void setSpaceIsHeld(boolean spaceIsHeld) {
+        this.spaceIsHeld = spaceIsHeld;
+    }
+
+    public boolean isCtrlIsHeld() {
+        return ctrlIsHeld;
+    }
+
+    public void setCtrlIsHeld(boolean ctrlIsHeld) {
+        this.ctrlIsHeld = ctrlIsHeld;
+    }
+
+    public boolean istIsHeld() {
+        return tIsHeld;
+    }
+
+    public void settIsHeld(boolean tIsHeld) {
+        this.tIsHeld = tIsHeld;
+    }
+
+    public boolean isMouseInside() {
+        return mouseInside;
+    }
+
+    public void setMouseInside(boolean mouseInside) {
+        this.mouseInside = mouseInside;
+    }
+
+    public boolean isButton1Held() {
+        return button1Held;
+    }
+
+    public void setButton1Held(boolean button1Held) {
+        this.button1Held = button1Held;
+    }
+
+
 }

@@ -4,7 +4,7 @@ import StartMenu.MainMenuTest;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.ServerController;
-import game.Thing;
+import game.GameObject;
 import game.World;
 import weapons.guns.Shotgun;
 import weapons.guns.SniperRifle;
@@ -15,16 +15,25 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Player extends Thing implements Creature {
-    // The texture of the player being used in the current frame
-    protected ImageFrame currentImage;
+public abstract class Player extends GameObject {
+    // Can be 0 = primary or 1 = secondary
+    public static final int PRIMARY_WEAPON = 0, SECONDARY_WEAPON = 1;
     // The integer representation of the player's current position
 //    protected Point pos;
-    protected double velX = 0;
-    protected double velY = 0;
+    public static final int SERVER_PLAYER = 0, CLIENT_PLAYER = 1;
+    // Preset velocities of player actions
+    protected final double VELJUMP = -12;
+    protected final double VELSNEAK = 2.2;
+    protected final double VELJOG = 5.2;
+    protected final double VELDASH = 19;
+    protected final double VELSUPERDASH = 30;
+    protected final int LANDINGTIMERMAX = 27;
+    protected final int SUPERDASHTIMERMAX = 67;
+    public MainMenuTest mainMenuTest;
+    // The texture of the player being used in the current frame
+    protected ImageFrame currentImage;
     protected Rectangle boundRect;
     protected double health = 100;
     protected int killCount = 0;
@@ -32,29 +41,15 @@ public abstract class Player extends Thing implements Creature {
     protected double kdr = -1;
     protected double tdo = 0;
     protected double damageMultiplier = 1;
-    public MainMenuTest mainMenuTest;
-
-
     protected int playerNumber;
     protected String playerName;
     protected Color playerColour;
-
-    // Preset velocities of player actions
-    protected final double VELJUMP = -12;
-    protected final double VELSNEAK = 2.2;
-    protected final double VELJOG = 5.2;
-    protected final double VELDASH = 19;
-    protected final double VELSUPERDASH = 30;
-
     // Determines what the player did last frame to help determine what animation to play.
     protected int lastAction = 1;
-    protected final int LANDINGTIMERMAX = 27;
-    protected final int SUPERDASHTIMERMAX = 67;
     protected int landingTimer = LANDINGTIMERMAX;
     protected int superDashTimer = SUPERDASHTIMERMAX;
     protected int dashTimer = 0;
     protected int jumpTimer = 0;
-
     // Animation strips for player. Action number is next to each.
     protected ImageStrip standing;   // 1
     protected ImageStrip jogging;    // 2
@@ -64,11 +59,6 @@ public abstract class Player extends Thing implements Creature {
     protected ImageStrip jumped;     // 5 Animation loop at end of jump
     protected ImageStrip dashing;    // 6
     protected ImageStrip landing;    // 7
-
-    protected boolean wIsHeld = false;
-    protected boolean dIsHeld = false;
-    protected boolean sIsHeld = false;
-    protected boolean aIsHeld = false;
     protected boolean shiftIsHeld = false;
     protected boolean spaceIsHeld = false;
     protected boolean ctrlIsHeld = false;
@@ -78,15 +68,12 @@ public abstract class Player extends Thing implements Creature {
     protected boolean isFalling = true;
     protected boolean isJumping = false;
     protected boolean isSneaking = false;
-
     // Prevents dash from being held
     // Prevents dash from being held
     protected boolean canDash = true;
     protected Arsenal weapons = new Arsenal();
-    // Can be 0 = primary or 1 = secondary
     protected int selectedWeapon = 0;
 
-    public static final int SERVER_PLAYER = 0, CLIENT_PLAYER = 1;
 
     public Player(double x, double y, double angle) {
         super(x, y, angle);
@@ -105,10 +92,10 @@ public abstract class Player extends Thing implements Creature {
         setColour();
         loadImageStrips();
         currentImage = standing.getHead();
-       // pos = new Point((int) super.getX(), (int) super.getY());
-      //  pocketMoney = 0;
-        boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 2,
-                (int)this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+        // pos = new Point((int) super.getX(), (int) super.getY());
+        //  pocketMoney = 0;
+        boundRect = new Rectangle((int) this.x - currentImage.getImage().getWidth() / 2,
+                (int) this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
 
         weapons.add(new Shotgun(this));
@@ -181,7 +168,7 @@ public abstract class Player extends Thing implements Creature {
                 currentImage = jumped.getHead();
             }
             lastAction = 5;
-        } else if(wIsHeld || dIsHeld || sIsHeld || aIsHeld) {
+        } else if (wIsHeld || dIsHeld || sIsHeld || aIsHeld) {
             if (lastAction == 2) {
                 currentImage = jogging.getNext(currentImage);
             } else {
@@ -200,19 +187,21 @@ public abstract class Player extends Thing implements Creature {
 
     /**
      * Gets the current frame from loadImage() and rotates it based on the player's angle
+     *
      * @param g
      * @param imgObs
      */
-    public void draw(Graphics g, ImageObserver imgObs) {
+    @Override
+    public void render(Graphics g) {
         loadImage();
 
         // Sets up the axis of rotation
         AffineTransform affTra = AffineTransform.getTranslateInstance(
-                x - currentImage.getImage().getWidth() / 2,
-                y - currentImage.getImage().getHeight() / 2);
+                x - currentImage.getImage().getWidth() / 2.0,
+                y - currentImage.getImage().getHeight() / 2.0);
         // Rotates the frame
-        affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2,
-                currentImage.getImage().getHeight() / 2);
+        affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2.0,
+                currentImage.getImage().getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
 
         // Draws the rotated image
@@ -220,14 +209,14 @@ public abstract class Player extends Thing implements Creature {
 
         // Draws the player's hitbox
         g.setColor(playerColour);
-        g.drawRect((int)x - currentImage.getImage().getWidth() / 2,
-                (int)y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+        g.drawRect((int) x - currentImage.getImage().getWidth() / 2,
+                (int) y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
 
         Font font = new Font("Arial", Font.BOLD, 20);
         FontMetrics stringSize = g2d.getFontMetrics(font);
-        g2d.drawString(playerName, (int)x - (stringSize.stringWidth(playerName)) / 2,
-                (int)y - currentImage.getImage().getHeight() / 2);
+        g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,
+                (int) y - currentImage.getImage().getHeight() / 2);
     }
 
 //    public Point getPos() {
@@ -267,10 +256,11 @@ public abstract class Player extends Thing implements Creature {
 
     /**
      * Increase total damage output of the player
+     *
      * @param tdoMod Damage value to add
      */
     public void addTDO(double tdoMod) {
-        if (this.tdo > 1.6*(10^308) || this.tdo < -1.6*(10^308)) {
+        if (this.tdo > 1.6 * (10 ^ 308) || this.tdo < -1.6 * (10 ^ 308)) {
             System.out.println("ERROR: TDO overflow");
         } else {
             this.tdo += tdoMod;
@@ -298,9 +288,10 @@ public abstract class Player extends Thing implements Creature {
      */
     public void loadImageStrips() {
         ArrayList<String> imgLocStr = new ArrayList<>();
-        String defLocStr = "resources/Textures/PLAYER_ONE/";;
-       // Saves amount of text to be used
-        if(World.controller instanceof ServerController){
+        String defLocStr = "resources/Textures/PLAYER_ONE/";
+        ;
+        // Saves amount of text to be used
+        if (World.controller instanceof ServerController) {
             if (this instanceof MainPlayer) {
                 defLocStr = "resources/Textures/PLAYER_ONE/";
             } else if (this instanceof OtherPlayer) {
@@ -350,7 +341,8 @@ public abstract class Player extends Thing implements Creature {
 
     /**
      * Builds the animation.ImageStrip for a specific animation
-     * @param imgLocStr All file names to be loaded into the animation.ImageStrip for animation
+     *
+     * @param imgLocStr           All file names to be loaded into the animation.ImageStrip for animation
      * @param defaultFileLocation The file path of the images
      * @return An animation.ImageStrip for animation
      */
@@ -373,5 +365,17 @@ public abstract class Player extends Thing implements Creature {
             imageFileSubstring += imageFileNames.charAt(i);
         }
         return new ImageStrip(images, imageFileSubstring);
+    }
+
+    public int getSelectedWeapon() {
+        return selectedWeapon;
+    }
+
+    public void setSelectedWeapon(int selectedWeapon) {
+        this.selectedWeapon = selectedWeapon;
+    }
+
+    public Arsenal getWeapons() {
+        return weapons;
     }
 }

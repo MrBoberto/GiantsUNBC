@@ -1,6 +1,5 @@
 package weapons;
 
-import game.Thing;
 import player.Player;
 
 public interface Weapon {
