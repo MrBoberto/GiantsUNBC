@@ -15,12 +15,7 @@ import java.io.*;
 
 public class SniperRifleBullet extends Bullet {
 
-    private Rectangle boundRect;
     private final double MASS = 0.2;
-
-    private double angle;
-    private double velX;
-    private double velY;
     private final int SERIAL = 001;
 
     public SniperRifleBullet(int player, double aimX, double aimY, int damage) {
@@ -73,11 +68,7 @@ public class SniperRifleBullet extends Bullet {
             velY = World.cosAdj(speed, angle);
         }
 
-//        System.out.println(", velX = " + velX + ", velY = " + velY);
 
-        //pos = new Point((int) super.getX(), (int) super.getY());
-        boundRect = new Rectangle((int)x - texture.getWidth() / 2, (int)y - texture.getHeight() / 2,
-                texture.getWidth(), texture.getHeight());
     }
 
     @Override
@@ -141,11 +132,6 @@ public class SniperRifleBullet extends Bullet {
     }
 
     @Override
-    public Rectangle getBounds() {
-        return boundRect;
-    }
-
-    @Override
     public double getAngle() {
         return angle;
     }
@@ -155,22 +141,4 @@ public class SniperRifleBullet extends Bullet {
         return SERIAL;
     }
 
-    @Override
-    public boolean hasStopped() {
-        return (velX == 0 && velY == 0);
-    }
-
-    @Serial
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.defaultWriteObject();
-        out.writeInt(1); // how many images are serialized?
-
-        ImageIO.write(texture, "png", out); // png is lossless
-    }
-
-    @Serial
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        texture = ImageIO.read(in);
-    }
 }

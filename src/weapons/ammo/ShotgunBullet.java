@@ -16,10 +16,6 @@ import java.io.*;
 public class ShotgunBullet extends Bullet {
 
     private final double MASS = 0.02;
-    //private Point pos;
-    private double angle;
-    private double velX;
-    private double velY;
     private final int SERIAL = 000;
 
     public ShotgunBullet(int player, double aimX, double aimY, int damage) {
@@ -123,22 +119,6 @@ public class ShotgunBullet extends Bullet {
         return ID;
     }
 
-    @Override
-    public boolean hasStopped() {
-        return (velX == 0 && velY == 0);
-    }
 
-    @Serial
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.defaultWriteObject();
-        out.writeInt(1); // how many images are serialized?
 
-            ImageIO.write(texture, "png", out); // png is lossless
-    }
-
-    @Serial
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        texture = ImageIO.read(in);
-    }
 }

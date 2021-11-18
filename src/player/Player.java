@@ -3,10 +3,7 @@ package player;
 import StartMenu.MainMenuTest;
 import animation.ImageFrame;
 import animation.ImageStrip;
-import game.ClientController;
-import game.ServerController;
-import game.GameObject;
-import game.World;
+import game.*;
 import weapons.guns.Shotgun;
 import weapons.guns.SniperRifle;
 
@@ -78,23 +75,11 @@ public abstract class Player extends GameObject {
     protected int selectedWeapon = 0;
 
 
-    public Player(double x, double y, double angle) {
+    public Player(double x, double y, double angle, Color playerColour) {
         super(x, y, angle);
+        this.playerColour = playerColour;
 
-        if (MainMenuTest.playerName.equals("")) {
-            if (World.controller instanceof ServerController) {
-                playerName = "Host";
-            } else {
-                playerName = "Guest";
-            }
-        } else {
-            playerName = MainMenuTest.playerName;
-        }
-
-        // Graphics-related
-        setColour();
-        loadImageStrips();
-        currentImage = standing.getHead();
+        Controller.players.add(this);
 
         weapons.add(new Shotgun(this));
         weapons.add(new SniperRifle(this));
@@ -145,8 +130,8 @@ public abstract class Player extends GameObject {
      * Determines which animation is being played and which frame should currently be played
      */
     protected void loadImage() {
-        if(imageLoaded) return;
-        if (dashTimer > 0) {
+
+        if (dashTimer > 0 && dashing != null) {
             if (lastAction == 6) {
                 currentImage = dashing.getNext(currentImage);
             } else {
@@ -156,7 +141,7 @@ public abstract class Player extends GameObject {
             // Don't continue jump animation even if in midair
             jumpTimer = 0;
             dashTimer--;
-        } else if (velY != 0 && (jumpTimer > 0 || lastAction == 5 || lastAction == -5)) {
+        } else if (velY != 0 && (jumpTimer > 0 || lastAction == 5 || lastAction == -5) && jumping != null) {
             if (jumpTimer == jumping.getLength()) {
                 currentImage = jumping.getHead();
                 jumpTimer--;
@@ -167,14 +152,14 @@ public abstract class Player extends GameObject {
                 currentImage = jumped.getHead();
             }
             lastAction = 5;
-        } else if (isWalking) {
+        } else if (isWalking && jogging != null ) {
             if (lastAction == 2) {
                 currentImage = jogging.getNext(currentImage);
             } else {
                 currentImage = jogging.getHead();
             }
             lastAction = 2;
-        } else {
+        } else if (standing != null ) {
             if (lastAction == 1) {
                 currentImage = standing.getNext(currentImage);
             } else {
@@ -235,15 +220,6 @@ public abstract class Player extends GameObject {
         this.damageMultiplier = damageMultiplier;
     }
 
-    public void setColour() {
-        if ((World.controller instanceof ServerController && this instanceof MainPlayer)
-                || (World.controller instanceof ClientController && this instanceof OtherPlayer)) {
-            playerColour = new Color(0, 0, 200);
-        } else {
-            playerColour = new Color(200, 0, 0);
-        }
-    }
-
     /**
      * Loads the image files into the image strips based upon their names
      */
@@ -252,8 +228,7 @@ public abstract class Player extends GameObject {
         String defLocStr = "resources/Textures/PLAYER_ONE/";
         ;
         // Saves amount of text to be used
-        if ((World.controller instanceof ServerController && this instanceof MainPlayer)
-                || (World.controller instanceof ClientController && this instanceof OtherPlayer)) {
+        if (playerColour == Color.BLUE) {
                 defLocStr = "resources/Textures/PLAYER_ONE/";
             } else {
                 defLocStr = "resources/Textures/PLAYER_TWO/";

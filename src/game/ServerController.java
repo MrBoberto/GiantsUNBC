@@ -1,19 +1,18 @@
 package game;
 
+import StartMenu.MainMenuTest;
 import packets.ClientBulletPacket;
 import packets.ClientUpdatePacket;
 import packets.StartPacket;
 import packets.StartRequest;
 import player.MainPlayer;
+import player.OtherPlayer;
 import player.Player;
 import weapons.ammo.Bullet;
-import weapons.ammo.Projectile;
 import weapons.ammo.ShotgunBullet;
 import weapons.ammo.SniperRifleBullet;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -25,8 +24,15 @@ public class ServerController extends Controller {
 
     public ServerController() {
         super();
+        thisPlayer = new MainPlayer(WIDTH, HEIGHT, 0, Color.BLUE);
+        otherPlayer = new OtherPlayer(50, 50, 0, Color.RED);
 
-        thisPlayer = new MainPlayer(WIDTH / 2, HEIGHT / 2, 0);
+        if (MainMenuTest.playerName.equals("")) {
+            thisPlayer.setPlayerName("Host");
+            otherPlayer.setPlayerName("Guest");
+        } else {
+            thisPlayer.setPlayerName(MainMenuTest.playerName);
+        }
 
         try {
             serverSocket = new ServerSocket(Controller.PORT);
@@ -58,9 +64,6 @@ public class ServerController extends Controller {
             otherPlayer.setY(packet.getY());
             otherPlayer.setAngle(packet.getAngle());
 
-
-
-            repaint();
         } else if (object instanceof StartRequest packet) {
 
             outputConnection.sendPacket(new StartPacket(10, 10, 0, thisPlayer.getPlayerName()));
@@ -99,18 +102,18 @@ public class ServerController extends Controller {
     @Override
     public void tick(){
         super.tick();
-        for (int j = 0; j < gameObjects.size(); j++) {
-
-            if (gameObjects.get(j) != null && gameObjects.get(j) instanceof Bullet bullet) {
+        for (int j = 0; j < movingAmmo.size(); j++) {
+            if (movingAmmo.get(j) != null) {
+                Bullet bullet = movingAmmo.get(j);
                 if (bullet.hasStopped()) {
-                    gameObjects.set(j, null);
-                    gameObjects.remove(null);
+                    movingAmmo.remove(bullet);
+
                 } else {
                     // Player who was hit (-1 if no one was hit)
                     int victimNumber = EntityCollision.getVictim(bullet);
                     if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber()) {
                         if (bullet.getSERIAL() != 002) {
-                            gameObjects.remove(j);
+                            movingAmmo.remove(bullet);
                         }
                         // Player
                         Player killer;
@@ -137,6 +140,5 @@ public class ServerController extends Controller {
 
             }
         }
-        repaint();
     }
 }

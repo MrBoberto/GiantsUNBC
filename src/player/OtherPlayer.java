@@ -1,14 +1,20 @@
 package player;
 
+import game.ClientController;
+import game.ServerController;
 import game.World;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 public class OtherPlayer extends Player {
-    public OtherPlayer(double x, double y, double angle) {
-        super(x, y, angle);
+    public OtherPlayer(double x, double y, double angle, Color color) {
+        super(x, y, angle, color);
+        // Graphics-related
+        loadImageStrips();
+        currentImage = standing.getHead();
     }
+
 
     public void tick() {
 

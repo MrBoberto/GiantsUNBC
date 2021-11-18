@@ -13,10 +13,10 @@ public class KeyInput extends KeyAdapter {
     public void keyPressed(KeyEvent e){
         int key = e.getKeyCode();
 
-        for (int i = 0; i < Controller.gameObjects.size(); i++) {
-            GameObject tmp = Controller.gameObjects.get(i);
+        for (int i = 0; i < Controller.players.size(); i++) {
+            GameObject tmp = Controller.players.get(i);
 
-            if(tmp instanceof Player){
+            if(tmp != null){
 
                 switch (key){
                     case KeyEvent.VK_W -> Controller.thisPlayer.setUp(true);
@@ -47,10 +47,10 @@ public class KeyInput extends KeyAdapter {
     public void keyReleased(KeyEvent e){
         int key = e.getKeyCode();
 
-        for (int i = 0; i < Controller.gameObjects.size(); i++) {
-            GameObject tmp = Controller.gameObjects.get(i);
+        for (int i = 0; i < Controller.players.size(); i++) {
+            GameObject tmp = Controller.players.get(i);
 
-            if(tmp instanceof Player){
+            if(tmp != null){
 
                 switch (key){
                     case KeyEvent.VK_W -> Controller.thisPlayer.setUp(false);

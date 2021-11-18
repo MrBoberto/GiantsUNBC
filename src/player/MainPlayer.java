@@ -1,6 +1,7 @@
 package player;
 
 import StartMenu.MainMenuTest;
+import game.ClientController;
 import game.Controller;
 import game.ServerController;
 import game.World;
@@ -15,8 +16,13 @@ public class MainPlayer extends Player {
     //Main Player movement directions
     private boolean up = false, down = false,right = false,left = false;
 
-    public MainPlayer(double x, double y, double angle) {
-        super(x, y, angle);
+    public MainPlayer(double x, double y, double angle, Color color) {
+        super(x, y, angle, color);
+
+        // Graphics-related
+
+        loadImageStrips();
+        currentImage = standing.getHead();
     }
 
 
@@ -193,6 +199,7 @@ public class MainPlayer extends Player {
         isWalking = (up || left || down || right);
         loadImage();
 
+        if(currentImage == null) return;
         // Sets up the axis of rotation
         AffineTransform affTra = AffineTransform.getTranslateInstance(
                 x - currentImage.getImage().getWidth() / 2.0,

@@ -1,10 +1,12 @@
 package game;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.*;
 
-public abstract class GameObject {
+public abstract class GameObject implements Serializable {
     // The precise position of the object, for use with physics
     protected double x, y, angle;
     protected double velX = 0;
@@ -14,16 +16,15 @@ public abstract class GameObject {
     public abstract void tick();
     public abstract void render(Graphics g);
     public Rectangle getBounds() {
-        if(texture != null){
-            return  new Rectangle(
-                    (int)x - texture.getWidth() / 2,
-                    (int)y - texture.getHeight() / 2,
+        if(texture != null) {
+            return new Rectangle(
+                    (int) x - texture.getWidth() / 2,
+                    (int) y - texture.getHeight() / 2,
                     texture.getWidth(),
                     texture.getHeight()
             );
-        } else {
-            System.out.println("ERROR");
-            return null;
+        }else{
+            return  new Rectangle(-10,-10,0,0);
         }
     }
 
@@ -32,13 +33,27 @@ public abstract class GameObject {
         this.y = y;
         this.angle = angle;
 
-        Controller.gameObjects.add(this);
+
     }
 
     public GameObject(double x, double y) {
         this.x = x;
         this.y = y;
         this.angle = 0;
+    }
+
+    @Serial
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        if(texture == null) return;
+        out.writeInt(1); // how many images are serialized?
+        ImageIO.write(texture, "png", out); // png is lossless
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        texture = ImageIO.read(in);
     }
 
     public double getVelX() {

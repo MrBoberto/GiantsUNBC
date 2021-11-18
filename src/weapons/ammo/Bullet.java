@@ -2,6 +2,7 @@ package weapons.ammo;
 
 import game.Controller;
 import game.GameObject;
+import player.MainPlayer;
 
 import java.awt.*;
 
@@ -45,13 +46,6 @@ public abstract class Bullet extends GameObject implements Projectile {
         } else if (velX != 0) {
             velX = 0;
         }
-
-        //Destroy this bullet if it collides with any other object
-        for (int i = 0; i < Controller.gameObjects.size(); i++) {
-            if(getBounds().intersects(Controller.gameObjects.get(i).getBounds())){
-                Controller.gameObjects.remove(this);
-            }
-        }
     }
 
 
@@ -59,7 +53,9 @@ public abstract class Bullet extends GameObject implements Projectile {
         return ID;
     }
 
-    public abstract boolean hasStopped();
+    public boolean hasStopped() {
+        return (velX == 0 && velY == 0);
+    }
 
     public int getPlayerIBelongToNumber() {
         return playerIBelongToNumber;

@@ -1,20 +1,15 @@
 package game;
 
-import MoveIngRectangle.Window;
 import animation.ImageStrip;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
 import weapons.ammo.Bullet;
-import weapons.ammo.Projectile;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +21,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static final int HEIGHT = WIDTH / 16 * 9;
     public static final double GRAVITY = 0.6;
     public static final double FRICTION = 1.1; // Friction acting on objects
-    public static ArrayList<Bullet> movingAmmo = new ArrayList<>();
+
 
     protected BufferedImage background;
     public static MainPlayer thisPlayer;
@@ -42,7 +37,8 @@ public abstract class Controller extends Canvas implements Runnable {
     private Thread thread;
 
     //All GameObjects
-    public static final ArrayList<GameObject> gameObjects = new ArrayList<>();
+    public static ArrayList<Bullet> movingAmmo = new ArrayList<>();
+    public static ArrayList<Player> players = new ArrayList<>();
 
     protected Controller() {
         new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
@@ -50,16 +46,13 @@ public abstract class Controller extends Canvas implements Runnable {
         this.addKeyListener(new KeyInput());
         this.addMouseListener(new MouseInput());
 
-        thisPlayer = new MainPlayer(WIDTH, HEIGHT, 0);
-        otherPlayer = new OtherPlayer(50, 50, 0);
-
-
 
 
     }
 
     public void start(){
         isRunning = true;
+        loadBackground();
         thread = new Thread(this);
         thread.start();
     }
@@ -101,8 +94,14 @@ public abstract class Controller extends Canvas implements Runnable {
     }
 
     public void tick(){
-        for (int i = 0; i < gameObjects.size(); i++) {
-            gameObjects.get(i).tick();
+        for (int i = 0; i < players.size(); i++) {
+            if(players.get(i) != null)
+            players.get(i).tick();
+        }
+
+        for (int i = 0; i < movingAmmo.size(); i++) {
+            if(movingAmmo.get(i) != null)
+                movingAmmo.get(i).tick();
         }
     }
 
@@ -119,11 +118,16 @@ public abstract class Controller extends Canvas implements Runnable {
         //////////////////////////////////////
         drawBackground(g);
 
-        for (int i = 0; i < gameObjects.size(); i++) {
-            gameObjects.get(i).render(g);
+        for (int i = 0; i < players.size(); i++) {
+            if(players.get(i) != null)
+            players.get(i).render(g);
         }
 
-        Toolkit.getDefaultToolkit().sync();
+        for (int i = 0; i < movingAmmo.size(); i++) {
+            if(movingAmmo.get(i) != null)
+                movingAmmo.get(i).render(g);
+        }
+
         //////////////////////////////////////
         g.dispose();
         bs.show();

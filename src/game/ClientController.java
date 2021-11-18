@@ -1,5 +1,6 @@
 package game;
 
+import StartMenu.MainMenuTest;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
@@ -21,6 +22,15 @@ public class ClientController extends Controller{
 
     public ClientController(){
         super();
+        thisPlayer = new MainPlayer(WIDTH, HEIGHT, 0, Color.RED);
+        otherPlayer = new OtherPlayer(50, 50, 0, Color.BLUE);
+
+        if (MainMenuTest.playerName.equals("")) {
+            thisPlayer.setPlayerName("Guest");
+            otherPlayer.setPlayerName("Host");
+        } else {
+            thisPlayer.setPlayerName(MainMenuTest.playerName);
+        }
         try {
             System.out.println("waiting for connection...");
 
@@ -46,6 +56,7 @@ public class ClientController extends Controller{
         }
 
         System.out.println("server + client connected.");
+
         start();
     }
 
@@ -53,24 +64,22 @@ public class ClientController extends Controller{
     public void packetReceived(Object object) {
         if(object instanceof StartPacket packet){
 
-            thisPlayer = new MainPlayer(packet.getX(), packet.getY(), packet.getAngle());
-
-            otherPlayer = new OtherPlayer(WIDTH / 2, HEIGHT / 2, 0);
             otherPlayer.setPlayerName(packet.getPlayerName());
     //        outputConnection.setGameRunning(true);
-            repaint();
+
         } else if(object instanceof ServerUpdatePacket packet){
             if(otherPlayer != null) {
+
+                otherPlayer.setWalking(otherPlayer.getX() != packet.getX() || otherPlayer.getY() != packet.getY());
                 //otherPlayer.getPos().setLocation(packet.getX(), packet.getY());
                 otherPlayer.setX(packet.getX());
                 otherPlayer.setY(packet.getY());
                 otherPlayer.setAngle(packet.getAngle());
 
-                otherPlayer.tick();
+
             }
 
 
-            repaint();
         } else if(object instanceof ServerBulletPacket packet){
 
             movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
@@ -87,12 +96,5 @@ public class ClientController extends Controller{
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void tick(){
-        super.tick();
-
-        repaint();
     }
 }
