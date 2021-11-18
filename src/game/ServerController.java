@@ -23,10 +23,6 @@ public class ServerController extends Controller {
     private ServerSocket serverSocket;
     private Socket socket;
 
-
-    Point mouseLoc = new Point(0, 0);
-    private boolean isMouseOnScreen = false;
-
     public ServerController() {
         super();
 
@@ -48,18 +44,21 @@ public class ServerController extends Controller {
         }
 
         System.out.println("server + client connected.");
+        start();
 
     }
 
     @Override
     public void packetReceived(Object object) {
         if (object instanceof ClientUpdatePacket packet) {
-            //otherPlayer.getPos().setLocation(packet.getX(), packet.getY());
+
+            otherPlayer.setWalking(otherPlayer.getX() != packet.getX() || otherPlayer.getY() != packet.getY());
+
             otherPlayer.setX(packet.getX());
             otherPlayer.setY(packet.getY());
             otherPlayer.setAngle(packet.getAngle());
 
-            otherPlayer.tick();
+
 
             repaint();
         } else if (object instanceof StartRequest packet) {
@@ -70,30 +69,20 @@ public class ServerController extends Controller {
         } else if (object instanceof ClientBulletPacket packet) {
 
             switch (packet.getType()){
-                case ShotgunBullet -> movingAmmo.add(new ShotgunBullet(
+                case ShotgunBullet -> new ShotgunBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
-                        )
-                );
-                case SniperRifleBullet -> movingAmmo.add(new SniperRifleBullet(
+                        );
+                case SniperRifleBullet -> new SniperRifleBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
-                        )
-                );
+                        );
             }
         }
-    }
-
-    public void mouseEntered(MouseEvent e) {
-        isMouseOnScreen = true;
-    }
-
-    public void mouseExited(MouseEvent e) {
-        isMouseOnScreen = false;
     }
 
     @Override
@@ -108,29 +97,20 @@ public class ServerController extends Controller {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Point mouseLocRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
-        if (isMouseOnScreen) {
-            double mouseX = mouseLocRelativeToScreen.getX() - this.getLocationOnScreen().getX();
-            double mouseY = mouseLocRelativeToScreen.getY() - this.getLocationOnScreen().getY();
-            mouseLoc = new Point((int) mouseX, (int) mouseY);
-        }
+    public void tick(){
+        super.tick();
+        for (int j = 0; j < gameObjects.size(); j++) {
 
-        thisPlayer.tick(mouseLoc);
-        for (int j = 0; j < movingAmmo.size(); j++) {
-            if (movingAmmo.get(j) != null) {
-
-                if (movingAmmo.get(j).hasStopped()) {
-                    movingAmmo.set(j, null);
-                    movingAmmo.remove(null);
+            if (gameObjects.get(j) != null && gameObjects.get(j) instanceof Bullet bullet) {
+                if (bullet.hasStopped()) {
+                    gameObjects.set(j, null);
+                    gameObjects.remove(null);
                 } else {
-                    movingAmmo.get(j).tick();
                     // Player who was hit (-1 if no one was hit)
-                    int victimNumber = EntityCollision.getVictim(movingAmmo.get(j));
-                    if (victimNumber != -1 && victimNumber != movingAmmo.get(j).getPlayerIBelongToNumber()) {
-                        Bullet bullet = movingAmmo.get(j);
+                    int victimNumber = EntityCollision.getVictim(bullet);
+                    if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber()) {
                         if (bullet.getSERIAL() != 002) {
-                            movingAmmo.remove(j);
+                            gameObjects.remove(j);
                         }
                         // Player
                         Player killer;
@@ -155,10 +135,8 @@ public class ServerController extends Controller {
                     }
                 }
 
-                repaint();
             }
-
-
         }
+        repaint();
     }
 }

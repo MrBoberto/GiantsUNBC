@@ -19,9 +19,6 @@ public class ClientController extends Controller{
 
     private Socket socket;
 
-    private Point mouseLoc = new Point(0, 0);
-    private boolean isMouseOnScreen = false;
-
     public ClientController(){
         super();
         try {
@@ -49,6 +46,7 @@ public class ClientController extends Controller{
         }
 
         System.out.println("server + client connected.");
+        start();
     }
 
     @Override
@@ -77,18 +75,7 @@ public class ClientController extends Controller{
 
             movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
 
-//            if(movingAmmo.size() != 0) {
-//                System.out.println(movingAmmo);
-//            }
         }
-    }
-
-    public void mouseEntered(MouseEvent e) {
-        isMouseOnScreen = true;
-    }
-
-    public void mouseExited(MouseEvent e) {
-        isMouseOnScreen = false;
     }
 
     @Override
@@ -103,20 +90,8 @@ public class ClientController extends Controller{
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Point mouseLocRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
-        if (isMouseOnScreen) {
-            double mouseX = mouseLocRelativeToScreen.getX() - this.getLocationOnScreen().getX();
-            double mouseY = mouseLocRelativeToScreen.getY() - this.getLocationOnScreen().getY();
-            mouseLoc = new Point((int) mouseX, (int) mouseY);
-        }
-        if(thisPlayer !=null){
-            thisPlayer.tick(mouseLoc);
-            for (int j = 0; j < movingAmmo.size(); j++) {
-                if(movingAmmo.get(j) != null)
-                movingAmmo.get(j).tick();
-            }
-        }
+    public void tick(){
+        super.tick();
 
         repaint();
     }

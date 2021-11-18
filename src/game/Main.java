@@ -7,15 +7,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class Main {
-    public static JFrame window = new JFrame("The Boyz");
     public static void startGame()  {
 
 
     }
 
     public static void main(String[] args) {
-        MainMenuTest mainMenuTest = new MainMenuTest();
-         int check=   mainMenuTest.getButtonListener().getNumber();
+        new MainMenuTest();
 
 
         try {

@@ -3,6 +3,7 @@ package player;
 import StartMenu.MainMenuTest;
 import animation.ImageFrame;
 import animation.ImageStrip;
+import game.ClientController;
 import game.ServerController;
 import game.GameObject;
 import game.World;
@@ -51,6 +52,7 @@ public abstract class Player extends GameObject {
     protected int dashTimer = 0;
     protected int jumpTimer = 0;
     // Animation strips for player. Action number is next to each.
+    protected boolean imageLoaded = false;
     protected ImageStrip standing;   // 1
     protected ImageStrip jogging;    // 2
     protected ImageStrip crouching;  // 3
@@ -68,6 +70,7 @@ public abstract class Player extends GameObject {
     protected boolean isFalling = true;
     protected boolean isJumping = false;
     protected boolean isSneaking = false;
+    protected boolean isWalking = false;
     // Prevents dash from being held
     // Prevents dash from being held
     protected boolean canDash = true;
@@ -79,7 +82,7 @@ public abstract class Player extends GameObject {
         super(x, y, angle);
 
         if (MainMenuTest.playerName.equals("")) {
-            if (playerNumber == 0) {
+            if (World.controller instanceof ServerController) {
                 playerName = "Host";
             } else {
                 playerName = "Guest";
@@ -92,11 +95,6 @@ public abstract class Player extends GameObject {
         setColour();
         loadImageStrips();
         currentImage = standing.getHead();
-        // pos = new Point((int) super.getX(), (int) super.getY());
-        //  pocketMoney = 0;
-        boundRect = new Rectangle((int) this.x - currentImage.getImage().getWidth() / 2,
-                (int) this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
-                currentImage.getImage().getHeight());
 
         weapons.add(new Shotgun(this));
         weapons.add(new SniperRifle(this));
@@ -146,7 +144,8 @@ public abstract class Player extends GameObject {
     /**
      * Determines which animation is being played and which frame should currently be played
      */
-    private void loadImage() {
+    protected void loadImage() {
+        if(imageLoaded) return;
         if (dashTimer > 0) {
             if (lastAction == 6) {
                 currentImage = dashing.getNext(currentImage);
@@ -168,7 +167,7 @@ public abstract class Player extends GameObject {
                 currentImage = jumped.getHead();
             }
             lastAction = 5;
-        } else if (wIsHeld || dIsHeld || sIsHeld || aIsHeld) {
+        } else if (isWalking) {
             if (lastAction == 2) {
                 currentImage = jogging.getNext(currentImage);
             } else {
@@ -185,43 +184,8 @@ public abstract class Player extends GameObject {
         }
     }
 
-    /**
-     * Gets the current frame from loadImage() and rotates it based on the player's angle
-     *
-     * @param g
-     * @param imgObs
-     */
-    @Override
-    public void render(Graphics g) {
-        loadImage();
 
-        // Sets up the axis of rotation
-        AffineTransform affTra = AffineTransform.getTranslateInstance(
-                x - currentImage.getImage().getWidth() / 2.0,
-                y - currentImage.getImage().getHeight() / 2.0);
-        // Rotates the frame
-        affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2.0,
-                currentImage.getImage().getHeight() / 2.0);
-        Graphics2D g2d = (Graphics2D) g;
 
-        // Draws the rotated image
-        g2d.drawImage(currentImage.getImage(), affTra, imgObs);
-
-        // Draws the player's hitbox
-        g.setColor(playerColour);
-        g.drawRect((int) x - currentImage.getImage().getWidth() / 2,
-                (int) y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
-                currentImage.getImage().getHeight());
-
-        Font font = new Font("Arial", Font.BOLD, 20);
-        FontMetrics stringSize = g2d.getFontMetrics(font);
-        g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,
-                (int) y - currentImage.getImage().getHeight() / 2);
-    }
-
-//    public Point getPos() {
-//        return pos;
-//    }
 
     public boolean isFalling() {
         return isFalling;
@@ -237,10 +201,6 @@ public abstract class Player extends GameObject {
 
     public void setJumping(boolean jumping) {
         isJumping = jumping;
-    }
-
-    public Rectangle getBounds() {
-        return boundRect;
     }
 
     public double getHealth() {
@@ -276,7 +236,8 @@ public abstract class Player extends GameObject {
     }
 
     public void setColour() {
-        if (playerNumber == 0) {
+        if ((World.controller instanceof ServerController && this instanceof MainPlayer)
+                || (World.controller instanceof ClientController && this instanceof OtherPlayer)) {
             playerColour = new Color(0, 0, 200);
         } else {
             playerColour = new Color(200, 0, 0);
@@ -291,19 +252,13 @@ public abstract class Player extends GameObject {
         String defLocStr = "resources/Textures/PLAYER_ONE/";
         ;
         // Saves amount of text to be used
-        if (World.controller instanceof ServerController) {
-            if (this instanceof MainPlayer) {
+        if ((World.controller instanceof ServerController && this instanceof MainPlayer)
+                || (World.controller instanceof ClientController && this instanceof OtherPlayer)) {
                 defLocStr = "resources/Textures/PLAYER_ONE/";
-            } else if (this instanceof OtherPlayer) {
+            } else {
                 defLocStr = "resources/Textures/PLAYER_TWO/";
             }
-        } else {
-            if (this instanceof OtherPlayer) {
-                defLocStr = "resources/Textures/PLAYER_ONE/";
-            } else if (this instanceof MainPlayer) {
-                defLocStr = "resources/Textures/PLAYER_TWO/";
-            }
-        }
+
 
 
         // Builds image strip for standing facing right
@@ -337,6 +292,8 @@ public abstract class Player extends GameObject {
         jumping = buildImageStrip(imgLocStr, defLocStr);
 //        System.out.println(jumping.toString());
         imgLocStr.clear();
+
+        imageLoaded = true;
     }
 
     /**
@@ -377,5 +334,13 @@ public abstract class Player extends GameObject {
 
     public Arsenal getWeapons() {
         return weapons;
+    }
+
+    public boolean isWalking() {
+        return isWalking;
+    }
+
+    public void setWalking(boolean walking) {
+        isWalking = walking;
     }
 }

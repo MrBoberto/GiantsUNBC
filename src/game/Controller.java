@@ -1,5 +1,6 @@
 package game;
 
+import MoveIngRectangle.Window;
 import animation.ImageStrip;
 import player.MainPlayer;
 import player.OtherPlayer;
@@ -28,8 +29,8 @@ public abstract class Controller extends Canvas implements Runnable {
     public static ArrayList<Bullet> movingAmmo = new ArrayList<>();
 
     protected BufferedImage background;
-    public static MainPlayer thisPlayer = new MainPlayer(WIDTH, HEIGHT, 0);
-    public static OtherPlayer otherPlayer = new OtherPlayer(50, 50, 0);
+    public static MainPlayer thisPlayer;
+    public static OtherPlayer otherPlayer;
 
 
 
@@ -44,13 +45,20 @@ public abstract class Controller extends Canvas implements Runnable {
     public static final ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     protected Controller() {
-        new GameWindow(WIDTH, HEIGHT, "THE BOYZ: The Game", this);
-        start();
+        new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
 
         this.addKeyListener(new KeyInput());
+        this.addMouseListener(new MouseInput());
+
+        thisPlayer = new MainPlayer(WIDTH, HEIGHT, 0);
+        otherPlayer = new OtherPlayer(50, 50, 0);
+
+
+
+
     }
 
-    private void start(){
+    public void start(){
         isRunning = true;
         thread = new Thread(this);
         thread.start();

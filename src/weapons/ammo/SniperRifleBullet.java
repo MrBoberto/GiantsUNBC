@@ -17,31 +17,36 @@ public class SniperRifleBullet extends Bullet {
 
     private Rectangle boundRect;
     private final double MASS = 0.2;
-    transient private BufferedImage texture;
+
     private double angle;
     private double velX;
     private double velY;
     private final int SERIAL = 001;
 
     public SniperRifleBullet(int player, double aimX, double aimY, int damage) {
-        super();
+        super(0,0,0);
 
         playerIBelongToNumber = player;
-
-
         if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
                 || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController)){
-            setX(Controller.thisPlayer.getX());
-            setY(Controller.thisPlayer.getY());
+            x = Controller.thisPlayer.getX();
+            y = Controller.thisPlayer.getY();
 
-            angle = World.atan(aimX - Controller.thisPlayer.getX(),
-                    aimY - Controller.thisPlayer.getY(), 0);
+            angle = World.atan(
+                    aimX - Controller.thisPlayer.getX(),
+                    aimY - Controller.thisPlayer.getY(),
+                    0
+            );
         } else if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ClientController)
                 || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ServerController)){
-            setX(Controller.otherPlayer.getX());
-            setY(Controller.otherPlayer.getY());
-            angle = World.atan(aimX - Controller.otherPlayer.getX(),
-                    aimY - Controller.otherPlayer.getY(), 0);
+            x = Controller.otherPlayer.getX();
+            y = Controller.otherPlayer.getY();
+
+            angle = World.atan(
+                    aimX - Controller.otherPlayer.getX(),
+                    aimY - Controller.otherPlayer.getY(),
+                    0
+            );
         }
 
         this.damage = damage;
@@ -103,23 +108,10 @@ public class SniperRifleBullet extends Bullet {
             velX = 0;
         }
 
-        if(texture != null) {
-            boundRect = new Rectangle((int)x - texture.getWidth() / 2,
-                    (int)y - texture.getHeight() / 2, texture.getWidth(),
-                    texture.getHeight());
-        }
-    }
-
-    public void loadImage() {
-        try {
-            texture = ImageIO.read(new File("resources/VFX/projectile/nato.png"));
-        } catch (IOException exc) {
-            System.out.println("Could not find image file: " + exc.getMessage());
-        }
     }
 
     @Override
-    public void draw(Graphics g, ImageObserver imgObs) {
+    public void render(Graphics g) {
         if(texture == null){
             loadImage();
         }
@@ -130,13 +122,21 @@ public class SniperRifleBullet extends Bullet {
                     texture.getHeight() / 2.0);
             Graphics2D g2d = (Graphics2D) g;
 
-            g2d.drawImage(texture, affTra, imgObs);
+            g2d.drawImage(texture, affTra, World.controller);
 
         /*
         g.setColor(new Color(50, 50, 100));
         g.drawRect(pos.x - texture.getWidth() / 2, pos.y - texture.getHeight() / 2, texture.getWidth(),
                 texture.getHeight());
          */
+        }
+    }
+
+    public void loadImage() {
+        try {
+            texture = ImageIO.read(new File("resources/VFX/projectile/nato.png"));
+        } catch (IOException exc) {
+            System.out.println("Could not find image file: " + exc.getMessage());
         }
     }
 

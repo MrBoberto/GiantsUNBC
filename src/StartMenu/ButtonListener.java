@@ -1,13 +1,18 @@
 package StartMenu;
 
+import game.Controller;
+import game.GameWindow;
+import game.Main;
 import game.World;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static StartMenu.MainMenuTest.wow;
-import static game.Main.window;
+
+import static game.World.controller;
 
 public class ButtonListener implements ActionListener {
 
@@ -21,23 +26,8 @@ private int number;
 
         System.out.println("The game has begun");
         wow.dispose();
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        window.add(World.controller);
-        window.addKeyListener(World.controller);
-        window.addMouseListener(World.controller);
-
-        window.setResizable(false);
-        window.pack();
-
-        ImageIcon icon = new ImageIcon("resources/GUI/icon/icon.png");
-        window.setIconImage(icon.getImage());
-
-        window.setLocationRelativeTo(null);
-        window.setVisible(true);
-        System.out.println(Math.toDegrees(World.atan(1, -2, 0)));
-
-
+        new World();
     }
 
     public int getNumber() {

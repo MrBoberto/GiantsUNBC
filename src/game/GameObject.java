@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
 public abstract class GameObject {
@@ -8,15 +9,30 @@ public abstract class GameObject {
     protected double x, y, angle;
     protected double velX = 0;
     protected double velY = 0;
+    transient protected BufferedImage texture;
 
     public abstract void tick();
     public abstract void render(Graphics g);
-    public abstract Rectangle getBounds();
+    public Rectangle getBounds() {
+        if(texture != null){
+            return  new Rectangle(
+                    (int)x - texture.getWidth() / 2,
+                    (int)y - texture.getHeight() / 2,
+                    texture.getWidth(),
+                    texture.getHeight()
+            );
+        } else {
+            System.out.println("ERROR");
+            return null;
+        }
+    }
 
     public GameObject(double x, double y, double angle) {
         this.x = x;
         this.y = y;
         this.angle = angle;
+
+        Controller.gameObjects.add(this);
     }
 
     public GameObject(double x, double y) {
@@ -64,4 +80,6 @@ public abstract class GameObject {
     public void setAngle(double angle) {
         this.angle = angle;
     }
+
+
 }

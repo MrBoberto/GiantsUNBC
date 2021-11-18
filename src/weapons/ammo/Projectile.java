@@ -7,15 +7,7 @@ import java.awt.image.ImageObserver;
 import java.io.Serializable;
 
 public interface Projectile extends Serializable{
-     void tick();
-     void draw(Graphics g, ImageObserver imgObs);
-     Rectangle getBounds();
-
-     double getX();
-     double getY();
-     double getAngle();
      int getSERIAL();
-     int getID();
      int getDamage();
      enum ProjectileType {ShotgunBullet, SniperRifleBullet}
 }

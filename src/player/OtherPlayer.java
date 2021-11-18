@@ -3,6 +3,7 @@ package player;
 import game.World;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 public class OtherPlayer extends Player {
     public OtherPlayer(double x, double y, double angle) {
@@ -11,29 +12,33 @@ public class OtherPlayer extends Player {
 
     public void tick() {
 
-        boundRect = new Rectangle((int) this.x - currentImage.getImage().getWidth() / 2,
-                (int) this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
-                currentImage.getImage().getHeight());
     }
 
     @Override
-    public void tick(Point MouseLoc) {
-        if (super.getX() <= currentImage.getImage().getWidth() / 2) {
-            super.setX(currentImage.getImage().getWidth() / 2);
-        } else if (super.getX() >= World.controller.WIDTH - currentImage.getImage().getWidth() / 2) {
-            super.setX(World.controller.WIDTH - currentImage.getImage().getWidth() / 2);
-        }
+    public void render(Graphics g) {
+        loadImage();
 
-        if (super.getY() <= currentImage.getImage().getHeight() / 2) {
-            super.setY(currentImage.getImage().getHeight() / 2);
-            velY = 1;
-        } else if (super.getY() >= World.controller.HEIGHT - currentImage.getImage().getHeight() / 2) {
-            super.setY(World.controller.HEIGHT - currentImage.getImage().getHeight() / 2);
-            velY = 0;
-            isFalling = false;
-        }
-        boundRect = new Rectangle((int) this.x - currentImage.getImage().getWidth() / 2,
-                (int) this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+        // Sets up the axis of rotation
+        AffineTransform affTra = AffineTransform.getTranslateInstance(
+                x - currentImage.getImage().getWidth() / 2.0,
+                y - currentImage.getImage().getHeight() / 2.0);
+        // Rotates the frame
+        affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2.0,
+                currentImage.getImage().getHeight() / 2.0);
+        Graphics2D g2d = (Graphics2D) g;
+
+        // Draws the rotated image
+        g2d.drawImage(currentImage.getImage(), affTra, World.controller);
+
+        // Draws the player's hitbox
+        g.setColor(playerColour);
+        g.drawRect((int) x - currentImage.getImage().getWidth() / 2,
+                (int) y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
+
+        Font font = new Font("Arial", Font.BOLD, 20);
+        FontMetrics stringSize = g2d.getFontMetrics(font);
+        g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,
+                (int) y - currentImage.getImage().getHeight() / 2);
     }
 }

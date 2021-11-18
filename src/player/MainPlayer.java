@@ -1,11 +1,14 @@
 package player;
 
+import StartMenu.MainMenuTest;
 import game.Controller;
+import game.ServerController;
 import game.World;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 
 public class MainPlayer extends Player {
 
@@ -16,160 +19,6 @@ public class MainPlayer extends Player {
         super(x, y, angle);
     }
 
-    public void keyPressed(KeyEvent e) {
-        // Determine key code so it can be compared to a key recognized by humans
-        int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_W) {
-            wIsHeld = true;
-        }
-        if (key == KeyEvent.VK_D) {
-            dIsHeld = true;
-        }
-        if (key == KeyEvent.VK_S) {
-            sIsHeld = true;
-        }
-        if (key == KeyEvent.VK_A) {
-            aIsHeld = true;
-        }
-        if (key == KeyEvent.VK_SHIFT) {
-            shiftIsHeld = true;
-            isSneaking = true;
-        }
-        if (key == KeyEvent.VK_SPACE) {
-            // Will eventually be removed
-            spaceIsHeld = true;
-            isJumping = true;
-        }
-        if (key == KeyEvent.VK_CONTROL) {
-            ctrlIsHeld = true;
-        }
-        if (key == KeyEvent.VK_T) {
-            tIsHeld = true;
-        }
-
-        //setAngle();
-    }
-
-    public void keyReleased(KeyEvent e) {
-        // Determine key code so that it can be compared to a key recognized by humans
-        int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_W) {
-            wIsHeld = false;
-        }
-        if (key == KeyEvent.VK_D) {
-            dIsHeld = false;
-        }
-        if (key == KeyEvent.VK_S) {
-            sIsHeld = false;
-        }
-        if (key == KeyEvent.VK_A) {
-            aIsHeld = false;
-        }
-        if (key == KeyEvent.VK_SHIFT) {
-            shiftIsHeld = false;
-            isSneaking = false;
-        }
-        if (key == KeyEvent.VK_SPACE) {
-            // Will eventually be removed
-            spaceIsHeld = false;
-        }
-        if (key == KeyEvent.VK_CONTROL) {
-            ctrlIsHeld = false;
-            canDash = true;
-        }
-        if (key == KeyEvent.VK_T) {
-            tIsHeld = false;
-            superDashTimer = SUPERDASHTIMERMAX;
-        }
-        if (key == KeyEvent.VK_1 || key == KeyEvent.VK_NUMPAD1) {
-            if (selectedWeapon == 0) {
-                weapons.setPrimary(1);
-            }
-            else {
-                weapons.setSecondary(1);
-            }
-            System.out.println(weapons);
-        }
-        if (key == KeyEvent.VK_2 || key == KeyEvent.VK_NUMPAD2) {
-            if (selectedWeapon == 0) {
-                weapons.setPrimary(2);
-            }
-            else {
-                weapons.setSecondary(2);
-            }
-            System.out.println(weapons);
-        }
-        if (key == KeyEvent.VK_3 || key == KeyEvent.VK_NUMPAD3) {
-            if (selectedWeapon == 0) {
-                weapons.setPrimary(3);
-            }
-            else {
-                weapons.setSecondary(3);
-            }
-            System.out.println(weapons);
-        }
-        if (key == KeyEvent.VK_4 || key == KeyEvent.VK_NUMPAD4) {
-            if (selectedWeapon == 0) {
-                weapons.setPrimary(4);
-            }
-            else {
-                weapons.setSecondary(4);
-            }
-            System.out.println(weapons);
-        }
-        if (key == KeyEvent.VK_5 || key == KeyEvent.VK_NUMPAD5) {
-            if (selectedWeapon == 0) {
-                weapons.setPrimary(5);
-            }
-            else {
-                weapons.setSecondary(5);
-            }
-            System.out.println(weapons);
-        }
-
-        //setAngle();
-    }
-    public void mousePressed(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            if (mouseInside) {
-                button1Held = true;
-            }
-        }
-    }
-
-    public void mouseReleased(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            button1Held = false;
-        }
-    }
-
-
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3) {
-            if (mouseInside) {
-                // Switch between primary and secondary
-                if (selectedWeapon < 1) {
-                    if (selectedWeapon == 0 && weapons.getSecondary() != null) {
-                        selectedWeapon ++;
-                    }
-                } else {
-                    if (selectedWeapon == 1 && weapons.getSecondary() != null) {
-                        selectedWeapon = 0;
-                    }
-                }
-            }
-        }
-    }
-
-    public void mouseEntered(MouseEvent e) {
-        mouseInside = true;
-    }
-
-    public void mouseExited(MouseEvent e) {
-        mouseInside = false;
-    }
 
     /**
      * Determines the angle in which the player is facing
@@ -259,7 +108,7 @@ public class MainPlayer extends Player {
             } else {
                 isJumping = false;
                 superDashTimer -= 1;
-                if (wIsHeld || dIsHeld || sIsHeld || aIsHeld) {
+                if (up || right || down || left) {
                     setVelocity(VELSNEAK / 2);
                 } else {
                     velX = 0;
@@ -268,9 +117,9 @@ public class MainPlayer extends Player {
         } else if (ctrlIsHeld && canDash && getVelocity() <= VELJOG) {
             setVelocity(VELDASH);
             dashTimer = dashing.getLength();
-        } else if (shiftIsHeld && (wIsHeld || dIsHeld || sIsHeld || aIsHeld)) {
+        } else if (shiftIsHeld && (up || right || down || left)) {
             setVelocity(VELSNEAK);
-        } else if ((wIsHeld || dIsHeld || sIsHeld || aIsHeld) && !shiftIsHeld && getVelocity() < VELJOG) {
+        } else if ((up || right || down || left) && !shiftIsHeld && getVelocity() < VELJOG) {
             setVelocity(VELJOG);
         } else if (shiftIsHeld) {
             velX = 0;
@@ -284,7 +133,6 @@ public class MainPlayer extends Player {
     /**
      * Translates the player using move(), applies friction, prevents the player from leaving the window,
      * updates the player's hitbox, and shoots weapons
-     * @param mouseLoc
      */
     @Override
     public void tick() {
@@ -332,19 +180,41 @@ public class MainPlayer extends Player {
         if (weapons.getSecondary().getCurrentDelay() > 0) {
             weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getCurrentDelay() - 1);
         }
+    }
 
+    /**
+     * Gets the current frame from loadImage() and rotates it based on the player's angle
+     *
+     * @param g
+     */
+    @Override
+    public void render(Graphics g) {
 
-//        // Shoot at the selected point
-//        if (button1Held) {
-//            if (selectedWeapon == 0 && weapons.getPrimary().getCurrentDelay() == 0) {
-//                weapons.getPrimary().shoot(mouseLoc.x, mouseLoc.y);
-//                weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getMAX_DELAY());
-//            } else if (selectedWeapon == 1 && weapons.getSecondary().getCurrentDelay() == 0) {
-//                weapons.getSecondary().shoot(mouseLoc.x, mouseLoc.y);
-//                weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getMAX_DELAY());
-//
-//            }
-//        }
+        isWalking = (up || left || down || right);
+        loadImage();
+
+        // Sets up the axis of rotation
+        AffineTransform affTra = AffineTransform.getTranslateInstance(
+                x - currentImage.getImage().getWidth() / 2.0,
+                y - currentImage.getImage().getHeight() / 2.0);
+        // Rotates the frame
+        affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2.0,
+                currentImage.getImage().getHeight() / 2.0);
+        Graphics2D g2d = (Graphics2D) g;
+
+        // Draws the rotated image
+        g2d.drawImage(currentImage.getImage(), affTra, World.controller);
+
+        // Draws the player's hitbox
+        g.setColor(playerColour);
+        g.drawRect((int) x - currentImage.getImage().getWidth() / 2,
+                (int) y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
+                currentImage.getImage().getHeight());
+
+        Font font = new Font("Arial", Font.BOLD, 20);
+        FontMetrics stringSize = g2d.getFontMetrics(font);
+        g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,
+                (int) y - currentImage.getImage().getHeight() / 2);
     }
 
     public boolean isUp() {

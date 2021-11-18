@@ -6,7 +6,6 @@ import java.security.SecureRandom;
 import static java.lang.Integer.parseInt;
 
 public final class World {
-    private static World theWorld = new World();
     public static Controller controller;
     private static SecureRandom sRandom = new SecureRandom();
 

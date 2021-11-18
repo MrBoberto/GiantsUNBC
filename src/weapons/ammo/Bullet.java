@@ -17,6 +17,7 @@ public abstract class Bullet extends GameObject implements Projectile {
     protected Bullet(double x, double y, double angle) {
         super(x, y, angle);
         ID = nextID++;
+        Controller.movingAmmo.add(this);
     }
 
     @Override
