@@ -7,8 +7,6 @@ import java.io.Serializable;
 
 public interface Weapon extends Serializable {
 
-    enum Type{Shotgun}
-
     void shoot(double mouseX, double mouseY);
 
     Player getPlayerIBelongTo();

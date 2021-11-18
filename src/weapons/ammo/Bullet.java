@@ -1,16 +1,12 @@
 package weapons.ammo;
 
-import player.Player;
-
-import java.io.Serializable;
-
 public abstract class Bullet implements Projectile {
     // The precise position of the object, for use with physics
     protected double x, y;
     protected int ID;
     private static int nextID = 0;
-    int playerIBelongTo;
-    Type TYPE = null;
+    int playerIBelongToNumber;
+    ProjectileType ProjectileTYPE = null;
     protected int damage;
 
 
@@ -41,12 +37,12 @@ public abstract class Bullet implements Projectile {
 
     public abstract boolean hasStopped();
 
-    public int getPlayerIBelongTo() {
-        return playerIBelongTo;
+    public int getPlayerIBelongToNumber() {
+        return playerIBelongToNumber;
     }
 
-    public Type getTYPE() {
-        return TYPE;
+    public ProjectileType getTYPE() {
+        return ProjectileTYPE;
     }
 
     @Override
@@ -55,8 +51,8 @@ public abstract class Bullet implements Projectile {
                 "x=" + x +
                 ", y=" + y +
                 ", ID=" + ID +
-                ", playerIBelongTo=" + playerIBelongTo +
-                ", TYPE=" + TYPE +
+                ", playerIBelongTo=" + playerIBelongToNumber +
+                ", TYPE=" + ProjectileTYPE +
                 '}';
     }
     public int getDamage() {

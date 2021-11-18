@@ -17,5 +17,5 @@ public interface Projectile extends Serializable{
      int getSERIAL();
      int getID();
      int getDamage();
-     enum Type{ShotgunBullet}
+     enum ProjectileType {ShotgunBullet, SniperRifleBullet}
 }

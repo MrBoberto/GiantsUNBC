@@ -5,7 +5,7 @@ import game.Controller;
 import game.ServerController;
 import game.World;
 import player.Player;
-import weapons.guns.Shotgun;
+import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -13,21 +13,21 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.*;
 
-public class ShotgunBullet extends Bullet {
+public class SniperRifleBullet extends Bullet {
 
     private Rectangle boundRect;
-    private final double MASS = 0.02;
+    private final double MASS = 0.2;
     transient private BufferedImage texture;
-    //private Point pos;
     private double angle;
     private double velX;
     private double velY;
-    private final int SERIAL = 000;
+    private final int SERIAL = 001;
 
-    public ShotgunBullet(int player, double aimX, double aimY, int damage) {
+    public SniperRifleBullet(int player, double aimX, double aimY, int damage) {
         super();
+
         playerIBelongToNumber = player;
-        ProjectileTYPE = ProjectileType.ShotgunBullet;
+
 
         if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
                 || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController)){
@@ -48,11 +48,15 @@ public class ShotgunBullet extends Bullet {
         loadImage();
         Controller.movingAmmo.add(this);
 
-
+        if (angle <= -Math.PI) {
+            angle += 2 * Math.PI;
+        } else if (angle > Math.PI) {
+            angle -= 2 * Math.PI;
+        }
 
 
 //        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = Shotgun.MOMENTUM / MASS - 10* World.getSRandom().nextDouble();
+        double speed = SniperRifle.MOMENTUM / MASS;
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
 //            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
@@ -75,10 +79,12 @@ public class ShotgunBullet extends Bullet {
     public void tick() {
         super.setX(super.getX() + velX);
         super.setY(super.getY() + velY);
+
         if(x == 0 || y == 0){
             return;
         }
-       // pos.setLocation(super.getX(), super.getY());
+
+        //pos.setLocation(super.getX(), super.getY());
 
         // Apply vertical friction
         if (velY > Controller.FRICTION) {
@@ -96,16 +102,17 @@ public class ShotgunBullet extends Bullet {
         } else if (velX != 0) {
             velX = 0;
         }
-        if(texture!= null){
+
+        if(texture != null) {
             boundRect = new Rectangle((int)x - texture.getWidth() / 2,
-                    (int)y- texture.getHeight() / 2, texture.getWidth(),
+                    (int)y - texture.getHeight() / 2, texture.getWidth(),
                     texture.getHeight());
         }
     }
 
     public void loadImage() {
         try {
-            texture = ImageIO.read(new File("resources/VFX/projectile/shot.png"));
+            texture = ImageIO.read(new File("resources/VFX/projectile/nato.png"));
         } catch (IOException exc) {
             System.out.println("Could not find image file: " + exc.getMessage());
         }
@@ -116,10 +123,10 @@ public class ShotgunBullet extends Bullet {
         if(texture == null){
             loadImage();
         }
-        if(texture != null && (x != 0 && y!=0)){
+        if(texture != null && (x != 0 && y!=0)) {
             AffineTransform affTra = AffineTransform.getTranslateInstance(
                     x - texture.getWidth() / 2.0, y - texture.getHeight() / 2.0);
-            affTra.rotate(angle, texture.getWidth() / 2.0,
+            affTra.rotate(-angle, texture.getWidth() / 2.0,
                     texture.getHeight() / 2.0);
             Graphics2D g2d = (Graphics2D) g;
 
@@ -131,7 +138,6 @@ public class ShotgunBullet extends Bullet {
                 texture.getHeight());
          */
         }
-
     }
 
     @Override
@@ -140,17 +146,13 @@ public class ShotgunBullet extends Bullet {
     }
 
     @Override
-    public int getSERIAL() {
-        return SERIAL;
-    }
-
-    @Override
     public double getAngle() {
         return angle;
     }
+
     @Override
-    public int getID() {
-        return ID;
+    public int getSERIAL() {
+        return SERIAL;
     }
 
     @Override
@@ -163,7 +165,7 @@ public class ShotgunBullet extends Bullet {
         out.defaultWriteObject();
         out.writeInt(1); // how many images are serialized?
 
-            ImageIO.write(texture, "png", out); // png is lossless
+        ImageIO.write(texture, "png", out); // png is lossless
     }
 
     @Serial

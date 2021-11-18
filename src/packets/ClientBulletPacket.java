@@ -1,7 +1,6 @@
 package packets;
 
 import weapons.ammo.Projectile;
-import weapons.guns.Weapon;
 
 import java.io.Serializable;
 
@@ -10,15 +9,15 @@ public class ClientBulletPacket implements Serializable {
     double playerY;
     double mouseXLocation;
     double mouseYLocation;
-    Projectile.Type type;
+    Projectile.ProjectileType projectileType;
     int damage;
 
-    public ClientBulletPacket(double playerX, double playerY, double mouseXLocation, double mouseYLocation, Projectile.Type type, int damage) {
+    public ClientBulletPacket(double playerX, double playerY, double mouseXLocation, double mouseYLocation, Projectile.ProjectileType projectileType, int damage) {
         this.playerX = playerX;
         this.playerY = playerY;
         this.mouseXLocation = mouseXLocation;
         this.mouseYLocation = mouseYLocation;
-        this.type = type;
+        this.projectileType = projectileType;
         this.damage = damage;
     }
 
@@ -38,8 +37,8 @@ public class ClientBulletPacket implements Serializable {
         return mouseYLocation;
     }
 
-    public Projectile.Type getType() {
-        return type;
+    public Projectile.ProjectileType getType() {
+        return projectileType;
     }
 
     public int getDamage() {

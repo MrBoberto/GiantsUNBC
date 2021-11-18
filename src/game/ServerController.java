@@ -5,12 +5,11 @@ import packets.ClientUpdatePacket;
 import packets.StartPacket;
 import packets.StartRequest;
 import player.MainPlayer;
-import player.OtherPlayer;
 import player.Player;
 import weapons.ammo.Bullet;
 import weapons.ammo.Projectile;
 import weapons.ammo.ShotgunBullet;
-import weapons.guns.Weapon;
+import weapons.ammo.SniperRifleBullet;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -69,10 +68,23 @@ public class ServerController extends Controller {
             otherPlayer.setPlayerName(packet.getClientName());
             System.out.println("Start request received and resent.");
         } else if (object instanceof ClientBulletPacket packet) {
-            if (packet.getType() == Projectile.Type.ShotgunBullet) {
-                movingAmmo.add(new ShotgunBullet(Player.CLIENT_PLAYER, packet.getMouseXLocation(), packet.getMouseYLocation(), packet.getDamage()));
-            }
 
+            switch (packet.getType()){
+                case ShotgunBullet -> movingAmmo.add(new ShotgunBullet(
+                        Player.CLIENT_PLAYER,
+                        packet.getMouseXLocation(),
+                        packet.getMouseYLocation(),
+                        packet.getDamage()
+                        )
+                );
+                case SniperRifleBullet -> movingAmmo.add(new SniperRifleBullet(
+                        Player.CLIENT_PLAYER,
+                        packet.getMouseXLocation(),
+                        packet.getMouseYLocation(),
+                        packet.getDamage()
+                        )
+                );
+            }
         }
     }
 
@@ -115,7 +127,7 @@ public class ServerController extends Controller {
                     movingAmmo.get(j).tick();
                     // Player who was hit (-1 if no one was hit)
                     int victimNumber = EntityCollision.getVictim(movingAmmo.get(j));
-                    if (victimNumber != -1 && victimNumber != movingAmmo.get(j).getPlayerIBelongTo()) {
+                    if (victimNumber != -1 && victimNumber != movingAmmo.get(j).getPlayerIBelongToNumber()) {
                         Bullet bullet = movingAmmo.get(j);
                         if (bullet.getSERIAL() != 002) {
                             movingAmmo.remove(j);
@@ -123,7 +135,7 @@ public class ServerController extends Controller {
                         // Player
                         Player killer;
                         Player victim;
-                        if (bullet.getPlayerIBelongTo() == Player.SERVER_PLAYER) {
+                        if (bullet.getPlayerIBelongToNumber() == Player.SERVER_PLAYER) {
                             killer = thisPlayer;
                             victim = otherPlayer;
                         } else {

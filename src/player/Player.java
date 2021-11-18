@@ -7,6 +7,7 @@ import game.ServerController;
 import game.Thing;
 import game.World;
 import weapons.guns.Shotgun;
+import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -111,7 +112,7 @@ public abstract class Player extends Thing implements Creature {
                 currentImage.getImage().getHeight());
 
         weapons.add(new Shotgun(this));
-        weapons.add(new Shotgun(this));
+        weapons.add(new SniperRifle(this));
     }
 
     public String getPlayerName() {
