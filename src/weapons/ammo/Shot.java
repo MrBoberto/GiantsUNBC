@@ -12,11 +12,11 @@ import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 
-public class Nato extends Ammo implements Projectile {
+public class Shot extends Ammo implements Projectile {
 
     private Rectangle boundRect;
-    private final double MASS = 0.2;
-    private final double DAMAGE = 100;
+    private final double MASS = 0.02;
+    private final double DAMAGE = 10;
     private double damage = 0;
     private BufferedImage texture;
     private AffineTransform affTra;
@@ -24,7 +24,8 @@ public class Nato extends Ammo implements Projectile {
     private double angle;
     private double velX;
     private double velY;
-    private final int SERIAL = 001;
+    private final int SERIAL = 000;
+
 
     /**
      *
@@ -37,7 +38,7 @@ public class Nato extends Ammo implements Projectile {
      * @param multiplier
      * @param angle
      */
-    public Nato(double x, double y, double aimX, double aimY, int playerNumber, double momentum, double multiplier, double angle) {
+    public Shot(double x, double y, double aimX, double aimY, int playerNumber, double momentum, double multiplier, double angle) {
         super(x, y, playerNumber);
 
         loadImage();
@@ -53,7 +54,7 @@ public class Nato extends Ammo implements Projectile {
         damage = DAMAGE * multiplier;
 
 //        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = momentum / MASS;
+        double speed = momentum / MASS - (momentum / (MASS * 2)) * World.getWorld().getSRandom().nextDouble();
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
 //            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
@@ -106,7 +107,7 @@ public class Nato extends Ammo implements Projectile {
 
     public void loadImage() {
         try {
-            texture = ImageIO.read(new File("resources/VFX/projectile/nato.png"));
+            texture = ImageIO.read(new File("resources/VFX/projectile/shot.png"));
         } catch (IOException exc) {
             System.out.println("Could not find image file: " + exc.getMessage());
         }

@@ -8,6 +8,7 @@ import weapons.ammo.Bullet;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -18,6 +19,9 @@ public class ClientController extends Controller{
 
     private Socket socket;
 
+    private Point mouseLoc = new Point(0, 0);
+    private boolean isMouseOnScreen = false;
+
     public ClientController(){
         super();
         try {
@@ -27,7 +31,7 @@ public class ClientController extends Controller{
 
             //socket = new Socket("142.207.59.6", Controller.PORT);
             //socket = new Socket("142.207.59.140", Controller.PORT);
-            String ipAddress= JOptionPane.showInputDialog ("Please enter the server's ip address:");
+            String ipAddress = JOptionPane.showInputDialog ("Please enter the server's ip address:");
             /*Scanner inputReader = new Scanner(System.in);
             System.out.println("Please enter ip address: ");
             String ipAddress = inputReader.nextLine(); //get file name
@@ -79,6 +83,14 @@ public class ClientController extends Controller{
         }
     }
 
+    public void mouseEntered(MouseEvent e) {
+        isMouseOnScreen = true;
+    }
+
+    public void mouseExited(MouseEvent e) {
+        isMouseOnScreen = false;
+    }
+
     @Override
     public void close() {
         try {
@@ -92,7 +104,12 @@ public class ClientController extends Controller{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
+        Point mouseLocRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
+        if (isMouseOnScreen) {
+            double mouseX = mouseLocRelativeToScreen.getX() - this.getLocationOnScreen().getX();
+            double mouseY = mouseLocRelativeToScreen.getY() - this.getLocationOnScreen().getY();
+            mouseLoc = new Point((int) mouseX, (int) mouseY);
+        }
         if(thisPlayer !=null){
             thisPlayer.tick(mouseLoc);
             for (int j = 0; j < movingAmmo.size(); j++) {

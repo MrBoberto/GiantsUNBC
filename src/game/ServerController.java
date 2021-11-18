@@ -14,6 +14,7 @@ import weapons.guns.Weapon;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,6 +23,10 @@ public class ServerController extends Controller {
 
     private ServerSocket serverSocket;
     private Socket socket;
+
+
+    Point mouseLoc = new Point(0, 0);
+    private boolean isMouseOnScreen = false;
 
     public ServerController() {
         super();
@@ -71,6 +76,14 @@ public class ServerController extends Controller {
         }
     }
 
+    public void mouseEntered(MouseEvent e) {
+        isMouseOnScreen = true;
+    }
+
+    public void mouseExited(MouseEvent e) {
+        isMouseOnScreen = false;
+    }
+
     @Override
     public void close() {
         try {
@@ -84,9 +97,14 @@ public class ServerController extends Controller {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
-        thisPlayer.tick(mouseLoc);
+        Point mouseLocRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
+        if (isMouseOnScreen) {
+            double mouseX = mouseLocRelativeToScreen.getX() - this.getLocationOnScreen().getX();
+            double mouseY = mouseLocRelativeToScreen.getY() - this.getLocationOnScreen().getY();
+            mouseLoc = new Point((int) mouseX, (int) mouseY);
+        }
 
+        thisPlayer.tick(mouseLoc);
         for (int j = 0; j < movingAmmo.size(); j++) {
             if(movingAmmo.get(j) != null) {
 
@@ -124,13 +142,6 @@ public class ServerController extends Controller {
                         }
                     }
                 }
-
-            }
-
-        }
-//        if(movingAmmo.size() != 0) {
-//            System.out.println(movingAmmo);
-//        }
 
         repaint();
     }
