@@ -11,7 +11,6 @@ import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +38,7 @@ public abstract class Player extends GameObject {
     protected int killCount = 0;
     protected int deathCount = 0;
     protected double kdr = -1;
-    protected double tdo = 0;
+    protected long tdo = 0;
     protected double damageMultiplier = 1;
     protected int playerNumber;
     protected String playerName;
@@ -76,17 +75,30 @@ public abstract class Player extends GameObject {
     protected Arsenal weapons = new Arsenal();
     protected int selectedWeapon = 0;
 
+    //Respawn point
+    protected double respawnPointX = 0;
+    protected double respawnPointY = 0;
+
+    //Stats
+    protected long bulletsShot = 0;
+    protected long bulletsHit = 0;
+    protected long walkingDistance = 0;
+
 
     public Player(double x, double y, double angle, Color playerColour) {
         super(x, y, angle);
+
+        respawnPointX = x;
+        respawnPointY = y;
         this.playerColour = playerColour;
 
         Controller.players.add(this);
 
-        weapons.add(new AssaultRifle(this));
-        weapons.add(new Pistol(this));
         weapons.add(new SniperRifle(this));
         weapons.add(new Shotgun(this));
+        weapons.add(new AssaultRifle(this));
+        weapons.add(new Pistol(this));
+
     }
 
     public String getPlayerName() {
@@ -208,7 +220,7 @@ public abstract class Player extends GameObject {
      *
      * @param tdoMod Damage value to add
      */
-    public void addTDO(double tdoMod) {
+    public void addTDO(long tdoMod) {
         if (this.tdo > 1.6 * (10 ^ 308) || this.tdo < -1.6 * (10 ^ 308)) {
             System.out.println("ERROR: TDO overflow");
         } else {
@@ -328,5 +340,32 @@ public abstract class Player extends GameObject {
         isWalking = walking;
     }
 
+    public void revive(){
+        health = 100;
+        x = respawnPointX;
+        y = respawnPointY;
+    }
 
+    public void incrementBulletCount(){
+        bulletsShot++;
+    }
+
+    public long getBulletCount(){
+        return bulletsShot;
+    }
+
+    public void incrementBulletHitCount(){
+        bulletsHit++;
+    }
+    public long getBulletHitCount(){
+        return bulletsHit;
+    }
+
+    public long getWalkingDistance() {
+        return walkingDistance;
+    }
+
+    public void incrementWalkingDistance() {
+        walkingDistance++;
+    }
 }

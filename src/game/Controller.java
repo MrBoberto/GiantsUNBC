@@ -14,6 +14,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class Controller extends Canvas implements Runnable {
     public static final int PORT = 55555;
@@ -40,8 +42,8 @@ public abstract class Controller extends Canvas implements Runnable {
     private Thread thread;
 
     //All GameObjects
-    public static ArrayList<Bullet> movingAmmo = new ArrayList<>();
-    public static ArrayList<Player> players = new ArrayList<>();
+    public static List<Bullet> movingAmmo = Collections.synchronizedList(new ArrayList<>());
+    public static List<Player> players = Collections.synchronizedList(new ArrayList<>());
 
     protected Controller() {
         new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
@@ -56,11 +58,12 @@ public abstract class Controller extends Canvas implements Runnable {
     public void start(){
         isRunning = true;
         loadBackground();
+
         thread = new Thread(this);
         thread.start();
     }
 
-    private void stop(){
+    protected void stop(){
         isRunning = false;
         try {
             thread.join();
@@ -190,52 +193,6 @@ public abstract class Controller extends Canvas implements Runnable {
 
     public Player getPlayer() {
         return thisPlayer;
-    }
-
-    /**
-     * Loads the image files into the image strips based upon their names
-     */
-    public void loadImageStrips() {
-        ArrayList<String> imgLocStr = new ArrayList<String>();
-
-        // Saves amount of text to be used
-        String defLocStr = "resources/GUI/arsenal_slot/";
-
-        // Builds image strip for standing facing right
-        for (int i = -1; i <= -1; i++) {
-            imgLocStr.add("weapon (" + i + ").png");
-        }
-//        arsenalSlots = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(arsenalSlots.toString());
-        imgLocStr.clear();
-    }
-
-    /**
-     * Builds the animation.ImageStrip for a specific animation
-     *
-     * @param imgLocStr           All file names to be loaded into the animation.ImageStrip for animation
-     * @param defaultFileLocation The file path of the images
-     * @return An animation.ImageStrip for animation
-     */
-    public ImageStrip buildImageStrip(ArrayList<String> imgLocStr, String defaultFileLocation) {
-        // The ArrayList of image files to be put into the animation.ImageStrip
-        ArrayList<BufferedImage> images = new ArrayList<>();
-        // Used to track images that are loaded
-        String imageFileNames = "";
-        String imageFileSubstring = "";
-        for (int i = 0; i < imgLocStr.size(); i++) {
-            try {
-                images.add(ImageIO.read(new File(defaultFileLocation + "" + imgLocStr.get(i))));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
-            }
-            imageFileNames += defaultFileLocation + imgLocStr.get(i) + ", ";
-        }
-        // Used for the toString() method of this animation.ImageStrip
-        for (int i = 0; i < imageFileNames.length() - 2; i++) {
-            imageFileSubstring += imageFileNames.charAt(i);
-        }
-        return new ImageStrip(images, imageFileSubstring);
     }
 
     public abstract void packetReceived(Object object);
