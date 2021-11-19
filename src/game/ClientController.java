@@ -4,6 +4,7 @@ import StartMenu.MainMenuTest;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
+import player.Player;
 import weapons.ammo.Bullet;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ public class ClientController extends Controller{
 
     public ClientController(){
         super();
-        thisPlayer = new MainPlayer(WIDTH, HEIGHT, 0, Color.RED);
+        thisPlayer = new MainPlayer(50, 50, 0, Color.RED);
         otherPlayer = new OtherPlayer(50, 50, 0, Color.BLUE);
 
         if (MainMenuTest.playerName.equals("")) {
@@ -75,15 +76,44 @@ public class ClientController extends Controller{
                 otherPlayer.setX(packet.getX());
                 otherPlayer.setY(packet.getY());
                 otherPlayer.setAngle(packet.getAngle());
-
-
             }
-
-
         } else if(object instanceof ServerBulletPacket packet){
 
             movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
 
+        } else if(object instanceof RespawnPacket){
+
+            thisPlayer.revive();
+
+        } else if(object instanceof WinnerPacket packet){
+
+
+            Player winner;
+            if(packet.getWinner() == Player.SERVER_PLAYER){
+                winner = otherPlayer;
+            } else {
+                winner = thisPlayer;
+            }
+
+            System.out.println("The winner is " + winner.getPlayerName());
+            System.out.println("Scores: ");
+            String format = " %10d  %10d  %10f  %10d  %10d  %10d  %10s %n";
+            System.out.format("      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of%n");
+            System.out.format("                                           Shot         Hit    Distance    Power-ups%n");
+            System.out.format("------------------------------------------------------------------------------------%n");
+            for (int i = 0; i < players.size(); i++) {
+
+                //Print
+                System.out.format(format,
+                        (int)packet.getPlayerInfo()[i][0],
+                        (int)packet.getPlayerInfo()[i][1],
+                        packet.getPlayerInfo()[i][2],
+                        (int)packet.getPlayerInfo()[i][3],
+                        (int)packet.getPlayerInfo()[i][4],
+                        (int)packet.getPlayerInfo()[i][5],
+                        "???");
+            }
+            stop();
         }
     }
 

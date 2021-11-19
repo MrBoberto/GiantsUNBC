@@ -131,6 +131,11 @@ public class MainPlayer extends Player {
             velX = 0;
         }
 
+        //Increase walking distance stat
+        if(velY > 0 || velX > 0){
+            incrementWalkingDistance();
+        }
+
         // Determine distance travelled
         super.setX(super.getX() + velX);
         super.setY(super.getY() + velY);

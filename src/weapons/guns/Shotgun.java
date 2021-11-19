@@ -35,6 +35,7 @@ public class Shotgun implements Weapon {
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             }
+            playerIBelongTo.incrementBulletCount();
         } else {
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 World.controller.getOutputConnection().sendPacket(

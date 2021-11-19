@@ -7,11 +7,16 @@ import weapons.ammo.Projectile;
 public class EntityCollision {
     public static int getVictim(Bullet proj) {
 
-        if (proj.getBounds().intersects(Controller.thisPlayer.getBounds())) {
+        try{
+            if (proj.getBounds().intersects(Controller.thisPlayer.getBounds())) {
                 return Player.SERVER_PLAYER;
             }
-        if (proj.getBounds().intersects(Controller.otherPlayer.getBounds())) {
-            return Player.CLIENT_PLAYER;
+            if (proj.getBounds().intersects(Controller.otherPlayer.getBounds())) {
+                return Player.CLIENT_PLAYER;
+            }
+
+        } catch (NullPointerException e){
+            /* empty */
         }
 
         return -1;
