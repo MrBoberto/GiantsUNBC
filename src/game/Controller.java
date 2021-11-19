@@ -20,7 +20,7 @@ public abstract class Controller extends Canvas implements Runnable {
     // public static final int FRAMEDELAY = 15;
     public static final int WIDTH = 1280;
     public static final int HEIGHT = WIDTH / 16 * 9;
-    public static final double FRICTION = 0.6; // Friction acting on objects
+    public static final double FRICTION = 0.5; // Friction acting on objects
     public static boolean mouseInside = false;
     public static boolean isMouse1Held = false;
     //public static Point mouseLoc = new Point(0, 0);

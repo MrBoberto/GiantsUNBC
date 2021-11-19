@@ -4,6 +4,7 @@ import game.ServerController;
 import game.World;
 import packets.ClientBulletPacket;
 import player.Player;
+import weapons.ammo.AssaultRifleBullet;
 import weapons.ammo.Projectile;
 //import weapons.ammo.Nato;
 import weapons.ammo.ShotgunBullet;
@@ -13,10 +14,10 @@ public class AssaultRifle implements Weapon {
     public static final double MOMENTUM = 0.65;
     public static final int ROUNDCOUNT = 1;
     public static final double INACCURACY = 0.075;
-    public static final int MAX_DELAY = 1;
+    public static final int MAX_DELAY = 0;
     private int currentDelay = 0;
     // Identifies type of gun
-    public static final int SERIAL = 000;
+    public static final int SERIAL = 003;
     public static int DAMAGE = 8;
 
     public AssaultRifle(Player playerIBelongTo) {
@@ -33,7 +34,7 @@ public class AssaultRifle implements Weapon {
         if (World.controller instanceof ServerController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             for (int i = 0; i < ROUNDCOUNT; i++) {
-                new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
+                new AssaultRifleBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             }
         } else {
             for (int i = 0; i < ROUNDCOUNT; i++) {
@@ -43,7 +44,7 @@ public class AssaultRifle implements Weapon {
                                 playerIBelongTo.getY(),
                                 mouseX,
                                 mouseY,
-                                Projectile.ProjectileType.ShotgunBullet,
+                                Projectile.ProjectileType.AssaultRifleBullet,
                                 DAMAGE
                         )
                 );

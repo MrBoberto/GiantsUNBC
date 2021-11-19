@@ -13,11 +13,14 @@ public class MouseInput extends MouseAdapter {
 
     public void mousePressed(MouseEvent e) {
         // Shoot at the selected point
+        /*
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (Controller.mouseInside) {
                 Controller.isMouse1Held = true;
             }
         }
+
+         */
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (Controller.thisPlayer.getSelectedWeapon() == Player.PRIMARY_WEAPON
                     && Controller.thisPlayer.getWeapons().getPrimary().getCurrentDelay() == 0)

@@ -8,9 +8,7 @@ import packets.StartRequest;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
-import weapons.ammo.Bullet;
-import weapons.ammo.ShotgunBullet;
-import weapons.ammo.SniperRifleBullet;
+import weapons.ammo.*;
 
 import java.awt.*;
 import java.io.IOException;
@@ -77,13 +75,25 @@ public class ServerController extends Controller {
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
-                        );
+                );
                 case SniperRifleBullet -> new SniperRifleBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
-                        );
+                );
+                case PistolBullet -> new PistolBullet(
+                        Player.CLIENT_PLAYER,
+                        packet.getMouseXLocation(),
+                        packet.getMouseYLocation(),
+                        packet.getDamage()
+                );
+                case AssaultRifleBullet -> new AssaultRifleBullet(
+                        Player.CLIENT_PLAYER,
+                        packet.getMouseXLocation(),
+                        packet.getMouseYLocation(),
+                        packet.getDamage()
+                );
             }
         }
     }

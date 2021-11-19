@@ -16,9 +16,9 @@ import java.io.*;
 public class PistolBullet extends Bullet {
 
     private final double MASS = 0.02;
-    private static final double MOMENTUM = 0.85;
-    private final int SERIAL = 000;
-    private static final double INACCURACY = 0.025;
+    private static final double MOMENTUM = 0.70;
+    private final int SERIAL = 002;
+    private static final double INACCURACY = 0.01;
 
 
     public PistolBullet(int player, double aimX, double aimY, int damage) {
@@ -63,7 +63,7 @@ public class PistolBullet extends Bullet {
 
 
 //        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = MOMENTUM / MASS - (MOMENTUM / (MASS * 8)) * World.getSRandom().nextDouble();
+        double speed = MOMENTUM / MASS - (MOMENTUM / (MASS * 10)) * World.getSRandom().nextDouble();
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
 //            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);

@@ -16,9 +16,9 @@ import java.io.*;
 public class AssaultRifleBullet extends Bullet {
 
     private final double MASS = 0.02;
-    private static final double MOMENTUM = 0.80;
-    private final int SERIAL = 000;
-    private static final double INACCURACY = 0.075;
+    private static final double MOMENTUM = 0.65;
+    private final int SERIAL = 003;
+    private static final double INACCURACY = 0.05;
 
     public AssaultRifleBullet(int player, double aimX, double aimY, int damage) {
         super(0,0,0);

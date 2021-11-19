@@ -10,10 +10,10 @@ import weapons.ammo.PistolBullet;
 
 public class Pistol implements Weapon {
     private final Player playerIBelongTo;
-    public static final double MOMENTUM = 0.95;
+    public static final double MOMENTUM = 1.2;
     public static final int ROUNDCOUNT = 1;
-    public static final double INACCURACY = 0.025;
-    public static final int MAX_DELAY = 15;
+    public static final double INACCURACY = 0.01;
+    public static final int MAX_DELAY = 25;
     private int currentDelay = 0;
     // Identifies type of gun
     public static final int SERIAL = 002;
@@ -43,7 +43,7 @@ public class Pistol implements Weapon {
                                 playerIBelongTo.getY(),
                                 mouseX,
                                 mouseY,
-                                Projectile.ProjectileType.ShotgunBullet,
+                                Projectile.ProjectileType.PistolBullet,
                                 DAMAGE
                         )
                 );
