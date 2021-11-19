@@ -13,15 +13,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.*;
 
-public class ShotgunBullet extends Bullet {
+public class AssaultRifleBullet extends Bullet {
 
     private final double MASS = 0.02;
-    private static final double MOMENTUM = 0.65;
+    private static final double MOMENTUM = 0.80;
     private final int SERIAL = 000;
-    private static final double INACCURACY = 0.1;
+    private static final double INACCURACY = 0.075;
 
-
-    public ShotgunBullet(int player, double aimX, double aimY, int damage) {
+    public AssaultRifleBullet(int player, double aimX, double aimY, int damage) {
         super(0,0,0);
         playerIBelongToNumber = player;
         ProjectileTYPE = ProjectileType.ShotgunBullet;
@@ -63,7 +62,7 @@ public class ShotgunBullet extends Bullet {
 
 
 //        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = MOMENTUM / MASS - (MOMENTUM / (MASS * 2)) * World.getSRandom().nextDouble();
+        double speed = MOMENTUM / MASS - (MOMENTUM / (MASS * 3)) * World.getSRandom().nextDouble();
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
 //            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);

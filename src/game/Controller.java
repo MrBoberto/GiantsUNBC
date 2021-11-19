@@ -8,6 +8,7 @@ import weapons.ammo.Bullet;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,11 +17,13 @@ import java.util.ArrayList;
 
 public abstract class Controller extends Canvas implements Runnable {
     public static final int PORT = 55555;
-    public static final int FRAMEDELAY = 15;
+    // public static final int FRAMEDELAY = 15;
     public static final int WIDTH = 1280;
     public static final int HEIGHT = WIDTH / 16 * 9;
-    public static final double GRAVITY = 0.6;
-    public static final double FRICTION = 1.1; // Friction acting on objects
+    public static final double FRICTION = 0.6; // Friction acting on objects
+    public static boolean mouseInside = false;
+    public static boolean isMouse1Held = false;
+    //public static Point mouseLoc = new Point(0, 0);
 
 
     protected BufferedImage background;
@@ -103,6 +106,46 @@ public abstract class Controller extends Canvas implements Runnable {
             if(movingAmmo.get(i) != null)
                 movingAmmo.get(i).tick();
         }
+
+
+        /*
+        if (isMouse1Held) {
+            if (Controller.thisPlayer.getSelectedWeapon() == Player.PRIMARY_WEAPON
+                    && Controller.thisPlayer.getWeapons().getPrimary().getCurrentDelay() == 0)
+            {
+                Point mouseLocRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
+                if (mouseInside) {
+                    double mouseX = mouseLocRelativeToScreen.getX() - this.getLocationOnScreen().getX();
+                    double mouseY = mouseLocRelativeToScreen.getY() - this.getLocationOnScreen().getY();
+                    mouseLoc = new Point((int) mouseX, (int) mouseY);
+                }
+                Controller.thisPlayer.getWeapons().getPrimary().shoot(
+                        mouseLoc.x,
+                        mouseLoc.y);
+
+                Controller.thisPlayer.getWeapons().getPrimary().setCurrentDelay(
+                        Controller.thisPlayer.getWeapons().getPrimary().getMAX_DELAY());
+
+            } else if (Controller.thisPlayer.getSelectedWeapon() == Player.SECONDARY_WEAPON
+                    && Controller.thisPlayer.getWeapons().getSecondary().getCurrentDelay() == 0) {
+
+                Point mouseLocRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
+                if (mouseInside) {
+                    double mouseX = mouseLocRelativeToScreen.getX() - this.getLocationOnScreen().getX();
+                    double mouseY = mouseLocRelativeToScreen.getY() - this.getLocationOnScreen().getY();
+                    mouseLoc = new Point((int) mouseX, (int) mouseY);
+                }
+                Controller.thisPlayer.getWeapons().getSecondary().shoot(
+                        mouseLoc.x,
+                        mouseLoc.y);
+
+                Controller.thisPlayer.getWeapons().getSecondary().setCurrentDelay(
+                        Controller.thisPlayer.getWeapons().getSecondary().getMAX_DELAY());
+
+            }
+        }
+
+         */
     }
 
     public void render(){
@@ -202,6 +245,4 @@ public abstract class Controller extends Canvas implements Runnable {
     public OutputConnection getOutputConnection() {
         return outputConnection;
     }
-
-
 }

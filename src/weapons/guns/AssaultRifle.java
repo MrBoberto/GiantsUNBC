@@ -5,24 +5,22 @@ import game.World;
 import packets.ClientBulletPacket;
 import player.Player;
 import weapons.ammo.Projectile;
+//import weapons.ammo.Nato;
 import weapons.ammo.ShotgunBullet;
-import weapons.ammo.SniperRifleBullet;
 
-import java.util.ArrayList;
-
-public class SniperRifle implements Weapon {
-    private Player playerIBelongTo;
-    public static final double MOMENTUM = 8;
+public class AssaultRifle implements Weapon {
+    private final Player playerIBelongTo;
+    public static final double MOMENTUM = 0.65;
     public static final int ROUNDCOUNT = 1;
-    public static final double INACCURACY = 0;
-    public static final int MAX_DELAY = 200;
+    public static final double INACCURACY = 0.075;
+    public static final int MAX_DELAY = 1;
     private int currentDelay = 0;
     // Identifies type of gun
-    private static final int SERIAL = 001;
-    public static final int DAMAGE = 100;
+    public static final int SERIAL = 000;
+    public static int DAMAGE = 8;
 
-    public SniperRifle(Player player) {
-        this.playerIBelongTo = player;
+    public AssaultRifle(Player playerIBelongTo) {
+        this.playerIBelongTo = playerIBelongTo;
     }
 
     /**
@@ -35,7 +33,7 @@ public class SniperRifle implements Weapon {
         if (World.controller instanceof ServerController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             for (int i = 0; i < ROUNDCOUNT; i++) {
-                new SniperRifleBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
+                new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             }
         } else {
             for (int i = 0; i < ROUNDCOUNT; i++) {
@@ -45,7 +43,7 @@ public class SniperRifle implements Weapon {
                                 playerIBelongTo.getY(),
                                 mouseX,
                                 mouseY,
-                                Projectile.ProjectileType.SniperRifleBullet,
+                                Projectile.ProjectileType.ShotgunBullet,
                                 DAMAGE
                         )
                 );
@@ -53,6 +51,7 @@ public class SniperRifle implements Weapon {
         }
     }
 
+    @Override
     public Player getPlayerIBelongTo() {
         return playerIBelongTo;
     }
@@ -89,7 +88,7 @@ public class SniperRifle implements Weapon {
 
     @Override
     public String toString() {
-        return SERIAL + ", Sniper Rifle";
+        return SERIAL + ", Assault Rifle";
     }
 
     @Override

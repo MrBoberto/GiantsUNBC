@@ -18,7 +18,7 @@
 //    public final int MAX_DELAY = 0;
 //    private int currentDelay = 0;
 //    // Identifies type of gun
-//    private final int SERIAL = 002;
+//    private final int SERIAL = 030;
 //
 //    public FlameThrower(Player parent) {
 //        this.parent = parent;

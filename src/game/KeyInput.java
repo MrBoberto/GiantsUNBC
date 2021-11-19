@@ -29,11 +29,6 @@ public class KeyInput extends KeyAdapter {
 //                    shiftIsHeld = true;
 //                    isSneaking = true;
 //                }
-//                if (key == KeyEvent.VK_SPACE) {
-//                    // Will eventually be removed
-//                    spaceIsHeld = true;
-//                    isJumping = true;
-//                }
 //                if (key == KeyEvent.VK_CONTROL) {
 //                    ctrlIsHeld = true;
 //                }
@@ -62,11 +57,6 @@ public class KeyInput extends KeyAdapter {
 //                if (key == KeyEvent.VK_SHIFT) {
 //                    shiftIsHeld = true;
 //                    isSneaking = true;
-//                }
-//                if (key == KeyEvent.VK_SPACE) {
-//                    // Will eventually be removed
-//                    spaceIsHeld = true;
-//                    isJumping = true;
 //                }
 //                if (key == KeyEvent.VK_CONTROL) {
 //                    ctrlIsHeld = true;

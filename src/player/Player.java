@@ -4,6 +4,8 @@ import StartMenu.MainMenuTest;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
+import weapons.guns.AssaultRifle;
+import weapons.guns.Pistol;
 import weapons.guns.Shotgun;
 import weapons.guns.SniperRifle;
 
@@ -81,8 +83,10 @@ public abstract class Player extends GameObject {
 
         Controller.players.add(this);
 
-        weapons.add(new Shotgun(this));
+        weapons.add(new AssaultRifle(this));
+        weapons.add(new Pistol(this));
         weapons.add(new SniperRifle(this));
+        weapons.add(new Shotgun(this));
     }
 
     public String getPlayerName() {

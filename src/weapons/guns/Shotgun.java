@@ -10,10 +10,10 @@ import weapons.ammo.ShotgunBullet;
 
 public class Shotgun implements Weapon {
     private final Player playerIBelongTo;
-    public static final double MOMENTUM = 0.85;
+    public static final double MOMENTUM = 0.65;
     public static final int ROUNDCOUNT = 10;
     public static final double INACCURACY = 0.1;
-    public static final int MAX_DELAY = 40;
+    public static final int MAX_DELAY = 60;
     private int currentDelay = 0;
     // Identifies type of gun
     public static final int SERIAL = 000;
