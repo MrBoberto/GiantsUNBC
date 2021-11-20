@@ -64,9 +64,8 @@ public class ServerController extends Controller {
     public void packetReceived(Object object) {
         if (object instanceof ClientUpdatePacket packet) {
 
-            boolean isWalking = (otherPlayer.getX() != packet.getX() || otherPlayer.getY() != packet.getY());
-            otherPlayer.setWalking(isWalking);
-            if (isWalking) otherPlayer.incrementWalkingDistance();
+            otherPlayer.setWalking(packet.isWalking());
+            if (packet.isWalking()) otherPlayer.incrementWalkingDistance();
 
             otherPlayer.setX(packet.getX());
             otherPlayer.setY(packet.getY());

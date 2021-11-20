@@ -82,7 +82,7 @@ public class ClientController extends Controller{
         } else if(object instanceof ServerUpdatePacket packet){
             if(otherPlayer != null) {
 
-                otherPlayer.setWalking(otherPlayer.getX() != packet.getX() || otherPlayer.getY() != packet.getY());
+                otherPlayer.setWalking(packet.isWalking());
                 //otherPlayer.getPos().setLocation(packet.getX(), packet.getY());
                 otherPlayer.setX(packet.getX());
                 otherPlayer.setY(packet.getY());

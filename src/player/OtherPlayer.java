@@ -25,7 +25,11 @@ public class OtherPlayer extends Player {
 
     @Override
     public void render(Graphics g) {
-        loadImage();
+
+        if(isTimeForNextFrame()){
+            loadImage();
+            resetAnimationTimer();
+        }
 
         // Sets up the axis of rotation
         AffineTransform affTra = AffineTransform.getTranslateInstance(

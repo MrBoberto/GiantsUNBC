@@ -96,7 +96,7 @@ public abstract class Player extends GameObject {
 
     //Animation timers
     protected int animationTimer = 0;
-    public static final int ANIMATION_DELAY = 10;
+    public static final int ANIMATION_DELAY = 1;
 
     public Player(double x, double y, double angle, Color playerColour) {
         super(x, y, angle);
@@ -426,5 +426,13 @@ public abstract class Player extends GameObject {
 
     public boolean isInvincible(){
         return invincibilityTimer > 0;
+    }
+
+    public boolean isTimeForNextFrame(){
+       return animationTimer >= ANIMATION_DELAY;
+    }
+
+    public void resetAnimationTimer(){
+        animationTimer = 0;
     }
 }
