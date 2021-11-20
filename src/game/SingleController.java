@@ -13,7 +13,6 @@ import java.io.IOException;
 
 public class SingleController extends Controller {
 
-
     public SingleController() {
         super();
         new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
@@ -119,9 +118,6 @@ public class SingleController extends Controller {
                         if (victim.getHealth() == 0) {
                             victim.incrementDeathCount();
                             victim.revive();
-                            if(victim == otherPlayer){
-                                outputConnection.sendPacket(new RespawnPacket());
-                            }
 
                             killer.incrementKillCount();
                             // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
