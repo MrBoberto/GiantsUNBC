@@ -45,7 +45,7 @@ public class OtherPlayer extends Player {
                 (int) y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
                 currentImage.getImage().getHeight() / 2);
 
-        Font font = new Font("Arial", Font.BOLD, 20);
+        Font font = new Font("Arial", Font.BOLD, 25);
         FontMetrics stringSize = g2d.getFontMetrics(font);
 
         g2d.fillRect((int) x - currentImage.getImage().getWidth() / 4,

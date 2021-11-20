@@ -5,7 +5,6 @@ import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
-import tile.Tiles;
 import weapons.ammo.Bullet;
 
 import javax.swing.*;
@@ -18,56 +17,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class ClientController extends Controller{
+public class AIController extends Controller{
 
     private Socket socket;
 
-    public ClientController(){
+    public AIController() {
         super();
-        new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
-
-        this.addKeyListener(new KeyInput());
-        this.addMouseListener(new MouseInput());
-
-        tiless = new Tiles[2];
-
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        setBackground(new Color(0, 0, 0));
-
         thisPlayer = new MainPlayer(50, 50, 0, Color.RED);
         otherPlayer = new OtherPlayer(50, 50, 0, Color.BLUE);
 
-        if (MainMenuTest.playerName.equals("")) {
-            thisPlayer.setPlayerName("Guest");
-            otherPlayer.setPlayerName("Host");
-        } else {
-            thisPlayer.setPlayerName(MainMenuTest.playerName);
-        }
-        try {
-            System.out.println("waiting for connection...");
+        thisPlayer.setPlayerName("CPU");
 
-
-
-            //socket = new Socket("142.207.59.6", Controller.PORT);
-            //socket = new Socket("142.207.59.140", Controller.PORT);
-            String ipAddress = JOptionPane.showInputDialog ("Please enter the server's ip address:");
-            /*Scanner inputReader = new Scanner(System.in);
-            System.out.println("Please enter ip address: ");
-            String ipAddress = inputReader.nextLine(); //get file name
-            System.out.println("You entered" + ipAddress + ".");*/
-
-            socket = new Socket(ipAddress, Controller.PORT);
-            System.out.println("connection accepted");
-
-            outputConnection = new OutputConnection(this, socket);
-            outputConnection.sendPacket(new StartRequest(thisPlayer.getPlayerName()));
-            inputConnection = new InputConnection(this, socket);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("server + client connected.");
+        System.out.println("CPU connected.");
 
         start();
     }
@@ -77,7 +38,7 @@ public class ClientController extends Controller{
         if(object instanceof StartPacket packet){
 
             otherPlayer.setPlayerName(packet.getPlayerName());
-    //        outputConnection.setGameRunning(true);
+            //        outputConnection.setGameRunning(true);
 
         } else if(object instanceof ServerUpdatePacket packet){
             if(otherPlayer != null) {
@@ -128,6 +89,12 @@ public class ClientController extends Controller{
             }
             stop();
         }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
     }
 
     @Override

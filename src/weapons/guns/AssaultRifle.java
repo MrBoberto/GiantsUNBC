@@ -1,6 +1,7 @@
 package weapons.guns;
 
 import game.ServerController;
+import game.SingleController;
 import game.World;
 import packets.ClientBulletPacket;
 import player.Player;
@@ -11,7 +12,7 @@ import weapons.ammo.ShotgunBullet;
 
 public class AssaultRifle implements Weapon {
     private final Player playerIBelongTo;
-    public static final double MOMENTUM = 0.65;
+    public static final double SPEED = 32.5;
     public static final int ROUNDCOUNT = 1;
     public static final double INACCURACY = 0.075;
     public static final int MAX_DELAY = 0;
@@ -36,6 +37,19 @@ public class AssaultRifle implements Weapon {
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 new AssaultRifleBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             }
+        } else if (World.controller instanceof SingleController) {
+            System.out.println("ASSAULT RIFLE SHOOTING...");
+            // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
+            if (playerIBelongTo.getPlayerNumber() == 0) {
+                for (int i = 0; i < ROUNDCOUNT; i++) {
+                    new AssaultRifleBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
+                }
+            } else {
+                for (int i = 0; i < ROUNDCOUNT; i++) {
+                    new AssaultRifleBullet(Player.CLIENT_PLAYER, mouseX, mouseY, DAMAGE);
+                }
+            }
+
         } else {
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 World.controller.getOutputConnection().sendPacket(
@@ -58,8 +72,8 @@ public class AssaultRifle implements Weapon {
     }
 
     @Override
-    public double getMOMENTUM() {
-        return MOMENTUM;
+    public double getSPEED() {
+        return SPEED;
     }
 
     @Override

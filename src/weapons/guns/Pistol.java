@@ -1,6 +1,7 @@
 package weapons.guns;
 
 import game.ServerController;
+import game.SingleController;
 import game.World;
 import packets.ClientBulletPacket;
 import player.Player;
@@ -10,7 +11,7 @@ import weapons.ammo.PistolBullet;
 
 public class Pistol implements Weapon {
     private final Player playerIBelongTo;
-    public static final double MOMENTUM = 1.2;
+    public static final double SPEED = 35;
     public static final int ROUNDCOUNT = 1;
     public static final double INACCURACY = 0.01;
     public static final int MAX_DELAY = 25;
@@ -30,7 +31,7 @@ public class Pistol implements Weapon {
      */
     @Override
     public void shoot(double mouseX, double mouseY) {
-        if (World.controller instanceof ServerController) {
+        if (World.controller instanceof ServerController || World.controller instanceof SingleController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 new PistolBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
@@ -57,8 +58,8 @@ public class Pistol implements Weapon {
     }
 
     @Override
-    public double getMOMENTUM() {
-        return MOMENTUM;
+    public double getSPEED() {
+        return SPEED;
     }
 
     @Override

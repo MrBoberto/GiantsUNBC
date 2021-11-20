@@ -1,9 +1,6 @@
 package weapons.ammo;
 
-import game.ClientController;
-import game.Controller;
-import game.ServerController;
-import game.World;
+import game.*;
 import player.Player;
 import weapons.guns.Shotgun;
 
@@ -15,8 +12,6 @@ import java.io.*;
 
 public class ShotgunBullet extends Bullet {
 
-    private final double MASS = 0.02;
-    private static final double MOMENTUM = 0.65;
     private final int SERIAL = 000;
     private static final double INACCURACY = 0.1;
 
@@ -27,7 +22,8 @@ public class ShotgunBullet extends Bullet {
         ProjectileTYPE = ProjectileType.ShotgunBullet;
 
         if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
-                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController)){
+                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController)
+                || (playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof SingleController)) {
 
             x = Controller.thisPlayer.getX();
             y = Controller.thisPlayer.getY();
@@ -39,7 +35,8 @@ public class ShotgunBullet extends Bullet {
             ) - INACCURACY / 2 + INACCURACY * World.getSRandom().nextDouble();
 
         } else if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ClientController)
-                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ServerController)){
+                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ServerController)
+                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof SingleController)){
 
             x = Controller.otherPlayer.getX();
             y = Controller.otherPlayer.getY();
@@ -63,7 +60,7 @@ public class ShotgunBullet extends Bullet {
 
 
 //        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = MOMENTUM / MASS - (MOMENTUM / (MASS * 2)) * World.getSRandom().nextDouble();
+        double speed = Shotgun.SPEED - (Shotgun.SPEED / 2) * World.getSRandom().nextDouble();
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
 //            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);

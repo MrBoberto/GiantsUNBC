@@ -2,23 +2,19 @@ package game;
 
 import StartMenu.MainMenuTest;
 import packets.*;
+import player.AIPlayer;
 import player.MainPlayer;
-import player.OtherPlayer;
 import player.Player;
 import tile.Tiles;
 import weapons.ammo.*;
 
 import java.awt.*;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
-public class ServerController extends Controller {
+public class SingleController extends Controller {
 
-    private ServerSocket serverSocket;
-    private Socket socket;
 
-    public ServerController() {
+    public SingleController() {
         super();
         new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
 
@@ -31,83 +27,24 @@ public class ServerController extends Controller {
         setBackground(new Color(0, 0, 0));
 
         thisPlayer = new MainPlayer(WIDTH - 50, HEIGHT - 50, 0, Color.BLUE);
-        otherPlayer = new OtherPlayer(50, 50, 0, Color.RED);
+        otherPlayer = new AIPlayer(50, 50, 0, Color.RED);
 
         if (MainMenuTest.playerName.equals("")) {
-            thisPlayer.setPlayerName("Host");
-            otherPlayer.setPlayerName("Guest");
+            thisPlayer.setPlayerName("Player");
+            otherPlayer.setPlayerName("Thanos");
         } else {
             thisPlayer.setPlayerName(MainMenuTest.playerName);
+            otherPlayer.setPlayerName("Thanos");
         }
 
-        try {
-            serverSocket = new ServerSocket(Controller.PORT);
-            System.out.println("waiting for connection...");
-            socket = serverSocket.accept();
-            System.out.println("connection accepted");
-            outputConnection = new OutputConnection(this, socket);
-            System.out.println("output connection complete");
-            inputConnection = new InputConnection(this, socket);
-            System.out.println("input connection complete");
-
-            //          outputConnection.setGameRunning(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("server + client connected.");
+        System.out.println("Controller built.");
         start();
 
     }
 
     @Override
     public void packetReceived(Object object) {
-        if (object instanceof ClientUpdatePacket packet) {
 
-            boolean isWalking = (otherPlayer.getX() != packet.getX() || otherPlayer.getY() != packet.getY());
-            otherPlayer.setWalking(isWalking);
-            if (isWalking) otherPlayer.incrementWalkingDistance();
-
-            otherPlayer.setX(packet.getX());
-            otherPlayer.setY(packet.getY());
-            otherPlayer.setAngle(packet.getAngle());
-
-        } else if (object instanceof StartRequest packet) {
-
-            outputConnection.sendPacket(new StartPacket(10, 10, 0, thisPlayer.getPlayerName()));
-            otherPlayer.setPlayerName(packet.getClientName());
-            System.out.println("Start request received and resent.");
-        } else if (object instanceof ClientBulletPacket packet) {
-
-            switch (packet.getType()){
-                case ShotgunBullet -> new ShotgunBullet(
-                        Player.CLIENT_PLAYER,
-                        packet.getMouseXLocation(),
-                        packet.getMouseYLocation(),
-                        packet.getDamage()
-                );
-                case SniperRifleBullet -> new SniperRifleBullet(
-                        Player.CLIENT_PLAYER,
-                        packet.getMouseXLocation(),
-                        packet.getMouseYLocation(),
-                        packet.getDamage()
-                );
-                case PistolBullet -> new PistolBullet(
-                        Player.CLIENT_PLAYER,
-                        packet.getMouseXLocation(),
-                        packet.getMouseYLocation(),
-                        packet.getDamage()
-                );
-                case AssaultRifleBullet -> new AssaultRifleBullet(
-                        Player.CLIENT_PLAYER,
-                        packet.getMouseXLocation(),
-                        packet.getMouseYLocation(),
-                        packet.getDamage()
-                );
-            }
-
-            otherPlayer.incrementBulletCount();
-        }
     }
 
     @Override
@@ -115,7 +52,6 @@ public class ServerController extends Controller {
         try {
             inputConnection.close();
             outputConnection.close();
-            serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -124,6 +60,30 @@ public class ServerController extends Controller {
     @Override
     public void tick(){
         super.tick();
+
+        // AI attempts to shoot if in range
+        double distance = World.pythHyp(otherPlayer.x - thisPlayer.x, otherPlayer.y - thisPlayer.y);
+        if (otherPlayer.getSelectedWeapon() == 0
+                && Controller.otherPlayer.getWeapons().getPrimary().getCurrentDelay() == 0) {
+            if ((otherPlayer.getWeapons().getPrimary().getSPEED() / 2) *
+                    (otherPlayer.getWeapons().getPrimary().getSPEED() / FRICTION) > distance) {
+                Controller.otherPlayer.getWeapons().getPrimary().shoot(thisPlayer.x, thisPlayer.y);
+
+                Controller.otherPlayer.getWeapons().getPrimary().setCurrentDelay(
+                        Controller.otherPlayer.getWeapons().getPrimary().getMAX_DELAY());
+            }
+        } else if (otherPlayer.getSelectedWeapon() == 1
+                && Controller.otherPlayer.getWeapons().getSecondary().getCurrentDelay() == 0) {
+            if ((otherPlayer.getWeapons().getSecondary().getSPEED() / 2) *
+                    (otherPlayer.getWeapons().getSecondary().getSPEED() / FRICTION) > distance) {
+                Controller.otherPlayer.getWeapons().getSecondary().shoot(thisPlayer.x, thisPlayer.y);
+
+                Controller.otherPlayer.getWeapons().getSecondary().setCurrentDelay(
+                        Controller.otherPlayer.getWeapons().getSecondary().getMAX_DELAY());
+            }
+        }
+
+        // Check bullets to see if a kill occurs
         for (int j = 0; j < movingAmmo.size(); j++) {
             if (movingAmmo.get(j) != null) {
                 Bullet bullet = movingAmmo.get(j);
@@ -164,7 +124,7 @@ public class ServerController extends Controller {
                             }
 
                             killer.incrementKillCount();
-                           // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
+                            // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
                             if(victim.getDeathCount() >= 10){
                                 declareWinner(killer);
                             }
@@ -214,8 +174,6 @@ public class ServerController extends Controller {
                     "???");
         }
 
-        //Send to client
-        outputConnection.sendPacket(new WinnerPacket(winnerNumber, playerInfo));
         stop();
     }
 }

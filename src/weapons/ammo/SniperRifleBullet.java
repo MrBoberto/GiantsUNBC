@@ -1,9 +1,6 @@
 package weapons.ammo;
 
-import game.ClientController;
-import game.Controller;
-import game.ServerController;
-import game.World;
+import game.*;
 import player.Player;
 import weapons.guns.SniperRifle;
 
@@ -15,15 +12,16 @@ import java.io.*;
 
 public class SniperRifleBullet extends Bullet {
 
-    private final double MASS = 0.2;
     private final int SERIAL = 001;
 
     public SniperRifleBullet(int player, double aimX, double aimY, int damage) {
         super(0,0,0);
+        ProjectileTYPE = ProjectileType.SniperRifleBullet;
 
         playerIBelongToNumber = player;
         if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
-                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController)){
+                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController)
+                || (playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof SingleController)) {
             x = Controller.thisPlayer.getX();
             y = Controller.thisPlayer.getY();
 
@@ -33,7 +31,8 @@ public class SniperRifleBullet extends Bullet {
                     0
             );
         } else if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ClientController)
-                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ServerController)){
+                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ServerController)
+                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof SingleController)){
             x = Controller.otherPlayer.getX();
             y = Controller.otherPlayer.getY();
 
@@ -56,7 +55,7 @@ public class SniperRifleBullet extends Bullet {
 
 
 //        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = SniperRifle.MOMENTUM / MASS;
+        double speed = SniperRifle.SPEED;
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
 //            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);

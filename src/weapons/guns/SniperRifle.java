@@ -1,6 +1,7 @@
 package weapons.guns;
 
 import game.ServerController;
+import game.SingleController;
 import game.World;
 import packets.ClientBulletPacket;
 import player.Player;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 
 public class SniperRifle implements Weapon {
     private Player playerIBelongTo;
-    public static final double MOMENTUM = 8;
+    public static final double SPEED = 40;
     public static final int ROUNDCOUNT = 1;
     public static final double INACCURACY = 0;
     public static final int MAX_DELAY = 200;
@@ -32,7 +33,7 @@ public class SniperRifle implements Weapon {
      */
     @Override
     public void shoot(double mouseX, double mouseY) {
-        if (World.controller instanceof ServerController) {
+        if (World.controller instanceof ServerController || World.controller instanceof SingleController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 new SniperRifleBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
@@ -58,8 +59,8 @@ public class SniperRifle implements Weapon {
     }
 
     @Override
-    public double getMOMENTUM() {
-        return MOMENTUM;
+    public double getSPEED() {
+        return SPEED;
     }
 
     @Override

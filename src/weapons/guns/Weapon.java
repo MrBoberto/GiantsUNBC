@@ -11,7 +11,7 @@ public interface Weapon extends Serializable {
     Player getPlayerIBelongTo();
 
     // Measured in kg * pixels / sec
-    double getMOMENTUM();
+    double getSPEED();
 
     double getINACCURACY();
 

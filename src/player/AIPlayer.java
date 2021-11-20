@@ -11,13 +11,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
-public class MainPlayer extends Player {
-
+public class AIPlayer extends OtherPlayer {
     //Main Player movement directions
     private boolean up = false, down = false,right = false,left = false;
 
-    public MainPlayer(double x, double y, double angle, Color color) {
+    public AIPlayer(double x, double y, double angle, Color color) {
         super(x, y, angle, color);
+
+        playerNumber = 1;
 
         // Graphics-related
 
@@ -34,10 +35,43 @@ public class MainPlayer extends Player {
         int avgX = 0;
         int avgY = 0;
 
-        if (up) avgY++;
-        if (right) avgX++;
-        if (down) avgY--;
-        if (left) avgX--;
+        if (Controller.thisPlayer.getHealth() <= health + 50) {
+            System.out.println("ATTAC");
+            if (Controller.thisPlayer.getY() < y) {
+                avgY++;
+                up = true;
+            }
+            if (Controller.thisPlayer.getX() > x) {
+                avgX++;
+                right = true;
+            }
+            if (Controller.thisPlayer.getY() > y) {
+                avgY--;
+                down = true;
+            }
+            if (Controller.thisPlayer.getY() < x) {
+                avgX--;
+                left = true;
+            }
+        } else {
+            System.out.println("PROTEC");
+            if (Controller.thisPlayer.getY() < y) {
+                avgY--;
+                down = true;
+            }
+            if (Controller.thisPlayer.getX() > x) {
+                avgX--;
+                left = true;
+            }
+            if (Controller.thisPlayer.getY() > y) {
+                avgY++;
+                up = true;
+            }
+            if (Controller.thisPlayer.getY() < x) {
+                avgX++;
+                right = true;
+            }
+        }
 
         if (avgX == 0 && avgY == 0) {
             return;
@@ -132,7 +166,7 @@ public class MainPlayer extends Player {
         }
 
         //Increase walking distance stat
-        if(velY > 0 || velX > 0){
+        if(velY != 0 || velX != 0){
             incrementWalkingDistance();
         }
 
@@ -149,6 +183,7 @@ public class MainPlayer extends Player {
     public void tick() {
         super.tick();
         setAngle();
+
         move();
 
         // Apply vertical friction
@@ -236,7 +271,7 @@ public class MainPlayer extends Player {
                 (int) y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
                 currentImage.getImage().getHeight() / 2);
 
-        Font font = new Font("Arial", Font.BOLD, 25);
+        Font font = new Font("Arial", Font.BOLD, 20);
         FontMetrics stringSize = g2d.getFontMetrics(font);
 
         g2d.fillRect((int) x - currentImage.getImage().getWidth() / 4,
@@ -247,86 +282,4 @@ public class MainPlayer extends Player {
         g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 4,
                 (int) y - 5 - currentImage.getImage().getHeight() / 4);
     }
-
-    public boolean isUp() {
-        return up;
-    }
-
-    public void setUp(boolean up) {
-        this.up = up;
-    }
-
-    public boolean isDown() {
-        return down;
-    }
-
-    public void setDown(boolean down) {
-        this.down = down;
-    }
-
-    public boolean isRight() {
-        return right;
-    }
-
-    public void setRight(boolean right) {
-        this.right = right;
-    }
-
-    public boolean isLeft() {
-        return left;
-    }
-
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
-
-    public boolean isShiftIsHeld() {
-        return shiftIsHeld;
-    }
-
-    public void setShiftIsHeld(boolean shiftIsHeld) {
-        this.shiftIsHeld = shiftIsHeld;
-    }
-
-    public boolean isSpaceIsHeld() {
-        return spaceIsHeld;
-    }
-
-    public void setSpaceIsHeld(boolean spaceIsHeld) {
-        this.spaceIsHeld = spaceIsHeld;
-    }
-
-    public boolean isCtrlIsHeld() {
-        return ctrlIsHeld;
-    }
-
-    public void setCtrlIsHeld(boolean ctrlIsHeld) {
-        this.ctrlIsHeld = ctrlIsHeld;
-    }
-
-    public boolean istIsHeld() {
-        return tIsHeld;
-    }
-
-    public void settIsHeld(boolean tIsHeld) {
-        this.tIsHeld = tIsHeld;
-    }
-
-    public boolean isMouseInside() {
-        return mouseInside;
-    }
-
-    public void setMouseInside(boolean mouseInside) {
-        this.mouseInside = mouseInside;
-    }
-
-    public boolean isButton1Held() {
-        return button1Held;
-    }
-
-    public void setButton1Held(boolean button1Held) {
-        this.button1Held = button1Held;
-    }
-
-
 }

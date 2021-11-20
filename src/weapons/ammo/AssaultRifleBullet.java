@@ -1,10 +1,8 @@
 package weapons.ammo;
 
-import game.ClientController;
-import game.Controller;
-import game.ServerController;
-import game.World;
+import game.*;
 import player.Player;
+import weapons.guns.AssaultRifle;
 import weapons.guns.Shotgun;
 
 import javax.imageio.ImageIO;
@@ -15,18 +13,17 @@ import java.io.*;
 
 public class AssaultRifleBullet extends Bullet {
 
-    private final double MASS = 0.02;
-    private static final double MOMENTUM = 0.65;
     private final int SERIAL = 003;
     private static final double INACCURACY = 0.05;
 
     public AssaultRifleBullet(int player, double aimX, double aimY, int damage) {
         super(0,0,0);
         playerIBelongToNumber = player;
-        ProjectileTYPE = ProjectileType.ShotgunBullet;
+        ProjectileTYPE = ProjectileType.AssaultRifleBullet;
 
         if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
-                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController)){
+                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController)
+                || (playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof SingleController)) {
 
             x = Controller.thisPlayer.getX();
             y = Controller.thisPlayer.getY();
@@ -38,7 +35,8 @@ public class AssaultRifleBullet extends Bullet {
             ) - INACCURACY / 2 + INACCURACY * World.getSRandom().nextDouble();
 
         } else if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ClientController)
-                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ServerController)){
+                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ServerController)
+                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof SingleController)) {
 
             x = Controller.otherPlayer.getX();
             y = Controller.otherPlayer.getY();
@@ -62,7 +60,7 @@ public class AssaultRifleBullet extends Bullet {
 
 
 //        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = MOMENTUM / MASS - (MOMENTUM / (MASS * 3)) * World.getSRandom().nextDouble();
+        double speed = AssaultRifle.SPEED - (AssaultRifle.SPEED / 3) * World.getSRandom().nextDouble();
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
 //            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);

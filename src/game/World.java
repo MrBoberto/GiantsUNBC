@@ -11,7 +11,7 @@ public final class World {
 
     public World()
     {
-       int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client"));
+       int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client | 3 for singleplayer"));
 
         if(choice==1){
             controller = new ServerController();
@@ -19,7 +19,18 @@ public final class World {
         } else if(choice == 2){
             controller = new ClientController();
             System.out.println("IM CLIENT");
+        } else if (choice == 3) {
+            controller = new SingleController();
+            System.out.println("Loading singleplayer mode");
         }
+    }
+
+    public static double pythHyp(double a, double b) {
+        return Math.sqrt((Math.pow(a, 2)) + (Math.pow(b, 2)));
+    }
+
+    public static double pythSide(double c, double a) {
+        return Math.sqrt((Math.pow(c, 2)) - (Math.pow(a, 2)));
     }
 
 

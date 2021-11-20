@@ -51,15 +51,6 @@ public abstract class Controller extends Canvas implements Runnable {
     int[][] mapTileReader ;
 
     protected Controller() {
-        new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
-
-        this.addKeyListener(new KeyInput());
-        this.addMouseListener(new MouseInput());
-
-        tiless = new Tiles[2];
-
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        setBackground(new Color(0, 0, 0));
 
     }
 
@@ -117,7 +108,6 @@ public abstract class Controller extends Canvas implements Runnable {
             if(movingAmmo.get(i) != null)
                 movingAmmo.get(i).tick();
         }
-
 
         /*
         if (isMouse1Held) {

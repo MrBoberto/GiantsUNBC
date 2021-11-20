@@ -7,6 +7,7 @@ import game.*;
 import weapons.guns.AssaultRifle;
 import weapons.guns.Pistol;
 import weapons.guns.Shotgun;
+import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -98,8 +99,6 @@ public abstract class Player extends GameObject {
     public static final int ANIMATION_DELAY = 10;
 
     public Player(double x, double y, double angle, Color playerColour) {
-
-
         super(x, y, angle);
 
         respawnPointX = x;
@@ -109,9 +108,11 @@ public abstract class Player extends GameObject {
 
         Controller.players.add(this);
 
-        weapons.add(new Shotgun(this));
         weapons.add(new AssaultRifle(this));
         weapons.add(new Pistol(this));
+        weapons.add(new SniperRifle(this));
+        weapons.add(new Shotgun(this));
+
 
         //Animation handlers
 //        animationTimer.
@@ -124,6 +125,10 @@ public abstract class Player extends GameObject {
 
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
     }
 
     public int getKillCount() {
