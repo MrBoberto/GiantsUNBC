@@ -9,11 +9,13 @@ public class ServerUpdatePacket implements Serializable {
     private double x;
     private double y;
     double angle;
+    private int[] health = new int[2];
 
-    public ServerUpdatePacket(double x, double y, double angle) {
+    public ServerUpdatePacket(double x, double y, double angle, int[] health) {
         this.x = x;
         this.y = y;
         this.angle = angle;
+        this.health = health;
     }
 
 
@@ -27,5 +29,9 @@ public class ServerUpdatePacket implements Serializable {
 
     public double getAngle() {
         return angle;
+    }
+
+    public int[] getHealth() {
+        return health;
     }
 }

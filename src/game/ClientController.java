@@ -76,6 +76,8 @@ public class ClientController extends Controller{
                 otherPlayer.setX(packet.getX());
                 otherPlayer.setY(packet.getY());
                 otherPlayer.setAngle(packet.getAngle());
+                otherPlayer.setHealth(packet.getHealth()[0]);
+                thisPlayer.setHealth(packet.getHealth()[1]);
             }
         } else if(object instanceof ServerBulletPacket packet){
 

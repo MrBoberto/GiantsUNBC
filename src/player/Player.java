@@ -34,7 +34,7 @@ public abstract class Player extends GameObject {
     // The texture of the player being used in the current frame
     protected ImageFrame currentImage;
     protected Rectangle boundRect;
-    protected double health = 100;
+    protected int health = 100;
     protected int killCount = 0;
     protected int deathCount = 0;
     protected double kdr = -1;
@@ -94,11 +94,10 @@ public abstract class Player extends GameObject {
 
         Controller.players.add(this);
 
-        weapons.add(new SniperRifle(this));
-        weapons.add(new Shotgun(this));
         weapons.add(new AssaultRifle(this));
         weapons.add(new Pistol(this));
-
+        weapons.add(new SniperRifle(this));
+        weapons.add(new Shotgun(this));
     }
 
     public String getPlayerName() {
@@ -204,7 +203,11 @@ public abstract class Player extends GameObject {
         isJumping = jumping;
     }
 
-    public double getHealth() {
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getHealth() {
         return health;
     }
 

@@ -55,7 +55,10 @@ public class OutputConnection implements Runnable {
 //                    y[1] = Controller.otherPlayer.getY();
 //                    angle[1] = Controller.otherPlayer.getAngle();
 
-                    sendPacket(new ServerUpdatePacket(Controller.thisPlayer.getX(), Controller.thisPlayer.getY(), Controller.thisPlayer.getAngle()));
+                    int[] serverHealths = {Controller.thisPlayer.getHealth(), Controller.otherPlayer.getHealth()};
+
+                    sendPacket(new ServerUpdatePacket(Controller.thisPlayer.getX(), Controller.thisPlayer.getY(),
+                            Controller.thisPlayer.getAngle(), serverHealths));
 //
 //                    double x[] = new double[Controller.movingAmmo.size()];
 //                    double y[] = new double[Controller.movingAmmo.size()];
@@ -75,7 +78,8 @@ public class OutputConnection implements Runnable {
                         sendPacket(new ClientUpdatePacket(
                                 controller.getPlayer().getX(),
                                 controller.getPlayer().getY(),
-                                controller.getPlayer().getAngle()));
+                                controller.getPlayer().getAngle(),
+                                controller.getPlayer().getHealth()));
                     }
 
                 }

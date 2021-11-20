@@ -7,11 +7,13 @@ public class ClientUpdatePacket implements Serializable {
     private double x;
     private double y;
     private double angle;
+    private int health;
 
-    public ClientUpdatePacket(double x, double y, double angle) {
+    public ClientUpdatePacket(double x, double y, double angle, int health) {
         this.x = x;
         this.y = y;
         this.angle = angle;
+        this.health = health;
     }
 
     public double getX() {
@@ -24,5 +26,9 @@ public class ClientUpdatePacket implements Serializable {
 
     public double getAngle() {
         return angle;
+    }
+
+    public int getHealth() {
+        return health;
     }
 }
