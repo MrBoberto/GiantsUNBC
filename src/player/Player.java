@@ -3,6 +3,7 @@ package player;
 import StartMenu.MainMenuTest;
 import animation.ImageFrame;
 import animation.ImageStrip;
+import game.Controller;
 import game.Thing;
 import game.World;
 import weapons.guns.FlameThrower;
@@ -18,6 +19,8 @@ import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static game.Controller.*;
 
 public abstract class Player extends Thing implements Creature {
     // The texture of the player being used in the current frame
@@ -80,6 +83,8 @@ public abstract class Player extends Thing implements Creature {
     protected boolean isJumping = false;
     protected boolean isSneaking = false;
 
+
+
     // Prevents dash from being held
     // Prevents dash from being held
     protected boolean canDash = true;
@@ -96,9 +101,7 @@ public abstract class Player extends Thing implements Creature {
         this.playerNumber = playerNumber;
         if (MainMenuTest.playerName.equals("")) {
             if (playerNumber == 0) {
-                solidArea = new Rectangle((pos.x - currentImage.getImage().getWidth() / 2) +40,
-                        (pos.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
-                        currentImage.getImage().getHeight()-85);
+
 
 
                 if(mainMenuTest.getPlayerName() =="" ){
@@ -114,9 +117,7 @@ public abstract class Player extends Thing implements Creature {
                 playerName = mainMenuTest.getPlayerName();
 
 
-                solidArea = new Rectangle((pos.x - currentImage.getImage().getWidth() / 2) +40,
-                        (pos.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
-                        currentImage.getImage().getHeight()-85);
+
             }
         } else {
             playerName = MainMenuTest.playerName;
@@ -133,6 +134,10 @@ public abstract class Player extends Thing implements Creature {
         boundRect = new Rectangle(pos.x - currentImage.getImage().getWidth() / 2,
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
+        solidArea = new Rectangle((pos.x - currentImage.getImage().getWidth() / 2) +40,
+                (pos.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
+                currentImage.getImage().getHeight()-85);
+
 
         weapons.add(new Shotgun(this));
         weapons.add(new FlameThrower(this));
@@ -255,7 +260,9 @@ public abstract class Player extends Thing implements Creature {
         g.drawRect(pos.x - currentImage.getImage().getWidth() / 2,
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
-        collisionArea(g);
+
+
+
 
         Font font = new Font("Arial", Font.BOLD, 20);
         FontMetrics stringSize = g2d.getFontMetrics(font);
@@ -263,32 +270,36 @@ public abstract class Player extends Thing implements Creature {
                 pos.y - currentImage.getImage().getHeight() / 2);
     }
 
-    public void collisionArea(Graphics g){
+    public ImageFrame getCurrentImage() {
+        return currentImage;
+    }
+
+    //public void collisionArea(Graphics g){
 
 
 
 
-        g.setColor(Color.black);
-        g.drawRect((pos.x - currentImage.getImage().getWidth() / 2) +40,
-                (pos.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
-                currentImage.getImage().getHeight()-85);
+//        g.setColor(Color.black);
+//        g.drawRect((pos.x - currentImage.getImage().getWidth() / 2) +40,
+//                (pos.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
+//                currentImage.getImage().getHeight()-85);
 
-        collisionOn = false;
-        double entityLeftWorldX = super.getX() + solidArea.x;
-        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
-        double entityToptWorldY = super.getY() + solidArea.y;
-        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
-
-        double playerLeftCol = entityLeftWorldX/50;
-        double playerRightCol = entityRightWorldX/50;
-        double plaerTopRow = entityToptWorldY/50;
-        double playerBottomRow = entityBottomWorldY/50;
+        //collisionOn = false;
+//        double entityLeftWorldX = super.getX() + solidArea.x;
+//        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
+//        double entityToptWorldY = super.getY() + solidArea.y;
+//        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
+//
+//        double playerLeftCol = entityLeftWorldX/50;
+//        double playerRightCol = entityRightWorldX/50;
+//        double plaerTopRow = entityToptWorldY/50;
+//        double playerBottomRow = entityBottomWorldY/50;
 
         int tileNum1, tileNum2;
 
        //switch ()
 
-    }
+   // }
 
     public Point getPos() {
         return pos;

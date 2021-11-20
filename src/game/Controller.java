@@ -20,6 +20,8 @@ import java.util.Objects;
 public abstract class Controller extends JPanel implements ActionListener, KeyListener, MouseListener {
     public static final int PORT = 55555;
 
+    public Player playerdir;
+
     public final int FRAMEDELAY = 15;
     public final int WIDTH = 1280;
     public final int HEIGHT = WIDTH / 16 * 9;
@@ -41,8 +43,10 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
     int checkHeight = 0;
     int checkWidth = 0;
 
+   public static int [] position  = new int[]{0, 0, 0, 0};
 
     public Controller(){
+
         tiless = new Tiles[2];
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -186,6 +190,9 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
         int[][] tile =loadMap();
         drawTiles(g,tile);
 
+//        g.drawRect((playerdir.getPos().x - playerdir.getCurrentImage().getImage().getWidth() / 2)+40 ,
+//                (playerdir.getPos().y - playerdir.getCurrentImage().getImage().getHeight() / 2)+40, (playerdir.getCurrentImage().getImage().getWidth())-85,
+//                (playerdir.getCurrentImage().getImage().getHeight())-85);
 
 
     }
@@ -208,6 +215,8 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
               if(tiles[roww][coln] == 1){
                   collisionArea(row,col,50,50);
+
+
               }
                 row  = row+50;
           }
@@ -217,13 +226,19 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
        }
 
-
-
     }
-    public void collisionArea(int x, int y, int width, int height){
-
+    public static void collisionArea(int x, int y, int width, int height){
+        position[0] = x;
+        position[1] = y;
+        position[2] = width;
+        position[3] = height;
+        System.out.println("position check  " +position[0]+"   "+position[1]+"   "+position[2]+"   "+position[3]);
     }
 
+
+    public static int[] getPosition() {
+        return position;
+    }
 
     public Player getPlayer() {
         return player;

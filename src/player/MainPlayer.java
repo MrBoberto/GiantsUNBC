@@ -333,10 +333,10 @@ public class MainPlayer extends Player {
                 currentImage.getImage().getHeight());
 
         collisionOn = false;
-        double entityLeftWorldX = super.getX() + solidArea.x;
-        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
-        double entityTopWorldX = super.getY() + solidArea.y;
-        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
+//        double entityLeftWorldX = super.getX() + solidArea.x;
+//        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
+//        double entityTopWorldX = super.getY() + solidArea.y;
+//        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
 
 
         if (weapons.getPrimary().getCurrentDelay() > 0) {
