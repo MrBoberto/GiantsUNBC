@@ -17,9 +17,9 @@ public class OtherPlayer extends Player {
 
 
     public void tick() {
-        boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 2,
-                (int)this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
-                currentImage.getImage().getHeight());
+        boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 4,
+                (int)this.y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
+                currentImage.getImage().getHeight() / 2);
     }
 
     @Override
@@ -40,19 +40,19 @@ public class OtherPlayer extends Player {
 
         // Draws the player's hitbox
         g.setColor(playerColour);
-        g.drawRect((int) x - currentImage.getImage().getWidth() / 2,
-                (int) y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
-                currentImage.getImage().getHeight());
+        g.drawRect((int) x - currentImage.getImage().getWidth() / 4,
+                (int) y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
+                currentImage.getImage().getHeight() / 2);
 
         Font font = new Font("Arial", Font.BOLD, 20);
         FontMetrics stringSize = g2d.getFontMetrics(font);
 
-        g2d.drawRect((int) x - currentImage.getImage().getWidth() / 2,
-                (int) y - currentImage.getImage().getHeight() / 2 - 2,
-                (int) (currentImage.getImage().getWidth() * health / 100),
-                1);
+        g2d.fillRect((int) x - currentImage.getImage().getWidth() / 4,
+                (int) y - currentImage.getImage().getHeight() / 4 - 5,
+                (currentImage.getImage().getWidth() * health / 200),
+                5);
 
         g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 4,
-                (int) y - 5 - currentImage.getImage().getHeight() / 2);
+                (int) y - 5 - currentImage.getImage().getHeight() / 4);
     }
 }
