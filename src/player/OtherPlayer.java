@@ -17,6 +17,7 @@ public class OtherPlayer extends Player {
 
 
     public void tick() {
+        super.tick();
         boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 2,
                 (int)this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());

@@ -147,6 +147,7 @@ public class MainPlayer extends Player {
      */
     @Override
     public void tick() {
+        super.tick();
         setAngle();
         move();
 
@@ -187,10 +188,10 @@ public class MainPlayer extends Player {
                 currentImage.getImage().getHeight());
 
         collisionOn = false;
-        double entityLeftWorldX = super.getX() + solidArea.x;
-        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
-        double entityTopWorldX = super.getY() + solidArea.y;
-        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
+//        double entityLeftWorldX = super.getX() + solidArea.x;
+//        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
+//        double entityTopWorldX = super.getY() + solidArea.y;
+//        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
 
 
         if (weapons.getPrimary().getCurrentDelay() > 0) {
@@ -199,6 +200,10 @@ public class MainPlayer extends Player {
         if (weapons.getSecondary().getCurrentDelay() > 0) {
             weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getCurrentDelay() - 1);
         }
+
+        solidArea = new Rectangle(((int)this.x - currentImage.getImage().getWidth() / 2) + 40,
+                ((int)this.y - currentImage.getImage().getHeight() / 2) + 40, currentImage.getImage().getWidth() - 85,
+                currentImage.getImage().getHeight() - 85);
     }
 
     /**

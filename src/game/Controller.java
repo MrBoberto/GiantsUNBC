@@ -1,18 +1,14 @@
 package game;
 
-import StartMenu.MainMenuTest;
-import animation.ImageStrip;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
 import weapons.ammo.Bullet;
 import tile.TileManager;
 import tile.Tiles;
-import weapons.Projectile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -48,7 +44,6 @@ public abstract class Controller extends Canvas implements Runnable {
     //All GameObjects
     public static List<Bullet> movingAmmo = Collections.synchronizedList(new ArrayList<>());
     public static List<Player> players = Collections.synchronizedList(new ArrayList<>());
-    protected Timer timer;
     protected MainPlayer player;
     protected TileManager tileManager;
     protected BufferedImage tileBackGround;
@@ -61,18 +56,10 @@ public abstract class Controller extends Canvas implements Runnable {
         this.addKeyListener(new KeyInput());
         this.addMouseListener(new MouseInput());
 
-
-
-    int checkHeight = 0;
-    int checkWidth = 0;
-
         tiless = new Tiles[2];
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
-
-        loadImageStrips();
-
 
     }
 
@@ -183,7 +170,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
         // Update graphics in this section:
         //////////////////////////////////////
-        drawBackground(g);
+        drawBackground((Graphics2D) g);
 
         for (int i = 0; i < players.size(); i++) {
             if(players.get(i) != null)

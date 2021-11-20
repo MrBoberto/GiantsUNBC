@@ -12,7 +12,6 @@ public final class World {
     public World()
     {
        int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client"));
-        choiceOpt = choice;
 
         if(choice==1){
             controller = new ServerController();
@@ -22,9 +21,7 @@ public final class World {
             System.out.println("IM CLIENT");
         }
     }
-    public static int getChoiceOpt() {
-        return choiceOpt;
-    }
+
 
     public static double atan(double x, double y, double angle) {
         if (x == 0 && y == 0) {
