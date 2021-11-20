@@ -11,17 +11,8 @@ public final class World {
 
     public World()
     {
-        boolean isValidInput = false;
-        String choiceString = "";
-        int choice = -1;
-
-        while(!isValidInput && choiceString != null) {
-            choiceString = JOptionPane.showInputDialog("1 for server | 2 for client");
-            if (choiceString != null && (choiceString.equals("1") || choiceString.equals("2"))) {
-                choice = parseInt(choiceString);
-                isValidInput = true;
-            }
-        }
+       int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client"));
+        choiceOpt = choice;
 
         if(choice==1){
             controller = new ServerController();
@@ -31,7 +22,9 @@ public final class World {
             System.out.println("IM CLIENT");
         }
     }
-
+    public static int getChoiceOpt() {
+        return choiceOpt;
+    }
 
     public static double atan(double x, double y, double angle) {
         if (x == 0 && y == 0) {

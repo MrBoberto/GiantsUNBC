@@ -185,6 +185,14 @@ public class MainPlayer extends Player {
         boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 2,
                 (int)this.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
+
+        collisionOn = false;
+        double entityLeftWorldX = super.getX() + solidArea.x;
+        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
+        double entityTopWorldX = super.getY() + solidArea.y;
+        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
+
+
         if (weapons.getPrimary().getCurrentDelay() > 0) {
             weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getCurrentDelay() - 1);
         }

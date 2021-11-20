@@ -84,17 +84,28 @@ public abstract class Player extends GameObject {
     protected long bulletsHit = 0;
     protected long walkingDistance = 0;
 
-
+    public Rectangle solidArea;
+    public boolean collisionOn =false;
     public Player(double x, double y, double angle, Color playerColour) {
+
+
         super(x, y, angle);
 
         respawnPointX = x;
         respawnPointY = y;
         this.playerColour = playerColour;
 
+        if (playerNumber == 0) {
+            solidArea = new Rectangle((pos.x - currentImage.getImage().getWidth() / 2) + 40,
+                    (pos.y - currentImage.getImage().getHeight() / 2) + 40, currentImage.getImage().getWidth() - 85,
+                    currentImage.getImage().getHeight() - 85);
+        }else {
+            solidArea = new Rectangle((pos.x - currentImage.getImage().getWidth() / 2) +40,
+                    (pos.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
+                    currentImage.getImage().getHeight()-85);
+        }
         Controller.players.add(this);
 
-        weapons.add(new SniperRifle(this));
         weapons.add(new Shotgun(this));
         weapons.add(new AssaultRifle(this));
         weapons.add(new Pistol(this));
@@ -187,7 +198,32 @@ public abstract class Player extends GameObject {
 
 
 
+    public void collisionArea(Graphics g){
 
+
+
+
+        g.setColor(Color.black);
+        g.drawRect((pos.x - currentImage.getImage().getWidth() / 2) +40,
+                (pos.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
+                currentImage.getImage().getHeight()-85);
+
+        collisionOn = false;
+        double entityLeftWorldX = super.getX() + solidArea.x;
+        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
+        double entityToptWorldY = super.getY() + solidArea.y;
+        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
+
+        double playerLeftCol = entityLeftWorldX/50;
+        double playerRightCol = entityRightWorldX/50;
+        double plaerTopRow = entityToptWorldY/50;
+        double playerBottomRow = entityBottomWorldY/50;
+
+        int tileNum1, tileNum2;
+
+        //switch ()
+
+    }
     public boolean isFalling() {
         return isFalling;
     }
