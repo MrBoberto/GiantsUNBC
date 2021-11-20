@@ -15,4 +15,6 @@ public interface Weapon {
      int getSERIAL();
      // Returns the name of the weapon
      String toString();
+     // Returns the damage each bullet does
+     double getDamage();
 }

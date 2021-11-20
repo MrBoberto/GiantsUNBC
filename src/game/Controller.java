@@ -1,9 +1,11 @@
 package game;
 
+import StartMenu.MainMenuTest;
 import animation.ImageStrip;
-import player.Creature;
 import player.MainPlayer;
 import player.Player;
+import tile.TileManager;
+import tile.Tiles;
 import weapons.Projectile;
 
 import javax.imageio.ImageIO;
@@ -11,9 +13,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public abstract class Controller extends JPanel implements ActionListener, KeyListener, MouseListener {
     public static final int PORT = 55555;
@@ -25,27 +27,41 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
     public final double FRICTION = 1.1; // Friction acting on objects
     public static ArrayList<Player> livingPlayers = new ArrayList<Player>();
     public static ArrayList<Projectile> movingAmmo = new ArrayList<Projectile>();
+    public MainMenuTest mainMenuTest;
 
     protected BufferedImage background;
     protected Timer timer;
     protected MainPlayer player;
+    protected TileManager tileManager;
+    protected BufferedImage tileBackGround;
+    public Tiles[] tiless;
+    int[][] mapTileReader ;
+
+
+    int checkHeight = 0;
+    int checkWidth = 0;
+
 
     public Controller(){
+        tiless = new Tiles[2];
+
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
+
         loadImageStrips();
 
         timer = new Timer(FRAMEDELAY, this);
         timer.start();
 
         loadBackground();
+
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        drawBackground(g);
+    Graphics2D g2 = (Graphics2D)g;
+        drawBackground(g2);
 
         if(player != null){
             player.draw(g, this);
@@ -111,18 +127,103 @@ public abstract class Controller extends JPanel implements ActionListener, KeyLi
 
     private void loadBackground() {
         try {
-            background = ImageIO.read(new File("resources/Textures/BG/background1.png"));
+            background = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/imageRes/backGroundMap.png")));
+
+
         } catch (IOException exc) {
+            System.out.println("Could not find image file: " + exc.getMessage());
+        }
+
+        try {
+            tiless[0] = new Tiles();
+            tiless[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resTiles/yellowTile.png")));
+
+
+
+        } catch (IOException exc) {
+            System.out.println("Could not find image file: " + exc.getMessage());
+        }
+        try{
+            tiless[1] = new Tiles();
+            tiless[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resTiles/brickwall.png")));
+            tiless[1].collision =true;
+        }catch (IOException exc){
             System.out.println("Could not find image file: " + exc.getMessage());
         }
     }
 
-    private void drawBackground(Graphics g) {
+    public  int[][] loadMap(){
+
+
+         int[][] tileMap=
+                 {       {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                         {1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                         {1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1},
+                         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1},
+                         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+
+                 };
+         return tileMap;
+    }
+
+
+    private void drawBackground(Graphics2D g) {
         g.drawImage(
                 background,
-                0, 0, this
-        );
+                0, 0, this.getWidth(),this.getHeight(),null);
+        int[][] tile =loadMap();
+        drawTiles(g,tile);
+
+
+
     }
+
+    private void drawTiles(Graphics2D g, int[][] tiles){
+
+
+
+        int col = 0;
+        int row = 0;
+
+
+       for(int roww = 0; roww<15  ;roww++){
+
+           for(int coln  =0; coln<26;coln++){
+             // System.out.print(tiles[roww][coln]+",");
+              //System.out.println(coln);
+              //int tileNum = mapTileReader[col][row];
+              g.drawImage(tiless[tiles[roww][coln]].image, row, col, 50,50,null);
+
+              if(tiles[roww][coln] == 1){
+                  collisionArea(row,col,50,50);
+              }
+                row  = row+50;
+          }
+           row = 0;
+           //System.out.println();
+            col = col+50;
+
+       }
+
+
+
+    }
+    public void collisionArea(int x, int y, int width, int height){
+
+    }
+
 
     public Player getPlayer() {
         return player;

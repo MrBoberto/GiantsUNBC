@@ -11,7 +11,5 @@ public interface Projectile {
      double getX();
      double getY();
      int getSERIAL();
-     // Returns the damage each bullet does
-     double getDamage();
-     int getPlayerNumber();
+     Weapon getWeapon();
 }

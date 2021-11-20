@@ -3,26 +3,17 @@ package game;
 import javax.swing.*;
 import java.security.SecureRandom;
 
-import static java.lang.Integer.parseInt;
-
 public class World {
     private static World theWorld;
+    private static int choiceOpt;
     private Controller controller;
     private SecureRandom sRandom = new SecureRandom();
 
+
     private World()
     {
-        boolean isValidInput = false;
-        String choiceString = "";
-        int choice = -1;
-
-        while(!isValidInput && choiceString != null) {
-            choiceString = JOptionPane.showInputDialog("1 for server | 2 for client");
-            if (choiceString != null && (choiceString.equals("1") || choiceString.equals("2"))) {
-                choice = parseInt(choiceString);
-                isValidInput = true;
-            }
-        }
+       int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client"));
+        choiceOpt = choice;
 
         if(choice==1){
             controller = new ServerController();
@@ -43,6 +34,10 @@ public class World {
             theWorld = new World();
         }
         return theWorld;
+    }
+
+    public static int getChoiceOpt() {
+        return choiceOpt;
     }
 
     public Controller getController() {

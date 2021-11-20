@@ -87,15 +87,36 @@ public abstract class Player extends Thing implements Creature {
     // Can be 0 = primary or 1 = secondary
     protected int selectedWeapon = 0;
 
+    public Rectangle solidArea;
+    public boolean collisionOn =false;
+
     public Player(int playerNumber, double x, double y, double angle) {
         super(x, y, angle);
 
         this.playerNumber = playerNumber;
         if (MainMenuTest.playerName.equals("")) {
             if (playerNumber == 0) {
-                playerName = "Host";
+                solidArea = new Rectangle((pos.x - currentImage.getImage().getWidth() / 2) +40,
+                        (pos.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
+                        currentImage.getImage().getHeight()-85);
+
+
+                if(mainMenuTest.getPlayerName() =="" ){
+                    playerName  = "Host";
+                }else{
+                    mainMenuTest.getPlayerName();
+                }
+
             } else {
-                playerName = "Guest";
+                if(mainMenuTest.getPlayerName() == ""){
+                    playerName = "Guest";
+                }else
+                playerName = mainMenuTest.getPlayerName();
+
+
+                solidArea = new Rectangle((pos.x - currentImage.getImage().getWidth() / 2) +40,
+                        (pos.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
+                        currentImage.getImage().getHeight()-85);
             }
         } else {
             playerName = MainMenuTest.playerName;
@@ -113,9 +134,9 @@ public abstract class Player extends Thing implements Creature {
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
 
-        weapons.add(new SniperRifle(this));
         weapons.add(new Shotgun(this));
         weapons.add(new FlameThrower(this));
+        weapons.add(new SniperRifle(this));
     }
 
     public int getPlayerNumber() {
@@ -234,11 +255,39 @@ public abstract class Player extends Thing implements Creature {
         g.drawRect(pos.x - currentImage.getImage().getWidth() / 2,
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
+        collisionArea(g);
 
         Font font = new Font("Arial", Font.BOLD, 20);
         FontMetrics stringSize = g2d.getFontMetrics(font);
-        g2d.drawString(playerName, pos.x - (stringSize.stringWidth(playerName)) / 4,
+        g2d.drawString(playerName, pos.x - (stringSize.stringWidth(playerName)) / 2,
                 pos.y - currentImage.getImage().getHeight() / 2);
+    }
+
+    public void collisionArea(Graphics g){
+
+
+
+
+        g.setColor(Color.black);
+        g.drawRect((pos.x - currentImage.getImage().getWidth() / 2) +40,
+                (pos.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
+                currentImage.getImage().getHeight()-85);
+
+        collisionOn = false;
+        double entityLeftWorldX = super.getX() + solidArea.x;
+        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
+        double entityToptWorldY = super.getY() + solidArea.y;
+        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
+
+        double playerLeftCol = entityLeftWorldX/50;
+        double playerRightCol = entityRightWorldX/50;
+        double plaerTopRow = entityToptWorldY/50;
+        double playerBottomRow = entityBottomWorldY/50;
+
+        int tileNum1, tileNum2;
+
+       //switch ()
+
     }
 
     public Point getPos() {

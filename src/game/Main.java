@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 
 public class Main {
     public static JFrame window = new JFrame("The Boyz");
+
     public static void startGame()  {
 
 

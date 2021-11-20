@@ -1,10 +1,8 @@
 package weapons.guns;
 
 import game.Thing;
-import game.World;
 import player.Player;
 import weapons.Weapon;
-import weapons.ammo.Nato;
 import weapons.ammo.Shot;
 
 import java.util.ArrayList;
@@ -18,6 +16,7 @@ public class Shotgun implements Weapon {
     private int currentDelay = 0;
     // Identifies type of gun
     private final int SERIAL = 000;
+    private final double DAMAGE = 10;
 
     public Shotgun(Player parent) {
         this.parent = parent;
@@ -25,18 +24,14 @@ public class Shotgun implements Weapon {
 
     /**
      * Constructs an ArrayList of shells and labels this as the bullets' parent
-     * @param aimX The vertical line passing through the selected location
-     * @param aimY The horizontal line passing through the selected location
+     * @param x The vertical line passing through the selected location
+     * @param y The horizontal line passing through the selected location
      */
     @Override
-    public void shoot(double aimX, double aimY) {
+    public void shoot(double x, double y) {
         ArrayList<Shot> shell = new ArrayList<Shot>(ROUNDCOUNT);
         for (int i = 0; i < ROUNDCOUNT; i++) {
-            shell.add(new Shot(parent.getX(), parent.getY(), aimX, aimY, parent.getPlayerNumber(),
-                    MOMENTUM, parent.getDamageMultiplier(),
-                    World.getWorld().atan(aimX - getParent().getX(),
-                            aimY - getParent().getY(), 0) - INACCURACY / 2
-                            + getINACCURACY() * World.getWorld().getSRandom().nextDouble()));
+            shell.add(new Shot(x, y, this));
 //            System.out.println("Fired shot " + (i + 1));
         }
     }
@@ -79,5 +74,10 @@ public class Shotgun implements Weapon {
     @Override
     public String toString() {
         return SERIAL + ", Shotgun";
+    }
+
+    @Override
+    public double getDamage() {
+        return DAMAGE * parent.getDamageMultiplier();
     }
 }

@@ -8,8 +8,11 @@ import java.awt.event.MouseEvent;
 
 public class MainPlayer extends Player {
 
+
     public MainPlayer(int playerNumber, double x, double y, double angle) {
         super(playerNumber, x, y, angle);
+
+        //solidArea = new Rectangle((currentImage.getImage().getWidth() / 2)+40,(currentImage.getImage().getHeight() / 2)+40,40,40);
     }
 
     public void keyPressed(KeyEvent e) {
@@ -329,6 +332,13 @@ public class MainPlayer extends Player {
                 pos.y - currentImage.getImage().getHeight() / 2, currentImage.getImage().getWidth(),
                 currentImage.getImage().getHeight());
 
+        collisionOn = false;
+        double entityLeftWorldX = super.getX() + solidArea.x;
+        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
+        double entityTopWorldX = super.getY() + solidArea.y;
+        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
+
+
         if (weapons.getPrimary().getCurrentDelay() > 0) {
             weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getCurrentDelay() - 1);
         }
@@ -342,10 +352,9 @@ public class MainPlayer extends Player {
             if (selectedWeapon == 0 && weapons.getPrimary().getCurrentDelay() == 0) {
                 weapons.getPrimary().shoot(mouseLoc.x, mouseLoc.y);
                 weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getMAX_DELAY());
-            } else if (selectedWeapon == 1 && weapons.getSecondary().getCurrentDelay() == 0) {
+            } else if (selectedWeapon == 1 && weapons.getPrimary().getCurrentDelay() == 0) {
                 weapons.getSecondary().shoot(mouseLoc.x, mouseLoc.y);
                 weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getMAX_DELAY());
-
             }
         }
     }
