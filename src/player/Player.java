@@ -7,6 +7,7 @@ import game.*;
 import weapons.guns.AssaultRifle;
 import weapons.guns.Pistol;
 import weapons.guns.Shotgun;
+import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -95,7 +96,7 @@ public abstract class Player extends GameObject {
 
     //Animation timers
     protected int animationTimer = 0;
-    public static final int ANIMATION_DELAY = 10;
+    public static final int ANIMATION_DELAY = 1;
 
     public Player(double x, double y, double angle, Color playerColour) {
 
@@ -421,5 +422,13 @@ public abstract class Player extends GameObject {
 
     public boolean isInvincible(){
         return invincibilityTimer > 0;
+    }
+
+    public boolean isTimeForNextFrame(){
+       return animationTimer >= ANIMATION_DELAY;
+    }
+
+    public void resetAnimationTimer(){
+        animationTimer = 0;
     }
 }

@@ -204,6 +204,7 @@ public class MainPlayer extends Player {
         solidArea = new Rectangle(((int)this.x - currentImage.getImage().getWidth() / 2) + 40,
                 ((int)this.y - currentImage.getImage().getHeight() / 2) + 40, currentImage.getImage().getWidth() - 85,
                 currentImage.getImage().getHeight() - 85);
+
     }
 
     /**
@@ -214,7 +215,11 @@ public class MainPlayer extends Player {
     @Override
     public void render(Graphics g) {
         isWalking = (up || left || down || right);
-        loadImage();
+        if(isTimeForNextFrame()){
+            loadImage();
+            resetAnimationTimer();
+        }
+
 
         if(currentImage == null) return;
         // Sets up the axis of rotation
