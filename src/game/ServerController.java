@@ -122,21 +122,24 @@ public class ServerController extends Controller {
                 } else {
                     // Player who was hit (-1 if no one was hit)
                     int victimNumber = EntityCollision.getVictim(bullet);
-                    if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber()) {
+
+                    // Player
+                    Player killer;
+                    Player victim;
+                    if (bullet.getPlayerIBelongToNumber() == Player.SERVER_PLAYER) {
+                        killer = thisPlayer;
+                        victim = otherPlayer;
+
+                    } else {
+                        killer = otherPlayer;
+                        victim = thisPlayer;
+                    }
+
+                    if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber() && !victim.isInvincible()) {
                         if (bullet.getSERIAL() != 002) {
                             movingAmmo.remove(bullet);
                         }
-                        // Player
-                        Player killer;
-                        Player victim;
-                        if (bullet.getPlayerIBelongToNumber() == Player.SERVER_PLAYER) {
-                            killer = thisPlayer;
-                            victim = otherPlayer;
 
-                        } else {
-                            killer = otherPlayer;
-                            victim = thisPlayer;
-                        }
 
                         killer.incrementBulletHitCount();
                         victim.modifyHealth(-1 * bullet.getDamage());

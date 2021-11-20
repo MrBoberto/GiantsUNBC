@@ -44,7 +44,8 @@ public class MainMenuTest {
         //wow.setSize(800,600);
         int width = wow.getWidth();
         int length = wow.getHeight();
-        wow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        Dimension size = Toolkit. getDefaultToolkit(). getScreenSize();
+        wow.setSize(size);
 
         wow.setMinimumSize(new Dimension(800, 800));
 
@@ -76,6 +77,8 @@ public class MainMenuTest {
         };
         backGround.setBounds(0,0,wow.getWidth(),wow.getHeight());
        backGround.setBackground(Color.BLACK);
+
+        System.out.println("Size of the frame is " +size);
 
 
         titleNamePanel = new JPanel(){
@@ -144,18 +147,15 @@ public class MainMenuTest {
         name.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println(" Please enter your name");
                 boolean isValidPlayerName = false;
-
-                // While there is no valid input and user has not pressed cancel
                 while (!isValidPlayerName && playerName != null) {
                     playerName = (JOptionPane.showInputDialog("Name for server 1 | Name for server 2"));
-                    // If user did not press cancel, and they typed something before pressing "Ok"
-                    if (playerName != null && !playerName.equals("")) {
+                    if (!playerName.equals("")) {
                         isValidPlayerName = true;
                         System.out.println("playerName " +playerName);
                     }
                 }
-                // If user pressed "Ok" without typing anything
                 if (playerName == null) {
                     playerName = "";
                 }

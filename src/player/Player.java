@@ -7,14 +7,15 @@ import game.*;
 import weapons.guns.AssaultRifle;
 import weapons.guns.Pistol;
 import weapons.guns.Shotgun;
-import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
 
 public abstract class Player extends GameObject {
     // Can be 0 = primary or 1 = secondary
@@ -70,8 +71,8 @@ public abstract class Player extends GameObject {
     protected boolean isSneaking = false;
     protected boolean isWalking = false;
     // Prevents dash from being held
-    // Prevents dash from being held
     protected boolean canDash = true;
+
     protected Arsenal weapons = new Arsenal();
     protected int selectedWeapon = 0;
 
@@ -84,20 +85,37 @@ public abstract class Player extends GameObject {
     protected long bulletsHit = 0;
     protected long walkingDistance = 0;
 
+    //Collisions
+    public Rectangle solidArea;
+    public boolean collisionOn =false;
+
+    //Invincibility
+    protected int invincibilityTimer = 0;
+    public static final int RESPAWN_INVINCIBILITY_TIME = 180;
+
+    //Animation timers
+    protected int animationTimer = 0;
+    public static final int ANIMATION_DELAY = 10;
 
     public Player(double x, double y, double angle, Color playerColour) {
+
+
         super(x, y, angle);
 
         respawnPointX = x;
         respawnPointY = y;
         this.playerColour = playerColour;
 
+
         Controller.players.add(this);
 
+        weapons.add(new Shotgun(this));
         weapons.add(new AssaultRifle(this));
         weapons.add(new Pistol(this));
-        weapons.add(new SniperRifle(this));
-        weapons.add(new Shotgun(this));
+
+        //Animation handlers
+//        animationTimer.
+
     }
 
     public String getPlayerName() {
@@ -186,7 +204,29 @@ public abstract class Player extends GameObject {
 
 
 
+    public void collisionArea(Graphics g){
 
+        g.setColor(Color.black);
+        g.drawRect(((int)this.x - currentImage.getImage().getWidth() / 2) +40,
+                ((int)this.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
+                currentImage.getImage().getHeight()-85);
+
+        collisionOn = false;
+        double entityLeftWorldX = super.getX() + solidArea.x;
+        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
+        double entityToptWorldY = super.getY() + solidArea.y;
+        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
+
+        double playerLeftCol = entityLeftWorldX/50;
+        double playerRightCol = entityRightWorldX/50;
+        double plaerTopRow = entityToptWorldY/50;
+        double playerBottomRow = entityBottomWorldY/50;
+
+        int tileNum1, tileNum2;
+
+        //switch ()
+
+    }
     public boolean isFalling() {
         return isFalling;
     }
@@ -291,6 +331,12 @@ public abstract class Player extends GameObject {
     }
 
     @Override
+    public void tick(){
+        invincibilityTimer--;
+        animationTimer++;
+    }
+
+    @Override
     public Rectangle getBounds() {
         return boundRect;
     }
@@ -347,6 +393,7 @@ public abstract class Player extends GameObject {
         health = 100;
         x = respawnPointX;
         y = respawnPointY;
+        invincibilityTimer = RESPAWN_INVINCIBILITY_TIME;
     }
 
     public void incrementBulletCount(){
@@ -370,5 +417,9 @@ public abstract class Player extends GameObject {
 
     public void incrementWalkingDistance() {
         walkingDistance++;
+    }
+
+    public boolean isInvincible(){
+        return invincibilityTimer > 0;
     }
 }
