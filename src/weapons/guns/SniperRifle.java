@@ -21,8 +21,8 @@ public class SniperRifle implements Weapon {
     private static final int SERIAL = 001;
     public static final int DAMAGE = 100;
 
-    public SniperRifle(Player player) {
-        this.playerIBelongTo = player;
+    public SniperRifle(Player playerIBelongTo) {
+        this.playerIBelongTo = playerIBelongTo;
     }
 
     /**
