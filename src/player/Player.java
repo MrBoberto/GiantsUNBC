@@ -110,10 +110,10 @@ public abstract class Player extends GameObject {
 
         Controller.players.add(this);
 
-        weapons.add(new Shotgun(this));
         weapons.add(new AssaultRifle(this));
         weapons.add(new Pistol(this));
         weapons.add(new SniperRifle(this));
+        weapons.add(new Shotgun(this));
 
 
         //Animation handlers
@@ -276,7 +276,7 @@ public abstract class Player extends GameObject {
      * @param tdoMod Damage value to add
      */
     public void addTDO(long tdoMod) {
-        if (this.tdo > 1.6 * (10 ^ 308) || this.tdo < -1.6 * (10 ^ 308)) {
+        if (this.tdo > 1.6 * Math.pow(10, 308) || this.tdo < -1.6 * Math.pow(10, 308)) {
             System.out.println("ERROR: TDO overflow");
         } else {
             this.tdo += tdoMod;

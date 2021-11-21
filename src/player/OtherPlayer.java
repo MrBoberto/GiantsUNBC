@@ -49,7 +49,8 @@ public class OtherPlayer extends Player {
                 (int) y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
                 currentImage.getImage().getHeight() / 2);
 
-        Font font = new Font("Arial", Font.BOLD, 25);
+        Font font = new Font("Arial", Font.BOLD, 15);
+        g2d.setFont(font);
         FontMetrics stringSize = g2d.getFontMetrics(font);
 
         g2d.fillRect((int) x - currentImage.getImage().getWidth() / 4,
@@ -57,7 +58,7 @@ public class OtherPlayer extends Player {
                 (currentImage.getImage().getWidth() * health / 200),
                 5);
 
-        g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 4,
+        g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,
                 (int) y - 5 - currentImage.getImage().getHeight() / 4);
     }
 }
