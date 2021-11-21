@@ -160,7 +160,9 @@ public abstract class Player extends GameObject {
      */
     public void incrementDeathCount() {
         this.deathCount++;
-        kdr = killCount / deathCount;
+        double kills = killCount;
+        double deaths = deathCount;
+        kdr = kills / deaths;
     }
 
     public double getKdr() {

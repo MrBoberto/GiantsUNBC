@@ -152,7 +152,6 @@ public class AIPlayer extends OtherPlayer {
         } else {
             velX = speed * Math.cos(super.getAngle());
             velY = -speed * Math.sin(super.getAngle());
-            System.out.println(velX);
 //            System.out.println("player.Player 1 Current super.getAngle(): " + super.getAngle());
             if ((super.getAngle() > (Math.PI / 2) && super.getAngle() < Math.PI)
                     || (super.getAngle() < 0 && super.getAngle() > -Math.PI / 2)) {

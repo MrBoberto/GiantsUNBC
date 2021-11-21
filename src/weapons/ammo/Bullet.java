@@ -2,6 +2,7 @@ package weapons.ammo;
 
 import game.Controller;
 import game.GameObject;
+import game.World;
 import player.MainPlayer;
 
 import java.awt.*;
@@ -29,26 +30,25 @@ public abstract class Bullet extends GameObject implements Projectile {
         if(x == 0 || y == 0){
             return;
         }
-        // pos.setLocation(super.getX(), super.getY());
 
-        // Apply vertical friction
-        if (velY > Controller.FRICTION) {
-            velY -= Controller.FRICTION;
-        } else if (velY < -Controller.FRICTION) {
-            velY += Controller.FRICTION;
-        } else if (velY != 0) {
+        if (World.pythHyp(velX, velY) >= Controller.FRICTION) {
+            double newSpeed = World.pythHyp(velX, velY) - Controller.FRICTION;
+
+            if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
+//            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
+                velX = World.cosAdj(newSpeed, angle);
+                velY = World.sinOpp(newSpeed, angle);
+            } else {
+//            System.out.print(", Positive, speed = " + weapon.getMOMENTUM() / MASS);
+                velX = World.sinOpp(newSpeed, angle);
+                velY = World.cosAdj(newSpeed, angle);
+            }
+        } else {
+            velX = 0;
             velY = 0;
         }
-        // Apply horizontal friction
-        if (velX > Controller.FRICTION) {
-            velX -= Controller.FRICTION;
-        } else if (velX < -Controller.FRICTION) {
-            velX += Controller.FRICTION;
-        } else if (velX != 0) {
-            velX = 0;
-        }
 
-        if(texture!= null){
+        if(texture != null){
             boundRect = new Rectangle((int)x - texture.getWidth() / 2,
                     (int)y- texture.getHeight() / 2, texture.getWidth(),
                     texture.getHeight());
