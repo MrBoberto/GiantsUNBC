@@ -110,10 +110,10 @@ public abstract class Player extends GameObject {
 
         Controller.players.add(this);
 
+        weapons.add(new Shotgun(this));
         weapons.add(new AssaultRifle(this));
         weapons.add(new Pistol(this));
         weapons.add(new SniperRifle(this));
-        weapons.add(new Shotgun(this));
 
 
         //Animation handlers

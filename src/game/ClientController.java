@@ -1,12 +1,13 @@
 package game;
 
 import StartMenu.MainMenuTest;
+import audio.SFXPlayer;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
 import tile.Tiles;
-import weapons.ammo.Bullet;
+import weapons.ammo.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,9 @@ import java.util.Scanner;
 public class ClientController extends Controller{
 
     private Socket socket;
+
+    private int shotgunAudioCount = 10;
+    public SFXPlayer serverWeaponAudio;
 
     public ClientController(){
         super();
@@ -94,6 +98,11 @@ public class ClientController extends Controller{
         } else if(object instanceof ServerBulletPacket packet){
 
             movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
+
+        } else if (object instanceof ServerSFXPacket packet) {
+
+            serverWeaponAudio.setFile(packet.getServerSFXLocation());
+            serverWeaponAudio.play();
 
         } else if(object instanceof RespawnPacket){
 

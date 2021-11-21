@@ -68,6 +68,7 @@ public class SingleController extends Controller {
             if ((otherPlayer.getWeapons().getPrimary().getSPEED() / 2) *
                     (otherPlayer.getWeapons().getPrimary().getSPEED() / FRICTION) > distance) {
                 Controller.otherPlayer.getWeapons().getPrimary().shoot(thisPlayer.x, thisPlayer.y);
+                Controller.otherPlayer.getWeapons().getPrimary().playAudio();
 
                 Controller.otherPlayer.getWeapons().getPrimary().setCurrentDelay(
                         Controller.otherPlayer.getWeapons().getPrimary().getMAX_DELAY());
@@ -77,6 +78,7 @@ public class SingleController extends Controller {
             if ((otherPlayer.getWeapons().getSecondary().getSPEED() / 2) *
                     (otherPlayer.getWeapons().getSecondary().getSPEED() / FRICTION) > distance) {
                 Controller.otherPlayer.getWeapons().getSecondary().shoot(thisPlayer.x, thisPlayer.y);
+                Controller.otherPlayer.getWeapons().getSecondary().playAudio();
 
                 Controller.otherPlayer.getWeapons().getSecondary().setCurrentDelay(
                         Controller.otherPlayer.getWeapons().getSecondary().getMAX_DELAY());

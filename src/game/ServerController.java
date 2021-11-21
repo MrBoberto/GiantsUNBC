@@ -1,6 +1,7 @@
 package game;
 
 import StartMenu.MainMenuTest;
+import audio.SFXPlayer;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
@@ -8,6 +9,8 @@ import player.Player;
 import tile.Tiles;
 import weapons.ammo.*;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
@@ -20,9 +23,12 @@ public class ServerController extends Controller {
 
     private ServerSocket serverSocket;
     private Socket socket;
+    private int shotgunAudioCount = 10;
+    public SFXPlayer clientWeaponAudio;
 
     public ServerController() {
         super();
+        clientWeaponAudio = new SFXPlayer();
         new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
 
         this.addKeyListener(new KeyInput());
@@ -80,34 +86,48 @@ public class ServerController extends Controller {
             otherPlayer.setPlayerName(packet.getClientName());
             System.out.println("Start request received and resent.");
         } else if (object instanceof ClientBulletPacket packet) {
-
             switch (packet.getType()){
-                case ShotgunBullet -> new ShotgunBullet(
+                case ShotgunBullet: new ShotgunBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
-                case SniperRifleBullet -> new SniperRifleBullet(
+                if (shotgunAudioCount == 10) {
+                    clientWeaponAudio.setFile("resources/SFX/Shotgun.wav");
+                } else if (shotgunAudioCount == 0) {
+                    // Do nothing
+                } else {
+                    shotgunAudioCount--;
+                }
+                break;
+                case SniperRifleBullet: new SniperRifleBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
-                case PistolBullet -> new PistolBullet(
+                clientWeaponAudio.setFile("resources/SFX/Sniper Rifle.wav");
+                break;
+                case PistolBullet: new PistolBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
-                case AssaultRifleBullet -> new AssaultRifleBullet(
+                clientWeaponAudio.setFile("resources/SFX/Pistol.wav");
+                break;
+                case AssaultRifleBullet: new AssaultRifleBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
+                clientWeaponAudio.setFile("resources/SFX/Assault Rifle.wav");
+                break;
             }
 
+            clientWeaponAudio.play();
             otherPlayer.incrementBulletCount();
         }
     }
@@ -275,6 +295,18 @@ public class ServerController extends Controller {
 
         //Send to client
         outputConnection.sendPacket(new WinnerPacket(winnerNumber, playerInfo));
+
+        // Kill the music
+        try {
+            soundtrack.stop();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
+
         stop();
     }
 }

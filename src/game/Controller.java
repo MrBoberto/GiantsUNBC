@@ -1,21 +1,21 @@
 package game;
 
+import audio.AudioPlayer;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
 import weapons.ammo.Bullet;
 import tile.TileManager;
 import tile.Tiles;
+import weapons.guns.AssaultRifle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class Controller extends Canvas implements Runnable {
     public static final int PORT = 55555;
@@ -49,9 +49,28 @@ public abstract class Controller extends Canvas implements Runnable {
     protected BufferedImage tileBackGround;
     public Tiles[] tiless;
     int[][] mapTileReader ;
+    AudioPlayer soundtrack;
 
     protected Controller() {
+        try
+        {
+            int randomMusic = World.getSRandom().nextInt(2);
+            System.out.println(randomMusic);
+            if (randomMusic == 0) {
+                soundtrack = new AudioPlayer("resources/Music/Trananozixa.wav");
+            } else {
+                soundtrack = new AudioPlayer("resources/Music/The_Colour_three.wav");
+            }
 
+            soundtrack.play();
+        }
+
+        catch (Exception ex)
+        {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+
+        }
     }
 
     public void start(){

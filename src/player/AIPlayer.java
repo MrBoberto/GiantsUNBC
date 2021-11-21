@@ -16,12 +16,14 @@ public class AIPlayer extends OtherPlayer {
     //Main Player movement directions
     private boolean up = false, down = false,right = false,left = false;
     private boolean attac = true;
+    private double desiredOffset = 40;  // Distance the AI wants to be from the player when attacking
+    private int fear = 50;              // Max health advantage the player can have for the ai to want to attack them
+
 
     public AIPlayer(double x, double y, double angle, Color color) {
         super(x, y, angle, color);
 
         playerNumber = 1;
-
         // Graphics-related
 
         loadImageStrips();
@@ -42,24 +44,24 @@ public class AIPlayer extends OtherPlayer {
         right = false;
         left = false;
 
-        if (Controller.thisPlayer.getHealth() <= health + 50) {
+        if (Controller.thisPlayer.getHealth() <= health + fear) {
             if (!attac) {
                 System.out.println(playerName + ": You should have gone for the head.");
             }
             attac = true;
-            if (Controller.thisPlayer.getY() < y - 2) {
+            if (Controller.thisPlayer.getY() < y - desiredOffset) {
                 avgY++;
                 up = true;
             }
-            if (Controller.thisPlayer.getX() > x + 2) {
+            if (Controller.thisPlayer.getX() > x + desiredOffset) {
                 avgX++;
                 right = true;
             }
-            if (Controller.thisPlayer.getY() > y + 2) {
+            if (Controller.thisPlayer.getY() > y + desiredOffset) {
                 avgY--;
                 down = true;
             }
-            if (Controller.thisPlayer.getX() < x - 2) {
+            if (Controller.thisPlayer.getX() < x - desiredOffset) {
                 avgX--;
                 left = true;
             }
@@ -68,19 +70,19 @@ public class AIPlayer extends OtherPlayer {
                 System.out.println(playerName + ": Your optimism is misplaced, Asgardian.");
             }
             attac = false;
-            if (Controller.thisPlayer.getY() < y - 2) {
+            if (Controller.thisPlayer.getY() < y) {
                 avgY--;
                 down = true;
             }
-            if (Controller.thisPlayer.getX() > x + 2) {
+            if (Controller.thisPlayer.getX() > x) {
                 avgX--;
                 left = true;
             }
-            if (Controller.thisPlayer.getY() > y + 2) {
+            if (Controller.thisPlayer.getY() > y) {
                 avgY++;
                 up = true;
             }
-            if (Controller.thisPlayer.getY() < x - 2) {
+            if (Controller.thisPlayer.getY() < x) {
                 avgX++;
                 right = true;
             }

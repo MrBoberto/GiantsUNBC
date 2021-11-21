@@ -26,6 +26,7 @@ public class MouseInput extends MouseAdapter {
                     && Controller.thisPlayer.getWeapons().getPrimary().getCurrentDelay() == 0)
             {
                 Controller.thisPlayer.getWeapons().getPrimary().shoot(e.getX(), e.getY());
+                Controller.thisPlayer.getWeapons().getPrimary().playAudio();
 
                 Controller.thisPlayer.getWeapons().getPrimary().setCurrentDelay(
                         Controller.thisPlayer.getWeapons().getPrimary().getMAX_DELAY());
@@ -34,6 +35,7 @@ public class MouseInput extends MouseAdapter {
                     && Controller.thisPlayer.getWeapons().getSecondary().getCurrentDelay() == 0) {
 
                 Controller.thisPlayer.getWeapons().getSecondary().shoot(e.getX(), e.getY());
+                Controller.thisPlayer.getWeapons().getSecondary().playAudio();
 
                 Controller.thisPlayer.getWeapons().getSecondary().setCurrentDelay(
                         Controller.thisPlayer.getWeapons().getSecondary().getMAX_DELAY());

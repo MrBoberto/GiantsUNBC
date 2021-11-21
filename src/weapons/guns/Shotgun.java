@@ -1,14 +1,21 @@
 package weapons.guns;
 
+import audio.AudioPlayer;
+import audio.SFXPlayer;
 import game.ServerController;
 import game.SingleController;
 import game.World;
 import packets.ClientBulletPacket;
+import packets.ServerSFXPacket;
 import player.Player;
 import weapons.ammo.AssaultRifleBullet;
 import weapons.ammo.Projectile;
 //import weapons.ammo.Nato;
 import weapons.ammo.ShotgunBullet;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
 
 public class Shotgun implements Weapon {
     private final Player playerIBelongTo;
@@ -20,9 +27,21 @@ public class Shotgun implements Weapon {
     // Identifies type of gun
     public static final int SERIAL = 000;
     public static int DAMAGE = 10;
+    public static String audioLocation = "resources/SFX/Shotgun.wav";
+    public SFXPlayer audio;
 
     public Shotgun(Player playerIBelongTo) {
         this.playerIBelongTo = playerIBelongTo;
+
+        try
+        {
+            audio = new SFXPlayer();
+        }
+        catch (Exception ex)
+        {
+            System.out.println("Error with playing shotgun sound.");
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -33,6 +52,7 @@ public class Shotgun implements Weapon {
     @Override
     public void shoot(double mouseX, double mouseY) {
         if (World.controller instanceof ServerController) {
+            World.controller.getOutputConnection().sendPacket(new ServerSFXPacket(audioLocation));
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
@@ -107,5 +127,16 @@ public class Shotgun implements Weapon {
     @Override
     public double getDamage() {
         return DAMAGE * playerIBelongTo.getDamageMultiplier();
+    }
+
+    @Override
+    public void playAudio() {
+        try {
+            audio.setFile(audioLocation);
+            audio.play();
+            System.out.println(0);
+        } catch(Exception e) {
+            System.out.println(e.getCause());
+        }
     }
 }

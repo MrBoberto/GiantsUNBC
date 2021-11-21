@@ -28,4 +28,6 @@ public interface Weapon extends Serializable {
 
     // Returns the damage each bullet does
     double getDamage();
+
+    void playAudio();
 }
