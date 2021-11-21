@@ -6,6 +6,7 @@ import game.ServerController;
 import game.SingleController;
 import game.World;
 import packets.ClientBulletPacket;
+import packets.ClientSFXPacket;
 import packets.ServerSFXPacket;
 import player.Player;
 import weapons.ammo.Projectile;
@@ -68,6 +69,7 @@ public class Pistol implements Weapon {
             }
         } else {
             for (int i = 0; i < ROUNDCOUNT; i++) {
+                World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(audioLocation));
                 World.controller.getOutputConnection().sendPacket(
                         new ClientBulletPacket(
                                 playerIBelongTo.getX(),

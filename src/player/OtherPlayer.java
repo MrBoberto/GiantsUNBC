@@ -59,6 +59,6 @@ public class OtherPlayer extends Player {
                 5);
 
         g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,
-                (int) y - 5 - currentImage.getImage().getHeight() / 4);
+                (int) y - 10 - currentImage.getImage().getHeight() / 4);
     }
 }

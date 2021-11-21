@@ -23,7 +23,6 @@ public class ServerController extends Controller {
 
     private ServerSocket serverSocket;
     private Socket socket;
-    private int shotgunAudioCount = 10;
     public SFXPlayer clientWeaponAudio;
 
     public ServerController() {
@@ -93,13 +92,6 @@ public class ServerController extends Controller {
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
-                if (shotgunAudioCount == 10) {
-                    clientWeaponAudio.setFile("resources/SFX/Shotgun.wav");
-                } else if (shotgunAudioCount == 0) {
-                    // Do nothing
-                } else {
-                    shotgunAudioCount--;
-                }
                 break;
                 case SniperRifleBullet: new SniperRifleBullet(
                         Player.CLIENT_PLAYER,
@@ -107,7 +99,6 @@ public class ServerController extends Controller {
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
-                clientWeaponAudio.setFile("resources/SFX/Sniper Rifle.wav");
                 break;
                 case PistolBullet: new PistolBullet(
                         Player.CLIENT_PLAYER,
@@ -115,7 +106,6 @@ public class ServerController extends Controller {
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
-                clientWeaponAudio.setFile("resources/SFX/Pistol.wav");
                 break;
                 case AssaultRifleBullet: new AssaultRifleBullet(
                         Player.CLIENT_PLAYER,
@@ -123,12 +113,13 @@ public class ServerController extends Controller {
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
-                clientWeaponAudio.setFile("resources/SFX/Assault Rifle.wav");
                 break;
             }
 
-            clientWeaponAudio.play();
             otherPlayer.incrementBulletCount();
+        } else if (object instanceof ClientSFXPacket packet) {
+            clientWeaponAudio.setFile(packet.getclientSFXLocation());
+            clientWeaponAudio.play();
         }
     }
 

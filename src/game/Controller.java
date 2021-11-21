@@ -52,6 +52,14 @@ public abstract class Controller extends Canvas implements Runnable {
     AudioPlayer soundtrack;
 
     protected Controller() {
+
+    }
+
+    public void start(){
+        isRunning = true;
+        loadBackground();
+
+        // Load soundtrack
         try
         {
             int randomMusic = World.getSRandom().nextInt(2);
@@ -61,21 +69,14 @@ public abstract class Controller extends Canvas implements Runnable {
             } else {
                 soundtrack = new AudioPlayer("resources/Music/The_Colour_three.wav");
             }
-
             soundtrack.play();
         }
-
         catch (Exception ex)
         {
             System.out.println("Error with playing sound.");
             ex.printStackTrace();
 
         }
-    }
-
-    public void start(){
-        isRunning = true;
-        loadBackground();
 
         thread = new Thread(this);
         thread.start();
