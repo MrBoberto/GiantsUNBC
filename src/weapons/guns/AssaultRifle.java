@@ -38,7 +38,6 @@ public class AssaultRifle implements Weapon {
                 new AssaultRifleBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             }
         } else if (World.controller instanceof SingleController) {
-            System.out.println("ASSAULT RIFLE SHOOTING...");
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             if (playerIBelongTo.getPlayerNumber() == 0) {
                 for (int i = 0; i < ROUNDCOUNT; i++) {
@@ -49,7 +48,6 @@ public class AssaultRifle implements Weapon {
                     new AssaultRifleBullet(Player.CLIENT_PLAYER, mouseX, mouseY, DAMAGE);
                 }
             }
-
         } else {
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 World.controller.getOutputConnection().sendPacket(

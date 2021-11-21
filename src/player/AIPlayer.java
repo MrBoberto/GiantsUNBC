@@ -5,6 +5,7 @@ import game.ClientController;
 import game.Controller;
 import game.ServerController;
 import game.World;
+import org.w3c.dom.ls.LSOutput;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -14,6 +15,7 @@ import java.awt.geom.AffineTransform;
 public class AIPlayer extends OtherPlayer {
     //Main Player movement directions
     private boolean up = false, down = false,right = false,left = false;
+    private boolean attac = true;
 
     public AIPlayer(double x, double y, double angle, Color color) {
         super(x, y, angle, color);
@@ -35,39 +37,50 @@ public class AIPlayer extends OtherPlayer {
         int avgX = 0;
         int avgY = 0;
 
+        down = false;
+        up = false;
+        right = false;
+        left = false;
+
         if (Controller.thisPlayer.getHealth() <= health + 50) {
-            System.out.println("ATTAC");
-            if (Controller.thisPlayer.getY() < y) {
+            if (!attac) {
+                System.out.println(playerName + ": You should have gone for the head.");
+            }
+            attac = true;
+            if (Controller.thisPlayer.getY() < y - 2) {
                 avgY++;
                 up = true;
             }
-            if (Controller.thisPlayer.getX() > x) {
+            if (Controller.thisPlayer.getX() > x + 2) {
                 avgX++;
                 right = true;
             }
-            if (Controller.thisPlayer.getY() > y) {
+            if (Controller.thisPlayer.getY() > y + 2) {
                 avgY--;
                 down = true;
             }
-            if (Controller.thisPlayer.getY() < x) {
+            if (Controller.thisPlayer.getY() < x - 2) {
                 avgX--;
                 left = true;
             }
         } else {
-            System.out.println("PROTEC");
-            if (Controller.thisPlayer.getY() < y) {
+            if (attac) {
+                System.out.println(playerName + ": Your optimism is misplaced, Asgardian.");
+            }
+            attac = false;
+            if (Controller.thisPlayer.getY() < y - 2) {
                 avgY--;
                 down = true;
             }
-            if (Controller.thisPlayer.getX() > x) {
+            if (Controller.thisPlayer.getX() > x + 2) {
                 avgX--;
                 left = true;
             }
-            if (Controller.thisPlayer.getY() > y) {
+            if (Controller.thisPlayer.getY() > y + 2) {
                 avgY++;
                 up = true;
             }
-            if (Controller.thisPlayer.getY() < x) {
+            if (Controller.thisPlayer.getY() < x - 2) {
                 avgX++;
                 right = true;
             }

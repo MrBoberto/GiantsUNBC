@@ -37,6 +37,8 @@ public abstract class Player extends GameObject {
     protected ImageFrame currentImage;
     protected Rectangle boundRect;
     protected int health = 100;
+    protected int healTimer = 120;
+    protected final int HEALTIMERMAX = 120;
     protected int killCount = 0;
     protected int deathCount = 0;
     protected double kdr = -1;
@@ -108,10 +110,10 @@ public abstract class Player extends GameObject {
 
         Controller.players.add(this);
 
+        weapons.add(new Shotgun(this));
         weapons.add(new AssaultRifle(this));
         weapons.add(new Pistol(this));
         weapons.add(new SniperRifle(this));
-        weapons.add(new Shotgun(this));
 
 
         //Animation handlers
@@ -134,6 +136,7 @@ public abstract class Player extends GameObject {
     public int getKillCount() {
         return killCount;
     }
+
 
     /**
      * Increases killCount by 1 and updates kdr if there are more than 0 deaths
@@ -263,6 +266,10 @@ public abstract class Player extends GameObject {
         }
     }
 
+    public void resetHealTimer() {
+        healTimer = HEALTIMERMAX;
+    }
+
     /**
      * Increase total damage output of the player
      *
@@ -337,6 +344,12 @@ public abstract class Player extends GameObject {
 
     @Override
     public void tick(){
+        if (healTimer > 0) {
+            healTimer--;
+        } else if (healTimer == 0 && health < 100) {
+            health++;
+            healTimer += 4;
+        }
         invincibilityTimer--;
         animationTimer++;
     }

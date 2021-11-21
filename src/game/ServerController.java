@@ -153,6 +153,7 @@ public class ServerController extends Controller {
 
                         killer.incrementBulletHitCount();
                         victim.modifyHealth(-1 * bullet.getDamage());
+                        victim.resetHealTimer();
                         killer.addTDO(-1 * bullet.getDamage());
 
                         if (victim.getHealth() == 0) {

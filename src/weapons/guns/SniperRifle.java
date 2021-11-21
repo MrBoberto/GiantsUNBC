@@ -5,6 +5,7 @@ import game.SingleController;
 import game.World;
 import packets.ClientBulletPacket;
 import player.Player;
+import weapons.ammo.AssaultRifleBullet;
 import weapons.ammo.Projectile;
 import weapons.ammo.ShotgunBullet;
 import weapons.ammo.SniperRifleBullet;
@@ -33,10 +34,21 @@ public class SniperRifle implements Weapon {
      */
     @Override
     public void shoot(double mouseX, double mouseY) {
-        if (World.controller instanceof ServerController || World.controller instanceof SingleController) {
+        if (World.controller instanceof ServerController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 new SniperRifleBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
+            }
+        } else if (World.controller instanceof SingleController) {
+            // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
+            if (playerIBelongTo.getPlayerNumber() == 0) {
+                for (int i = 0; i < ROUNDCOUNT; i++) {
+                    new SniperRifleBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
+                }
+            } else {
+                for (int i = 0; i < ROUNDCOUNT; i++) {
+                    new SniperRifleBullet(Player.CLIENT_PLAYER, mouseX, mouseY, DAMAGE);
+                }
             }
         } else {
             for (int i = 0; i < ROUNDCOUNT; i++) {
