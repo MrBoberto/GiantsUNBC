@@ -8,12 +8,14 @@ public class ClientUpdatePacket implements Serializable {
     private double y;
     private double angle;
     boolean isWalking;
+    int weaponSerial;
 
-    public ClientUpdatePacket(double x, double y, double angle, boolean isWalking) {
+    public ClientUpdatePacket(double x, double y, double angle, boolean isWalking, int weaponSerial) {
         this.x = x;
         this.y = y;
         this.angle = angle;
         this.isWalking = isWalking;
+        this.weaponSerial = weaponSerial;
     }
 
     public double getX() {
@@ -31,5 +33,9 @@ public class ClientUpdatePacket implements Serializable {
 
     public boolean isWalking() {
         return isWalking;
+    }
+
+    public int getWeaponSerial() {
+        return weaponSerial;
     }
 }

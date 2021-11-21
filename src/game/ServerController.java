@@ -78,6 +78,7 @@ public class ServerController extends Controller {
             otherPlayer.setX(packet.getX());
             otherPlayer.setY(packet.getY());
             otherPlayer.setAngle(packet.getAngle());
+            otherPlayer.setWeaponSerial(packet.getWeaponSerial());
 
         } else if (object instanceof StartRequest packet) {
 

@@ -49,7 +49,8 @@ public class OutputConnection implements Runnable {
                             Controller.thisPlayer.getY(),
                             Controller.thisPlayer.getAngle(),
                             serverHealths,
-                            Controller.thisPlayer.isWalking()
+                            Controller.thisPlayer.isWalking(),
+                            Controller.thisPlayer.getWeaponSerial()
                     ));
 
                     sendPacket(new ServerBulletPacket(Controller.movingAmmo.toArray(new Bullet[0])));
@@ -59,7 +60,8 @@ public class OutputConnection implements Runnable {
                                 controller.getPlayer().getX(),
                                 controller.getPlayer().getY(),
                                 controller.getPlayer().getAngle(),
-                                controller.getPlayer().isWalking()));
+                                controller.getPlayer().isWalking(),
+                                controller.getPlayer().getWeaponSerial()));
                     }
 
                 }

@@ -94,6 +94,7 @@ public class ClientController extends Controller{
                 otherPlayer.setAngle(packet.getAngle());
                 otherPlayer.setHealth(packet.getHealth()[0]);
                 thisPlayer.setHealth(packet.getHealth()[1]);
+                otherPlayer.setWeaponSerial(packet.getWeaponSerial());
             }
         } else if(object instanceof ServerBulletPacket packet){
 

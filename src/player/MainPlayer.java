@@ -194,7 +194,6 @@ public class MainPlayer extends Player {
 //        double entityTopWorldX = super.getY() + solidArea.y;
 //        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
 
-
         if (weapons.getPrimary().getCurrentDelay() > 0) {
             weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getCurrentDelay() - 1);
         }
@@ -221,7 +220,6 @@ public class MainPlayer extends Player {
             resetAnimationTimer();
         }
 
-
         if(currentImage == null) return;
         // Sets up the axis of rotation
         AffineTransform affTra = AffineTransform.getTranslateInstance(
@@ -230,10 +228,14 @@ public class MainPlayer extends Player {
         // Rotates the frame
         affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2.0,
                 currentImage.getImage().getHeight() / 2.0);
+
         Graphics2D g2d = (Graphics2D) g;
 
         // Draws the rotated image
         g2d.drawImage(currentImage.getImage(), affTra, World.controller);
+
+        if (weaponSerial == -1 || weaponTextures.get(weaponSerial) == null) return;
+        g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);
 
         // Draws the player's hitbox
         g.setColor(playerColour);

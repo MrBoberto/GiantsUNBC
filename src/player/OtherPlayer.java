@@ -43,6 +43,9 @@ public class OtherPlayer extends Player {
         // Draws the rotated image
         g2d.drawImage(currentImage.getImage(), affTra, World.controller);
 
+        if (weaponSerial == -1 || weaponTextures.get(weaponSerial) == null) return;
+        g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);
+
         // Draws the player's hitbox
         g.setColor(playerColour);
         g.drawRect((int) x - currentImage.getImage().getWidth() / 4,

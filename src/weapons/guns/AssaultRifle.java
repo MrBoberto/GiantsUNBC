@@ -1,6 +1,5 @@
 package weapons.guns;
 
-import audio.AudioPlayer;
 import audio.SFXPlayer;
 import game.ServerController;
 import game.SingleController;
@@ -11,10 +10,6 @@ import packets.ServerSFXPacket;
 import player.Player;
 import weapons.ammo.AssaultRifleBullet;
 import weapons.ammo.Projectile;
-
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
 
 public class AssaultRifle implements Weapon {
     private final Player playerIBelongTo;

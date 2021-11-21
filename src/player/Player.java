@@ -63,6 +63,7 @@ public abstract class Player extends GameObject {
     protected ImageStrip jumped;     // 5 Animation loop at end of jump
     protected ImageStrip dashing;    // 6
     protected ImageStrip landing;    // 7
+    protected ArrayList<BufferedImage> weaponTextures;
     protected boolean shiftIsHeld = false;
     protected boolean spaceIsHeld = false;
     protected boolean ctrlIsHeld = false;
@@ -78,6 +79,7 @@ public abstract class Player extends GameObject {
 
     protected Arsenal weapons = new Arsenal();
     protected int selectedWeapon = 0;
+    protected int weaponSerial = -1;
 
     //Respawn point
     protected double respawnPointX = 0;
@@ -341,6 +343,18 @@ public abstract class Player extends GameObject {
 //        System.out.println(jumping.toString());
         imgLocStr.clear();
 
+        for (int i = 0; i <= 3; i++) {
+            imgLocStr.add("weapon (" + i + ").png");
+        }
+        weaponTextures = new ArrayList<>();
+        // Load weapon textures
+        for (int i = 0; i < imgLocStr.size(); i++) {
+            try {
+                weaponTextures.add(ImageIO.read(new File("resources/Textures/WEAPONS/" + imgLocStr.get(i))));
+            } catch (IOException exc) {
+                System.out.println("Could not find image file: " + exc.getMessage());
+            }
+        }
         imageLoaded = true;
     }
 
@@ -354,6 +368,12 @@ public abstract class Player extends GameObject {
         }
         invincibilityTimer--;
         animationTimer++;
+
+        if (selectedWeapon == 0) {
+            weaponSerial = weapons.getPrimary().getSERIAL();
+        } else {
+            weaponSerial = weapons.getSecondary().getSERIAL();
+        }
     }
 
     @Override
@@ -395,6 +415,14 @@ public abstract class Player extends GameObject {
 
     public void setSelectedWeapon(int selectedWeapon) {
         this.selectedWeapon = selectedWeapon;
+    }
+
+    public int getWeaponSerial() {
+        return weaponSerial;
+    }
+
+    public void setWeaponSerial(int weaponSerial) {
+        this.weaponSerial = weaponSerial;
     }
 
     public Arsenal getWeapons() {

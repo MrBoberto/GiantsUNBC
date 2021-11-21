@@ -11,13 +11,15 @@ public class ServerUpdatePacket implements Serializable {
     double angle;
     private int[] health = new int[2];
     boolean isWalking;
+    int weaponSerial;
 
-    public ServerUpdatePacket(double x, double y, double angle, int[] health, boolean isWalking) {
+    public ServerUpdatePacket(double x, double y, double angle, int[] health, boolean isWalking, int weaponSerial) {
         this.x = x;
         this.y = y;
         this.angle = angle;
         this.health = health;
         this.isWalking = isWalking;
+        this.weaponSerial = weaponSerial;
     }
 
 
@@ -39,5 +41,9 @@ public class ServerUpdatePacket implements Serializable {
 
     public boolean isWalking() {
         return isWalking;
+    }
+
+    public int getWeaponSerial() {
+        return weaponSerial;
     }
 }
