@@ -59,7 +59,7 @@ public class AIPlayer extends OtherPlayer {
                 avgY--;
                 down = true;
             }
-            if (Controller.thisPlayer.getY() < x - 2) {
+            if (Controller.thisPlayer.getX() < x - 2) {
                 avgX--;
                 left = true;
             }
@@ -104,6 +104,22 @@ public class AIPlayer extends OtherPlayer {
                 super.setAngle(-Math.PI / 2);
                 return;
             }
+        } else if (avgX == 1) {
+            if (avgY == 1) {
+                super.setAngle(Math.PI / 4);
+                return;
+            } else {
+                super.setAngle(3 * Math.PI / 4);
+                return;
+            }
+        } else if (avgX == -1){
+            if (avgY == 1) {
+                super.setAngle(-Math.PI / 4);
+                return;
+            } else {
+                super.setAngle(-3 * Math.PI / 4);
+                return;
+            }
         }
 
         double acuteAngle = Math.atan(avgY/avgX);
@@ -136,6 +152,7 @@ public class AIPlayer extends OtherPlayer {
         } else {
             velX = speed * Math.cos(super.getAngle());
             velY = -speed * Math.sin(super.getAngle());
+            System.out.println(velX);
 //            System.out.println("player.Player 1 Current super.getAngle(): " + super.getAngle());
             if ((super.getAngle() > (Math.PI / 2) && super.getAngle() < Math.PI)
                     || (super.getAngle() < 0 && super.getAngle() > -Math.PI / 2)) {

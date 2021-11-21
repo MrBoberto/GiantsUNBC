@@ -39,7 +39,7 @@ public class MainMenuTest {
         return buttonListener;
     }
 
-    public MainMenuTest(){
+    public MainMenuTest() {
         wow = new JFrame("Your Mom");
         //wow.setSize(800,600);
         int width = wow.getWidth();
@@ -54,10 +54,9 @@ public class MainMenuTest {
         wow.getContentPane().setBackground(Color.BLUE);
         wow.setLayout(null);
         // to make window appear on the screen
+        // max size was incorrect on my multi-display monitor so I changed it - Noah
         con  = wow.getContentPane();
-        Dimension d= wow.getMaximumSize();
-        wow.setSize(d.width, d.height);
-        System.out.println("Size" +wow.getWidth()+"width"+ d.height);
+        System.out.println("Size" +wow.getWidth()+"width"+ wow.getHeight());
         try{
 
             backGroundMain = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/imageRes/textBack.png")));
