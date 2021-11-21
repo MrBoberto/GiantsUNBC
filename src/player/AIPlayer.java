@@ -6,6 +6,10 @@ import game.Controller;
 import game.ServerController;
 import game.World;
 import org.w3c.dom.ls.LSOutput;
+import weapons.guns.AssaultRifle;
+import weapons.guns.Pistol;
+import weapons.guns.Shotgun;
+import weapons.guns.SniperRifle;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -17,11 +21,17 @@ public class AIPlayer extends OtherPlayer {
     private boolean up = false, down = false,right = false,left = false;
     private boolean attac = true;
     private double desiredOffset = 40;  // Distance the AI wants to be from the player when attacking
+    private double shortRangeBound = 500;   // Distance determining whether to use short or long-range weapon
     private int fear = 50;              // Max health advantage the player can have for the ai to want to attack them
 
 
     public AIPlayer(double x, double y, double angle, Color color) {
         super(x, y, angle, color);
+        weapons.clear();
+        weapons.add(new SniperRifle(this));
+        weapons.add(new AssaultRifle(this));
+        weapons.add(new Pistol(this));
+        weapons.add(new Shotgun(this));
 
         playerNumber = 1;
         // Graphics-related
@@ -213,6 +223,23 @@ public class AIPlayer extends OtherPlayer {
     @Override
     public void tick() {
         super.tick();
+
+        // Determine whether to use shorter or longer ranged weapon
+        if (Controller.thisPlayer.getX() < x - shortRangeBound || Controller.thisPlayer.getY() < y - shortRangeBound
+                || Controller.thisPlayer.getX() > x + shortRangeBound || Controller.thisPlayer.getY() > y + shortRangeBound) {
+            if (selectedWeapon == 0 && weapons.getPrimary().getSPEED() < weapons.getSecondary().getSPEED()) {
+                selectedWeapon = 1;
+            } else if (selectedWeapon == 1 && weapons.getPrimary().getSPEED() > weapons.getSecondary().getSPEED()) {
+                selectedWeapon = 0;
+            }
+        } else {
+            if (selectedWeapon == 1 && weapons.getPrimary().getSPEED() < weapons.getSecondary().getSPEED()) {
+                selectedWeapon = 0;
+            } else if (selectedWeapon == 0 && weapons.getPrimary().getSPEED() > weapons.getSecondary().getSPEED()) {
+                selectedWeapon = 1;
+            }
+        }
+
         setAngle();
 
         move();

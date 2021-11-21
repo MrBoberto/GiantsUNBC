@@ -132,7 +132,6 @@ public class Pistol implements Weapon {
         try {
             audio.setFile(audioLocation);
             audio.play();
-            System.out.println(0);
         } catch(Exception e) {
             System.out.println(e.getCause());
         }

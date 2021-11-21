@@ -126,6 +126,14 @@ public class Arsenal {
         return secondary;
     }
 
+    public void clear() {
+        primary = null;
+        secondary = null;
+        for (int i = 0; i < weapons.size(); i++) {
+            weapons.remove(0);
+        }
+    }
+
     @Override
     public String toString() {
         String string = "Primary: " + primary + ", Secondary: " + secondary + ",\nInventory: {";
