@@ -126,6 +126,14 @@ public class Arsenal {
         return secondary;
     }
 
+    public Weapon get(int index) {
+        return weapons.get(index);
+    }
+
+    public int size() {
+        return weapons.size();
+    }
+
     public void clear() {
         primary = null;
         secondary = null;
