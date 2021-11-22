@@ -1,13 +1,15 @@
 package packets;
 
-public class ClientSFXPacket {
+import java.io.Serializable;
+
+public class ClientSFXPacket implements Serializable {
     String clientSFXLocation;
 
     public ClientSFXPacket(String clientSFXLocation) {
         this.clientSFXLocation = clientSFXLocation;
     }
 
-    public String getclientSFXLocation() {
+    public String getClientSFXLocation() {
         return clientSFXLocation;
     }
 }

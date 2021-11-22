@@ -62,8 +62,8 @@ public class AssaultRifle implements Weapon {
                 }
             }
         } else {
+            World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(audioLocation));
             for (int i = 0; i < ROUNDCOUNT; i++) {
-                World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(audioLocation));
                 World.controller.getOutputConnection().sendPacket(
                         new ClientBulletPacket(
                                 playerIBelongTo.getX(),

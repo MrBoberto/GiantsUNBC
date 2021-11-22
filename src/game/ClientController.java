@@ -33,6 +33,7 @@ public class ClientController extends Controller{
 
         this.addKeyListener(new KeyInput());
         this.addMouseListener(new MouseInput());
+        serverWeaponAudio = new SFXPlayer();
 
         tiless = new Tiles[2];
 

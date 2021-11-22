@@ -62,9 +62,9 @@ public abstract class Controller extends Canvas implements Runnable {
         // Load soundtrack
         try
         {
-            int randomMusic = World.getSRandom().nextInt(2);
+            int randomMusic = World.getSRandom().nextInt(10);
             System.out.println(randomMusic);
-            if (randomMusic == 0) {
+            if (randomMusic < 5) {
                 soundtrack = new AudioPlayer("resources/Music/Trananozixa.wav");
             } else {
                 soundtrack = new AudioPlayer("resources/Music/The_Colour_three.wav");

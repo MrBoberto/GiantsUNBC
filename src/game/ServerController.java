@@ -119,7 +119,7 @@ public class ServerController extends Controller {
 
             otherPlayer.incrementBulletCount();
         } else if (object instanceof ClientSFXPacket packet) {
-            clientWeaponAudio.setFile(packet.getclientSFXLocation());
+            clientWeaponAudio.setFile(packet.getClientSFXLocation());
             clientWeaponAudio.play();
         }
     }

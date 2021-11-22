@@ -1,6 +1,8 @@
 package packets;
 
-public class ServerSFXPacket {
+import java.io.Serializable;
+
+public class ServerSFXPacket implements Serializable {
     String serverSFXLocation;
 
     public ServerSFXPacket(String serverSFXLocation) {
