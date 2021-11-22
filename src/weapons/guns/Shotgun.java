@@ -21,14 +21,13 @@ import java.io.IOException;
 public class Shotgun implements Weapon {
     private final Player playerIBelongTo;
     public static final double SPEED = 30;
-    public static final int ROUNDCOUNT = 10;
+    public static final int ROUNDCOUNT = 5;
     public static final double INACCURACY = 0.1;
     public static final int MAX_DELAY = 55;
     private int currentDelay = 0;
     // Identifies type of gun
     public static final int SERIAL = 000;
-    public static int DAMAGE = 10;
-    public static String audioLocation = "resources/SFX/Shotgun.wav";
+    public static int DAMAGE = 20;
     public SFXPlayer audio;
 
     public Shotgun(Player playerIBelongTo) {
@@ -53,7 +52,7 @@ public class Shotgun implements Weapon {
     @Override
     public void shoot(double mouseX, double mouseY) {
         if (World.controller instanceof ServerController) {
-            World.controller.getOutputConnection().sendPacket(new ServerSFXPacket(audioLocation));
+            World.controller.getOutputConnection().sendPacket(new ServerSFXPacket(SERIAL));
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
@@ -70,7 +69,7 @@ public class Shotgun implements Weapon {
                 }
             }
         } else {
-            World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(audioLocation));
+            World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(SERIAL));
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 World.controller.getOutputConnection().sendPacket(
                         new ClientBulletPacket(
@@ -134,7 +133,7 @@ public class Shotgun implements Weapon {
     @Override
     public void playAudio() {
         try {
-            audio.setFile(audioLocation);
+            audio.setFile(SERIAL);
             audio.play();
         } catch(Exception e) {
             System.out.println(e.getCause());

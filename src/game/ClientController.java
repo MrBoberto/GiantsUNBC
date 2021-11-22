@@ -103,7 +103,7 @@ public class ClientController extends Controller{
 
         } else if (object instanceof ServerSFXPacket packet) {
 
-            serverWeaponAudio.setFile(packet.getServerSFXLocation());
+            serverWeaponAudio.setFile(packet.getServerSFXInt());
             serverWeaponAudio.play();
 
         } else if(object instanceof RespawnPacket){

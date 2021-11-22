@@ -87,39 +87,35 @@ public class ServerController extends Controller {
             System.out.println("Start request received and resent.");
         } else if (object instanceof ClientBulletPacket packet) {
             switch (packet.getType()){
-                case ShotgunBullet: new ShotgunBullet(
+                case ShotgunBullet -> new ShotgunBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
-                break;
-                case SniperRifleBullet: new SniperRifleBullet(
+                case SniperRifleBullet -> new SniperRifleBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
-                break;
-                case PistolBullet: new PistolBullet(
+                case PistolBullet -> new PistolBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
-                break;
-                case AssaultRifleBullet: new AssaultRifleBullet(
+                case AssaultRifleBullet -> new AssaultRifleBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
-                break;
             }
 
             otherPlayer.incrementBulletCount();
         } else if (object instanceof ClientSFXPacket packet) {
-            clientWeaponAudio.setFile(packet.getClientSFXLocation());
+            clientWeaponAudio.setFile(packet.getClientSFXInt());
             clientWeaponAudio.play();
         }
     }

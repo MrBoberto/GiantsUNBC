@@ -21,7 +21,6 @@ public class AssaultRifle implements Weapon {
     // Identifies type of gun
     public static final int SERIAL = 003;
     public static int DAMAGE = 8;
-    public static String audioLocation = "resources/SFX/Assault Rifle.wav";
     public SFXPlayer audio;
 
     public AssaultRifle(Player playerIBelongTo) {
@@ -45,7 +44,7 @@ public class AssaultRifle implements Weapon {
     @Override
     public void shoot(double mouseX, double mouseY) {
         if (World.controller instanceof ServerController) {
-            World.controller.getOutputConnection().sendPacket(new ServerSFXPacket(audioLocation));
+            World.controller.getOutputConnection().sendPacket(new ServerSFXPacket(SERIAL));
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 new AssaultRifleBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
@@ -62,7 +61,7 @@ public class AssaultRifle implements Weapon {
                 }
             }
         } else {
-            World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(audioLocation));
+            World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(SERIAL));
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 World.controller.getOutputConnection().sendPacket(
                         new ClientBulletPacket(
@@ -126,7 +125,7 @@ public class AssaultRifle implements Weapon {
     @Override
     public void playAudio() {
         try {
-            audio.setFile(audioLocation);
+            audio.setFile(SERIAL);
             audio.play();
         } catch(Exception e) {
             System.out.println(e.getCause());

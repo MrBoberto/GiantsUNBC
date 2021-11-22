@@ -82,7 +82,7 @@ public class PistolBullet extends Bullet {
 
     public void loadImage() {
         try {
-            texture = ImageIO.read(new File("resources/VFX/projectile/shot.png"));
+            texture = ImageIO.read(getClass().getResource("/resources/VFX/projectile/shot.png"));
         } catch (IOException exc) {
             System.out.println("Could not find image file: " + exc.getMessage());
         }

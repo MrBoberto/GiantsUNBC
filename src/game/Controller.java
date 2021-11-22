@@ -10,6 +10,7 @@ import tile.Tiles;
 import weapons.guns.AssaultRifle;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -31,8 +32,6 @@ public abstract class Controller extends Canvas implements Runnable {
     protected BufferedImage background;
     public static MainPlayer thisPlayer;
     public static OtherPlayer otherPlayer;
-
-
 
     //Multiplayer
     protected InputConnection inputConnection;
@@ -65,9 +64,9 @@ public abstract class Controller extends Canvas implements Runnable {
             int randomMusic = World.getSRandom().nextInt(10);
             System.out.println(randomMusic);
             if (randomMusic < 5) {
-                soundtrack = new AudioPlayer("resources/Music/Trananozixa.wav");
+                soundtrack = new AudioPlayer("/resources/Music/Trananozixa.wav");
             } else {
-                soundtrack = new AudioPlayer("resources/Music/The_Colour_three.wav");
+                soundtrack = new AudioPlayer("/resources/Music/The_Colour_three.wav");
             }
             soundtrack.play();
         }

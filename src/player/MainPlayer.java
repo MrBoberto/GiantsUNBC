@@ -400,13 +400,13 @@ public class MainPlayer extends Player {
         ArrayList<String> imgLocStr = new ArrayList<>();
 
         for (int i = -1; i <= 3; i++) {
-            imgLocStr.add("weapon (" + i + ").png");
+            imgLocStr.add("arsenal (" + i + ").png");
         }
         slotTextures = new ArrayList<>();
         // Load weapon textures
         for (int i = 0; i < imgLocStr.size(); i++) {
             try {
-                slotTextures.add(ImageIO.read(new File("resources/GUI/arsenal_slot/" + imgLocStr.get(i))));
+                slotTextures.add(ImageIO.read(getClass().getResource("/resources/GUI/arsenal_slot/" + imgLocStr.get(i))));
             } catch (IOException exc) {
                 System.out.println("Could not find image file: " + exc.getMessage());
             }

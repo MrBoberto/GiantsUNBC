@@ -300,13 +300,13 @@ public abstract class Player extends GameObject {
      */
     public void loadImageStrips() {
         ArrayList<String> imgLocStr = new ArrayList<>();
-        String defLocStr = "resources/Textures/PLAYER_ONE/";
+        String defLocStr;
         ;
         // Saves amount of text to be used
         if (playerColour == Color.BLUE) {
-                defLocStr = "resources/Textures/PLAYER_ONE/";
+                defLocStr = "/resources/Textures/PLAYER_ONE/";
             } else {
-                defLocStr = "resources/Textures/PLAYER_TWO/";
+                defLocStr = "/resources/Textures/PLAYER_TWO/";
             }
 
 
@@ -350,7 +350,7 @@ public abstract class Player extends GameObject {
         // Load weapon textures
         for (int i = 0; i < imgLocStr.size(); i++) {
             try {
-                weaponTextures.add(ImageIO.read(new File("resources/Textures/WEAPONS/" + imgLocStr.get(i))));
+                weaponTextures.add(ImageIO.read(getClass().getResource("/resources/Textures/WEAPONS/" + imgLocStr.get(i))));
             } catch (IOException exc) {
                 System.out.println("Could not find image file: " + exc.getMessage());
             }
@@ -396,7 +396,7 @@ public abstract class Player extends GameObject {
         String imageFileSubstring = "";
         for (int i = 0; i < imgLocStr.size(); i++) {
             try {
-                images.add(ImageIO.read(new File(defaultFileLocation + "" + imgLocStr.get(i))));
+                images.add(ImageIO.read(getClass().getResource(defaultFileLocation + "" + imgLocStr.get(i))));
             } catch (IOException exc) {
                 System.out.println("Could not find image file: " + exc.getMessage());
             }

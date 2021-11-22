@@ -3,13 +3,13 @@ package packets;
 import java.io.Serializable;
 
 public class ServerSFXPacket implements Serializable {
-    String serverSFXLocation;
+    int serverSFXInt;
 
-    public ServerSFXPacket(String serverSFXLocation) {
-        this.serverSFXLocation = serverSFXLocation;
+    public ServerSFXPacket(int serverSFXInt) {
+        this.serverSFXInt = serverSFXInt;
     }
 
-    public String getServerSFXLocation() {
-        return serverSFXLocation;
+    public int getServerSFXInt() {
+        return serverSFXInt;
     }
 }

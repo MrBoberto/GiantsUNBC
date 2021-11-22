@@ -92,7 +92,7 @@ public class SniperRifleBullet extends Bullet {
 
     public void loadImage() {
         try {
-            texture = ImageIO.read(new File("resources/VFX/projectile/nato.png"));
+            texture = ImageIO.read(getClass().getResource("/resources/VFX/projectile/nato.png"));
         } catch (IOException exc) {
             System.out.println("Could not find image file: " + exc.getMessage());
         }

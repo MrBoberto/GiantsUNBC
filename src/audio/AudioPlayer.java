@@ -3,13 +3,10 @@ package audio;
 // file using Clip Object
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Scanner;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.*;
 
 public class AudioPlayer
 {
@@ -26,20 +23,22 @@ public class AudioPlayer
 
     // constructor to initialize streams and clip
     public AudioPlayer(String filePath)
-            throws UnsupportedAudioFileException,
-            IOException, LineUnavailableException
+            throws LineUnavailableException
     {
         // create AudioInputStream object
-        audioInputStream =
-                AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
 
-        // create clip reference
-        clip = AudioSystem.getClip();
+        URL audioUrl = this.getClass().getResource(filePath);
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(audioUrl);
+            DataLine.Info info = new DataLine.Info(Clip.class, audioInputStream.getFormat());
+            clip = (Clip) AudioSystem.getLine(info);
 
-        // open audioInputStream to the clip
-        clip.open(audioInputStream);
-
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
+            // open audioInputStream to the clip
+            clip.open(audioInputStream);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 
     // Method to play the audio
