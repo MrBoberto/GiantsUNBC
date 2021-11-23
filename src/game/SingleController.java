@@ -1,11 +1,9 @@
 package game;
 
-import StartMenu.MainMenuTest;
-import packets.*;
 import player.AIPlayer;
 import player.MainPlayer;
+import player.OtherPlayer;
 import player.Player;
-import tile.Tiles;
 import weapons.ammo.*;
 
 import java.awt.*;
@@ -20,20 +18,17 @@ public class SingleController extends Controller {
 
         this.addKeyListener(new KeyInput());
         this.addMouseListener(new MouseInput());
-
-        tiless = new Tiles[2];
-
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
 
-        thisPlayer = new MainPlayer(WIDTH - 50, HEIGHT - 50, 0, Color.BLUE);
-        otherPlayer = new AIPlayer(50, 50, 0, Color.RED);
+        thisPlayer = new MainPlayer(Controller.thisX, Controller.thisY, 0, Color.BLUE);
+        otherPlayer = new AIPlayer(Controller.otherX, Controller.otherY, 0, Color.RED);
 
-        if (MainMenuTest.playerName.equals("")) {
+        if (MainMenu.playerName.equals("")) {
             thisPlayer.setPlayerName("Player");
             otherPlayer.setPlayerName("Thanos");
         } else {
-            thisPlayer.setPlayerName(MainMenuTest.playerName);
+            thisPlayer.setPlayerName(MainMenu.playerName);
             otherPlayer.setPlayerName("Thanos");
         }
 

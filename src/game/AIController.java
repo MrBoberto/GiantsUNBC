@@ -1,6 +1,6 @@
 package game;
 
-import StartMenu.MainMenuTest;
+
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
@@ -23,8 +23,8 @@ public class AIController extends Controller{
 
     public AIController() {
         super();
-        thisPlayer = new MainPlayer(50, 50, 0, Color.RED);
-        otherPlayer = new OtherPlayer(50, 50, 0, Color.BLUE);
+        thisPlayer = new MainPlayer(Controller.otherX, Controller.otherY, 0, Color.RED);
+        otherPlayer = new OtherPlayer(Controller.thisX, Controller.thisY, 0, Color.BLUE);
 
         thisPlayer.setPlayerName("CPU");
 

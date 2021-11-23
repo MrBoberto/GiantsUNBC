@@ -1,19 +1,18 @@
 package player;
 
-import StartMenu.MainMenuTest;
+import game.MainMenu;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
+import mapObjects.Block;
 import weapons.guns.AssaultRifle;
 import weapons.guns.Pistol;
 import weapons.guns.Shotgun;
 import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -32,7 +31,7 @@ public abstract class Player extends GameObject {
     protected final double VELSUPERDASH = 30;
     protected final int LANDINGTIMERMAX = 27;
     protected final int SUPERDASHTIMERMAX = 67;
-    public MainMenuTest mainMenuTest;
+    public MainMenu mainMenu;
     // The texture of the player being used in the current frame
     protected ImageFrame currentImage;
     protected Rectangle boundRect;
@@ -107,6 +106,9 @@ public abstract class Player extends GameObject {
 
         respawnPointX = x;
         respawnPointY = y;
+
+        System.out.println(x + " " + y);
+
         this.playerColour = playerColour;
 
 
@@ -116,10 +118,6 @@ public abstract class Player extends GameObject {
         weapons.add(new AssaultRifle(this));
         weapons.add(new Pistol(this));
         weapons.add(new SniperRifle(this));
-
-
-        //Animation handlers
-//        animationTimer.
 
     }
 
@@ -216,29 +214,8 @@ public abstract class Player extends GameObject {
 
 
 
-    public void collisionArea(Graphics g){
 
-        g.setColor(Color.black);
-        g.drawRect(((int)this.x - currentImage.getImage().getWidth() / 2) +40,
-                ((int)this.y - currentImage.getImage().getHeight() / 2) +40, currentImage.getImage().getWidth()-85,
-                currentImage.getImage().getHeight()-85);
 
-        collisionOn = false;
-        double entityLeftWorldX = super.getX() + solidArea.x;
-        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
-        double entityToptWorldY = super.getY() + solidArea.y;
-        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
-
-        double playerLeftCol = entityLeftWorldX/50;
-        double playerRightCol = entityRightWorldX/50;
-        double plaerTopRow = entityToptWorldY/50;
-        double playerBottomRow = entityBottomWorldY/50;
-
-        int tileNum1, tileNum2;
-
-        //switch ()
-
-    }
     public boolean isFalling() {
         return isFalling;
     }

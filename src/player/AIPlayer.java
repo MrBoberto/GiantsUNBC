@@ -1,19 +1,13 @@
 package player;
 
-import StartMenu.MainMenuTest;
-import game.ClientController;
 import game.Controller;
-import game.ServerController;
 import game.World;
-import org.w3c.dom.ls.LSOutput;
 import weapons.guns.AssaultRifle;
 import weapons.guns.Pistol;
 import weapons.guns.Shotgun;
 import weapons.guns.SniperRifle;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
 public class AIPlayer extends OtherPlayer {

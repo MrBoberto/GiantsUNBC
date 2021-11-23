@@ -1,6 +1,6 @@
 package game;
 
-import StartMenu.MainMenuTest;
+
 
 import javax.swing.*;
 import java.net.InetAddress;
@@ -13,7 +13,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new MainMenuTest();
+        new MainMenu();
 
 
         try {

@@ -1,12 +1,11 @@
 package game;
 
-import StartMenu.MainMenuTest;
+
 import audio.SFXPlayer;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
-import tile.Tiles;
 import weapons.ammo.*;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -16,8 +15,6 @@ import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Formatter;
-import java.util.Locale;
 
 public class ServerController extends Controller {
 
@@ -33,19 +30,17 @@ public class ServerController extends Controller {
         this.addKeyListener(new KeyInput());
         this.addMouseListener(new MouseInput());
 
-        tiless = new Tiles[2];
-
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
 
-        thisPlayer = new MainPlayer(WIDTH - 50, HEIGHT - 50, 0, Color.BLUE);
-        otherPlayer = new OtherPlayer(50, 50, 0, Color.RED);
+        thisPlayer = new MainPlayer(Controller.thisX, Controller.thisY, 0, Color.BLUE);
+        otherPlayer = new OtherPlayer(Controller.otherX, Controller.otherY, 0, Color.RED);
 
-        if (MainMenuTest.playerName.equals("")) {
+        if (MainMenu.playerName.equals("")) {
             thisPlayer.setPlayerName("Host");
             otherPlayer.setPlayerName("Guest");
         } else {
-            thisPlayer.setPlayerName(MainMenuTest.playerName);
+            thisPlayer.setPlayerName(MainMenu.playerName);
         }
 
         try {

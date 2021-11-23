@@ -1,7 +1,4 @@
-package StartMenu;
-
-import tile.TileManager;
-import tile.Tiles;
+package game;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class MainMenuTest {
+public class MainMenu {
 
     public static JFrame wow;
     Container con;
@@ -23,23 +20,15 @@ public class MainMenuTest {
     public static String playerName = "";
     BufferedImage backGroundMain ;
 
-    ButtonListener buttonListener = new ButtonListener();
-    TileManager tileManager = new TileManager(this);
 
 
     Font titleFont = new Font("Times New Roman",Font.PLAIN,90);
     Font button = new Font("Times New Roman",Font.PLAIN,30);
     JButton startButton, quit, name;
-    public static void main(String[] args) {
-        new MainMenuTest();//comments
 
-    }
 
-    public ButtonListener getButtonListener() {
-        return buttonListener;
-    }
 
-    public MainMenuTest() {
+    public MainMenu() {
         wow = new JFrame("Your Mom");
         //wow.setSize(800,600);
         int width = wow.getWidth();
@@ -85,9 +74,6 @@ public class MainMenuTest {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
-
-                    Graphics2D g2 = (Graphics2D)g;
-                    tileManager.draw(g2);
             }
         };
         titleNamePanel.setBounds(480,100,600,150);
@@ -109,8 +95,13 @@ public class MainMenuTest {
         startButton.setFont(button);
         startButton.setBounds(300,400,100,400);
 
-        //System.out.println(buttonListener.getNumber());
-        startButton.addActionListener(buttonListener);
+        startButton.addActionListener(e -> {
+
+            System.out.println("The game has begun");
+            wow.dispose();
+
+            new World();
+        });
 
 
         quit = new JButton("quit");
@@ -143,21 +134,18 @@ public class MainMenuTest {
         name.setFont(button);
         name.setBounds(300,400,100,300);
 
-        name.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(" Please enter your name");
-                boolean isValidPlayerName = false;
-                while (!isValidPlayerName && playerName != null) {
-                    playerName = (JOptionPane.showInputDialog("Name for server 1 | Name for server 2"));
-                    if (!playerName.equals("")) {
-                        isValidPlayerName = true;
-                        System.out.println("playerName " +playerName);
-                    }
+        name.addActionListener(e -> {
+            System.out.println(" Please enter your name");
+            boolean isValidPlayerName = false;
+            while (!isValidPlayerName && playerName != null) {
+                playerName = (JOptionPane.showInputDialog("Name for server 1 | Name for server 2"));
+                if (!playerName.equals("")) {
+                    isValidPlayerName = true;
+                    System.out.println("playerName " +playerName);
                 }
-                if (playerName == null) {
-                    playerName = "";
-                }
+            }
+            if (playerName == null) {
+                playerName = "";
             }
         });
 

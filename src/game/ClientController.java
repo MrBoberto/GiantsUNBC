@@ -1,24 +1,18 @@
 package game;
 
-import StartMenu.MainMenuTest;
 import audio.SFXPlayer;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
-import tile.Tiles;
-import weapons.ammo.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class ClientController extends Controller{
 
@@ -35,19 +29,17 @@ public class ClientController extends Controller{
         this.addMouseListener(new MouseInput());
         serverWeaponAudio = new SFXPlayer();
 
-        tiless = new Tiles[2];
-
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
 
-        thisPlayer = new MainPlayer(50, 50, 0, Color.RED);
-        otherPlayer = new OtherPlayer(50, 50, 0, Color.BLUE);
+        thisPlayer = new MainPlayer(Controller.otherX, Controller.otherY, 0, Color.RED);
+        otherPlayer = new OtherPlayer(Controller.thisX, Controller.thisY, 0, Color.BLUE);
 
-        if (MainMenuTest.playerName.equals("")) {
+        if (MainMenu.playerName.equals("")) {
             thisPlayer.setPlayerName("Guest");
             otherPlayer.setPlayerName("Host");
         } else {
-            thisPlayer.setPlayerName(MainMenuTest.playerName);
+            thisPlayer.setPlayerName(MainMenu.playerName);
         }
         try {
             System.out.println("waiting for connection...");
@@ -83,7 +75,7 @@ public class ClientController extends Controller{
         if(object instanceof StartPacket packet){
 
             otherPlayer.setPlayerName(packet.getPlayerName());
-    //        outputConnection.setGameRunning(true);
+
 
         } else if(object instanceof ServerUpdatePacket packet){
             if(otherPlayer != null) {

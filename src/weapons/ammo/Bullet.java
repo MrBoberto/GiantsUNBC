@@ -3,6 +3,7 @@ package weapons.ammo;
 import game.Controller;
 import game.GameObject;
 import game.World;
+import mapObjects.Block;
 import player.MainPlayer;
 
 import java.awt.*;
@@ -52,6 +53,19 @@ public abstract class Bullet extends GameObject implements Projectile {
             boundRect = new Rectangle((int)x - texture.getWidth() / 2,
                     (int)y- texture.getHeight() / 2, texture.getWidth(),
                     texture.getHeight());
+        }
+
+        checkBlockCollision();
+    }
+
+    private void checkBlockCollision(){
+        for (int i = 0; i < Controller.blocks.size(); i++) {
+            Block block = Controller.blocks.get(i);
+
+            if(getBounds() != null && getBounds().intersects(block.getBounds())){
+                velX = 0;
+                velY = 0;
+            }
         }
     }
 

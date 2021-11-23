@@ -1,18 +1,13 @@
 package player;
 
-import StartMenu.MainMenuTest;
-import game.ClientController;
 import game.Controller;
-import game.ServerController;
 import game.World;
+import mapObjects.Block;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -20,6 +15,7 @@ public class MainPlayer extends Player {
 
     //Main Player movement directions
     private boolean up = false, down = false,right = false,left = false;
+    private boolean upStop = false, downStop = false,rightStop = false,leftStop = false;
     protected ArrayList<BufferedImage> slotTextures;
 
     public MainPlayer(double x, double y, double angle, Color color) {
@@ -137,14 +133,73 @@ public class MainPlayer extends Player {
             velX = 0;
         }
 
-        //Increase walking distance stat
-        if(velY > 0 || velX > 0){
-            incrementWalkingDistance();
-        }
+        //Check collisions
+        checkBlockCollisions();
+
+
+
 
         // Determine distance travelled
-        super.setX(super.getX() + velX);
-        super.setY(super.getY() + velY);
+        if((velX > 0 && !rightStop) || (velX < 0 && !leftStop)){
+            super.setX(super.getX() + velX);
+
+            //Increase walking distance stat
+            if(velY > 0 || velX > 0){
+                incrementWalkingDistance();
+            }
+        }
+
+        if((velY > 0 && !downStop) || (velY < 0 && !upStop)){
+            super.setY(super.getY() + velY);
+
+            //Increase walking distance stat
+            if(velY > 0 || velX > 0){
+                incrementWalkingDistance();
+            }
+        }
+    }
+
+    private void checkBlockCollisions(){
+        upStop = false;
+        downStop = false;
+        leftStop = false;
+        rightStop = false;
+        for (int i = 0; i < Controller.blocks.size(); i++) {
+            Block block = Controller.blocks.get(i);
+
+            if(getBounds() != null){
+                int offset = 3;
+                //Check upper bound
+                if(block.getBounds().intersects(new Rectangle(
+                        (int) x - currentImage.getImage().getWidth() / 4 + offset,
+                        (int) y - currentImage.getImage().getHeight() / 4 - offset,
+                        currentImage.getImage().getWidth() / 2 - offset,
+                        1))){
+                    upStop = true;
+                }
+                if((new Rectangle(
+                        (int) x - currentImage.getImage().getWidth() / 4 + offset,
+                        (int) y + currentImage.getImage().getHeight() / 4 + offset,
+                        currentImage.getImage().getWidth() / 2 - offset,
+                        1)).intersects(block.getBounds())){
+                    downStop = true;
+                }
+                if((new Rectangle(
+                        (int) x - currentImage.getImage().getWidth() / 4 - offset,
+                        (int) y - currentImage.getImage().getHeight() / 4 + offset,
+                        1,
+                        currentImage.getImage().getHeight() / 2- offset)).intersects(block.getBounds())){
+                    leftStop = true;
+                }
+                if((new Rectangle(
+                        (int) x + currentImage.getImage().getWidth() / 4 + offset,
+                        (int) y - currentImage.getImage().getHeight() / 4 + offset,
+                        1,
+                        currentImage.getImage().getHeight() / 2 - offset)).intersects(block.getBounds())){
+                    rightStop = true;
+                }
+            }
+        }
     }
 
     /**
@@ -174,7 +229,7 @@ public class MainPlayer extends Player {
             velX = 0;
         }
 
-        //images
+        //Keep player inside game area
         if (super.getX() <= currentImage.getImage().getWidth() / 2.0) {
             super.setX(currentImage.getImage().getWidth() / 2.0);
         } else if (super.getX() >= Controller.WIDTH - currentImage.getImage().getWidth() / 2.0) {
@@ -220,6 +275,7 @@ public class MainPlayer extends Player {
      */
     @Override
     public void render(Graphics g) {
+
 
         Graphics2D g2d = (Graphics2D) g;
 
