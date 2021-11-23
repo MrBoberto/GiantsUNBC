@@ -2,6 +2,7 @@ package game;
 
 
 import audio.SFXPlayer;
+import mapObjects.DeathMark;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
@@ -15,6 +16,9 @@ import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Array;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class ServerController extends Controller {
 
@@ -136,48 +140,55 @@ public class ServerController extends Controller {
                     movingAmmo.remove(bullet);
 
                 } else {
-                    // Player who was hit (-1 if no one was hit)
-                    int victimNumber = EntityCollision.getVictim(bullet);
-
-                    // Player
-                    Player killer;
-                    Player victim;
-                    if (bullet.getPlayerIBelongToNumber() == Player.SERVER_PLAYER) {
-                        killer = thisPlayer;
-                        victim = otherPlayer;
-
-                    } else {
-                        killer = otherPlayer;
-                        victim = thisPlayer;
-                    }
-
-                    if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber() && !victim.isInvincible()) {
-                        if (bullet.getSERIAL() != 002) {
-                            movingAmmo.remove(bullet);
-                        }
-
-
-                        killer.incrementBulletHitCount();
-                        victim.modifyHealth(-1 * bullet.getDamage());
-                        victim.resetHealTimer();
-                        killer.addTDO(-1 * bullet.getDamage());
-
-                        if (victim.getHealth() == 0) {
-                            victim.incrementDeathCount();
-                            victim.revive();
-                            if(victim == otherPlayer){
-                                outputConnection.sendPacket(new RespawnPacket());
-                            }
-
-                            killer.incrementKillCount();
-                           // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
-                            if(victim.getDeathCount() >= 10){
-                                declareWinner(killer);
-                            }
-                        }
-                    }
+                    checkVictims(bullet);
                 }
 
+            }
+        }
+    }
+
+    private void checkVictims(Bullet bullet) {
+        // Player who was hit (-1 if no one was hit)
+        int victimNumber = EntityCollision.getVictim(bullet);
+
+        // Player
+        Player killer;
+        Player victim;
+        if (bullet.getPlayerIBelongToNumber() == Player.SERVER_PLAYER) {
+            killer = thisPlayer;
+            victim = otherPlayer;
+
+        } else {
+            killer = otherPlayer;
+            victim = thisPlayer;
+        }
+
+        if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber() && !victim.isInvincible()) {
+            if (bullet.getSERIAL() != 002) {
+                movingAmmo.remove(bullet);
+            }
+
+
+            killer.incrementBulletHitCount();
+            victim.modifyHealth(-1 * bullet.getDamage());
+            victim.resetHealTimer();
+            killer.addTDO(-1 * bullet.getDamage());
+
+            if (victim.getHealth() == 0) {
+                victim.incrementDeathCount();
+                eyeCandy.add(new DeathMark(victim.getX(), victim.getY(), victimNumber));
+                outputConnection.sendPacket(new EyeCandyPacket(eyeCandy.toArray(new GameObject[0])));
+                victim.revive();
+                if(victim == otherPlayer){
+                    outputConnection.sendPacket(new RespawnPacket());
+
+                }
+
+                killer.incrementKillCount();
+               // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
+                if(victim.getDeathCount() >= 10){
+                    declareWinner(killer);
+                }
             }
         }
     }

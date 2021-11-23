@@ -5,12 +5,12 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class BufferedImageLoader {
-    private BufferedImage image;
+public final class BufferedImageLoader {
+    private static BufferedImage image;
 
-    public BufferedImage loadImage(String path){
+    public static BufferedImage loadImage(String path){
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResource(path)));
+            image = ImageIO.read(Objects.requireNonNull(BufferedImageLoader.class.getResource(path)));
         } catch (IOException e) {
             e.printStackTrace();
         }

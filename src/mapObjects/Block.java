@@ -7,14 +7,11 @@ import utilities.BufferedImageLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Random;
 
 public class Block extends GameObject {
-
-    BufferedImage texture;
 
     public Block(double x, double y) {
         super(x, y);

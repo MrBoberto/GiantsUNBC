@@ -1,0 +1,48 @@
+package mapObjects;
+
+import game.Controller;
+import game.GameObject;
+import game.World;
+import player.Player;
+import utilities.BufferedImageLoader;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
+public class DeathMark extends GameObject {
+
+    int playerNumber;
+    public DeathMark(double x, double y, int playerNumber) {
+        super(x, y);
+
+        this.playerNumber = playerNumber;
+        loadImage();
+    }
+
+    private void loadImage() {
+        if(playerNumber == Player.SERVER_PLAYER){
+            texture = BufferedImageLoader.loadImage("/resources/Textures/eye_candy/death_mark_blue.png");
+        } else {
+            texture = BufferedImageLoader.loadImage("/resources/Textures/eye_candy/death_mark_red.png");
+        }
+    }
+
+    @Override
+    public void tick() {
+        /* empty */
+    }
+
+    @Override
+    public void render(Graphics g) {
+        if(texture == null){
+            loadImage();
+        } else {
+            g.drawImage(texture, (int)x - Controller.GRID_SIZE/4, (int)y - Controller.GRID_SIZE/4, Controller.GRID_SIZE/2, Controller.GRID_SIZE/2, World.controller);
+        }
+    }
+
+    @Override
+    public Rectangle getBounds() {
+        return new Rectangle((int)x,(int)y,texture.getWidth(),texture.getHeight());
+    }
+}

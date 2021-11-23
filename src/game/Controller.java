@@ -38,6 +38,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static List<Bullet> movingAmmo = Collections.synchronizedList(new ArrayList<>());
     public static List<Player> players = Collections.synchronizedList(new ArrayList<>());
     public static List<Block> blocks = Collections.synchronizedList(new ArrayList<>());
+    public static List<GameObject> eyeCandy = Collections.synchronizedList(new ArrayList<>());
     public static MainPlayer thisPlayer;
     public static OtherPlayer otherPlayer;
 
@@ -55,17 +56,13 @@ public abstract class Controller extends Canvas implements Runnable {
     protected BufferedImage background;
     public static final int GRID_SIZE = 58;
 
-    //Utilities
-    protected BufferedImageLoader imageLoader;
-
     protected Controller() {
-        imageLoader = new BufferedImageLoader();
 
         //Load background
-        background = imageLoader.loadImage("/resources/Textures/BG/wood_background.png");
+        background = BufferedImageLoader.loadImage("/resources/Textures/BG/wood_background.png");
 
         //Loading level
-        level = imageLoader.loadImage("/resources/mapLayouts/Level1.png");
+        level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level1.png");
         loadLevel(level);
     }
 
@@ -164,13 +161,19 @@ public abstract class Controller extends Canvas implements Runnable {
 
         g.drawImage(background,0,0,WIDTH,HEIGHT,this);
 
+        //Render eye candy
+        for (int i = 0; i < eyeCandy.size(); i++) {
+            if(eyeCandy.get(i) != null){
+                eyeCandy.get(i).render(g);
+            }
+        }
+
         //Render block shadows
         for (int i = 0; i < blocks.size(); i++) {
             if (blocks.get(i) != null){
                 blocks.get(i).renderShadow(g);
             }
         }
-
 
         for (int i = 0; i < movingAmmo.size(); i++) {
             if(movingAmmo.get(i) != null)
