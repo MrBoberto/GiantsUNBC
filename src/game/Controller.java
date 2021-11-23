@@ -51,7 +51,8 @@ public abstract class Controller extends Canvas implements Runnable {
     AudioPlayer soundtrack;
 
     //Levels
-    protected BufferedImage level = null;
+    protected BufferedImage level;
+    protected BufferedImage background;
     public static final int GRID_SIZE = 58;
 
     //Utilities
@@ -59,6 +60,10 @@ public abstract class Controller extends Canvas implements Runnable {
 
     protected Controller() {
         imageLoader = new BufferedImageLoader();
+
+        //Load background
+        background = imageLoader.loadImage("/resources/Textures/BG/wood_background.png");
+
         //Loading level
         level = imageLoader.loadImage("/resources/mapLayouts/Level1.png");
         loadLevel(level);
@@ -157,10 +162,14 @@ public abstract class Controller extends Canvas implements Runnable {
         // Update graphics in this section:
         //////////////////////////////////////
 
-        //TODO: Implement correct BG
-        g.setColor(Color.BLACK);
-        g.fillRect(0,0,WIDTH,HEIGHT);
+        g.drawImage(background,0,0,WIDTH,HEIGHT,this);
 
+        //Render block shadows
+        for (int i = 0; i < blocks.size(); i++) {
+            if (blocks.get(i) != null){
+                blocks.get(i).renderShadow(g);
+            }
+        }
 
 
         for (int i = 0; i < movingAmmo.size(); i++) {
@@ -201,8 +210,8 @@ public abstract class Controller extends Canvas implements Runnable {
 
                 //Player 2 spawn point if red
                 if(red == 255 && green == 0 && blue == 0){
-                    otherX = xx*GRID_SIZE + GRID_SIZE/4;
-                    otherY = yy*GRID_SIZE + GRID_SIZE/4;
+                    otherX = xx*GRID_SIZE + GRID_SIZE/2;
+                    otherY = yy*GRID_SIZE + GRID_SIZE/2;
                 }
 
                 //Create block if white
@@ -212,8 +221,8 @@ public abstract class Controller extends Canvas implements Runnable {
 
                 //Player 1 spawn point if blue
                 if(red == 0 && green == 0 && blue == 255){
-                    thisX = xx*GRID_SIZE + GRID_SIZE/4;
-                    thisY = yy*GRID_SIZE + GRID_SIZE/4;
+                    thisX = xx*GRID_SIZE + GRID_SIZE/2;
+                    thisY = yy*GRID_SIZE + GRID_SIZE/2;
                 }
             }
         }
