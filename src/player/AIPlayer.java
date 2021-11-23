@@ -234,8 +234,6 @@ public class AIPlayer extends OtherPlayer {
             }
         }
 
-        setAngle();
-
         move();
 
         // Apply vertical friction
@@ -292,6 +290,8 @@ public class AIPlayer extends OtherPlayer {
         solidArea = new Rectangle(((int)this.x - currentImage.getImage().getWidth() / 2) + 40,
                 ((int)this.y - currentImage.getImage().getHeight() / 2) + 40, currentImage.getImage().getWidth() - 85,
                 currentImage.getImage().getHeight() - 85);
+
+        setAngle();
     }
 
     /**

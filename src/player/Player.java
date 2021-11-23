@@ -212,10 +212,6 @@ public abstract class Player extends GameObject {
         }
     }
 
-
-
-
-
     public boolean isFalling() {
         return isFalling;
     }

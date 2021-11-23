@@ -243,6 +243,9 @@ public class ServerController extends Controller {
             }
         }
 
+        g2D.dispose();
+        bs.show();
+
 
 
 

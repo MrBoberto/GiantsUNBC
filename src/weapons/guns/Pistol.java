@@ -1,6 +1,5 @@
 package weapons.guns;
 
-import audio.AudioPlayer;
 import audio.SFXPlayer;
 import game.ServerController;
 import game.SingleController;
@@ -12,10 +11,6 @@ import player.Player;
 import weapons.ammo.Projectile;
 //import weapons.ammo.Nato;
 import weapons.ammo.PistolBullet;
-
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
 
 public class Pistol implements Weapon {
     private final Player playerIBelongTo;

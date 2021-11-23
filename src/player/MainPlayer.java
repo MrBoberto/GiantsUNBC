@@ -276,7 +276,6 @@ public class MainPlayer extends Player {
     @Override
     public void render(Graphics g) {
 
-
         Graphics2D g2d = (Graphics2D) g;
 
         if (selectedWeapon == 0) {
