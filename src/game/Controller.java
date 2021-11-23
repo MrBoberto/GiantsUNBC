@@ -161,11 +161,7 @@ public abstract class Controller extends Canvas implements Runnable {
         g.setColor(Color.BLACK);
         g.fillRect(0,0,WIDTH,HEIGHT);
 
-        for (int i = 0; i < players.size(); i++) {
-            if(players.get(i) != null) {
-                players.get(i).render(g);
-            }
-        }
+
 
         for (int i = 0; i < movingAmmo.size(); i++) {
             if(movingAmmo.get(i) != null)
@@ -175,6 +171,12 @@ public abstract class Controller extends Canvas implements Runnable {
         for (int i = 0; i < blocks.size(); i++) {
             if (blocks.get(i) != null){
                 blocks.get(i).render(g);
+            }
+        }
+
+        for (int i = 0; i < players.size(); i++) {
+            if(players.get(i) != null) {
+                players.get(i).render(g);
             }
         }
 
