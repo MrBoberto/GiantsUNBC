@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Objects;
 
 public class GameWindow {
     public GameWindow(int width, int height, String windowName, Controller controller) {
@@ -15,7 +16,7 @@ public class GameWindow {
 
         Image img;
         try {
-            img = ImageIO.read(getClass().getResource("/resources/GUI/icon/icon.png"));
+            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/icon/icon.png")));
             frame.setIconImage(img);
         } catch(Exception e) {
             System.out.println(e.getMessage());
