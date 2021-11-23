@@ -4,6 +4,7 @@ import player.Player;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 public class KeyInput extends KeyAdapter {
     public KeyInput(){
@@ -11,47 +12,48 @@ public class KeyInput extends KeyAdapter {
     }
 
     public void keyPressed(KeyEvent e){
-        int key = e.getKeyCode();
 
         //for (int i = 0; i < Controller.players.size(); i++) {
             //GameObject tmp = Controller.players.get(i);
 
             //if(tmp != null){
 
-                switch (key) {
-                    case KeyEvent.VK_W:
-                        Controller.thisPlayer.setUp(true); break;
-                    case KeyEvent.VK_A:
-                        Controller.thisPlayer.setLeft(true); break;
-                    case KeyEvent.VK_S:
-                        Controller.thisPlayer.setDown(true); break;
-                    case KeyEvent.VK_D:
-                        Controller.thisPlayer.setRight(true); break;
-                    case KeyEvent.VK_1: //case KeyEvent.VK_NUMPAD1:
-                        if (Controller.thisPlayer.getSelectedWeapon() == 0) {
-                            Controller.thisPlayer.getWeapons().setPrimary(1);
-                        } else {
-                            Controller.thisPlayer.getWeapons().setSecondary(1);
-                        }
-                        System.out.println("KeyInput: " + Controller.thisPlayer.getWeapons());
-                        break;
-                    case KeyEvent.VK_2: case KeyEvent.VK_NUMPAD2:
-                        if (Controller.thisPlayer.getSelectedWeapon() == 0) {
-                            Controller.thisPlayer.getWeapons().setPrimary(2);
-                        } else {
-                            Controller.thisPlayer.getWeapons().setSecondary(2);
-                        }
-                        System.out.println(Controller.thisPlayer.getWeapons());
-                        break;
-                    case KeyEvent.VK_3: case KeyEvent.VK_NUMPAD3:
-                        if (Controller.thisPlayer.getSelectedWeapon() == 0) {
-                            Controller.thisPlayer.getWeapons().setPrimary(3);
-                        } else {
-                            Controller.thisPlayer.getWeapons().setSecondary(3);
-                        }
-                        System.out.println(Controller.thisPlayer.getWeapons());
-                        break;
-                }
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            Controller.thisPlayer.setUp(true);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_A) {
+            Controller.thisPlayer.setLeft(true);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_S) {
+            Controller.thisPlayer.setDown(true);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_D) {
+            Controller.thisPlayer.setRight(true);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_1 || e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
+            if (Controller.thisPlayer.getSelectedWeapon() == 0) {
+                Controller.thisPlayer.getWeapons().setPrimary(1);
+            } else {
+                Controller.thisPlayer.getWeapons().setSecondary(1);
+            }
+            System.out.println("KeyInput: " + Controller.thisPlayer.getWeapons());
+        }
+        if (e.getKeyCode() == KeyEvent.VK_2 || e.getKeyCode() == KeyEvent.VK_NUMPAD2) {
+            if (Controller.thisPlayer.getSelectedWeapon() == 0) {
+                Controller.thisPlayer.getWeapons().setPrimary(2);
+            } else {
+                Controller.thisPlayer.getWeapons().setSecondary(2);
+            }
+            System.out.println("KeyInput: " + Controller.thisPlayer.getWeapons());
+        }
+        if (e.getKeyCode() == KeyEvent.VK_3 || e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
+            if (Controller.thisPlayer.getSelectedWeapon() == 0) {
+                Controller.thisPlayer.getWeapons().setPrimary(3);
+            } else {
+                Controller.thisPlayer.getWeapons().setSecondary(3);
+            }
+            System.out.println("KeyInput: " + Controller.thisPlayer.getWeapons());
+        }
 
 //                if (key == KeyEvent.VK_SHIFT) {
 //                    shiftIsHeld = true;
