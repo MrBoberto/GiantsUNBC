@@ -48,7 +48,7 @@ public class MainMenu {
         System.out.println("Size" +wow.getWidth()+"width"+ wow.getHeight());
         try{
 
-            backGroundMain = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/imageRes/textBack.png")));
+            backGroundMain = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/imageRes/textBack.png")));
         }catch (IOException e){
             e.printStackTrace();
         }
