@@ -301,6 +301,8 @@ public class AIPlayer extends OtherPlayer {
      */
     @Override
     public void render(Graphics g) {
+        super.render(g);
+
         isWalking = (up || left || down || right);
         loadImage();
 

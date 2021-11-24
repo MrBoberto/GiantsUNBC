@@ -104,8 +104,6 @@ public class ClientController extends Controller{
 
         } else if (object instanceof EyeCandyPacket packet){
             eyeCandy = new ArrayList<>(Arrays.asList(packet.getEyeCandy())) ;
-
-            System.out.println(eyeCandy);
         } else if(object instanceof WinnerPacket packet){
 
 

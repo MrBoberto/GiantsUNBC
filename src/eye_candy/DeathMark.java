@@ -1,4 +1,4 @@
-package mapObjects;
+package eye_candy;
 
 import game.Controller;
 import game.GameObject;
@@ -14,6 +14,8 @@ public class DeathMark extends GameObject {
     int playerNumber;
     public DeathMark(double x, double y, int playerNumber) {
         super(x, y);
+
+        Controller.eyeCandy.add(this);
 
         this.playerNumber = playerNumber;
         loadImage();

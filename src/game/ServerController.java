@@ -2,7 +2,7 @@ package game;
 
 
 import audio.SFXPlayer;
-import mapObjects.DeathMark;
+import eye_candy.DeathMark;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
@@ -16,9 +16,6 @@ import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Array;
-import java.util.Arrays;
-import java.util.Collections;
 
 public class ServerController extends Controller {
 
@@ -175,9 +172,12 @@ public class ServerController extends Controller {
             killer.addTDO(-1 * bullet.getDamage());
 
             if (victim.getHealth() == 0) {
-                victim.incrementDeathCount();
-                eyeCandy.add(new DeathMark(victim.getX(), victim.getY(), victimNumber));
+
+                //Handle death markers on the floor
+                new DeathMark(victim.getX(), victim.getY(), victimNumber);
                 outputConnection.sendPacket(new EyeCandyPacket(eyeCandy.toArray(new GameObject[0])));
+
+                victim.incrementDeathCount();
                 victim.revive();
                 if(victim == otherPlayer){
                     outputConnection.sendPacket(new RespawnPacket());

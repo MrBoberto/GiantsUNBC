@@ -25,7 +25,7 @@ public class OtherPlayer extends Player {
 
     @Override
     public void render(Graphics g) {
-
+        super.render(g);
         if(isTimeForNextFrame()){
             loadImage();
             resetAnimationTimer();
