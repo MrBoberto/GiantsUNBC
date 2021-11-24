@@ -4,7 +4,7 @@ import eye_candy.BlockShadow;
 import game.Controller;
 import game.GameObject;
 import game.World;
-import utilities.BufferedImageLoader;
+
 
 import javax.imageio.ImageIO;
 import java.awt.*;

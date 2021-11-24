@@ -29,7 +29,7 @@ public class MainMenu {
 
 
     public MainMenu() {
-        wow = new JFrame("Your Mom");
+        wow = new JFrame("Doing your Mom");
         //wow.setSize(800,600);
         int width = wow.getWidth();
         int length = wow.getHeight();
