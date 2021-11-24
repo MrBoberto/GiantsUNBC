@@ -4,7 +4,6 @@ import game.MainMenu;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
-import mapObjects.Block;
 import weapons.guns.AssaultRifle;
 import weapons.guns.Pistol;
 import weapons.guns.Shotgun;
@@ -12,6 +11,7 @@ import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -96,10 +96,15 @@ public abstract class Player extends GameObject {
     //Invincibility
     protected int invincibilityTimer = 0;
     public static final int RESPAWN_INVINCIBILITY_TIME = 180;
+    protected int invincibilityGraphicTimer = 0;
+    public static final int INVINCIBILITY_GRAPHIC_TIME = 15;
+    protected boolean skipFrame = false;
+    protected boolean isInvincible = false;
 
     //Animation timers
     protected int animationTimer = 0;
     public static final int ANIMATION_DELAY = 1;
+
 
     public Player(double x, double y, double angle, Color playerColour) {
         super(x, y, angle);
@@ -350,6 +355,30 @@ public abstract class Player extends GameObject {
     }
 
     @Override
+    public void render(Graphics g){
+        Graphics2D g2 = (Graphics2D) g;
+        //Render shadow
+        g2.setColor(new Color(0, 0, 0, 64));
+        g2.rotate(+Math.PI * 5/4, x,y);
+        g2.fillOval(
+                (int) x - Controller.GRID_SIZE / 4,
+                (int) y - Controller.GRID_SIZE / 4,
+                Controller.GRID_SIZE / 2,
+                Controller.GRID_SIZE* 7/8);
+        g2.rotate(-Math.PI * 5/4 , x,y);
+
+        if(isInvincible()) {
+            invincibilityGraphicTimer ++;
+            if(invincibilityGraphicTimer > INVINCIBILITY_GRAPHIC_TIME){
+                skipFrame = true;
+                if(invincibilityGraphicTimer > 2*INVINCIBILITY_GRAPHIC_TIME) {
+                    invincibilityGraphicTimer = 0;
+                }
+            }
+        }
+    }
+
+    @Override
     public Rectangle getBounds() {
         return boundRect;
     }
@@ -382,6 +411,13 @@ public abstract class Player extends GameObject {
         return new ImageStrip(images, imageFileSubstring);
     }
 
+    public void revive(){
+        health = 100;
+        x = respawnPointX;
+        y = respawnPointY;
+        invincibilityTimer = RESPAWN_INVINCIBILITY_TIME;
+    }
+
     public int getSelectedWeapon() {
         return selectedWeapon;
     }
@@ -410,12 +446,6 @@ public abstract class Player extends GameObject {
         isWalking = walking;
     }
 
-    public void revive(){
-        health = 100;
-        x = respawnPointX;
-        y = respawnPointY;
-        invincibilityTimer = RESPAWN_INVINCIBILITY_TIME;
-    }
 
     public void incrementBulletCount(){
         bulletsShot++;
@@ -441,7 +471,15 @@ public abstract class Player extends GameObject {
     }
 
     public boolean isInvincible(){
-        return invincibilityTimer > 0;
+        if(World.controller instanceof ServerController) {
+            return invincibilityTimer > 0;
+        } else {
+            return isInvincible;
+        }
+    }
+
+    public void setInvincible(boolean invincible) {
+        isInvincible = invincible;
     }
 
     public boolean isTimeForNextFrame(){

@@ -2,6 +2,7 @@ package game;
 
 
 import audio.SFXPlayer;
+import eye_candy.DeathMark;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
@@ -136,46 +137,56 @@ public class ServerController extends Controller {
                     movingAmmo.remove(bullet);
 
                 } else {
-                    // Player who was hit (-1 if no one was hit)
-                    int victimNumber = EntityCollision.getVictim(bullet);
+                    checkVictims(bullet);
+                }
+            }
+        }
+    }
 
-                    // Player
-                    Player killer;
-                    Player victim;
-                    if (bullet.getPlayerIBelongToNumber() == Player.SERVER_PLAYER) {
-                        killer = thisPlayer;
-                        victim = otherPlayer;
+    private void checkVictims(Bullet bullet) {
+        // Player who was hit (-1 if no one was hit)
+        int victimNumber = EntityCollision.getVictim(bullet);
 
-                    } else {
-                        killer = otherPlayer;
-                        victim = thisPlayer;
-                    }
+        // Player
+        Player killer;
+        Player victim;
+        if (bullet.getPlayerIBelongToNumber() == Player.SERVER_PLAYER) {
+            killer = thisPlayer;
+            victim = otherPlayer;
 
-                    if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber() && !victim.isInvincible()) {
-                        if (bullet.getSERIAL() != 002) {
-                            movingAmmo.remove(bullet);
-                        }
+        } else {
+            killer = otherPlayer;
+            victim = thisPlayer;
+        }
+
+        if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber() && !victim.isInvincible()) {
+            if (bullet.getSERIAL() != 002) {
+                movingAmmo.remove(bullet);
+            }
 
 
-                        killer.incrementBulletHitCount();
-                        victim.modifyHealth(-1 * bullet.getDamage());
-                        victim.resetHealTimer();
-                        killer.addTDO(-1 * bullet.getDamage());
+            killer.incrementBulletHitCount();
+            victim.modifyHealth(-1 * bullet.getDamage());
+            victim.resetHealTimer();
+            killer.addTDO(-1 * bullet.getDamage());
 
-                        if (victim.getHealth() == 0) {
-                            victim.incrementDeathCount();
-                            victim.revive();
-                            if(victim == otherPlayer){
-                                outputConnection.sendPacket(new RespawnPacket());
-                            }
+            if (victim.getHealth() == 0) {
 
-                            killer.incrementKillCount();
-                           // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
-                            if(victim.getDeathCount() >= 10){
-                                declareWinner(killer);
-                            }
-                        }
-                    }
+                //Handle death markers on the floor
+                new DeathMark(victim.getX(), victim.getY(), victimNumber);
+                outputConnection.sendPacket(new EyeCandyPacket(eyeCandy.toArray(new GameObject[0])));
+
+                victim.incrementDeathCount();
+                victim.revive();
+                if(victim == otherPlayer){
+                    outputConnection.sendPacket(new RespawnPacket());
+
+                }
+
+                killer.incrementKillCount();
+               // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
+                if(victim.getDeathCount() >= 10){
+                    declareWinner(killer);
                 }
             }
         }

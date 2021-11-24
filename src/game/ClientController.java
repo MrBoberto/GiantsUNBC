@@ -88,6 +88,8 @@ public class ClientController extends Controller{
                 otherPlayer.setHealth(packet.getHealth()[0]);
                 thisPlayer.setHealth(packet.getHealth()[1]);
                 otherPlayer.setWeaponSerial(packet.getWeaponSerial());
+                otherPlayer.setInvincible(packet.isInvincible()[0]);
+                thisPlayer.setInvincible(packet.isInvincible()[1]);
             }
         } else if(object instanceof ServerBulletPacket packet){
 
@@ -102,6 +104,8 @@ public class ClientController extends Controller{
 
             thisPlayer.revive();
 
+        } else if (object instanceof EyeCandyPacket packet){
+            eyeCandy = new ArrayList<>(Arrays.asList(packet.getEyeCandy())) ;
         } else if(object instanceof WinnerPacket packet){
 
 

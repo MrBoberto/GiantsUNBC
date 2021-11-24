@@ -272,6 +272,8 @@ public class MainPlayer extends Player {
      */
     @Override
     public void render(Graphics g) {
+        super.render(g);
+
 
         Graphics2D g2d = (Graphics2D) g;
 
@@ -341,7 +343,11 @@ public class MainPlayer extends Player {
                 currentImage.getImage().getHeight() / 2.0);
 
         // Draws the rotated image
-        g2d.drawImage(currentImage.getImage(), affTra, World.controller);
+        if(skipFrame) {
+            skipFrame = false;
+        } else {
+            g2d.drawImage(currentImage.getImage(), affTra, World.controller);
+        }
 
         if (weaponSerial == -1 || weaponTextures.get(weaponSerial) == null) return;
         g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);
