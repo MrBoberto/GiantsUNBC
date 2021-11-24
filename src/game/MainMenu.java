@@ -68,6 +68,8 @@ public class MainMenu {
         System.out.println("Size of the frame is " +size);
 
 
+        // Title is now included in background
+        /*
         titleNamePanel = new JPanel(){
             @Override
             protected void paintComponent(Graphics g) {
@@ -82,6 +84,8 @@ public class MainMenu {
         titleNameLabel.setForeground(Color.RED);
         titleNameLabel.setFont(titleFont);
 
+         */
+
 
 
         startButtonPanel = new JPanel();
@@ -90,7 +94,7 @@ public class MainMenu {
 
         startButton = new JButton("Start");
         startButton.setBackground(Color.black);
-        startButton.setForeground(Color.RED);
+        startButton.setForeground(Color.YELLOW);
         startButton.setFont(button);
         startButton.setBounds(300,400,100,400);
 
@@ -103,9 +107,9 @@ public class MainMenu {
         });
 
 
-        quit = new JButton("quit");
+        quit = new JButton("Quit");
         quit.setBackground(Color.black);
-        quit.setForeground(Color.RED);
+        quit.setForeground(Color.YELLOW);
         quit.setFont(button);
         quit.setBounds(300,400,100,400);
 
@@ -129,7 +133,7 @@ public class MainMenu {
 
         name = new JButton("Name");
         name.setBackground(Color.black);
-        name.setForeground(Color.RED);
+        name.setForeground(Color.YELLOW);
         name.setFont(button);
         name.setBounds(300,400,100,300);
 
@@ -149,13 +153,13 @@ public class MainMenu {
         });
 
 
-        backGround.add(titleNamePanel);
-        titleNamePanel.add(titleNameLabel);
+        //backGround.add(titleNamePanel);
+        //titleNamePanel.add(titleNameLabel);
         startButtonPanel.add(startButton);
         startButtonPanel.add(name);
         startButtonPanel.add(quit);
         con.add(startButtonPanel);
-        con.add(titleNamePanel);
+        //con.add(titleNamePanel);
         con.add(backGround);
 
         wow.setResizable(false);

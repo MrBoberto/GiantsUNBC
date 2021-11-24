@@ -68,7 +68,6 @@ public abstract class Player extends GameObject {
     protected boolean ctrlIsHeld = false;
     protected boolean tIsHeld = false;
     protected boolean mouseInside = true;
-    protected boolean button1Held = false;
     protected boolean isFalling = true;
     protected boolean isJumping = false;
     protected boolean isSneaking = false;
@@ -344,7 +343,9 @@ public abstract class Player extends GameObject {
             health++;
             healTimer += 4;
         }
-        invincibilityTimer--;
+        if (invincibilityTimer > 0) {
+            invincibilityTimer--;
+        }
         animationTimer++;
 
         if (selectedWeapon == 0) {
@@ -471,7 +472,7 @@ public abstract class Player extends GameObject {
     }
 
     public boolean isInvincible(){
-        if(World.controller instanceof ServerController) {
+        if(World.controller instanceof ServerController || World.controller instanceof SingleController) {
             return invincibilityTimer > 0;
         } else {
             return isInvincible;

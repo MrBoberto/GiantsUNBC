@@ -16,11 +16,11 @@ public class AssaultRifle implements Weapon {
     public static final double SPEED = 32.5;
     public static final int ROUNDCOUNT = 1;
     public static final double INACCURACY = 0.075;
-    public static final int MAX_DELAY = 0;
+    public static final int MAX_DELAY = 7;
     private int currentDelay = 0;
     // Identifies type of gun
     public static final int SERIAL = 003;
-    public static int DAMAGE = 8;
+    public static int DAMAGE = 14;
     public SFXPlayer audio;
 
     public AssaultRifle(Player playerIBelongTo) {

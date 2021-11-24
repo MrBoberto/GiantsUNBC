@@ -21,7 +21,7 @@ public class Pistol implements Weapon {
     private int currentDelay = 0;
     // Identifies type of gun
     public static final int SERIAL = 002;
-    public static int DAMAGE = 20;
+    public static int DAMAGE = 25;
     public SFXPlayer audio;
 
     public Pistol(Player playerIBelongTo) {

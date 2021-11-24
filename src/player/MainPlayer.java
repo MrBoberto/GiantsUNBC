@@ -17,6 +17,7 @@ public class MainPlayer extends Player {
     private boolean up = false, down = false,right = false,left = false;
     private boolean upStop = false, downStop = false,rightStop = false,leftStop = false;
     protected ArrayList<BufferedImage> slotTextures;
+    protected boolean button1Held = false;
 
     public MainPlayer(double x, double y, double angle, Color color) {
         super(x, y, angle, color);

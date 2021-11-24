@@ -7,6 +7,7 @@ import player.OtherPlayer;
 import player.Player;
 import utilities.BufferedImageLoader;
 import weapons.ammo.Bullet;
+import weapons.guns.AssaultRifle;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -62,7 +63,7 @@ public abstract class Controller extends Canvas implements Runnable {
         background = BufferedImageLoader.loadImage("/resources/Textures/BG/wood_background.png");
 
         //Loading level
-        level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level1.png");
+        level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level2.png");
         loadLevel(level);
     }
 
@@ -74,7 +75,6 @@ public abstract class Controller extends Canvas implements Runnable {
         try
         {
             int randomMusic = World.getSRandom().nextInt(10);
-            System.out.println(randomMusic);
             if (randomMusic < 5) {
                 soundtrack = new AudioPlayer("/resources/Music/Trananozixa.wav");
             } else {
@@ -141,6 +141,26 @@ public abstract class Controller extends Canvas implements Runnable {
         for (int i = 0; i < movingAmmo.size(); i++) {
             if(movingAmmo.get(i) != null)
                 movingAmmo.get(i).tick();
+        }
+
+        if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 0 && thisPlayer.getWeaponSerial() == 003
+                && thisPlayer.getWeapons().getPrimary().getCurrentDelay() == 0) {
+            Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
+            Point mouseRelativeToGame = new Point(mouseRelativeToScreen.x - getLocationOnScreen().x,
+                    mouseRelativeToScreen.y - getLocationOnScreen().y);
+            thisPlayer.getWeapons().getPrimary().shoot(mouseRelativeToGame.x, mouseRelativeToGame.y);
+
+            Controller.thisPlayer.getWeapons().getPrimary().setCurrentDelay(
+                    AssaultRifle.MAX_DELAY);
+        } else if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 1 && thisPlayer.getWeaponSerial() == 003
+                && thisPlayer.getWeapons().getSecondary().getCurrentDelay() == 0) {
+            Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
+            Point mouseRelativeToGame = new Point(mouseRelativeToScreen.x - getLocationOnScreen().x,
+                    mouseRelativeToScreen.y - getLocationOnScreen().y);
+            thisPlayer.getWeapons().getSecondary().shoot(mouseRelativeToGame.x, mouseRelativeToGame.y);
+
+            Controller.thisPlayer.getWeapons().getSecondary().setCurrentDelay(
+                    AssaultRifle.MAX_DELAY);
         }
     }
 
