@@ -38,7 +38,8 @@ public class DeathMark extends GameObject {
     public void render(Graphics g) {
         if(texture == null){
             loadImage();
-        } else {
+        }
+        if (texture != null){
             g.drawImage(texture, (int)x - Controller.GRID_SIZE/4, (int)y - Controller.GRID_SIZE/4, Controller.GRID_SIZE/2, Controller.GRID_SIZE/2, World.controller);
         }
     }
