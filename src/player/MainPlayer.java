@@ -278,7 +278,6 @@ public class MainPlayer extends Player {
         super.render(g);
 
 
-
         Graphics2D g2d = (Graphics2D) g;
 
         if (selectedWeapon == 0) {

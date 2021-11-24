@@ -138,6 +138,9 @@ public class ClientController extends Controller{
                     "                                           Shot         Hit    Distance    Power-ups",
                     WIDTH / 2, HEIGHT / 2);
 
+            g2D.dispose();
+            bs.show();
+
             double[][] playerInfo = new double[2][6];
 
             for (int i = 0; i < players.size(); i++) {

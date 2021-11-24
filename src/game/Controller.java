@@ -78,7 +78,7 @@ public abstract class Controller extends Canvas implements Runnable {
             if (randomMusic < 5) {
                 soundtrack = new AudioPlayer("/resources/Music/Trananozixa.wav");
             } else {
-                soundtrack = new AudioPlayer("/resources/Music/The_Colour_three.wav");
+                soundtrack = new AudioPlayer("/resources/Music/The_Colour_Three.wav");
             }
             soundtrack.play();
         }
