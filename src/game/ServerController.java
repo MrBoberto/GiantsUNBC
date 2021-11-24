@@ -177,7 +177,6 @@ public class ServerController extends Controller {
                         }
                     }
                 }
-
             }
         }
     }
@@ -190,28 +189,6 @@ public class ServerController extends Controller {
             winnerNumber = Player.CLIENT_PLAYER;
         }
 
-        BufferStrategy bs = this.getBufferStrategy();
-        if(bs == null){
-            this.createBufferStrategy(3);
-            return;
-        }
-        Graphics2D g2D = (Graphics2D) bs.getDrawGraphics();
-
-        g2D.setColor(Color.BLACK);
-        Font font = new Font("Arial", Font.BOLD, 25);
-        g2D.setFont(font);
-        FontMetrics stringSize = g2D.getFontMetrics(font);
-
-        g2D.drawString("The winner is " + winner.getPlayerName(), WIDTH / 2, HEIGHT / 10);
-        g2D.drawString("Scores:" + winner.getPlayerName(), WIDTH / 2, HEIGHT / 5);
-        g2D.drawString("The winner is " + winner.getPlayerName(), WIDTH / 2, 3 * HEIGHT / 10);
-        g2D.drawString(
-                "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                WIDTH / 2, 2 * HEIGHT / 5);
-        g2D.drawString(
-                "                                           Shot         Hit    Distance    Power-ups",
-                WIDTH / 2, HEIGHT / 2);
-
         double[][] playerInfo = new double[2][6];
 
         for (int i = 0; i < players.size(); i++) {
@@ -223,32 +200,9 @@ public class ServerController extends Controller {
             playerInfo[i][3] = player.getBulletCount();
             playerInfo[i][4] = player.getBulletHitCount();
             playerInfo[i][5] = player.getWalkingDistance();
-
-            //Determine format
-            String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
-                    player.getKillCount(),
-                    player.getDeathCount(),
-                    player.getKdr(),
-                    player.getBulletCount(),
-                    player.getBulletHitCount(),
-                    player.getWalkingDistance(),
-                    "???");
-
-            if (i == 0) {
-                g2D.drawString(format,
-                        WIDTH / 2, 3 * HEIGHT / 5);
-            } else {
-                g2D.drawString(format,
-                        WIDTH / 2, 7 * HEIGHT / 10);
-            }
         }
 
-        g2D.dispose();
-        bs.show();
-
-
-
-
+        renderWinner(winnerNumber, playerInfo);
 
         double[][] playerInfo1 = new double[2][6];
 
@@ -292,7 +246,6 @@ public class ServerController extends Controller {
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
-
         stop();
     }
 }

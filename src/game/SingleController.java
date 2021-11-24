@@ -1,11 +1,14 @@
 package game;
 
+import packets.WinnerPacket;
 import player.AIPlayer;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
 import weapons.ammo.*;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
@@ -132,69 +135,48 @@ public class SingleController extends Controller {
     }
 
     public void declareWinner(Player winner){
-
-        BufferStrategy bs = this.getBufferStrategy();
-        if(bs == null){
-            this.createBufferStrategy(3);
-            return;
+        int winnerNumber;
+        if(winner == thisPlayer){
+            winnerNumber = Player.SERVER_PLAYER;
+        } else {
+            winnerNumber = Player.CLIENT_PLAYER;
         }
-        Graphics2D g2D = (Graphics2D) bs.getDrawGraphics();
-
-        g2D.setColor(Color.BLACK);
-        Font font = new Font("Arial", Font.BOLD, 25);
-        g2D.setFont(font);
-        FontMetrics stringSize = g2D.getFontMetrics(font);
-
-        g2D.drawString("The winner is " + winner.getPlayerName(), WIDTH / 2, HEIGHT / 10);
-        g2D.drawString("Scores:" + winner.getPlayerName(), WIDTH / 2, HEIGHT / 5);
-        g2D.drawString("The winner is " + winner.getPlayerName(), WIDTH / 2, 3 * HEIGHT / 10);
-        g2D.drawString(
-                "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                WIDTH / 2, 2 * HEIGHT / 5);
-        g2D.drawString(
-                "                                           Shot         Hit    Distance    Power-ups",
-                WIDTH / 2, HEIGHT / 2);
-
-        g2D.dispose();
-        bs.show();
 
         double[][] playerInfo = new double[2][6];
 
         for (int i = 0; i < players.size(); i++) {
             //Save data to send to client
             Player player = players.get(i);
-
-            //Determine format
-            String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
-                    player.getKillCount(),
-                    player.getDeathCount(),
-                    player.getKdr(),
-                    player.getBulletCount(),
-                    player.getBulletHitCount(),
-                    player.getWalkingDistance(),
-                    "???");
-
-            if (i == 0) {
-                g2D.drawString(format,
-                        WIDTH / 2, 3 * HEIGHT / 5);
-            } else {
-                g2D.drawString(format,
-                        WIDTH / 2, 7 * HEIGHT / 10);
-            }
+            playerInfo[i][0] = player.getKillCount();
+            playerInfo[i][1] = player.getDeathCount();
+            playerInfo[i][2] = player.getKdr();
+            playerInfo[i][3] = player.getBulletCount();
+            playerInfo[i][4] = player.getBulletHitCount();
+            playerInfo[i][5] = player.getWalkingDistance();
         }
+
+        renderWinner(winnerNumber, playerInfo);
+
+        double[][] playerInfo1 = new double[2][6];
 
         System.out.println("The winner is " + winner.getPlayerName());
         System.out.println("Scores: ");
-        String format = " %10d  %10d  %10f  %10d  %10d  %10d  %10s %n";
+        String format1 = " %10d  %10d  %10f  %10d  %10d  %10d  %10s %n";
         System.out.format("      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of%n");
         System.out.format("                                           Shot         Hit    Distance    Power-ups%n");
         System.out.format("------------------------------------------------------------------------------------%n");
         for (int i = 0; i < players.size(); i++) {
             //Save data to send to client
             Player player = players.get(i);
+            playerInfo1[i][0] = player.getKillCount();
+            playerInfo1[i][1] = player.getDeathCount();
+            playerInfo1[i][2] = player.getKdr();
+            playerInfo1[i][3] = player.getBulletCount();
+            playerInfo1[i][4] = player.getBulletHitCount();
+            playerInfo1[i][5] = player.getWalkingDistance();
 
             //Print
-            System.out.format(format,
+            System.out.format(format1,
                     player.getKillCount(),
                     player.getDeathCount(),
                     player.getKdr(),
@@ -204,6 +186,16 @@ public class SingleController extends Controller {
                     "???");
         }
 
+        // Kill the music
+        try {
+            soundtrack.stop();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
         stop();
     }
 }

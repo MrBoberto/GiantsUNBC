@@ -136,9 +136,6 @@ public class MainPlayer extends Player {
         //Check collisions
         checkBlockCollisions();
 
-
-
-
         // Determine distance travelled
         if((velX > 0 && !rightStop) || (velX < 0 && !leftStop)){
             super.setX(super.getX() + velX);

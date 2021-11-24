@@ -2,6 +2,7 @@ package player;
 
 import game.Controller;
 import game.World;
+import mapObjects.Block;
 import weapons.guns.AssaultRifle;
 import weapons.guns.Pistol;
 import weapons.guns.Shotgun;
@@ -13,10 +14,13 @@ import java.awt.geom.AffineTransform;
 public class AIPlayer extends OtherPlayer {
     //Main Player movement directions
     private boolean up = false, down = false,right = false,left = false;
+    private boolean upStop = false, downStop = false,rightStop = false,leftStop = false;
     private boolean attac = true;
     private double desiredOffset = 40;  // Distance the AI wants to be from the player when attacking
     private double shortRangeBound = 500;   // Distance determining whether to use short or long-range weapon
     private int fear = 50;              // Max health advantage the player can have for the ai to want to attack them
+    private int randAngleDuration = 0;
+    private int randAngleDurationMax = 20;
 
 
     public AIPlayer(double x, double y, double angle, Color color) {
@@ -43,99 +47,136 @@ public class AIPlayer extends OtherPlayer {
         int avgX = 0;
         int avgY = 0;
 
-        down = false;
-        up = false;
-        right = false;
-        left = false;
+        if (randAngleDuration > 0) randAngleDuration--;
 
-        if (Controller.thisPlayer.getHealth() <= health + fear) {
-            if (!attac) {
-                System.out.println(playerName + ": You should have gone for the head.");
+        // If there is anything in Thanos' path
+        if (rightStop || downStop || leftStop || upStop || randAngleDuration > 0) {
+            if (leftStop && randAngleDuration - 1 < randAngleDurationMax) {
+                angle = Math.PI * World.getSRandom().nextDouble();
+                randAngleDurationMax = 5 + World.getSRandom().nextInt(10);
+                randAngleDuration = randAngleDurationMax;
             }
-            attac = true;
-            if (Controller.thisPlayer.getY() < y - desiredOffset) {
-                avgY++;
-                up = true;
+            if (upStop && randAngleDuration - 1 < randAngleDurationMax) {
+                angle = Math.PI / 2 + Math.PI * World.getSRandom().nextDouble();
+                randAngleDurationMax = 5 + World.getSRandom().nextInt(10);
+                randAngleDuration = randAngleDurationMax;
             }
-            if (Controller.thisPlayer.getX() > x + desiredOffset) {
-                avgX++;
-                right = true;
+            if (rightStop && randAngleDuration - 1 < randAngleDurationMax) {
+                angle = Math.PI + Math.PI * World.getSRandom().nextDouble();
+                randAngleDurationMax = 5 + World.getSRandom().nextInt(10);
+                randAngleDuration = randAngleDurationMax;
             }
-            if (Controller.thisPlayer.getY() > y + desiredOffset) {
-                avgY--;
-                down = true;
+            if (downStop && randAngleDuration - 1 < randAngleDurationMax) {
+                angle = 3 * Math.PI / 2 + Math.PI * World.getSRandom().nextDouble();
+                randAngleDurationMax = 5 + World.getSRandom().nextInt(10);
+                randAngleDuration = randAngleDurationMax;
             }
-            if (Controller.thisPlayer.getX() < x - desiredOffset) {
-                avgX--;
-                left = true;
-            }
-        } else {
-            if (attac) {
-                System.out.println(playerName + ": Your optimism is misplaced, Asgardian.");
-            }
-            attac = false;
-            if (Controller.thisPlayer.getY() < y) {
-                avgY--;
-                down = true;
-            }
-            if (Controller.thisPlayer.getX() > x) {
-                avgX--;
-                left = true;
-            }
-            if (Controller.thisPlayer.getY() > y) {
-                avgY++;
-                up = true;
-            }
-            if (Controller.thisPlayer.getY() < x) {
-                avgX++;
-                right = true;
+
+            // Ensure angle is in bounds
+            for (int i = 0; i < 2; i++) {
+                if (angle <= -Math.PI) {
+                    angle += 2 * Math.PI;
+                } else if (angle > Math.PI) {
+                    angle -= 2 * Math.PI;
+                }
             }
         }
+        // If nothing is in Thanos' path
+        else {
+            down = false;
+            up = false;
+            right = false;
+            left = false;
 
-        if (avgX == 0 && avgY == 0) {
-            return;
-        } else if (avgX == 0) {
-            if (avgY == 1) {
-                super.setAngle(0);
-                return;
+            if (Controller.thisPlayer.getHealth() <= health + fear) {
+                if (!attac) {
+                    System.out.println(playerName + ": You should have gone for the head.");
+                }
+                attac = true;
+                if (Controller.thisPlayer.getY() < y - desiredOffset) {
+                    avgY++;
+                    up = true;
+                }
+                if (Controller.thisPlayer.getX() > x + desiredOffset) {
+                    avgX++;
+                    right = true;
+                }
+                if (Controller.thisPlayer.getY() > y + desiredOffset) {
+                    avgY--;
+                    down = true;
+                }
+                if (Controller.thisPlayer.getX() < x - desiredOffset) {
+                    avgX--;
+                    left = true;
+                }
             } else {
-                super.setAngle(Math.PI);
-                return;
+                if (attac) {
+                    System.out.println(playerName + ": Your optimism is misplaced, Asgardian.");
+                }
+                attac = false;
+                if (Controller.thisPlayer.getY() < y) {
+                    avgY--;
+                    down = true;
+                }
+                if (Controller.thisPlayer.getX() > x) {
+                    avgX--;
+                    left = true;
+                }
+                if (Controller.thisPlayer.getY() > y) {
+                    avgY++;
+                    up = true;
+                }
+                if (Controller.thisPlayer.getY() < x) {
+                    avgX++;
+                    right = true;
+                }
             }
-        } else if (avgY == 0) {
-            if (avgX == 1) {
-                super.setAngle(Math.PI / 2);
-                return;
-            } else {
-                super.setAngle(-Math.PI / 2);
-                return;
-            }
-        } else if (avgX == 1) {
-            if (avgY == 1) {
-                super.setAngle(Math.PI / 4);
-                return;
-            } else {
-                super.setAngle(3 * Math.PI / 4);
-                return;
-            }
-        } else if (avgX == -1){
-            if (avgY == 1) {
-                super.setAngle(-Math.PI / 4);
-                return;
-            } else {
-                super.setAngle(-3 * Math.PI / 4);
-                return;
-            }
-        }
 
-        double acuteAngle = Math.atan(avgY/avgX);
+            if (avgX == 0 && avgY == 0) {
+                return;
+            } else if (avgX == 0) {
+                if (avgY == 1) {
+                    super.setAngle(0);
+                    return;
+                } else {
+                    super.setAngle(Math.PI);
+                    return;
+                }
+            } else if (avgY == 0) {
+                if (avgX == 1) {
+                    super.setAngle(Math.PI / 2);
+                    return;
+                } else {
+                    super.setAngle(-Math.PI / 2);
+                    return;
+                }
+            } else if (avgX == 1) {
+                if (avgY == 1) {
+                    super.setAngle(Math.PI / 4);
+                    return;
+                } else {
+                    super.setAngle(3 * Math.PI / 4);
+                    return;
+                }
+            } else if (avgX == -1){
+                if (avgY == 1) {
+                    super.setAngle(-Math.PI / 4);
+                    return;
+                } else {
+                    super.setAngle(-3 * Math.PI / 4);
+                    return;
+                }
+            }
+
+            double acuteAngle = Math.atan(avgY/avgX);
 //        System.out.println("player.Player 1 Acute super.getAngle(): " + Math.toDegrees(acuteAngle));
 
-        if (avgY < 0) {
-            acuteAngle += Math.PI;
-        }
+            if (avgY < 0) {
+                acuteAngle += Math.PI;
+            }
 
-        super.setAngle(acuteAngle);
+            super.setAngle(acuteAngle);
+        }
     }
 
     /**
@@ -200,14 +241,27 @@ public class AIPlayer extends OtherPlayer {
             velX = 0;
         }
 
-        //Increase walking distance stat
-        if(velY != 0 || velX != 0){
-            incrementWalkingDistance();
-        }
+        //Check collisions
+        checkBlockCollisions();
 
         // Determine distance travelled
-        super.setX(super.getX() + velX);
-        super.setY(super.getY() + velY);
+        if((velX > 0 && !rightStop) || (velX < 0 && !leftStop)){
+            super.setX(super.getX() + velX);
+
+            //Increase walking distance stat
+            if(velY > 0 || velX > 0){
+                incrementWalkingDistance();
+            }
+        }
+
+        if((velY > 0 && !downStop) || (velY < 0 && !upStop)){
+            super.setY(super.getY() + velY);
+
+            //Increase walking distance stat
+            if(velY > 0 || velX > 0){
+                incrementWalkingDistance();
+            }
+        }
     }
 
     /**
@@ -217,6 +271,7 @@ public class AIPlayer extends OtherPlayer {
     @Override
     public void tick() {
         super.tick();
+        setAngle();
 
         // Determine whether to use shorter or longer ranged weapon
         if (Controller.thisPlayer.getX() < x - shortRangeBound || Controller.thisPlayer.getY() < y - shortRangeBound
@@ -290,8 +345,49 @@ public class AIPlayer extends OtherPlayer {
         solidArea = new Rectangle(((int)this.x - currentImage.getImage().getWidth() / 2) + 40,
                 ((int)this.y - currentImage.getImage().getHeight() / 2) + 40, currentImage.getImage().getWidth() - 85,
                 currentImage.getImage().getHeight() - 85);
+    }
 
-        setAngle();
+    private void checkBlockCollisions(){
+        upStop = false;
+        downStop = false;
+        leftStop = false;
+        rightStop = false;
+        for (int i = 0; i < Controller.blocks.size(); i++) {
+            Block block = Controller.blocks.get(i);
+
+            if(getBounds() != null){
+                int offset = 3;
+                //Check upper bound
+                if(block.getBounds().intersects(new Rectangle(
+                        (int) x - currentImage.getImage().getWidth() / 4 + offset,
+                        (int) y - currentImage.getImage().getHeight() / 4 - offset,
+                        currentImage.getImage().getWidth() / 2 - offset,
+                        1))){
+                    upStop = true;
+                }
+                if((new Rectangle(
+                        (int) x - currentImage.getImage().getWidth() / 4 + offset,
+                        (int) y + currentImage.getImage().getHeight() / 4 + offset,
+                        currentImage.getImage().getWidth() / 2 - offset,
+                        1)).intersects(block.getBounds())){
+                    downStop = true;
+                }
+                if((new Rectangle(
+                        (int) x - currentImage.getImage().getWidth() / 4 - offset,
+                        (int) y - currentImage.getImage().getHeight() / 4 + offset,
+                        1,
+                        currentImage.getImage().getHeight() / 2- offset)).intersects(block.getBounds())){
+                    leftStop = true;
+                }
+                if((new Rectangle(
+                        (int) x + currentImage.getImage().getWidth() / 4 + offset,
+                        (int) y - currentImage.getImage().getHeight() / 4 + offset,
+                        1,
+                        currentImage.getImage().getHeight() / 2 - offset)).intersects(block.getBounds())){
+                    rightStop = true;
+                }
+            }
+        }
     }
 
     /**

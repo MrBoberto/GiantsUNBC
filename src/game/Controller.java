@@ -171,7 +171,6 @@ public abstract class Controller extends Canvas implements Runnable {
             }
         }
 
-
         for (int i = 0; i < movingAmmo.size(); i++) {
             if(movingAmmo.get(i) != null)
                 movingAmmo.get(i).render(g);
@@ -191,6 +190,106 @@ public abstract class Controller extends Canvas implements Runnable {
 
         //////////////////////////////////////
         g.dispose();
+        bs.show();
+    }
+
+    public void renderWinner(int winnerNumber, double[][] playerInfo) {
+        System.out.println("renderWinner");
+
+        BufferStrategy bs = this.getBufferStrategy();
+        if(bs == null){
+            this.createBufferStrategy(3);
+            return;
+        }
+
+        Graphics g = bs.getDrawGraphics();
+
+        // Update graphics in this section:
+        //////////////////////////////////////
+
+        g.drawImage(background,0,0,WIDTH,HEIGHT,this);
+
+        //Render block shadows
+        for (int i = 0; i < blocks.size(); i++) {
+            if (blocks.get(i) != null){
+                blocks.get(i).renderShadow(g);
+            }
+        }
+
+
+        for (int i = 0; i < movingAmmo.size(); i++) {
+            if(movingAmmo.get(i) != null)
+                movingAmmo.get(i).render(g);
+        }
+
+        for (int i = 0; i < blocks.size(); i++) {
+            if (blocks.get(i) != null){
+                blocks.get(i).render(g);
+            }
+        }
+
+        for (int i = 0; i < players.size(); i++) {
+            if(players.get(i) != null) {
+                players.get(i).render(g);
+            }
+        }
+
+        Player winner;
+        if (winnerNumber == thisPlayer.getPlayerNumber()) {
+            winner = thisPlayer;
+        } else {
+            winner = otherPlayer;
+        }
+
+        Graphics2D g2D = (Graphics2D) bs.getDrawGraphics();
+
+        g2D.setColor(Color.BLACK);
+        Font font = new Font("Arial", Font.BOLD, 25);
+        g2D.setFont(font);
+        FontMetrics stringSize = g2D.getFontMetrics(font);
+
+        g2D.drawString("The winner is " + winner.getPlayerName(),
+                WIDTH / 2 - (stringSize.stringWidth("The winner is ")), HEIGHT / 10);
+        g2D.drawString("Scores:" + winner.getPlayerName(), WIDTH / 2 - (stringSize.stringWidth("Scores:")),
+                HEIGHT / 5);
+        g2D.drawString("The winner is " + winner.getPlayerName(),
+                WIDTH / 2 - (stringSize.stringWidth("The winner is ")), 3 * HEIGHT / 10);
+        g2D.drawString(
+                "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
+                WIDTH / 2 - (stringSize.stringWidth(
+                        "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of")),
+                2 * HEIGHT / 5);
+        g2D.drawString(
+                "                                           Shot         Hit    Distance    Power-ups",
+                WIDTH / 2 - (stringSize.stringWidth(
+                        "                                           Shot         Hit    Distance    Power-ups")), HEIGHT / 2);
+
+        for (int i = 0; i < players.size(); i++) {
+            //Save data to send to client
+            Player player = players.get(i);
+
+            //Determine format
+            String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
+                    player.getKillCount(),
+                    player.getDeathCount(),
+                    player.getKdr(),
+                    player.getBulletCount(),
+                    player.getBulletHitCount(),
+                    player.getWalkingDistance(),
+                    "???");
+
+            if (i == 0) {
+                g2D.drawString(format,
+                        WIDTH / 2 - (stringSize.stringWidth(format)), 3 * HEIGHT / 5);
+            } else {
+                g2D.drawString(format,
+                        WIDTH / 2 - (stringSize.stringWidth(format)), 7 * HEIGHT / 10);
+            }
+        }
+
+        //////////////////////////////////////
+        g.dispose();
+        g2D.dispose();
         bs.show();
     }
 
