@@ -50,7 +50,8 @@ public class OutputConnection implements Runnable {
                             Controller.thisPlayer.getAngle(),
                             serverHealths,
                             Controller.thisPlayer.isWalking(),
-                            Controller.thisPlayer.getWeaponSerial()
+                            Controller.thisPlayer.getWeaponSerial(),
+                            new boolean[] {Controller.thisPlayer.isInvincible(), Controller.otherPlayer.isInvincible() }
                     ));
 
                     sendPacket(new ServerBulletPacket(Controller.movingAmmo.toArray(new Bullet[0])));

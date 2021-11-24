@@ -317,7 +317,11 @@ public class AIPlayer extends OtherPlayer {
         Graphics2D g2d = (Graphics2D) g;
 
         // Draws the rotated image
-        g2d.drawImage(currentImage.getImage(), affTra, World.controller);
+        if(skipFrame) {
+            skipFrame = false;
+        } else {
+            g2d.drawImage(currentImage.getImage(), affTra, World.controller);
+        }
 
         if (weaponSerial == -1 || weaponTextures.get(weaponSerial) == null) return;
         g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);

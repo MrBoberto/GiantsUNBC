@@ -88,6 +88,8 @@ public class ClientController extends Controller{
                 otherPlayer.setHealth(packet.getHealth()[0]);
                 thisPlayer.setHealth(packet.getHealth()[1]);
                 otherPlayer.setWeaponSerial(packet.getWeaponSerial());
+                otherPlayer.setInvincible(packet.isInvincible()[0]);
+                thisPlayer.setInvincible(packet.isInvincible()[1]);
             }
         } else if(object instanceof ServerBulletPacket packet){
 

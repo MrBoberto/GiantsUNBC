@@ -96,6 +96,10 @@ public abstract class Player extends GameObject {
     //Invincibility
     protected int invincibilityTimer = 0;
     public static final int RESPAWN_INVINCIBILITY_TIME = 180;
+    protected int invincibilityGraphicTimer = 0;
+    public static final int INVINCIBILITY_GRAPHIC_TIME = 15;
+    protected boolean skipFrame = false;
+    protected boolean isInvincible = false;
 
     //Animation timers
     protected int animationTimer = 0;
@@ -366,6 +370,16 @@ public abstract class Player extends GameObject {
                 Controller.GRID_SIZE / 2,
                 Controller.GRID_SIZE* 7/8);
         g2.rotate(-Math.PI * 5/4 , x,y);
+
+        if(isInvincible()) {
+            invincibilityGraphicTimer ++;
+            if(invincibilityGraphicTimer > INVINCIBILITY_GRAPHIC_TIME){
+                skipFrame = true;
+                if(invincibilityGraphicTimer > 2*INVINCIBILITY_GRAPHIC_TIME) {
+                    invincibilityGraphicTimer = 0;
+                }
+            }
+        }
     }
 
     @Override
@@ -461,7 +475,15 @@ public abstract class Player extends GameObject {
     }
 
     public boolean isInvincible(){
-        return invincibilityTimer > 0;
+        if(World.controller instanceof ServerController) {
+            return invincibilityTimer > 0;
+        } else {
+            return isInvincible;
+        }
+    }
+
+    public void setInvincible(boolean invincible) {
+        isInvincible = invincible;
     }
 
     public boolean isTimeForNextFrame(){
