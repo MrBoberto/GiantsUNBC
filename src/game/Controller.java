@@ -208,17 +208,11 @@ public abstract class Controller extends Canvas implements Runnable {
 
         g.drawImage(background,0,0,WIDTH,HEIGHT,this);
 
-        //Render block shadows
-        for (int i = 0; i < blocks.size(); i++) {
-            if (blocks.get(i) != null){
-                blocks.get(i).renderShadow(g);
+        //Render eye candy
+        for (int i = 0; i < eyeCandy.size(); i++) {
+            if(eyeCandy.get(i) != null){
+                eyeCandy.get(i).render(g);
             }
-        }
-
-
-        for (int i = 0; i < movingAmmo.size(); i++) {
-            if(movingAmmo.get(i) != null)
-                movingAmmo.get(i).render(g);
         }
 
         for (int i = 0; i < blocks.size(); i++) {
@@ -226,6 +220,13 @@ public abstract class Controller extends Canvas implements Runnable {
                 blocks.get(i).render(g);
             }
         }
+
+        for (int i = 0; i < movingAmmo.size(); i++) {
+            if(movingAmmo.get(i) != null)
+                movingAmmo.get(i).render(g);
+        }
+
+
 
         for (int i = 0; i < players.size(); i++) {
             if(players.get(i) != null) {

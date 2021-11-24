@@ -257,6 +257,5 @@ public class ServerController extends Controller {
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
-        stop();
     }
 }
