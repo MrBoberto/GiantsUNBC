@@ -5,6 +5,7 @@ import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
+import utilities.BufferedImageLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,16 +44,7 @@ public class ClientController extends Controller{
         }
         try {
             System.out.println("waiting for connection...");
-
-
-
-            //socket = new Socket("142.207.59.6", Controller.PORT);
-            //socket = new Socket("142.207.59.140", Controller.PORT);
-            String ipAddress = JOptionPane.showInputDialog ("Please enter the server's ip address:");
-            /*Scanner inputReader = new Scanner(System.in);
-            System.out.println("Please enter ip address: ");
-            String ipAddress = inputReader.nextLine(); //get file name
-            System.out.println("You entered" + ipAddress + ".");*/
+            String ipAddress = MainMenu.ipaddress;
 
             socket = new Socket(ipAddress, Controller.PORT);
             System.out.println("connection accepted");
@@ -75,6 +67,13 @@ public class ClientController extends Controller{
         if(object instanceof StartPacket packet){
 
             otherPlayer.setPlayerName(packet.getPlayerName());
+            thisPlayer.setRespawnPointX(packet.getX());
+            thisPlayer.setRespawnPointY(packet.getY());
+            thisPlayer.setX(packet.getX());
+            thisPlayer.setY(packet.getY());
+            //Loading level
+            level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level"+ packet.getMapSelected() +".png");
+            loadLevel(level);
 
 
         } else if(object instanceof ServerUpdatePacket packet){

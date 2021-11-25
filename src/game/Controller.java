@@ -62,9 +62,7 @@ public abstract class Controller extends Canvas implements Runnable {
         //Load background
         background = BufferedImageLoader.loadImage("/resources/Textures/BG/wood_background.png");
 
-        //Loading level
-        level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level1.png");
-        loadLevel(level);
+
     }
 
     public void start(){
@@ -170,7 +168,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public void render(){
         BufferStrategy bs = this.getBufferStrategy();
         if(bs == null){
-            this.createBufferStrategy(3);
+                this.createBufferStrategy(3);
             return;
         }
 
@@ -314,7 +312,7 @@ public abstract class Controller extends Canvas implements Runnable {
     }
 
     //Loading the level
-    private void loadLevel(BufferedImage image){
+    void loadLevel(BufferedImage image){
         int w = image.getWidth();
         int h = image.getHeight();
 
