@@ -166,34 +166,39 @@ public class MainPlayer extends Player {
             Block block = Controller.blocks.get(i);
 
             if(getBounds() != null){
-                int offset = 3;
+                int offset = Controller.GRID_SIZE / 4;
+                int playerThickness = 8;
+                int boundThickness = 1;
                 //Check upper bound
                 if(block.getBounds().intersects(new Rectangle(
                         (int) x - currentImage.getImage().getWidth() / 4 + offset,
-                        (int) y - currentImage.getImage().getHeight() / 4 - offset,
-                        currentImage.getImage().getWidth() / 2 - offset,
-                        1))){
+                        (int) y - currentImage.getImage().getHeight() / 4 + playerThickness,
+                        currentImage.getImage().getWidth() / 2 - 2*offset,
+                        boundThickness))){
                     upStop = true;
                 }
+                //Check lower bound
                 if((new Rectangle(
                         (int) x - currentImage.getImage().getWidth() / 4 + offset,
-                        (int) y + currentImage.getImage().getHeight() / 4 + offset,
-                        currentImage.getImage().getWidth() / 2 - offset,
-                        1)).intersects(block.getBounds())){
+                        (int) y + currentImage.getImage().getHeight() / 4 - boundThickness - playerThickness,
+                        currentImage.getImage().getWidth() / 2 - 2*offset,
+                        boundThickness)).intersects(block.getBounds())){
                     downStop = true;
                 }
+                //Check left bound
                 if((new Rectangle(
-                        (int) x - currentImage.getImage().getWidth() / 4 - offset,
+                        (int) x - currentImage.getImage().getWidth() / 4 + playerThickness,
                         (int) y - currentImage.getImage().getHeight() / 4 + offset,
-                        1,
-                        currentImage.getImage().getHeight() / 2- offset)).intersects(block.getBounds())){
+                        boundThickness,
+                        currentImage.getImage().getHeight() / 2- 2*offset)).intersects(block.getBounds())){
                     leftStop = true;
                 }
+                //Check right bound
                 if((new Rectangle(
-                        (int) x + currentImage.getImage().getWidth() / 4 + offset,
+                        (int) x + currentImage.getImage().getWidth() / 4 - boundThickness - playerThickness,
                         (int) y - currentImage.getImage().getHeight() / 4 + offset,
-                        1,
-                        currentImage.getImage().getHeight() / 2 - offset)).intersects(block.getBounds())){
+                        boundThickness,
+                        currentImage.getImage().getHeight() / 2 - 2*offset)).intersects(block.getBounds())){
                     rightStop = true;
                 }
             }
@@ -275,8 +280,9 @@ public class MainPlayer extends Player {
     public void render(Graphics g) {
         super.render(g);
 
-
         Graphics2D g2d = (Graphics2D) g;
+
+
 
         if (selectedWeapon == 0) {
             // If primary is selected, this is primary slot

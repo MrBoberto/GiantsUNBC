@@ -63,7 +63,7 @@ public abstract class Controller extends Canvas implements Runnable {
         background = BufferedImageLoader.loadImage("/resources/Textures/BG/wood_background.png");
 
         //Loading level
-        level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level2.png");
+        level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level1.png");
         loadLevel(level);
     }
 

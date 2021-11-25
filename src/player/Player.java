@@ -149,7 +149,7 @@ public abstract class Player extends GameObject {
         this.killCount++;
         // kdr stays at -1 as long as there are no deaths so that it is easy to identify
         if (deathCount != 0) {
-            kdr = killCount / deathCount;
+            kdr = (float)killCount / (float)deathCount;
         } else {
             kdr = -1;
         }
