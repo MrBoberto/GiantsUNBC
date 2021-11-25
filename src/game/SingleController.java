@@ -5,6 +5,7 @@ import player.AIPlayer;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
+import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -18,6 +19,10 @@ public class SingleController extends Controller {
     public SingleController() {
         super();
         new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
+
+        //Loading level
+        level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level"+ MainMenu.mapSelected +".png");
+        loadLevel(level);
 
         this.addKeyListener(new KeyInput());
         this.addMouseListener(new MouseInput());

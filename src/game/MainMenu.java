@@ -17,7 +17,7 @@ public class MainMenu {
     public static String playerName = "";
     BufferedImage backgroundImage;
     public static String ipaddress;
-    public static int mapSelected = 0;
+    public static int mapSelected = 1;
     private static int SERVER = 0, SINGLEPLAYER = 1;
 
     public MainMenu() {
