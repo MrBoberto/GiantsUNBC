@@ -23,7 +23,6 @@ public class GameWindow {
         }
 
 
-
         frame.add(controller);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

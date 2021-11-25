@@ -488,4 +488,20 @@ public abstract class Player extends GameObject {
     public void resetAnimationTimer(){
         animationTimer = 0;
     }
+
+    public double getRespawnPointX() {
+        return respawnPointX;
+    }
+
+    public double getRespawnPointY() {
+        return respawnPointY;
+    }
+
+    public void setRespawnPointX(double respawnPointX) {
+        this.respawnPointX = respawnPointX;
+    }
+
+    public void setRespawnPointY(double respawnPointY) {
+        this.respawnPointY = respawnPointY;
+    }
 }

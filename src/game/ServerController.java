@@ -7,11 +7,13 @@ import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
+import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 import weapons.aoe.Explosion;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
@@ -28,9 +30,12 @@ public class ServerController extends Controller {
         super();
         clientWeaponAudio = new SFXPlayer();
         new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
-
         this.addKeyListener(new KeyInput());
         this.addMouseListener(new MouseInput());
+
+        //Loading level
+        level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level" + MainMenu.mapSelected +".png");
+        loadLevel(level);
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
@@ -79,7 +84,7 @@ public class ServerController extends Controller {
 
         } else if (object instanceof StartRequest packet) {
 
-            outputConnection.sendPacket(new StartPacket(10, 10, 0, thisPlayer.getPlayerName()));
+            outputConnection.sendPacket(new StartPacket(otherPlayer.getRespawnPointX(), otherPlayer.getRespawnPointY(), 0, thisPlayer.getPlayerName(), MainMenu.mapSelected));
             otherPlayer.setPlayerName(packet.getClientName());
             System.out.println("Start request received and resent.");
         } else if (object instanceof ClientBulletPacket packet) {

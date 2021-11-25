@@ -9,9 +9,8 @@ public final class World {
     public static Controller controller;
     private static SecureRandom sRandom = new SecureRandom();
 
-    public World()
+    public World(int choice)
     {
-       int choice = Integer.parseInt(JOptionPane.showInputDialog("1 for server | 2 for client | 3 for singleplayer"));
 
         if(choice==1){
             controller = new ServerController();
