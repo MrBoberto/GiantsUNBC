@@ -26,6 +26,7 @@ public class MouseInput extends MouseAdapter {
             if (Controller.thisPlayer.getSelectedWeapon() == Player.PRIMARY_WEAPON
                     && Controller.thisPlayer.getWeapons().getPrimary().getCurrentDelay() == 0)
             {
+                System.out.println(Controller.thisPlayer.getWeapons().getPrimary().toString() + " is firing.");
                 Controller.thisPlayer.getWeapons().getPrimary().shoot(e.getX(), e.getY());
                 //Controller.thisPlayer.getWeapons().getPrimary().playAudio();
 

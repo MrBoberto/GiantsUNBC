@@ -4,10 +4,7 @@ import game.MainMenu;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
-import weapons.guns.AssaultRifle;
-import weapons.guns.Pistol;
-import weapons.guns.Shotgun;
-import weapons.guns.SniperRifle;
+import weapons.guns.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -118,6 +115,7 @@ public abstract class Player extends GameObject {
 
         Controller.players.add(this);
 
+        weapons.add(new RocketLauncher(this));
         weapons.add(new Shotgun(this));
         weapons.add(new AssaultRifle(this));
         weapons.add(new Pistol(this));
@@ -188,7 +186,7 @@ public abstract class Player extends GameObject {
             // Don't continue jump animation even if in midair
             jumpTimer = 0;
             dashTimer--;
-        } else if (velY != 0 && (jumpTimer > 0 || lastAction == 5 || lastAction == -5) && jumping != null) {
+        } else if (getVelY() != 0 && (jumpTimer > 0 || lastAction == 5 || lastAction == -5) && jumping != null) {
             if (jumpTimer == jumping.getLength()) {
                 currentImage = jumping.getHead();
                 jumpTimer--;
@@ -320,7 +318,7 @@ public abstract class Player extends GameObject {
 //        System.out.println(jumping.toString());
         imgLocStr.clear();
 
-        for (int i = 0; i <= 3; i++) {
+        for (int i = 0; i <= 4; i++) {
             imgLocStr.add("weapon (" + i + ").png");
         }
         weaponTextures = new ArrayList<>();

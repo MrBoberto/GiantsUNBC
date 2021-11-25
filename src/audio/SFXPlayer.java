@@ -18,8 +18,10 @@ public class SFXPlayer {
             fileLocation = "/resources/SFX/Sniper Rifle.wav";
         } else if (fileInt == 2) {
             fileLocation = "/resources/SFX/Pistol.wav";
-        } else {
+        } else if (fileInt == 3) {
             fileLocation = "/resources/SFX/Assault Rifle.wav";
+        } else {
+            fileLocation = "/resources/SFX/Pistol.wav";
         }
 
         URL audioUrl = this.getClass().getResource(fileLocation);

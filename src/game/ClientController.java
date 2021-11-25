@@ -5,6 +5,7 @@ import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
+import weapons.aoe.Explosion;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,6 +95,10 @@ public class ClientController extends Controller{
         } else if(object instanceof ServerBulletPacket packet){
 
             movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
+
+        } else if(object instanceof ServerExplosionPacket packet){
+
+            explosions.add(new Explosion(packet.getX(), packet.getY(), packet.getPlayerNumber()));
 
         } else if (object instanceof ServerSFXPacket packet) {
 

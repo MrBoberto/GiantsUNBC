@@ -7,6 +7,7 @@ import player.OtherPlayer;
 import player.Player;
 import utilities.BufferedImageLoader;
 import weapons.ammo.Bullet;
+import weapons.aoe.Explosion;
 import weapons.guns.AssaultRifle;
 
 import java.awt.*;
@@ -40,6 +41,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static List<Player> players = Collections.synchronizedList(new ArrayList<>());
     public static List<Block> blocks = Collections.synchronizedList(new ArrayList<>());
     public static List<GameObject> eyeCandy = Collections.synchronizedList(new ArrayList<>());
+    public static List<Explosion> explosions = Collections.synchronizedList(new ArrayList<>());
     public static MainPlayer thisPlayer;
     public static OtherPlayer otherPlayer;
 
@@ -61,6 +63,8 @@ public abstract class Controller extends Canvas implements Runnable {
 
         //Load background
         background = BufferedImageLoader.loadImage("/resources/Textures/BG/wood_background.png");
+
+        Explosion.loadImageStrips();
 
         //Loading level
         level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level1.png");
@@ -143,6 +147,11 @@ public abstract class Controller extends Canvas implements Runnable {
                 movingAmmo.get(i).tick();
         }
 
+        for (int i = 0; i < explosions.size(); i++) {
+            if(explosions.get(i) != null)
+                explosions.get(i).tick();
+        }
+
         if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 0 && thisPlayer.getWeaponSerial() == 003
                 && thisPlayer.getWeapons().getPrimary().getCurrentDelay() == 0) {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
@@ -199,7 +208,10 @@ public abstract class Controller extends Canvas implements Runnable {
                 movingAmmo.get(i).render(g);
         }
 
-
+        for (int i = 0; i < explosions.size(); i++) {
+            if(explosions.get(i) != null)
+                explosions.get(i).render(g);
+        }
 
         for (int i = 0; i < players.size(); i++) {
             if(players.get(i) != null) {
