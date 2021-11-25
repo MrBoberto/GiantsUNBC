@@ -1,58 +1,43 @@
 package game;
 
-import javax.imageio.ImageIO;
+import utilities.BufferedImageLoader;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Objects;
 
 public class MainMenu {
 
-    public static JFrame wow;
-    Container con;
-    JPanel titleNamePanel;
-    JLabel titleNameLabel;
-    JPanel startButtonPanel;
-    JPanel backGround ;
+    public static JFrame mainMenu;
     public static String playerName = "";
-    BufferedImage backGroundMain ;
-
-
-
-    Font titleFont = new Font("Times New Roman",Font.PLAIN,90);
-    Font button = new Font("Times New Roman",Font.PLAIN,30);
-    JButton startButton, quit, name;
-
-
+    BufferedImage backgroundImage;
 
     public MainMenu() {
-        wow = new JFrame("Doing your Mom");
-        //wow.setSize(800,600);
-        int width = wow.getWidth();
-        int length = wow.getHeight();
-        Dimension size = Toolkit. getDefaultToolkit(). getScreenSize();
-        wow.setSize(size);
+        mainMenu = new JFrame("Doing your Mom");
 
-        wow.setMinimumSize(new Dimension(800, 800));
+        Dimension size = new Dimension(Controller.WIDTH, Controller.HEIGHT);
+        mainMenu.setSize(size);
+        mainMenu.setPreferredSize(size);
+        mainMenu.setMaximumSize(size);
+        mainMenu.setMinimumSize(size);
+        mainMenu.setResizable(false);
+        mainMenu.setLocationRelativeTo(null);
 
-        wow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        wow.getContentPane().setBackground(Color.BLUE);
-        wow.setLayout(null);
+        mainMenu.getContentPane().setBackground(Color.BLUE);
+        GridBagConstraints c = new GridBagConstraints();
+
+
         // to make window appear on the screen
         // max size was incorrect on my multi-display monitor so I changed it - Noah
-        con  = wow.getContentPane();
-        System.out.println("Size" +wow.getWidth()+"width"+ wow.getHeight());
-        try{
-            backGroundMain = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/imageRes/textBack.png")));
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        System.out.println("Size" + mainMenu.getWidth()+"width"+ mainMenu.getHeight());
 
-        backGround = new JPanel(){
+        backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
+
+        JPanel mainMenuPanel = new JPanel(new GridBagLayout()){
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -62,115 +47,151 @@ public class MainMenu {
 
             }
         };
-        backGround.setBounds(0,0,wow.getWidth(),wow.getHeight());
-       backGround.setBackground(Color.BLACK);
 
-        System.out.println("Size of the frame is " +size);
+        mainMenuPanel.setMaximumSize(new Dimension(Controller.WIDTH, Controller.HEIGHT / 6));
+        c.anchor = GridBagConstraints.PAGE_END;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        mainMenu.add(mainMenuPanel);
+        c.weighty = 0.8;
+        mainMenuPanel.add(createNewVoidPanel(), c);
 
+        JPanel bottomPanel = new JPanel(new GridBagLayout());
+        bottomPanel.setBackground(new Color(0,0,0,0));
+        c.weighty = 0.2;
+        c.weightx = 1.0;
+        c.insets = new Insets(10,10,10,10);
+        mainMenuPanel.add(bottomPanel, c);
 
-        // Title is now included in background
-        /*
-        titleNamePanel = new JPanel(){
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-
-            }
-        };
-        titleNamePanel.setBounds(480,100,600,150);
-        titleNamePanel.setBackground(Color.black);
-
-        titleNameLabel = new JLabel("THE BOYZ");
-        titleNameLabel.setForeground(Color.RED);
-        titleNameLabel.setFont(titleFont);
-
-         */
-
-
-
-        startButtonPanel = new JPanel();
-        startButtonPanel.setBackground(Color.BLACK);
-        startButtonPanel.setBounds(700,400,100,200);
-
-        startButton = new JButton("Start");
-        startButton.setBackground(Color.black);
-        startButton.setForeground(Color.YELLOW);
-        startButton.setFont(button);
-        startButton.setBounds(300,400,100,400);
-
-        startButton.addActionListener(e -> {
+        JButton PLAYButton = new JButton();
+        PLAYButton.setText("PLAY");
+        c.weightx = 0.2;
+        c.gridx = 0;
+        c.gridy = 0;
+        PLAYButton.addActionListener(e -> {
 
             System.out.println("The game has begun");
-            wow.dispose();
+            mainMenu.dispose();
 
             new World();
         });
+        bottomPanel.add(PLAYButton, c);
+
+        JPanel settingsPanel = new JPanel(new GridLayout(2, 1));
+        settingsPanel.setBackground(new Color(0,0,0,0));
+
+        settingsPanel.add(createNewVoidPanel());
+        JButton settingsButton = new JButton("Settings");
+        settingsPanel.add(settingsButton);
 
 
-        quit = new JButton("Quit");
-        quit.setBackground(Color.black);
-        quit.setForeground(Color.YELLOW);
-        quit.setFont(button);
-        quit.setBounds(300,400,100,400);
 
-        quit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("The game has ended");
-                JPanel quitPanel = new JPanel();
-                quitPanel.setBounds(300,300,1000,1000);
-                //titleNamePanel.setBounds(100,100,600,150);
-                quitPanel.setBackground(Color.black);
-                JLabel quitLabel = new JLabel("Thanks For Playing" );
-                quitLabel.setFont(titleFont);
-                quitLabel.setForeground(Color.RED);
-                quitPanel.add(quitLabel);
-                con.add(quitPanel);
-                wow.add(titleNamePanel);
-                SwingUtilities.updateComponentTreeUI(wow);
-            }
-        });
+        for (int i = 1; i <= 5; i++) {
+            c.gridx = i;
+            bottomPanel.add(createNewVoidPanel(), c);
 
-        name = new JButton("Name");
-        name.setBackground(Color.black);
-        name.setForeground(Color.YELLOW);
-        name.setFont(button);
-        name.setBounds(300,400,100,300);
+        }
 
-        name.addActionListener(e -> {
-            System.out.println(" Please enter your name");
-            boolean isValidPlayerName = false;
-            while (!isValidPlayerName && playerName != null) {
-                playerName = (JOptionPane.showInputDialog("Name for server 1 | Name for server 2"));
-                if (!playerName.equals("")) {
-                    isValidPlayerName = true;
-                    System.out.println("playerName " +playerName);
+        c.gridx = 5;
+        bottomPanel.add(settingsPanel, c);
+
+        JPanel quitPanel = new JPanel(new GridLayout(2, 1));
+        quitPanel.setBackground(new Color(0,0,0,0));
+        quitPanel.add(createNewVoidPanel());
+        JButton quit = new JButton("Quit");
+        quit.addActionListener(e -> mainMenu.dispose());
+        quitPanel.add(quit);
+
+        c.gridx = 7;
+        bottomPanel.add(quitPanel,c);
+
+        for (Component component : bottomPanel.getComponents()) {
+            if (component instanceof JButton) {
+                component.setFont(new Font("Arial", Font.BOLD, 80));
+                component.setForeground(Color.YELLOW);
+                ((JButton) component).setOpaque(false);
+                ((JButton) component).setBorderPainted(false);
+                ((JButton) component).setFocusPainted(false);
+            } else if (component instanceof JPanel){
+                for (Component subComponent : ((JPanel) component).getComponents()){
+                    if (subComponent instanceof JButton) {
+                        subComponent.setFont(new Font("Bauhaus 93", Font.PLAIN, 20));
+                        subComponent.setForeground(Color.YELLOW);
+                        ((JButton) subComponent).setOpaque(false);
+                        ((JButton) subComponent).setBorderPainted(false);
+                        ((JButton) subComponent).setFocusPainted(false);
+                    }
                 }
             }
-            if (playerName == null) {
-                playerName = "";
-            }
-        });
+        }
 
-
-        //backGround.add(titleNamePanel);
-        //titleNamePanel.add(titleNameLabel);
-        startButtonPanel.add(startButton);
-        startButtonPanel.add(name);
-        startButtonPanel.add(quit);
-        con.add(startButtonPanel);
-        //con.add(titleNamePanel);
-        con.add(backGround);
-
-        wow.setResizable(false);
-        wow.setVisible(true);
+        mainMenu.setVisible(true);
 
     }
     public void draw(Graphics2D g2){
-        g2.drawImage(backGroundMain,0,0,wow.getWidth(),wow.getHeight(),null);
+        g2.drawImage(backgroundImage,0,0, mainMenu.getWidth(), mainMenu.getHeight(),null);
     }
 
     public  String getPlayerName() {
         return playerName;
     }
+
+    private JPanel createNewVoidPanel(){
+        JPanel voidPanel = new JPanel();
+        voidPanel.setBackground(new Color(0,0,0,0));
+        return voidPanel;
+    }
+
+    static class MainMenuButton extends JComponent implements MouseListener {
+        public MainMenuButton(){
+            super();
+            enableInputMethods(true);
+            addMouseListener(this);
+        }
+
+        @Override
+        public Dimension getPreferredSize(){
+            return new Dimension(super.getPreferredSize());
+        }
+
+        @Override
+        public Dimension getMinimumSize(){
+            return new Dimension(super.getMinimumSize());
+        }
+
+        @Override
+        public Dimension getMaximumSize(){
+            return new Dimension(super.getMaximumSize());
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+    }
 }
+
