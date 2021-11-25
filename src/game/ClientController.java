@@ -65,15 +65,17 @@ public class ClientController extends Controller{
     @Override
     public void packetReceived(Object object) {
         if(object instanceof StartPacket packet){
+            //Loading level
+            level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level"+ packet.getMapSelected() +".png");
+            loadLevel(level);
+
 
             otherPlayer.setPlayerName(packet.getPlayerName());
             thisPlayer.setRespawnPointX(packet.getX());
             thisPlayer.setRespawnPointY(packet.getY());
             thisPlayer.setX(packet.getX());
             thisPlayer.setY(packet.getY());
-            //Loading level
-            level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level"+ packet.getMapSelected() +".png");
-            loadLevel(level);
+
 
 
         } else if(object instanceof ServerUpdatePacket packet){
