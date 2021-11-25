@@ -129,7 +129,13 @@ public class MainMenu {
         MainMenuButton singleplayerButton = new MainMenuButton(e -> {
 
             mainMenuPanel.remove(buttonsPanel);
-            mainMenuPanel.add(mapSelection(mainMenuPanel, SINGLEPLAYER));
+            c.anchor = GridBagConstraints.CENTER;
+            c.fill = GridBagConstraints.BOTH;
+            c.gridy = 0;
+            c.gridx = 0;
+            c.weighty = 1.0;
+            c.weightx = 1.0;
+            mainMenuPanel.add(mapSelection(mainMenuPanel, SINGLEPLAYER), c);
             mainMenuPanel.validate();
             mainMenuPanel.repaint();
 
@@ -157,41 +163,73 @@ public class MainMenu {
     private JPanel mapSelection(JPanel mainMenuPanel, int gameType) {
 
         JPanel mapSelectionPanel = new JPanel(new GridBagLayout());
+        mapSelectionPanel.setMinimumSize(new Dimension(Controller.WIDTH,Controller.HEIGHT));
+        mapSelectionPanel.setOpaque(false);
         ArrayList<BufferedImage> maps = new ArrayList<>();
         for(File file: (Objects.requireNonNull((new File("src/resources/mapLayouts")).listFiles((dir, name) -> name.endsWith(".png"))))){
             maps.add(BufferedImageLoader.loadImage("/resources/mapLayouts/"+ file.getName()));
         }
 
         GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
         c.weightx = 1.0;
         c.insets = new Insets(5,5,10,10);
-        c.weighty = 1.0/(maps.size() + 6);
+        c.weighty = 1.0/9.0;
 
-        for (int i = 0; i <= 6; i++) {
+        c.gridx = 0;
+
+        for (int i = 0; i <= 5; i++) {
             c.gridy = i;
             mapSelectionPanel.add(createNewVoidPanel(), c);
         }
+        JPanel instructions = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                Font font = new Font("Bauhaus 93", Font.PLAIN, 30);
+                FontMetrics fontMetrics = g2.getFontMetrics(font);
+                g2.setColor(Color.WHITE);
+                g2.setFont(font);
+                String text = "Select a map...     ";
+                g2.drawString(text, Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,20);
+            }
+        };
+        c.gridy = 6;
+        c.ipady = 15;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        mapSelectionPanel.add(instructions, c);
 
-        c.gridx = 7;
-        JPanel mapsPanel = new JPanel(new GridLayout(2,maps.size()/2));
+
+        JPanel mapsPanel = new JPanel(new GridLayout(2, maps.size()/2,10,10));
+        mapsPanel.setOpaque(false);
+
         for (int i = 0, mapsSize = maps.size(); i < mapsSize; i++) {
             BufferedImage map = maps.get(i);
+            int finalI1 = i;
             JButton button = new JButton(){
                 @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     Graphics2D g2 = (Graphics2D) g;
-                    g2.drawImage(map,0,0,map.getWidth(),map.getHeight(),null);
+                    g2.drawImage(map,0,0,map.getWidth() * 5, map.getHeight() * 5,null);
+                    if(mapSelected == finalI1 +1){
+                        g2.setColor(Color.RED);
+                        g2.setStroke(new BasicStroke(3));
+                        g2.drawRect(0,0,map.getWidth() * 5, map.getHeight() * 5);
+                        mapsPanel.repaint();
+                    }
                 }
             };
             int finalI = i+1;
-            button.addActionListener(e -> {
-                mapSelected = finalI;
-            });
+            button.addActionListener(e -> mapSelected = finalI);
             button.setFocusPainted(false);
+            button.setPreferredSize(new Dimension(map.getWidth() * 5, map.getHeight() * 5));
+
             mapsPanel.add(button);
         }
+        c.gridy = 7;
+        c.ipady = 0;
+        c.fill = GridBagConstraints.CENTER;
         mapSelectionPanel.add(mapsPanel, c);
 
         MainMenuButton startButton = new MainMenuButton(e -> {
@@ -206,6 +244,8 @@ public class MainMenu {
 
         }, "Start");
         c.gridy = 8;
+        c.ipady = 0 ;
+        c.fill = GridBagConstraints.CENTER;
         mapSelectionPanel.add(startButton, c);
         MainMenuButton backButton = new MainMenuButton(e -> {
             mainMenuPanel.remove(mapSelectionPanel);
@@ -247,7 +287,13 @@ public class MainMenu {
         MainMenuButton serverButton = new MainMenuButton(e -> {
 
             mainMenuPanel.remove(multiplayerMenu);
-            mainMenuPanel.add(mapSelection(mainMenuPanel, SERVER));
+            c.anchor = GridBagConstraints.CENTER;
+            c.fill = GridBagConstraints.BOTH;
+            c.gridy = 0;
+            c.gridx = 0;
+            c.weighty = 1.0;
+            c.weightx = 1.0;
+            mainMenuPanel.add(mapSelection(mainMenuPanel, SERVER), c);
             mainMenuPanel.validate();
             mainMenuPanel.repaint();
 
