@@ -1,9 +1,12 @@
 package game;
 
 import audio.AudioPlayer;
+import audio.SFXPlayer;
 import utilities.BufferedImageLoader;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -11,6 +14,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import static com.sun.java.accessibility.util.SwingEventMonitor.addChangeListener;
 
 public class MainMenu {
 
@@ -21,6 +26,8 @@ public class MainMenu {
     public static int mapSelected = 1;
     private static int SERVER = 0, SINGLEPLAYER = 1;
     public static AudioPlayer soundtrack;
+    public static final int VOL_MAX = 100;
+    public static final int VOL_MIN = 0;
 
     public MainMenu() {
         mainMenu = new JFrame("Doing your Mom");
@@ -157,8 +164,16 @@ public class MainMenu {
         buttonsPanel.add(singleplayerButton, c);
 
         MainMenuButton settingsButton = new MainMenuButton(e -> {
-
-
+            mainMenuPanel.remove(buttonsPanel);
+            c.anchor = GridBagConstraints.CENTER;
+            c.fill = GridBagConstraints.BOTH;
+            c.gridy = 0;
+            c.gridx = 0;
+            c.weighty = 1.0;
+            c.weightx = 1.0;
+            mainMenuPanel.add(settingsMenu(mainMenuPanel), c);
+            mainMenuPanel.validate();
+            mainMenuPanel.repaint();
 
         }, "Settings");
         c.gridy = 9;
@@ -297,6 +312,130 @@ public class MainMenu {
         return mapSelectionPanel;
     }
 
+    private JPanel settingsMenu(JPanel mainMenuPanel) {
+        GridBagConstraints c = new GridBagConstraints();
+        JPanel settingsMenu = new JPanel(new GridBagLayout());
+        settingsMenu.setOpaque(false);
+        c.fill = GridBagConstraints.CENTER;
+        c.weightx = 1.0;
+        c.insets = new Insets(5,5,10,10);
+
+
+        c.weighty = 1.0/9.0;
+        c.gridx = 0;
+
+        for (int i = 0; i <= 6; i++) {
+            c.gridy = i;
+            settingsMenu.add(createNewVoidPanel(), c);
+        }
+
+
+        MainMenuButton videoButton = new MainMenuButton(e -> {
+
+            /*
+            mainMenuPanel.remove(settingsMenu);
+            c.anchor = GridBagConstraints.CENTER;
+            c.fill = GridBagConstraints.BOTH;
+            c.gridy = 0;
+            c.gridx = 0;
+            c.weighty = 1.0;
+            c.weightx = 1.0;
+            mainMenuPanel.add(mapSelection(mainMenuPanel, SERVER), c);
+            mainMenuPanel.validate();
+            mainMenuPanel.repaint();
+
+             */
+
+        }, "Video Settings");
+        c.gridy = 7;
+        settingsMenu.add(videoButton, c);
+
+        MainMenuButton audioButton = new MainMenuButton(e -> {
+
+            mainMenuPanel.remove(settingsMenu);
+            c.anchor = GridBagConstraints.CENTER;
+            c.fill = GridBagConstraints.BOTH;
+            c.gridy = 0;
+            c.gridx = 0;
+            c.weighty = 1.0;
+            c.weightx = 1.0;
+            mainMenuPanel.add(audioMenu(mainMenuPanel), c);
+            mainMenuPanel.validate();
+            mainMenuPanel.repaint();
+
+        }, "Audio Settings");
+        c.gridy = 8;
+        settingsMenu.add(audioButton, c);
+
+        MainMenuButton backButton = new MainMenuButton(f -> {
+            mainMenuPanel.remove(settingsMenu);
+
+            JPanel bottomPanel = buttonsPanel(mainMenuPanel);
+
+            c.fill = GridBagConstraints.CENTER;
+            c.weighty = 0.2;
+            c.weightx = 1.0;
+            c.insets = new Insets(5,5,10,10);
+            mainMenuPanel.add(bottomPanel, c);
+            mainMenuPanel.validate();
+            mainMenuPanel.repaint();
+        }, "Back");
+        c.gridy = 9;
+        settingsMenu.add(backButton ,c);
+
+        return settingsMenu;
+    }
+
+    private JPanel audioMenu(JPanel mainMenuPanel) {
+        GridBagConstraints c = new GridBagConstraints();
+        JPanel audioMenu = new JPanel(new GridBagLayout());
+        audioMenu.setOpaque(false);
+        c.fill = GridBagConstraints.CENTER;
+        c.weightx = 1.0;
+        c.insets = new Insets(5,5,10,10);
+
+
+        c.weighty = 1.0/9.0;
+        c.gridx = 0;
+
+        for (int i = 0; i <= 6; i++) {
+            c.gridy = i;
+            audioMenu.add(createNewVoidPanel(), c);
+        }
+
+        MainMenuSlider masterSlider = new MainMenuSlider("Master Volume", VOL_MIN, VOL_MAX, VOL_MAX);
+        c.gridy = 3;
+        audioMenu.add(masterSlider, c);
+        audioMenu.add(masterSlider.getJSlider(), c);
+
+        MainMenuSlider gameSlider = new MainMenuSlider("Game Volume", VOL_MIN, VOL_MAX, VOL_MAX);
+        c.gridy = 5;
+        audioMenu.add(gameSlider, c);
+        audioMenu.add(gameSlider.getJSlider(), c);
+
+        MainMenuSlider musicSlider = new MainMenuSlider("Music Volume", VOL_MIN, VOL_MAX, VOL_MAX);
+        c.gridy = 7;
+        audioMenu.add(musicSlider, c);
+        audioMenu.add(musicSlider.getJSlider(), c);
+
+        MainMenuButton backButton = new MainMenuButton(f -> {
+            mainMenuPanel.remove(audioMenu);
+            c.anchor = GridBagConstraints.CENTER;
+            c.fill = GridBagConstraints.BOTH;
+            c.gridy = 0;
+            c.gridx = 0;
+            c.weighty = 1.0;
+            c.weightx = 1.0;
+            mainMenuPanel.add(settingsMenu(mainMenuPanel), c);
+            mainMenuPanel.validate();
+            mainMenuPanel.repaint();
+        }, "Back");
+        c.gridy = 9;
+        audioMenu.add(backButton ,c);
+
+        return audioMenu;
+    }
+
     private JPanel multiplayerMenu(JPanel mainMenuPanel) {
         GridBagConstraints c = new GridBagConstraints();
         JPanel multiplayerMenu = new JPanel(new GridBagLayout());
@@ -417,7 +556,6 @@ public class MainMenu {
             return getPreferredSize();
         }
 
-
         @Override
         protected void paintComponent(Graphics g) {
 
@@ -479,6 +617,72 @@ public class MainMenu {
         public void addActionListener(ActionListener listener)
         {
             listeners.add(listener);
+        }
+    }
+
+    static class MainMenuSlider extends JComponent implements ChangeListener {
+        String text;
+        JSlider jSlider;
+        BufferedImage unselectedTexture;
+
+        public MainMenuSlider(String text, int min, int max, int init) {
+            super();
+            jSlider = new JSlider(min, max, init);
+
+            unselectedTexture = BufferedImageLoader.loadImage("/resources/GUI/main_menu/unselected_option.png");
+
+            enableInputMethods(true);
+            jSlider.addChangeListener(this);
+
+            setOpaque(false);
+            this.text = text;
+            setBackground(new Color(0,255,0,0));
+        }
+
+        public JSlider getJSlider() {
+            return jSlider;
+        }
+
+        @Override
+        public Dimension getPreferredSize(){
+            return new Dimension(unselectedTexture.getWidth() + 20,unselectedTexture.getHeight() + 20);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setFont(new Font("Bauhaus 93", Font.PLAIN, 30));
+            g2.drawImage(unselectedTexture,0,0,unselectedTexture.getWidth(),unselectedTexture.getHeight(),null);
+            g2.setColor(Color.GRAY);
+            g2.drawString(text,30,30);
+        }
+
+        @Override
+        public Dimension getMinimumSize(){
+            return getPreferredSize();
+        }
+
+        @Override
+        public Dimension getMaximumSize(){
+            return getPreferredSize();
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            switch (text) {
+                case "Master Volume":
+                    Main.setVolumeMaster(jSlider.getValue());
+                    AudioPlayer.setVolume();
+                    break;
+                case "Game Volume":
+                    Main.setVolumeSFX(jSlider.getValue());
+                    break;
+                case "Music Volume":
+                    Main.setVolumeMusic(jSlider.getValue());
+                    AudioPlayer.setVolume();
+                    break;
+            }
+
         }
     }
 }

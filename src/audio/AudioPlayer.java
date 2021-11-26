@@ -1,6 +1,8 @@
 package audio;
 // Java program to play an Audio
 // file using Clip Object
+import game.Main;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -12,14 +14,19 @@ public class AudioPlayer
 {
 
     // to store current position
-    Long currentFrame;
-    Clip clip;
+    static Long currentFrame;
+    static Clip clip;
 
     // current status of clip
-    String status;
+    static String status;
 
-    AudioInputStream audioInputStream;
+    static AudioInputStream audioInputStream;
     static String filePath;
+    protected static int volume = 100;
+    static FloatControl gainControl;
+    static double gain = 1;
+    protected static float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+
 
     // constructor to initialize streams and clip
     public AudioPlayer(String filePath)
@@ -39,6 +46,19 @@ public class AudioPlayer
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
+
+        gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        double gain = (double) Main.getVolumeMusic() / (double) 100;
+        dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+        gainControl.setValue(dB);
+    }
+
+    public static void setVolume() {
+        if (volume == Main.getVolumeMusic()) return;
+        gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        double gain = (double) Main.getVolumeMusic() / (double) 100;
+        dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+        gainControl.setValue(dB);
     }
 
     // Method to play the audio
@@ -70,7 +90,7 @@ public class AudioPlayer
     {
         if (status.equals("play"))
         {
-            System.out.println("Audio is already "+
+            System.out.println("Audio is already " +
                     "being played");
             return;
         }
@@ -126,4 +146,8 @@ public class AudioPlayer
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
+    @Override
+    public String toString() {
+        return status;
+    }
 }

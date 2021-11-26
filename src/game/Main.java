@@ -7,6 +7,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class Main {
+    private static int volumeMaster = 100;
+    private static int volumeMusic = 100;
+    private static int volumeSFX = 100;
+
     public static void startGame()  {
 
 
@@ -30,5 +34,29 @@ public class Main {
         }
 
         SwingUtilities.invokeLater(Main::startGame);
+    }
+
+    public static int getVolumeMaster() {
+        return volumeMaster;
+    }
+
+    public static void setVolumeMaster(int volumeMaster) {
+        Main.volumeMaster = volumeMaster;
+    }
+
+    public static int getVolumeMusic() {
+        return (int) volumeMusic * volumeMaster / 100;
+    }
+
+    public static void setVolumeMusic(int volumeMusic) {
+        Main.volumeMusic = volumeMusic;
+    }
+
+    public static int getVolumeSFX() {
+        return (int) volumeSFX * volumeMaster / 100;
+    }
+
+    public static void setVolumeSFX(int volumeSFX) {
+        Main.volumeSFX = volumeSFX;
     }
 }

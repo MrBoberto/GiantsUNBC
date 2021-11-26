@@ -1,5 +1,7 @@
 package audio;
 
+import game.Main;
+
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +10,10 @@ import java.net.URL;
 public class SFXPlayer {
     Clip clip;
     AudioInputStream audioInputStream;
+    protected static int volume = 100;
+    static FloatControl gainControl;
+    static double gain = 1;
+    protected static float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
 
     public void setFile(int fileInt) {
         String fileLocation;
@@ -37,6 +43,19 @@ public class SFXPlayer {
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
+
+        gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        double gain = (double) Main.getVolumeMusic() / (double) 100;
+        dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+        gainControl.setValue(dB);
+    }
+
+    public void setVolume(int volume) {
+        if (volume == Main.getVolumeMusic()) return;
+        gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        double gain = (double) Main.getVolumeMusic() / (double) 100;
+        dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+        gainControl.setValue(dB);
     }
 
     public void play() {
