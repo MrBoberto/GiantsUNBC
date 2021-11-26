@@ -261,7 +261,7 @@ public class MainMenu {
             }
             catch (Exception ex)
             {
-                System.out.println("Error with playing sound.");
+                System.out.println("Error with stopping sound.");
                 ex.printStackTrace();
 
             }
@@ -334,6 +334,15 @@ public class MainMenu {
 
         MainMenuButton clientButton = new MainMenuButton(e -> {
             ipaddress = JOptionPane.showInputDialog ("Please enter the server's ip address:");
+            try
+            {
+                soundtrack.stop();
+            }
+            catch (Exception ex) {
+                System.out.println("Error with stopping soundtrack.");
+                ex.printStackTrace();
+
+            }
             mainMenu.dispose();
 
             new World(2);
