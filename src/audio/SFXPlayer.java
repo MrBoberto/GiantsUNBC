@@ -51,7 +51,7 @@ public class SFXPlayer {
     }
 
     public void setVolume(int volume) {
-        if (volume == Main.getVolumeMusic()) return;
+        if (volume == Main.getVolumeSFX()) return;
         gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         double gain = (double) Main.getVolumeMusic() / (double) 100;
         dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
