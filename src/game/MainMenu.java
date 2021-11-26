@@ -1,5 +1,6 @@
 package game;
 
+import audio.AudioPlayer;
 import utilities.BufferedImageLoader;
 
 import javax.swing.*;
@@ -19,6 +20,7 @@ public class MainMenu {
     public static String ipaddress;
     public static int mapSelected = 1;
     private static int SERVER = 0, SINGLEPLAYER = 1;
+    public static AudioPlayer soundtrack;
 
     public MainMenu() {
         mainMenu = new JFrame("Doing your Mom");
@@ -92,9 +94,19 @@ public class MainMenu {
             mainMenuPanel.repaint();
         });
 
-
         mainMenu.setVisible(true);
 
+        try
+        {
+            soundtrack = new AudioPlayer("/resources/Music/The_Number_J.wav");
+            soundtrack.play();
+        }
+        catch (Exception ex)
+        {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+
+        }
     }
 
     private JPanel buttonsPanel(JPanel mainMenuPanel) {
@@ -153,6 +165,16 @@ public class MainMenu {
         buttonsPanel.add(settingsButton, c);
 
         MainMenuButton quitButton = new MainMenuButton(e -> {
+            try
+            {
+                soundtrack.stop();
+            }
+            catch (Exception ex)
+            {
+                System.out.println("Error with playing sound.");
+                ex.printStackTrace();
+
+            }
             mainMenu.dispose();
         }, "Quit");
         c.gridy = 10;
@@ -233,7 +255,16 @@ public class MainMenu {
         mapSelectionPanel.add(mapsPanel, c);
 
         MainMenuButton startButton = new MainMenuButton(e -> {
+            try
+            {
+                soundtrack.stop();
+            }
+            catch (Exception ex)
+            {
+                System.out.println("Error with playing sound.");
+                ex.printStackTrace();
 
+            }
             mainMenu.dispose();
             if(gameType == SERVER){
                 new World(1);
