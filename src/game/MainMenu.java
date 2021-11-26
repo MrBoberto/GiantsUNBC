@@ -4,6 +4,7 @@ import audio.AudioPlayer;
 import audio.SFXPlayer;
 import utilities.BufferedImageLoader;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -31,6 +32,14 @@ public class MainMenu {
 
     public MainMenu() {
         mainMenu = new JFrame("Doing your Mom");
+
+        Image img;
+        try {
+            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/icon/icon.png")));
+            mainMenu.setIconImage(img);
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
 
         Dimension size = new Dimension(Controller.WIDTH, Controller.HEIGHT);
         mainMenu.setSize(size);
@@ -504,7 +513,7 @@ public class MainMenu {
             mainMenuPanel.repaint();
         }, "Back");
         c.gridy = 9;
-        multiplayerMenu.add(backButton ,c);
+        multiplayerMenu.add(backButton, c);
 
         return multiplayerMenu;
     }

@@ -29,9 +29,6 @@ public class ServerController extends Controller {
     public ServerController() {
         super();
         clientWeaponAudio = new SFXPlayer();
-        new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
-        this.addKeyListener(new KeyInput());
-        this.addMouseListener(new MouseInput());
 
         //Loading level
         level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level" + MainMenu.mapSelected +".png");
@@ -352,6 +349,7 @@ public class ServerController extends Controller {
     }
 
     public void declareWinner(Player winner){
+        isWon = true;
         int winnerNumber;
         if(winner == thisPlayer){
             winnerNumber = Player.SERVER_PLAYER;

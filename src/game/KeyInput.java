@@ -7,7 +7,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class KeyInput extends KeyAdapter {
-    public KeyInput(){
+    protected Controller controller;
+
+    public KeyInput(Controller controller){
+        this.controller = controller;
         /* empty */
     }
 
@@ -17,7 +20,12 @@ public class KeyInput extends KeyAdapter {
             //GameObject tmp = Controller.players.get(i);
 
             //if(tmp != null){
-
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            if (controller.getGameWindow().canPause) {
+                controller.openPauseMenu();
+                controller.getGameWindow().setCanPause(false);
+            }
+        }
         if (e.getKeyCode() == KeyEvent.VK_W) {
             Controller.thisPlayer.setUp(true);
         }
@@ -78,6 +86,7 @@ public class KeyInput extends KeyAdapter {
             if(tmp != null){
 
                 switch (key){
+                    case KeyEvent.VK_ESCAPE -> controller.getGameWindow().setCanPause(true);
                     case KeyEvent.VK_W -> Controller.thisPlayer.setUp(false);
                     case KeyEvent.VK_A -> Controller.thisPlayer.setLeft(false);
                     case KeyEvent.VK_S -> Controller.thisPlayer.setDown(false);

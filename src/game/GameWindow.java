@@ -7,8 +7,12 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class GameWindow {
+    protected JFrame frame;
+    protected boolean canPause = true;
+
     public GameWindow(int width, int height, String windowName, Controller controller) {
-        JFrame frame = new JFrame(windowName);
+
+        frame = new JFrame(windowName);
 
         frame.setPreferredSize(new Dimension(width, height));
         frame.setMaximumSize(new Dimension(width, height));
@@ -28,5 +32,17 @@ public class GameWindow {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public boolean canPause() {
+        return canPause;
+    }
+
+    public void setCanPause(boolean canPause) {
+        this.canPause = canPause;
     }
 }

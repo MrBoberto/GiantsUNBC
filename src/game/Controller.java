@@ -10,6 +10,7 @@ import weapons.ammo.Bullet;
 import weapons.aoe.Explosion;
 import weapons.guns.AssaultRifle;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -26,14 +27,16 @@ public abstract class Controller extends Canvas implements Runnable {
 
     //Mouse controllers
     public static boolean mouseInside = false;
-    public static boolean isMouse1Held = false;
+    public static boolean isWon = false;
+    public boolean hasPauseMenu = false;
+    public PauseMenu pauseMenu;
 
     //Multiplayer
     protected InputConnection inputConnection;
     protected OutputConnection outputConnection;
 
     //Game loop
-    private boolean isRunning = false;
+    protected boolean isRunning = false;
     private Thread thread;
 
     //All GameObjects
@@ -44,6 +47,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static List<Explosion> explosions = Collections.synchronizedList(new ArrayList<>());
     public static MainPlayer thisPlayer;
     public static OtherPlayer otherPlayer;
+    public static GameWindow gameWindow;
 
     //Players spawn points
     public static int thisX = 0;
@@ -60,6 +64,9 @@ public abstract class Controller extends Canvas implements Runnable {
     public static final int GRID_SIZE = 58;
 
     protected Controller() {
+        gameWindow = new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
+        this.addKeyListener(new KeyInput(this));
+        this.addMouseListener(new MouseInput(this));
 
         //Load background
         background = BufferedImageLoader.loadImage("/resources/Textures/BG/wood_background.png");
@@ -69,6 +76,9 @@ public abstract class Controller extends Canvas implements Runnable {
         //Loading level
         level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level1.png");
         loadLevel(level);
+
+        // For focus of key inputs after component switch
+        setFocusable(true);
     }
 
     public void start(){
@@ -129,8 +139,44 @@ public abstract class Controller extends Canvas implements Runnable {
                 timer += 1000;
                 frames = 0;
             }
+
+            /*
+            if ((hasPauseMenu && this instanceof SingleController)) {
+                unlockWaiter();
+                waitForThread();
+            }
+
+             */
         }
         stop();
+    }
+
+    public void openPauseMenu() {
+        this.removeKeyListener(new KeyInput(this));
+        this.removeMouseListener(new MouseInput(this));
+        hasPauseMenu = true;
+        pauseMenu = new PauseMenu(gameWindow.getFrame(), this);
+        gameWindow.getFrame().remove(this);
+        gameWindow.getFrame().add(pauseMenu.getJPanel());
+        gameWindow.getFrame().revalidate();
+    }
+
+    public void closePauseMenu() {
+        gameWindow.getFrame().remove(pauseMenu.getJPanel());
+        gameWindow.getFrame().add(this);
+        gameWindow.getFrame().revalidate();
+        gameWindow.setCanPause(true);
+
+        // Allows key inputs to be used after the component switch
+        requestFocusInWindow();
+        this.createBufferStrategy(3);
+        hasPauseMenu = false;
+        this.addMouseListener(new MouseInput(this));
+        this.addKeyListener(new KeyInput(this));
+    }
+
+    public GameWindow getGameWindow() {
+        return gameWindow;
     }
 
     /**
@@ -177,9 +223,13 @@ public abstract class Controller extends Canvas implements Runnable {
      * Graphics tick. Happens a whole bunch of times per second.
      */
     public void render(){
+        if (isWon || hasPauseMenu) {
+            return;
+        }
+
         BufferStrategy bs = this.getBufferStrategy();
         if(bs == null){
-                this.createBufferStrategy(3);
+            this.createBufferStrategy(3);
             return;
         }
 

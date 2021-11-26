@@ -7,7 +7,10 @@ import java.awt.event.MouseEvent;
 
 public class MouseInput extends MouseAdapter {
 
-    public MouseInput(){
+    protected Controller controller;
+
+    public MouseInput(Controller controller){
+        this.controller = controller;
         /* empty */
     }
 

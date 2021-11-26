@@ -25,10 +25,7 @@ public class ClientController extends Controller{
 
     public ClientController(){
         super();
-        new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
 
-        this.addKeyListener(new KeyInput());
-        this.addMouseListener(new MouseInput());
         serverWeaponAudio = new SFXPlayer();
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -114,7 +111,7 @@ public class ClientController extends Controller{
             eyeCandy = new ArrayList<>(Arrays.asList(packet.getEyeCandy())) ;
         } else if(object instanceof WinnerPacket packet){
 
-
+            isWon = true;
             Player winner;
             if(packet.getWinner() == Player.SERVER_PLAYER){
                 winner = otherPlayer;

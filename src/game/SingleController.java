@@ -22,14 +22,11 @@ public class SingleController extends Controller {
 
     public SingleController() {
         super();
-        new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
 
         //Loading level
         level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level"+ MainMenu.mapSelected +".png");
         loadLevel(level);
 
-        this.addKeyListener(new KeyInput());
-        this.addMouseListener(new MouseInput());
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
 
@@ -282,6 +279,7 @@ public class SingleController extends Controller {
     }
 
     public void declareWinner(Player winner){
+        isWon = true;
         int winnerNumber;
         if(winner == thisPlayer){
             winnerNumber = Player.SERVER_PLAYER;
@@ -343,6 +341,7 @@ public class SingleController extends Controller {
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
-        stop();
+
+        isRunning = false;
     }
 }
