@@ -114,6 +114,35 @@ public abstract class Controller extends Canvas implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        mouseInside = false;
+        isWon = false;
+        hasPauseMenu = false;
+
+        players.clear();
+
+        movingAmmo.clear();
+
+        explosions.clear();
+
+        blocks.clear();
+
+        eyeCandy.clear();
+
+        //All GameObjects
+        movingAmmo = Collections.synchronizedList(new ArrayList<>());
+        players = Collections.synchronizedList(new ArrayList<>());
+        blocks = Collections.synchronizedList(new ArrayList<>());
+        eyeCandy = Collections.synchronizedList(new ArrayList<>());
+        explosions = Collections.synchronizedList(new ArrayList<>());
+        thisPlayer = null;
+        otherPlayer = null;
+
+        //Players spawn points
+        thisX = 0;
+        thisY = 0;
+        otherX = 0;
+        otherY = 0;
     }
 
     public void run(){

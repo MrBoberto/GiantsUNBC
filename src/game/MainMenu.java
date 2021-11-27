@@ -13,6 +13,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -215,9 +216,22 @@ public class MainMenu {
         mapSelectionPanel.setMinimumSize(new Dimension(Controller.WIDTH,Controller.HEIGHT));
         mapSelectionPanel.setOpaque(false);
         ArrayList<BufferedImage> maps = new ArrayList<>();
+
+        /*
         for(File file: (Objects.requireNonNull((new File("src/resources/mapLayouts")).listFiles((dir, name) -> name.endsWith(".png"))))){
             maps.add(BufferedImageLoader.loadImage("/resources/mapLayouts/"+ file.getName()));
         }
+
+         */
+
+        for (int i = 1; i <= 9; i++) {
+            try {
+                maps.add(ImageIO.read(getClass().getResource("/resources/mapLayouts/" + "Level" + i + ".png")));
+            } catch (IOException exc) {
+                System.out.println("Could not find image file: " + exc.getMessage());
+            }
+        }
+
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
