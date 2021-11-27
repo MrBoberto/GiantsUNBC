@@ -20,7 +20,7 @@ public class DamageUp extends PowerUp{
     //Graphics
     private final int SECONDARY_TEXTURE_MAX_TIMER = 10;
     private int secondaryTextureTimer = 0;
-    private int secondaryTextureState = 0;
+    private int secondaryTextureState = 1;
     private final int FLOAT_EFFECT_MAX_TIMER = 3;
     private int floatTimer = 0;
     private int floatState = 2;
@@ -56,10 +56,10 @@ public class DamageUp extends PowerUp{
 
         if(secondaryTextureTimer > SECONDARY_TEXTURE_MAX_TIMER){
             secondaryTextureTimer = 0;
-            if(secondaryTextureState == 2){
-                secondaryTextureState = 0;
+            if(secondaryTextureState == -1){
+                secondaryTextureState = 1;
             } else {
-                secondaryTextureState++;
+                secondaryTextureState--;
             }
         }
         if(floatTimer > FLOAT_EFFECT_MAX_TIMER){
@@ -88,11 +88,7 @@ public class DamageUp extends PowerUp{
     @Override
     public void render(Graphics g) {
         g.drawImage(texture,(int)x,(int)y + floatState,POWER_UP_DIMENSIONS.width,POWER_UP_DIMENSIONS.height,World.controller);
-        switch (secondaryTextureState){
-            case 0 -> g.drawImage(secondary_texture,(int)x,(int)y +2 + floatState,POWER_UP_DIMENSIONS.width,POWER_UP_DIMENSIONS.height,World.controller);
-            case 1 -> g.drawImage(secondary_texture,(int)x,(int)y + floatState,POWER_UP_DIMENSIONS.width,POWER_UP_DIMENSIONS.height,World.controller);
-            case 2 -> g.drawImage(secondary_texture,(int)x,(int)y -2 + floatState,POWER_UP_DIMENSIONS.width,POWER_UP_DIMENSIONS.height,World.controller);
-        }
+        g.drawImage(secondary_texture,(int)x,(int)y + (secondaryTextureState*2)+ floatState,POWER_UP_DIMENSIONS.width,POWER_UP_DIMENSIONS.height,World.controller);
 
     }
 }
