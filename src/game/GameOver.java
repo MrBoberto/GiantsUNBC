@@ -49,15 +49,7 @@ public class GameOver {
 
         BufferedImage backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
 
-        JPanel mainMenuPanel = new JPanel(new GridBagLayout()){
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-
-                Graphics2D g2 = (Graphics2D)g;
-                g2.drawImage(backgroundImage,0,0, gameOver.getWidth(), gameOver.getHeight(),null);
-
-            }};
+        JPanel mainMenuPanel = new JPanel(new GridBagLayout());
 
         mainMenuPanel.setOpaque(false);
         gameOver.add(mainMenuPanel);
@@ -70,10 +62,51 @@ public class GameOver {
                 FontMetrics fontMetrics = g2.getFontMetrics(font);
                 g2.setColor(Color.WHITE);
                 g2.setFont(font);
-                String text = "Game Ends click here to Play Again";
+
+                String text =        "           Game Ends  " +
+                        "Click anywhere to return to the main screen";
+
+                g2.drawString("The winner is " + winner.getPlayerName(),
+                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,20);
+                g2.drawString("Scores:" + winner.getPlayerName(), Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 3/4);
+                g2.drawString("The winner is " + winner.getPlayerName(),
+                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 3/4);
+                g2.drawString(
+                        "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
+                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 3/4);
+                g2.drawString(
+                        "                                           Shot         Hit    Distance    Power-ups",
+                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 3/4);
+
+                for (int i = 0; i < players.size(); i++) {
+                    //Save data to send to client
+                    Player player = players.get(i);
+
+                    //Determine format
+                    String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
+                            player.getKillCount(),
+                            player.getDeathCount(),
+                            player.getKdr(),
+                            player.getBulletCount(),
+                            player.getBulletHitCount(),
+                            player.getWalkingDistance(),
+                            "???");
+
+                    if (i == 0) {
+                        g2.drawString(format,
+                                Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 3/4);
+                    } else {
+                        g2.drawString(format,
+                                Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 3/4);
+                    }
+                }
+
                 g2.drawString(text, Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 3/4);
+                //g2.drawString(text, Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 2/4);
             }
         };
+
+
         startButton.setOpaque(false);
         startButton.setContentAreaFilled(false);
         startButton.setBorderPainted(false);
@@ -87,16 +120,8 @@ public class GameOver {
 
         startButton.addActionListener(f -> {
             mainMenuPanel.remove(startButton);
+            MainMenu mainMenu = new MainMenu();
 
-           // JPanel bottomPanel = buttonsPanel(mainMenuPanel);
-
-            c.fill = GridBagConstraints.CENTER;
-            c.weighty = 0.2;
-            c.weightx = 1.0;
-            c.insets = new Insets(5,5,10,10);
-            //mainMenuPanel.add(bottomPanel, c);
-            mainMenuPanel.validate();
-            mainMenuPanel.repaint();
         });
 
         gameOver.setVisible(true);

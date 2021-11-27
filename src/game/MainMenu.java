@@ -31,6 +31,7 @@ public class MainMenu {
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
     static SFXPlayer sfxPlayer;
+    GameOver gameOver;
 
     public MainMenu() {
         mainMenu = new JFrame("Doing your Mom");
@@ -65,12 +66,15 @@ public class MainMenu {
         backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
 
         JPanel mainMenuPanel = new JPanel(new GridBagLayout()){
-            @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
 
-            Graphics2D g2 = (Graphics2D)g;
-            g2.drawImage(backgroundImage,0,0, mainMenu.getWidth(), mainMenu.getHeight(),null);
+            @Override
+
+        protected void paintComponent(Graphics g) {
+
+                super.paintComponent(g);
+
+                Graphics2D g2 = (Graphics2D) g;
+                g2.drawImage(backgroundImage, 0, 0, mainMenu.getWidth(), mainMenu.getHeight(), null);
 
         }};
 
