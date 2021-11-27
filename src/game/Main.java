@@ -3,10 +3,13 @@ package game;
 
 
 import javax.swing.*;
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
 public class Main {
+
     private static int volumeMaster = 100;
     private static int volumeMusic = 100;
     private static int volumeSFX = 100;
@@ -16,7 +19,7 @@ public class Main {
 
     }
 
-    public static void main(String[] args) {
+    public Main(){
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
@@ -29,7 +32,25 @@ public class Main {
             String ipAddress = String.valueOf(InetAddress.getLocalHost());
             String[] ipAddressClean = ipAddress.split("/", 2);
             System.out.println("The ip address: "+ipAddress);
-        } catch (UnknownHostException e) {
+            Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
+            while(Interfaces.hasMoreElements())
+            {
+                NetworkInterface Interface = (NetworkInterface)Interfaces.nextElement();
+                Enumeration<InetAddress> Addresses = Interface.getInetAddresses();
+                while(Addresses.hasMoreElements())
+                {
+                    InetAddress Address = (InetAddress)Addresses.nextElement();
+                    if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1"))
+                    {
+                        if (Address.isReachable(5000)) {
+                            System.out.println(Address.getHostAddress() + " is on the network");
+                        }
+                        //System.out.println("IS THIS THE REAL IP ADDRESS:" + Address.getHostAddress());
+                    }
+                }
+            }
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -67,4 +88,10 @@ public class Main {
     public static int getVolumeSFXActual() {
         return volumeSFX;
     }
+
+    public static void main(String[] args) {
+        Main main = new Main();
+    }
 }
+
+
