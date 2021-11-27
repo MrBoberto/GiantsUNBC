@@ -57,6 +57,7 @@ public class MouseInput extends MouseAdapter {
 
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON3) {
+            System.out.println("Switch!");
             if (Controller.mouseInside) {
                 int selectedWeapon = Controller.thisPlayer.getSelectedWeapon();
                 // Switch between primary and secondary

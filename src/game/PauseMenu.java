@@ -81,7 +81,6 @@ public class PauseMenu implements KeyListener {
 
         PauseMenuButton backToGameButton = new PauseMenuButton(e -> {
             pauseMenuPanel.remove(buttonsPanel);
-            pauseMenuPanel.removeKeyListener(this);
             controller.closePauseMenu();
         }, "Back To Game");
         c.gridy = 3;

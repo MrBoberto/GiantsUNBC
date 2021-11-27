@@ -13,7 +13,7 @@ import java.io.*;
 
 public class PistolBullet extends Bullet {
 
-    private final int SERIAL = 004;
+    private final int SERIAL = 002;
     private static final double INACCURACY = 0.01;
 
 

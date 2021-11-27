@@ -217,6 +217,7 @@ public class MainMenu {
         mapSelectionPanel.setOpaque(false);
         ArrayList<BufferedImage> maps = new ArrayList<>();
 
+
         /*
         for(File file: (Objects.requireNonNull((new File("src/resources/mapLayouts")).listFiles((dir, name) -> name.endsWith(".png"))))){
             maps.add(BufferedImageLoader.loadImage("/resources/mapLayouts/"+ file.getName()));

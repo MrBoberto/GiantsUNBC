@@ -181,8 +181,8 @@ public abstract class Controller extends Canvas implements Runnable {
     }
 
     public void openPauseMenu() {
-        this.removeKeyListener(new KeyInput(this));
-        this.removeMouseListener(new MouseInput(this));
+        //this.removeKeyListener(keyInput);
+        //this.removeMouseListener();
         hasPauseMenu = true;
         pauseMenu = new PauseMenu(gameWindow.getFrame(), this);
         gameWindow.getFrame().remove(this);
@@ -200,8 +200,8 @@ public abstract class Controller extends Canvas implements Runnable {
         requestFocusInWindow();
         this.createBufferStrategy(3);
         hasPauseMenu = false;
-        this.addMouseListener(new MouseInput(this));
-        this.addKeyListener(new KeyInput(this));
+        //this.addMouseListener(new MouseInput(this));
+        //this.addKeyListener(new KeyInput(this));
     }
 
     public GameWindow getGameWindow() {
