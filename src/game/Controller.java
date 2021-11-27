@@ -372,45 +372,13 @@ public abstract class Controller extends Canvas implements Runnable {
         Font font = new Font("Arial", Font.BOLD, 25);
         g2D.setFont(font);
         FontMetrics stringSize = g2D.getFontMetrics(font);
+        gameWindow.frame.dispose();
+        GameOver gameOver = new GameOver(winner,HEIGHT,g2D,players, WIDTH,stringSize);
+        //gameOver.printGame(winner,HEIGHT,g2D,players, WIDTH,stringSize);
 
-        g2D.drawString("The winner is " + winner.getPlayerName(),
-                WIDTH / 2 - (stringSize.stringWidth("The winner is ")), HEIGHT / 10);
-        g2D.drawString("Scores:" + winner.getPlayerName(), WIDTH / 2 - (stringSize.stringWidth("Scores:")),
-                HEIGHT / 5);
-        g2D.drawString("The winner is " + winner.getPlayerName(),
-                WIDTH / 2 - (stringSize.stringWidth("The winner is ")), 3 * HEIGHT / 10);
-        g2D.drawString(
-                "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                WIDTH / 2 - (stringSize.stringWidth(
-                        "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of")),
-                2 * HEIGHT / 5);
-        g2D.drawString(
-                "                                           Shot         Hit    Distance    Power-ups",
-                WIDTH / 2 - (stringSize.stringWidth(
-                        "                                           Shot         Hit    Distance    Power-ups")), HEIGHT / 2);
 
-        for (int i = 0; i < players.size(); i++) {
-            //Save data to send to client
-            Player player = players.get(i);
 
-            //Determine format
-            String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
-                    player.getKillCount(),
-                    player.getDeathCount(),
-                    player.getKdr(),
-                    player.getBulletCount(),
-                    player.getBulletHitCount(),
-                    player.getWalkingDistance(),
-                    "???");
 
-            if (i == 0) {
-                g2D.drawString(format,
-                        WIDTH / 2 - (stringSize.stringWidth(format)), 3 * HEIGHT / 5);
-            } else {
-                g2D.drawString(format,
-                        WIDTH / 2 - (stringSize.stringWidth(format)), 7 * HEIGHT / 10);
-            }
-        }
 
         //////////////////////////////////////
         g.dispose();

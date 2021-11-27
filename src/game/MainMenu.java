@@ -129,7 +129,7 @@ public class MainMenu {
         }
     }
 
-    private JPanel buttonsPanel(JPanel mainMenuPanel) {
+    public JPanel buttonsPanel(JPanel mainMenuPanel) {
         GridBagConstraints c = new GridBagConstraints();
         JPanel buttonsPanel = new JPanel(new GridBagLayout());
         buttonsPanel.setOpaque(false);
