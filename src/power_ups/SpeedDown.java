@@ -11,28 +11,28 @@ import utilities.BufferedImageLoader;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class DamageDown extends PowerUp{
+public class SpeedDown extends PowerUp{
 
-    public static final int EFFECT_TIME = 6 * 60;
+    public static final int EFFECT_TIME = 4 * 60;
     private final float multiplier;
     private final BufferedImage secondary_texture;
 
     //Graphics
     private final int SECONDARY_TEXTURE_MAX_TIMER = 10;
     private int secondaryTextureTimer = 0;
-    private int secondaryTextureState = -1;
+    private int secondaryTextureState = 1;
     private final int FLOAT_EFFECT_MAX_TIMER = 3;
     private int floatTimer = 0;
     private int floatState = 2;
     private boolean floatDirection = true;
 
-    public DamageDown(double x, double y, float multiplier) {
+    public SpeedDown(double x, double y, float multiplier) {
         super(x, y);
 
         this.multiplier = multiplier;
 
-        texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/DMG_sprite.png");
-        secondary_texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/down_arrow_blue_sprite.png");
+        texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/SPEED_sprite.png");
+        secondary_texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/up_arrow_orange_sprite.png");
     }
 
     @Override
@@ -41,9 +41,9 @@ public class DamageDown extends PowerUp{
         Controller.powerUps.remove(indexToRemove);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController){
             if(playerNumber == Player.SERVER_PLAYER){
-                Controller.thisPlayer.setDamageMultiplier(multiplier, EFFECT_TIME);
+                Controller.thisPlayer.setSpeedMultiplier(multiplier, EFFECT_TIME);
             } else {
-                Controller.otherPlayer.setDamageMultiplier(multiplier, EFFECT_TIME);
+                Controller.otherPlayer.setSpeedMultiplier(multiplier, EFFECT_TIME);
             }
         }
 
@@ -56,10 +56,10 @@ public class DamageDown extends PowerUp{
 
         if(secondaryTextureTimer > SECONDARY_TEXTURE_MAX_TIMER){
             secondaryTextureTimer = 0;
-            if(secondaryTextureState == 1){
-                secondaryTextureState = -1;
+            if(secondaryTextureState == -1){
+                secondaryTextureState = 1;
             } else {
-                secondaryTextureState++;
+                secondaryTextureState--;
             }
         }
         if(floatTimer > FLOAT_EFFECT_MAX_TIMER){
@@ -81,7 +81,7 @@ public class DamageDown extends PowerUp{
     @Override
     protected void updateClient(int playerNumber, int indexToRemove) {
         PowerUpEffectPacket powerUpEffectPacket = new PowerUpEffectPacket(playerNumber, indexToRemove, EFFECT_TIME);
-        powerUpEffectPacket.setDamageMultiplier(multiplier);
+        powerUpEffectPacket.setSpeedMultiplier(multiplier);
         World.controller.getOutputConnection().sendPacket(powerUpEffectPacket);
     }
 

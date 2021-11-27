@@ -280,10 +280,10 @@ public abstract class Player extends GameObject {
         return damageMultiplier;
     }
 
-    public void setDamageMultiplier(float damageMultiplier) {
+    public void setDamageMultiplier(float damageMultiplier, int time) {
         if(damageMultiplier != -1) {
             this.damageMultiplier = damageMultiplier;
-            damageMultiplierTimer = DamageUp.EFFECT_TIME;
+            damageMultiplierTimer = time;
         }
 
     }
@@ -536,10 +536,10 @@ public abstract class Player extends GameObject {
         this.respawnPointY = respawnPointY;
     }
 
-    public void setSpeedMultiplier(float speedMultiplier){
+    public void setSpeedMultiplier(float speedMultiplier, int time){
         if(speedMultiplier != -1) {
             this.speedMultiplier = speedMultiplier;
-            speedMultiplierTimer = SpeedUp.EFFECT_TIME;
+            speedMultiplierTimer = time;
         }
     }
 }

@@ -111,13 +111,13 @@ public class ClientController extends Controller {
             powerUps.remove(packet.getIndexToRemove());
             switch (packet.getPlayerToBeAffected()) {
                 case Player.SERVER_PLAYER:
-                    otherPlayer.setDamageMultiplier(packet.getDamageMultiplier());
-                    otherPlayer.setSpeedMultiplier(packet.getSpeedMultiplier());
+                    otherPlayer.setDamageMultiplier(packet.getDamageMultiplier(), packet.getTime());
+                    otherPlayer.setSpeedMultiplier(packet.getSpeedMultiplier(), packet.getTime());
                     /* here goes other property changes */
                     break;
                 case Player.CLIENT_PLAYER:
-                    thisPlayer.setDamageMultiplier(packet.getDamageMultiplier());
-                    thisPlayer.setSpeedMultiplier(packet.getSpeedMultiplier());
+                    thisPlayer.setDamageMultiplier(packet.getDamageMultiplier(), packet.getTime());
+                    thisPlayer.setSpeedMultiplier(packet.getSpeedMultiplier(), packet.getTime());
                     break;
             }
         } else if (object instanceof CreatePowerUpPacket packet) {

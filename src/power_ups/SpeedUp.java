@@ -41,9 +41,9 @@ public class SpeedUp extends PowerUp{
         Controller.powerUps.remove(indexToRemove);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController){
             if(playerNumber == Player.SERVER_PLAYER){
-                Controller.thisPlayer.setSpeedMultiplier(multiplier);
+                Controller.thisPlayer.setSpeedMultiplier(multiplier, EFFECT_TIME);
             } else {
-                Controller.otherPlayer.setSpeedMultiplier(multiplier);
+                Controller.otherPlayer.setSpeedMultiplier(multiplier, EFFECT_TIME);
             }
         }
 
@@ -80,7 +80,7 @@ public class SpeedUp extends PowerUp{
 
     @Override
     protected void updateClient(int playerNumber, int indexToRemove) {
-        PowerUpEffectPacket powerUpEffectPacket = new PowerUpEffectPacket(playerNumber, indexToRemove);
+        PowerUpEffectPacket powerUpEffectPacket = new PowerUpEffectPacket(playerNumber, indexToRemove, EFFECT_TIME);
         powerUpEffectPacket.setSpeedMultiplier(multiplier);
         World.controller.getOutputConnection().sendPacket(powerUpEffectPacket);
     }

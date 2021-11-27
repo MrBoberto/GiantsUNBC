@@ -5,14 +5,20 @@ import java.io.Serializable;
 public class PowerUpEffectPacket implements Serializable {
     private final int playerToBeAffected;
     private final int indexToRemove;
+    private final int time;
 
     //Possible changes. -1 == no change.
     private float damageMultiplier = -1;
     private float speedMultiplier = -1;
 
-    public PowerUpEffectPacket(int playerToBeAffected, int indexToRemove) {
+    public PowerUpEffectPacket(int playerToBeAffected, int indexToRemove, int time) {
         this.playerToBeAffected = playerToBeAffected;
         this.indexToRemove = indexToRemove;
+        this.time = time;
+    }
+
+    public int getTime() {
+        return time;
     }
 
     public void setDamageMultiplier(float damageMultiplier) {

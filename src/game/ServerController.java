@@ -209,6 +209,7 @@ public class ServerController extends Controller {
     private void checkVictims(Bullet bullet) {
         // Player who was hit (-1 if no one was hit)
         int victimNumber = EntityCollision.getVictim(bullet);
+        System.out.println("CHECK");
 
         // Player
         Player killer;
@@ -228,6 +229,7 @@ public class ServerController extends Controller {
             }
 
             double damage = (-1 * bullet.getDamage() * killer.getDamageMultiplier());
+            System.out.println(damage);
             killer.incrementBulletHitCount();
             victim.modifyHealth(damage);
             victim.resetHealTimer();
