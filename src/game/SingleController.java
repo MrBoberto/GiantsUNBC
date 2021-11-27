@@ -1,5 +1,6 @@
 package game;
 
+import audio.SFXPlayer;
 import eye_candy.DeathMark;
 import packets.EyeCandyPacket;
 import packets.RespawnPacket;
@@ -20,8 +21,11 @@ import java.io.IOException;
 
 public class SingleController extends Controller {
 
+    public SFXPlayer weaponAudio;
+
     public SingleController() {
         super();
+        weaponAudio = new SFXPlayer();
 
         //Loading level
         level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level"+ MainMenu.mapSelected +".png");
@@ -77,6 +81,9 @@ public class SingleController extends Controller {
                         bullet.setVelX(0);
                         bullet.setVelY(0);
                         explosions.add(new Explosion(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
+
+                        weaponAudio.setFile(-1);
+                        weaponAudio.play();
                     }
                 } else {
                     checkVictims(bullet);
@@ -143,6 +150,9 @@ public class SingleController extends Controller {
                 bullet.setVelY(0);
                 //System.out.println("Rocket launcher victor: " + bullet.getPlayerIBelongToNumber() + "; Rocket launcher loser: " + victimNumber);
                 explosions.add(new Explosion(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
+
+                weaponAudio.setFile(-1);
+                weaponAudio.play();
             } else if (bullet.getSERIAL() != 002) {
                 movingAmmo.remove(bullet);
             }

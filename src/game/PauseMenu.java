@@ -1,5 +1,7 @@
 package game;
 
+import audio.AudioPlayer;
+import audio.SFXPlayer;
 import utilities.BufferedImageLoader;
 
 import javax.swing.*;
@@ -14,6 +16,7 @@ public class PauseMenu implements KeyListener {
     JFrame frame;
     Controller controller;
     KeyInput keyInput;
+    static SFXPlayer sfxPlayer;
 
     public PauseMenu(JFrame frame, Controller controller) {
         this.frame = frame;
@@ -21,6 +24,8 @@ public class PauseMenu implements KeyListener {
         BufferedImage backgroundImage;
         GridBagConstraints c = new GridBagConstraints();
         backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
+        sfxPlayer = new SFXPlayer();
+        sfxPlayer.setFile(-2);
 
         pauseMenuPanel = new JPanel(new GridBagLayout()) {
             @Override
@@ -149,6 +154,7 @@ public class PauseMenu implements KeyListener {
 
         @Override
         public void mousePressed(MouseEvent e) {
+            sfxPlayer.play();
             notifyListeners(e);
             repaint();
         }

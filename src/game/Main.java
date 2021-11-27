@@ -45,7 +45,7 @@ public class Main {
     }
 
     public static int getVolumeMusic() {
-        return (int) volumeMusic * volumeMaster / 100;
+        return volumeMusic * volumeMaster / 100;
     }
 
     public static void setVolumeMusic(int volumeMusic) {
@@ -53,10 +53,18 @@ public class Main {
     }
 
     public static int getVolumeSFX() {
-        return (int) volumeSFX * volumeMaster / 100;
+        return volumeSFX * volumeMaster / 100;
     }
 
     public static void setVolumeSFX(int volumeSFX) {
         Main.volumeSFX = volumeSFX;
+    }
+
+    public static int getVolumeMusicActual() {
+        return volumeMusic;
+    }
+
+    public static int getVolumeSFXActual() {
+        return volumeSFX;
     }
 }

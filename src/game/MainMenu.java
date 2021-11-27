@@ -29,6 +29,7 @@ public class MainMenu {
     public static AudioPlayer soundtrack;
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
+    static SFXPlayer sfxPlayer;
 
     public MainMenu() {
         mainMenu = new JFrame("Doing your Mom");
@@ -53,6 +54,8 @@ public class MainMenu {
         mainMenu.getContentPane().setBackground(Color.BLUE);
         GridBagConstraints c = new GridBagConstraints();
 
+        sfxPlayer = new SFXPlayer();
+        sfxPlayer.setFile(-2);
 
         // to make window appear on the screen
         // max size was incorrect on my multi-display monitor so I changed it - Noah
@@ -412,17 +415,17 @@ public class MainMenu {
             audioMenu.add(createNewVoidPanel(), c);
         }
 
-        MainMenuSlider masterSlider = new MainMenuSlider("Master Volume", VOL_MIN, VOL_MAX, VOL_MAX);
+        MainMenuSlider masterSlider = new MainMenuSlider("Master Volume", VOL_MIN, VOL_MAX);
         c.gridy = 3;
         audioMenu.add(masterSlider, c);
         audioMenu.add(masterSlider.getJSlider(), c);
 
-        MainMenuSlider gameSlider = new MainMenuSlider("Game Volume", VOL_MIN, VOL_MAX, VOL_MAX);
+        MainMenuSlider gameSlider = new MainMenuSlider("Game Volume", VOL_MIN, VOL_MAX);
         c.gridy = 5;
         audioMenu.add(gameSlider, c);
         audioMenu.add(gameSlider.getJSlider(), c);
 
-        MainMenuSlider musicSlider = new MainMenuSlider("Music Volume", VOL_MIN, VOL_MAX, VOL_MAX);
+        MainMenuSlider musicSlider = new MainMenuSlider("Music Volume", VOL_MIN, VOL_MAX);
         c.gridy = 7;
         audioMenu.add(musicSlider, c);
         audioMenu.add(musicSlider.getJSlider(), c);
@@ -586,6 +589,7 @@ public class MainMenu {
 
         @Override
         public void mousePressed(MouseEvent e) {
+            sfxPlayer.play();
             notifyListeners(e);
             repaint();
         }
@@ -634,8 +638,22 @@ public class MainMenu {
         JSlider jSlider;
         BufferedImage unselectedTexture;
 
-        public MainMenuSlider(String text, int min, int max, int init) {
+        public MainMenuSlider(String text, int min, int max) {
             super();
+
+            // Default to 100
+            int init = 100;
+            switch (text) {
+                case "Master Volume":
+                    init = Main.getVolumeMaster();
+                    break;
+                case "Game Volume":
+                    init = Main.getVolumeSFXActual();
+                    break;
+                case "Music Volume":
+                    init = Main.getVolumeMusicActual();
+                    break;
+            }
             jSlider = new JSlider(min, max, init);
 
             unselectedTexture = BufferedImageLoader.loadImage("/resources/GUI/main_menu/unselected_option.png");
@@ -682,9 +700,11 @@ public class MainMenu {
                 case "Master Volume":
                     Main.setVolumeMaster(jSlider.getValue());
                     AudioPlayer.setVolume();
+                    sfxPlayer.setVolume();
                     break;
                 case "Game Volume":
                     Main.setVolumeSFX(jSlider.getValue());
+                    sfxPlayer.setVolume();
                     break;
                 case "Music Volume":
                     Main.setVolumeMusic(jSlider.getValue());

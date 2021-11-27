@@ -97,6 +97,8 @@ public class ClientController extends Controller{
         } else if(object instanceof ServerExplosionPacket packet){
 
             explosions.add(new Explosion(packet.getX(), packet.getY(), packet.getPlayerNumber()));
+            serverWeaponAudio.setFile(-1);
+            serverWeaponAudio.play();
 
         } else if (object instanceof ServerSFXPacket packet) {
 

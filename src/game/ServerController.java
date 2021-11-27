@@ -127,6 +127,8 @@ public class ServerController extends Controller {
                     packet.getY(),
                     packet.getPlayerNumber()
             );
+            clientWeaponAudio.setFile(-1);
+            clientWeaponAudio.play();
 
         } else if (object instanceof ClientSFXPacket packet) {
             clientWeaponAudio.setFile(packet.getClientSFXInt());
@@ -158,6 +160,10 @@ public class ServerController extends Controller {
                         System.out.println("Explosive triggered");
                         explosions.add(new Explosion(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
                         outputConnection.sendPacket(new ServerExplosionPacket(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
+
+                        // Not necessarily an explosion created by client but clientWeaponAudio was the most convenient option
+                        clientWeaponAudio.setFile(-1);
+                        clientWeaponAudio.play();
                     }
                 } else {
                     checkVictims(bullet);
@@ -200,6 +206,10 @@ public class ServerController extends Controller {
                 explosions.add(new Explosion(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
                 outputConnection.sendPacket(new ServerExplosionPacket(bullet.x, bullet.y,
                         bullet.getPlayerIBelongToNumber()));
+
+                // Not necessarily an explosion created by client but clientWeaponAudio was the most convenient option
+                clientWeaponAudio.setFile(-1);
+                clientWeaponAudio.play();
             }
             if (bullet.getSERIAL() != 002) {
                 movingAmmo.remove(bullet);
