@@ -33,7 +33,6 @@ public class InputConnection implements Runnable{
         System.out.println("hello from input thread");
         while(running){
             try {
-
                 Object object = inputStream.readObject();
                 controller.packetReceived(object);
             } catch (EOFException | SocketException e){

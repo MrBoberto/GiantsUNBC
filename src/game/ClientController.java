@@ -8,6 +8,7 @@ import player.Player;
 import power_ups.DamageDown;
 import power_ups.DamageUp;
 import power_ups.SpeedUp;
+import weapons.aoe.Explosion;
 import utilities.BufferedImageLoader;
 
 import java.awt.*;
@@ -27,8 +28,6 @@ public class ClientController extends Controller {
         super();
         new GameWindow(WIDTH, HEIGHT, "THE BOYZ", this);
 
-        this.addKeyListener(new KeyInput());
-        this.addMouseListener(new MouseInput());
         serverWeaponAudio = new SFXPlayer();
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -96,6 +95,12 @@ public class ClientController extends Controller {
 
             movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
 
+        } else if(object instanceof ServerExplosionPacket packet){
+
+            explosions.add(new Explosion(packet.getX(), packet.getY(), packet.getPlayerNumber()));
+            serverWeaponAudio.setFile(-1);
+            serverWeaponAudio.play();
+
         } else if (object instanceof ServerSFXPacket packet) {
 
             serverWeaponAudio.setFile(packet.getServerSFXInt());
@@ -130,7 +135,7 @@ public class ClientController extends Controller {
         }
         else if (object instanceof WinnerPacket packet) {
 
-
+            isWon = true;
             Player winner;
             if (packet.getWinner() == Player.SERVER_PLAYER) {
                 winner = otherPlayer;

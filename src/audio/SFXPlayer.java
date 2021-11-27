@@ -1,5 +1,7 @@
 package audio;
 
+import game.Main;
+
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +10,10 @@ import java.net.URL;
 public class SFXPlayer {
     Clip clip;
     AudioInputStream audioInputStream;
+    protected static int volume = 100;
+    static FloatControl gainControl;
+    static double gain = 1;
+    protected static float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
 
     public void setFile(int fileInt) {
         String fileLocation;
@@ -18,8 +24,14 @@ public class SFXPlayer {
             fileLocation = "/resources/SFX/Sniper Rifle.wav";
         } else if (fileInt == 2) {
             fileLocation = "/resources/SFX/Pistol.wav";
-        } else {
+        } else if (fileInt == 3) {
             fileLocation = "/resources/SFX/Assault Rifle.wav";
+        } else if (fileInt == 4) {
+            fileLocation = "/resources/SFX/Pistol.wav";
+        } else if (fileInt == -1) {
+            fileLocation = "/resources/SFX/Explosion1.wav";
+        } else {
+            fileLocation = "/resources/SFX/Click1.wav";
         }
 
         URL audioUrl = this.getClass().getResource(fileLocation);
@@ -35,6 +47,19 @@ public class SFXPlayer {
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
+
+        gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        double gain = (double) Main.getVolumeSFX() / (double) 100;
+        dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+        gainControl.setValue(dB);
+    }
+
+    public void setVolume() {
+        if (volume == Main.getVolumeSFX()) return;
+        gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        double gain = (double) Main.getVolumeSFX() / (double) 100;
+        dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+        gainControl.setValue(dB);
     }
 
     public void play() {

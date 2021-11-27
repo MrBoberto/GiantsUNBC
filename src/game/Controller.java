@@ -8,8 +8,10 @@ import player.Player;
 import power_ups.PowerUp;
 import utilities.BufferedImageLoader;
 import weapons.ammo.Bullet;
+import weapons.aoe.Explosion;
 import weapons.guns.AssaultRifle;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -26,14 +28,16 @@ public abstract class Controller extends Canvas implements Runnable {
 
     //Mouse controllers
     public static boolean mouseInside = false;
-    public static boolean isMouse1Held = false;
+    public static boolean isWon = false;
+    public boolean hasPauseMenu = false;
+    public PauseMenu pauseMenu;
 
     //Multiplayer
     protected InputConnection inputConnection;
     protected OutputConnection outputConnection;
 
     //Game loop
-    private boolean isRunning = false;
+    protected boolean isRunning = false;
     private Thread thread;
 
     //All GameObjects
@@ -41,9 +45,11 @@ public abstract class Controller extends Canvas implements Runnable {
     public static List<Player> players = Collections.synchronizedList(new ArrayList<>());
     public static List<Block> blocks = Collections.synchronizedList(new ArrayList<>());
     public static List<GameObject> eyeCandy = Collections.synchronizedList(new ArrayList<>());
+    public static List<Explosion> explosions = Collections.synchronizedList(new ArrayList<>());
     public static List<PowerUp> powerUps = Collections.synchronizedList(new ArrayList<>());
     public static MainPlayer thisPlayer;
     public static OtherPlayer otherPlayer;
+    public static GameWindow gameWindow;
 
     //Global PowerUps variables
     protected static int currentPowerUpCooldown = 0;
@@ -64,11 +70,21 @@ public abstract class Controller extends Canvas implements Runnable {
     public static final int GRID_SIZE = 58;
 
     protected Controller() {
+        gameWindow = new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
+        this.addKeyListener(new KeyInput(this));
+        this.addMouseListener(new MouseInput(this));
 
         //Load background
         background = BufferedImageLoader.loadImage("/resources/Textures/BG/wood_background.png");
 
+        Explosion.loadImageStrips();
 
+        //Loading level
+        level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level1.png");
+        loadLevel(level);
+
+        // For focus of key inputs after component switch
+        setFocusable(true);
     }
 
     public void start(){
@@ -104,6 +120,35 @@ public abstract class Controller extends Canvas implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+//TODO ADD POWER UPS HERE
+        mouseInside = false;
+        isWon = false;
+        hasPauseMenu = false;
+
+        players.clear();
+
+        movingAmmo.clear();
+
+        explosions.clear();
+
+        blocks.clear();
+
+        eyeCandy.clear();
+
+        //All GameObjects
+        movingAmmo = Collections.synchronizedList(new ArrayList<>());
+        players = Collections.synchronizedList(new ArrayList<>());
+        blocks = Collections.synchronizedList(new ArrayList<>());
+        eyeCandy = Collections.synchronizedList(new ArrayList<>());
+        explosions = Collections.synchronizedList(new ArrayList<>());
+        thisPlayer = null;
+        otherPlayer = null;
+
+        //Players spawn points
+        thisX = 0;
+        thisY = 0;
+        otherX = 0;
+        otherY = 0;
     }
 
     public void run(){
@@ -129,8 +174,44 @@ public abstract class Controller extends Canvas implements Runnable {
                 timer += 1000;
                 frames = 0;
             }
+
+            /*
+            if ((hasPauseMenu && this instanceof SingleController)) {
+                unlockWaiter();
+                waitForThread();
+            }
+
+             */
         }
         stop();
+    }
+
+    public void openPauseMenu() {
+        //this.removeKeyListener(keyInput);
+        //this.removeMouseListener();
+        hasPauseMenu = true;
+        pauseMenu = new PauseMenu(gameWindow.getFrame(), this);
+        gameWindow.getFrame().remove(this);
+        gameWindow.getFrame().add(pauseMenu.getJPanel());
+        gameWindow.getFrame().revalidate();
+    }
+
+    public void closePauseMenu() {
+        gameWindow.getFrame().remove(pauseMenu.getJPanel());
+        gameWindow.getFrame().add(this);
+        gameWindow.getFrame().revalidate();
+        gameWindow.setCanPause(true);
+
+        // Allows key inputs to be used after the component switch
+        requestFocusInWindow();
+        this.createBufferStrategy(3);
+        hasPauseMenu = false;
+        //this.addMouseListener(new MouseInput(this));
+        //this.addKeyListener(new KeyInput(this));
+    }
+
+    public GameWindow getGameWindow() {
+        return gameWindow;
     }
 
     /**
@@ -151,6 +232,11 @@ public abstract class Controller extends Canvas implements Runnable {
             if(powerUps.get(i) != null){
                 powerUps.get(i).tick();
             }
+        }
+
+        for (int i = 0; i < explosions.size(); i++) {
+            if(explosions.get(i) != null)
+                explosions.get(i).tick();
         }
 
         if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 0 && thisPlayer.getWeaponSerial() == 003
@@ -178,9 +264,13 @@ public abstract class Controller extends Canvas implements Runnable {
      * Graphics tick. Happens a whole bunch of times per second.
      */
     public void render(){
+        if (isWon || hasPauseMenu) {
+            return;
+        }
+
         BufferStrategy bs = this.getBufferStrategy();
         if(bs == null){
-                this.createBufferStrategy(3);
+            this.createBufferStrategy(3);
             return;
         }
 
@@ -215,7 +305,10 @@ public abstract class Controller extends Canvas implements Runnable {
                 movingAmmo.get(i).render(g);
         }
 
-
+        for (int i = 0; i < explosions.size(); i++) {
+            if(explosions.get(i) != null)
+                explosions.get(i).render(g);
+        }
 
         for (int i = 0; i < players.size(); i++) {
             if(players.get(i) != null) {

@@ -14,6 +14,7 @@ import power_ups.PowerUp;
 import power_ups.SpeedUp;
 import utilities.BufferedImageLoader;
 import weapons.ammo.*;
+import weapons.aoe.Explosion;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -33,9 +34,6 @@ public class ServerController extends Controller {
     public ServerController() {
         super();
         clientWeaponAudio = new SFXPlayer();
-        new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
-        this.addKeyListener(new KeyInput());
-        this.addMouseListener(new MouseInput());
 
         //Loading level
         level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level" + MainMenu.mapSelected +".png");
@@ -92,7 +90,7 @@ public class ServerController extends Controller {
             otherPlayer.setPlayerName(packet.getClientName());
             System.out.println("Start request received and resent.");
         } else if (object instanceof ClientBulletPacket packet) {
-            switch (packet.getType()){
+            switch (packet.getType()) {
                 case ShotgunBullet -> new ShotgunBullet(
                         Player.CLIENT_PLAYER,
                         packet.getMouseXLocation(),
@@ -117,9 +115,26 @@ public class ServerController extends Controller {
                         packet.getMouseYLocation(),
                         packet.getDamage()
                 );
+                case RocketLauncherBullet -> new RocketLauncherBullet(
+                        Player.CLIENT_PLAYER,
+                        packet.getMouseXLocation(),
+                        packet.getMouseYLocation(),
+                        packet.getDamage()
+                );
             }
 
             otherPlayer.incrementBulletCount();
+
+        } else if (object instanceof ClientExplosionPacket packet) {
+
+            new Explosion(
+                    packet.getX(),
+                    packet.getY(),
+                    packet.getPlayerNumber()
+            );
+            clientWeaponAudio.setFile(-1);
+            clientWeaponAudio.play();
+
         } else if (object instanceof ClientSFXPacket packet) {
             clientWeaponAudio.setFile(packet.getClientSFXInt());
             clientWeaponAudio.play();
@@ -145,9 +160,29 @@ public class ServerController extends Controller {
                 Bullet bullet = movingAmmo.get(j);
                 if (bullet.hasStopped()) {
                     movingAmmo.remove(bullet);
+                    if (bullet.getSERIAL() == 004 &&
+                            EntityCollision.getBulletVictim(bullet) != bullet.getPlayerIBelongToNumber()) {
+                        System.out.println("Explosive triggered");
+                        explosions.add(new Explosion(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
+                        outputConnection.sendPacket(new ServerExplosionPacket(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
 
+                        // Not necessarily an explosion created by client but clientWeaponAudio was the most convenient option
+                        clientWeaponAudio.setFile(-1);
+                        clientWeaponAudio.play();
+                    }
                 } else {
                     checkVictims(bullet);
+                }
+            }
+        }
+
+        for (int j = 0; j < explosions.size(); j++) {
+            if (explosions.get(j) != null) {
+                Explosion explosion = explosions.get(j);
+                if (explosion.hasDied()) {
+                    explosions.remove(explosion);
+                } else {
+                    checkVictims(explosion);
                 }
             }
         }
@@ -208,7 +243,7 @@ public class ServerController extends Controller {
 
     private void checkVictims(Bullet bullet) {
         // Player who was hit (-1 if no one was hit)
-        int victimNumber = EntityCollision.getVictim(bullet);
+        int victimNumber = EntityCollision.getBulletVictim(bullet);
         System.out.println("CHECK");
 
         // Player
@@ -224,6 +259,17 @@ public class ServerController extends Controller {
         }
 
         if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber() && !victim.isInvincible()) {
+            if (bullet.getSERIAL() == 004) {
+                movingAmmo.remove(bullet);
+                System.out.println("Rocket launcher victor: " + bullet.getPlayerIBelongToNumber());
+                explosions.add(new Explosion(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
+                outputConnection.sendPacket(new ServerExplosionPacket(bullet.x, bullet.y,
+                        bullet.getPlayerIBelongToNumber()));
+
+                // Not necessarily an explosion created by client but clientWeaponAudio was the most convenient option
+                clientWeaponAudio.setFile(-1);
+                clientWeaponAudio.play();
+            }
             if (bullet.getSERIAL() != 002) {
                 movingAmmo.remove(bullet);
             }
@@ -245,7 +291,6 @@ public class ServerController extends Controller {
                 victim.revive();
                 if(victim == otherPlayer){
                     outputConnection.sendPacket(new RespawnPacket());
-
                 }
 
                 killer.incrementKillCount();
@@ -257,7 +302,125 @@ public class ServerController extends Controller {
         }
     }
 
+    private void checkVictims(Explosion explosion) {
+        // Player who was hit (-1 if no one was hit)
+        int victimNumber = EntityCollision.getExplosionVictim(explosion);
+
+        System.out.println("victimNumber = " + victimNumber + ", killerNumber = " + explosion.getPlayerIBelongToNumber());
+
+        // Player
+        Player killer;
+        Player victim;
+        if (explosion.getPlayerIBelongToNumber() == Player.SERVER_PLAYER) {
+            killer = thisPlayer;
+            if (victimNumber == Player.CLIENT_PLAYER) {
+                victim = otherPlayer;
+            } else if (victimNumber == Player.SERVER_PLAYER) {
+                victim = thisPlayer;
+            } else {
+                victim = null;
+            }
+        } else {
+            killer = otherPlayer;
+            if (victimNumber == Player.CLIENT_PLAYER) {
+                victim = otherPlayer;
+            } else if (victimNumber == Player.SERVER_PLAYER) {
+                victim = thisPlayer;
+            } else {
+                victim = null;
+            }
+        }
+
+        if (victim != null && explosion.isHarmful() && !victim.isInvincible()) {
+
+            killer.incrementBulletHitCount();
+            victim.modifyHealth(-1 * Explosion.DAMAGE);
+            victim.resetHealTimer();
+            killer.addTDO(-1 * Explosion.DAMAGE);
+
+            if (victim.getHealth() == 0) {
+
+                //Handle death markers on the floor
+                new DeathMark(victim.getX(), victim.getY(), victimNumber);
+                outputConnection.sendPacket(new EyeCandyPacket(eyeCandy.toArray(new GameObject[0])));
+
+                victim.incrementDeathCount();
+                victim.revive();
+                if(victim == otherPlayer){
+                    outputConnection.sendPacket(new RespawnPacket());
+                }
+
+                killer.incrementKillCount();
+                // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
+                if(victim.getDeathCount() >= 10){
+                    declareWinner(killer);
+                }
+            }
+        } else if (victimNumber == -2 && explosion.isHarmful()) {
+
+            if (!otherPlayer.isInvincible()) {
+                otherPlayer.modifyHealth(-1 * Explosion.DAMAGE);
+                otherPlayer.resetHealTimer();
+                if (otherPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
+                    killer.addTDO(-1 * Explosion.DAMAGE);
+                    killer.incrementBulletHitCount();
+                }
+
+                if (otherPlayer.getHealth() == 0) {
+
+                    //Handle death markers on the floor
+                    new DeathMark(otherPlayer.getX(), otherPlayer.getY(), Player.CLIENT_PLAYER);
+                    outputConnection.sendPacket(new EyeCandyPacket(eyeCandy.toArray(new GameObject[0])));
+
+                    otherPlayer.incrementDeathCount();
+                    otherPlayer.revive();
+
+                    outputConnection.sendPacket(new RespawnPacket());
+
+                    if (otherPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
+                        killer.incrementKillCount();
+                        if(otherPlayer.getDeathCount() >= 10){
+                            declareWinner(killer);
+                        }
+                    }
+
+                    // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
+
+                }
+            }
+            if (!thisPlayer.isInvincible()) {
+                thisPlayer.modifyHealth(-1 * Explosion.DAMAGE);
+                thisPlayer.resetHealTimer();
+                System.out.println("I got memed");
+
+                if (thisPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
+                    killer.addTDO(-1 * Explosion.DAMAGE);
+                    killer.incrementBulletHitCount();
+                }
+
+                if (thisPlayer.getHealth() == 0) {
+
+                    //Handle death markers on the floor
+                    new DeathMark(thisPlayer.getX(), thisPlayer.getY(), Player.SERVER_PLAYER);
+                    outputConnection.sendPacket(new EyeCandyPacket(eyeCandy.toArray(new GameObject[0])));
+
+                    thisPlayer.incrementDeathCount();
+                    thisPlayer.revive();
+
+                    if (thisPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
+                        killer.incrementKillCount();
+                        if(thisPlayer.getDeathCount() >= 10){
+                            declareWinner(killer);
+                        }
+                    }
+                    System.out.println(thisPlayer.getPlayerName() + " was memed by " + killer.getPlayerName());
+                }
+            }
+        }
+    }
+
     public void declareWinner(Player winner){
+        isWon = true;
         int winnerNumber;
         if(winner == thisPlayer){
             winnerNumber = Player.SERVER_PLAYER;

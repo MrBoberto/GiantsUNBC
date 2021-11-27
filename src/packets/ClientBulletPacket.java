@@ -12,7 +12,8 @@ public class ClientBulletPacket implements Serializable {
     Projectile.ProjectileType projectileType;
     int damage;
 
-    public ClientBulletPacket(double playerX, double playerY, double mouseXLocation, double mouseYLocation, Projectile.ProjectileType projectileType, int damage) {
+    public ClientBulletPacket(double playerX, double playerY, double mouseXLocation, double mouseYLocation,
+                              Projectile.ProjectileType projectileType, int damage) {
         this.playerX = playerX;
         this.playerY = playerY;
         this.mouseXLocation = mouseXLocation;

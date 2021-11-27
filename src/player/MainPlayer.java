@@ -78,31 +78,31 @@ public class MainPlayer extends Player {
      */
     public void setVelocity(double speed) {
         if (super.getAngle() == 0) {
-            velY = -speed;
-            velX = 0;
+            setVelY(-speed);
+            setVelX(0);
         } else if (super.getAngle() == Math.PI / 2) {
-            velX = speed;
-            velY = 0;
+            setVelX(speed);
+            setVelY(0);
         } else if (super.getAngle() == Math.PI) {
-            velY = speed;
-            velX = 0;
+            setVelY(speed);
+            setVelX(0);
         } else if (super.getAngle() == -Math.PI / 2) {
-            velX = -speed;
-            velY = 0;
+            setVelX(-speed);
+            setVelY(0);
         } else {
-            velX = speed * Math.cos(super.getAngle());
-            velY = -speed * Math.sin(super.getAngle());
+            setVelX(speed * Math.cos(super.getAngle()));
+            setVelY(-speed * Math.sin(super.getAngle()));
 //            System.out.println("player.Player 1 Current super.getAngle(): " + super.getAngle());
             if ((super.getAngle() > (Math.PI / 2) && super.getAngle() < Math.PI)
                     || (super.getAngle() < 0 && super.getAngle() > -Math.PI / 2)) {
-                velX *= -1;
-                velY *= -1;
+                setVelX(getVelX() * -1);
+                setVelY(getVelY() * -1);
             }
         }
     }
 
     public double getVelocity() {
-        return Math.sqrt(Math.pow(velX, 2) + Math.pow(velY, 2)) * Math.cos(super.getAngle());
+        return Math.sqrt(Math.pow(getVelX(), 2) + Math.pow(getVelY(), 2)) * Math.cos(super.getAngle());
     }
 
     /**
@@ -120,7 +120,7 @@ public class MainPlayer extends Player {
                 if (up || right || down || left) {
                     setVelocity(VELSNEAK / 2);
                 } else {
-                    velX = 0;
+                    setVelX(0);
                 }
             }
         } else if (ctrlIsHeld && canDash && getVelocity() <= VELJOG) {
@@ -131,27 +131,27 @@ public class MainPlayer extends Player {
         } else if ((up || right || down || left) && !shiftIsHeld && getVelocity() < VELJOG) {
             setVelocity(VELJOG);
         } else if (shiftIsHeld) {
-            velX = 0;
+            setVelX(0);
         }
 
         //Check collisions
         checkBlockCollisions();
 
         // Determine distance travelled
-        if((velX > 0 && !rightStop) || (velX < 0 && !leftStop)){
-            super.setX(super.getX() + (velX*speedMultiplier));
+        if((getVelX() > 0 && !rightStop) || (getVelX() < 0 && !leftStop)){
+            super.setX(super.getX() + (getVelX()*speedMultiplier));
 
             //Increase walking distance stat
-            if(velY > 0 || velX > 0){
+            if(getVelY() > 0 || getVelX() > 0){
                 incrementWalkingDistance();
             }
         }
 
-        if((velY > 0 && !downStop) || (velY < 0 && !upStop)){
-            super.setY(super.getY() + (velY*speedMultiplier));
+        if((getVelY() > 0 && !downStop) || (getVelY() < 0 && !upStop)){
+            super.setY(super.getY() + (getVelY()*speedMultiplier));
 
             //Increase walking distance stat
-            if(velY > 0 || velX > 0){
+            if(getVelY() > 0 || getVelX() > 0){
                 incrementWalkingDistance();
             }
         }
@@ -216,20 +216,20 @@ public class MainPlayer extends Player {
         move();
 
         // Apply vertical friction
-        if (velY > Controller.FRICTION) {
-            velY -= Controller.FRICTION;
-        } else if (velY < -Controller.FRICTION) {
-            velY += Controller.FRICTION;
-        } else if (velY != 0) {
-            velY = 0;
+        if (getVelY() > Controller.FRICTION) {
+            setVelY(getVelY() - Controller.FRICTION);
+        } else if (getVelY() < -Controller.FRICTION) {
+            setVelY(getVelY() + Controller.FRICTION);
+        } else if (getVelY() != 0) {
+            setVelY(0);
         }
         // Apply horizontal friction
-        if (velX > Controller.FRICTION) {
-            velX -= Controller.FRICTION;
-        } else if (velX < -Controller.FRICTION) {
-            velX += Controller.FRICTION;
-        } else if (velX != 0) {
-            velX = 0;
+        if (getVelX() > Controller.FRICTION) {
+            setVelX(getVelX() - Controller.FRICTION);
+        } else if (getVelX() < -Controller.FRICTION) {
+            setVelX(getVelX() + Controller.FRICTION);
+        } else if (getVelX() != 0) {
+            setVelX(0);
         }
 
         //Keep player inside game area
@@ -241,10 +241,10 @@ public class MainPlayer extends Player {
 
         if (super.getY() <= currentImage.getImage().getHeight() / 2.0) {
             super.setY(currentImage.getImage().getHeight() / 2.0);
-            velY = 1;
+            setVelY(1);
         } else if (super.getY() >= Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0) {
             super.setY(Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0);
-            velY = 0;
+            setVelY(0);
             isFalling = false;
         }
 
@@ -294,11 +294,13 @@ public class MainPlayer extends Player {
                 g2d.drawImage(slotTextures.get(weapons.getPrimary().getSERIAL() + 1), affTraPP, World.controller);
                 if (weapons.getSecondary() != null) {
                     g2d.drawImage(slotTextures.get(weapons.getSecondary().getSERIAL() + 1), affTraPS, World.controller);
-                    AffineTransform affTraI = AffineTransform.getTranslateInstance(Controller.WIDTH - weapons.size() * 120, 120);
+                    AffineTransform affTraI = AffineTransform.getTranslateInstance((Controller.WIDTH) - (weapons.size() * 70), 120);
                     affTraI.scale(0.5, 0.5);
+                    int j = 240;
                     for (int i = 0; i < weapons.size(); i++) {
-                        affTraI.translate(i * 120, 0);
+                        affTraI.translate(i * j, 0);
                         g2d.drawImage(slotTextures.get(weapons.get(i).getSERIAL() + 1), affTraI, World.controller);
+                        j /= 2;
                     }
                 } else {
                     // The empty texture is a placeholder in case a background is made for inventory slots
@@ -318,11 +320,13 @@ public class MainPlayer extends Player {
                 g2d.drawImage(slotTextures.get(weapons.getPrimary().getSERIAL() + 1), affTraSP, World.controller);
                 if (weapons.getSecondary() != null) {
                     g2d.drawImage(slotTextures.get(weapons.getSecondary().getSERIAL() + 1), affTraSS, World.controller);
-                    AffineTransform affTraI = AffineTransform.getTranslateInstance(Controller.WIDTH - weapons.size() * 120, 120);
+                    AffineTransform affTraI = AffineTransform.getTranslateInstance((Controller.WIDTH) - (weapons.size() * 70), 120);
                     affTraI.scale(0.5, 0.5);
+                    int j = 240;
                     for (int i = 0; i < weapons.size(); i++) {
-                        affTraI.translate(i * 120, 0);
+                        affTraI.translate(i * j, 0);
                         g2d.drawImage(slotTextures.get(weapons.get(i).getSERIAL() + 1), affTraI, World.controller);
+                        j /= 2;
                     }
                 } else {
                     // The empty texture is a placeholder in case a background is made for inventory slots
@@ -464,7 +468,7 @@ public class MainPlayer extends Player {
 
         ArrayList<String> imgLocStr = new ArrayList<>();
 
-        for (int i = -1; i <= 3; i++) {
+        for (int i = -1; i <= 4; i++) {
             imgLocStr.add("arsenal (" + i + ").png");
         }
         slotTextures = new ArrayList<>();

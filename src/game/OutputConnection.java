@@ -2,10 +2,10 @@ package game;
 
 import packets.ServerBulletPacket;
 import packets.ClientUpdatePacket;
+import packets.ServerExplosionPacket;
 import packets.ServerUpdatePacket;
 import weapons.ammo.Bullet;
-import weapons.ammo.Projectile;
-import weapons.ammo.ShotgunBullet;
+import weapons.aoe.Explosion;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -36,7 +36,6 @@ public class OutputConnection implements Runnable {
     public void run() {
         running = true;
         while (running) {
-
 
             // Send current state of game to clients.
             if (gameRunning) {

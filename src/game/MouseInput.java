@@ -7,7 +7,10 @@ import java.awt.event.MouseEvent;
 
 public class MouseInput extends MouseAdapter {
 
-    public MouseInput(){
+    protected Controller controller;
+
+    public MouseInput(Controller controller){
+        this.controller = controller;
         /* empty */
     }
 
@@ -26,6 +29,7 @@ public class MouseInput extends MouseAdapter {
             if (Controller.thisPlayer.getSelectedWeapon() == Player.PRIMARY_WEAPON
                     && Controller.thisPlayer.getWeapons().getPrimary().getCurrentDelay() == 0)
             {
+                System.out.println(Controller.thisPlayer.getWeapons().getPrimary().toString() + " is firing.");
                 Controller.thisPlayer.getWeapons().getPrimary().shoot(e.getX(), e.getY());
                 //Controller.thisPlayer.getWeapons().getPrimary().playAudio();
 
@@ -53,6 +57,7 @@ public class MouseInput extends MouseAdapter {
 
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON3) {
+            System.out.println("Switch!");
             if (Controller.mouseInside) {
                 int selectedWeapon = Controller.thisPlayer.getSelectedWeapon();
                 // Switch between primary and secondary

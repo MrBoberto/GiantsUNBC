@@ -13,7 +13,7 @@ import java.io.*;
 
 public class PistolBullet extends Bullet {
 
-    private final int SERIAL = 004;
+    private final int SERIAL = 002;
     private static final double INACCURACY = 0.01;
 
 
@@ -65,12 +65,12 @@ public class PistolBullet extends Bullet {
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
 //            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
-            velX = World.cosAdj(speed, angle);
-            velY = World.sinOpp(speed, angle);
+            setVelX(World.cosAdj(speed, angle));
+            setVelY(World.sinOpp(speed, angle));
         } else {
 //            System.out.print(", Positive, speed = " + weapon.getMOMENTUM() / MASS);
-            velX = World.sinOpp(speed, angle);
-            velY = World.cosAdj(speed, angle);
+            setVelX(World.sinOpp(speed, angle));
+            setVelY(World.cosAdj(speed, angle));
         }
 
 //        System.out.println(", velX = " + velX + ", velY = " + velY);

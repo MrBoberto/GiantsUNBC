@@ -9,8 +9,8 @@ import java.io.*;
 public abstract class GameObject implements Serializable {
     // The precise position of the object, for use with physics
     protected double x, y, angle;
-    protected double velX = 0;
-    protected double velY = 0;
+    private double velX = 0;
+    private double velY = 0;
     transient protected BufferedImage texture;
 
     public abstract void tick();
@@ -34,7 +34,9 @@ public abstract class GameObject implements Serializable {
     @Serial
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        if(texture == null) return;
+        if(texture == null) {
+            return;
+        }
         out.writeInt(1); // how many images are serialized?
         ImageIO.write(texture, "png", out); // png is lossless
     }
@@ -42,7 +44,7 @@ public abstract class GameObject implements Serializable {
     @Serial
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        texture = ImageIO.read(in);
+        if (texture != null) texture = ImageIO.read(in);
     }
 
     public double getVelX() {
