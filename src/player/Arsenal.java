@@ -146,7 +146,7 @@ public class Arsenal {
         if (primary.getSERIAL() == SERIAL || secondary.getSERIAL() == SERIAL) {
             return true;
         } else {
-            for (int i; i < weapons.size(); i++) {
+            for (int i = 0; i < weapons.size(); i++) {
                 if (weapons.get(i).getSERIAL() == SERIAL) {
                     return true;
                 }
