@@ -5,7 +5,9 @@ import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
+import power_ups.DamageDown;
 import power_ups.DamageUp;
+import power_ups.SpeedUp;
 import utilities.BufferedImageLoader;
 
 import java.awt.*;
@@ -110,16 +112,20 @@ public class ClientController extends Controller {
             switch (packet.getPlayerToBeAffected()) {
                 case Player.SERVER_PLAYER:
                     otherPlayer.setDamageMultiplier(packet.getDamageMultiplier());
+                    otherPlayer.setSpeedMultiplier(packet.getSpeedMultiplier());
                     /* here goes other property changes */
                     break;
                 case Player.CLIENT_PLAYER:
                     thisPlayer.setDamageMultiplier(packet.getDamageMultiplier());
+                    thisPlayer.setSpeedMultiplier(packet.getSpeedMultiplier());
                     break;
             }
         } else if (object instanceof CreatePowerUpPacket packet) {
             //Use default properties since server is the one that controls effects and collisions.
             switch (packet.getPowerUpType()){
                 case DamageUp -> powerUps.add(new DamageUp(packet.getX(),packet.getY(),Player.DEFAULT_DAMAGE_MULTIPLIER));
+                case DamageDown -> powerUps.add(new DamageDown(packet.getX(),packet.getY(),Player.DEFAULT_DAMAGE_MULTIPLIER));
+                case SpeedUp -> powerUps.add(new SpeedUp(packet.getX(),packet.getY(),Player.DEFAULT_SPEED_MULTIPLIER));
             }
         }
         else if (object instanceof WinnerPacket packet) {

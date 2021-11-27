@@ -11,28 +11,28 @@ import utilities.BufferedImageLoader;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class DamageUp extends PowerUp{
+public class DamageDown extends PowerUp{
 
-    public static final int EFFECT_TIME = 480; // in game ticks (= 8 seconds)
+    public static final int EFFECT_TIME = DamageUp.EFFECT_TIME;
     private final float multiplier;
     private final BufferedImage secondary_texture;
 
     //Graphics
     private final int SECONDARY_TEXTURE_MAX_TIMER = 10;
     private int secondaryTextureTimer = 0;
-    private int secondaryTextureState = 1;
+    private int secondaryTextureState = -1;
     private final int FLOAT_EFFECT_MAX_TIMER = 3;
     private int floatTimer = 0;
     private int floatState = 2;
     private boolean floatDirection = true;
 
-    public DamageUp(double x, double y, float multiplier) {
+    public DamageDown(double x, double y, float multiplier) {
         super(x, y);
 
         this.multiplier = multiplier;
 
         texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/DMG_sprite.png");
-        secondary_texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/up_arrow_orange_sprite.png");
+        secondary_texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/down_arrow_blue_sprite.png");
     }
 
     @Override
@@ -56,10 +56,10 @@ public class DamageUp extends PowerUp{
 
         if(secondaryTextureTimer > SECONDARY_TEXTURE_MAX_TIMER){
             secondaryTextureTimer = 0;
-            if(secondaryTextureState == -1){
-                secondaryTextureState = 1;
+            if(secondaryTextureState == 1){
+                secondaryTextureState = -1;
             } else {
-                secondaryTextureState--;
+                secondaryTextureState++;
             }
         }
         if(floatTimer > FLOAT_EFFECT_MAX_TIMER){
@@ -80,7 +80,7 @@ public class DamageUp extends PowerUp{
 
     @Override
     protected void updateClient(int playerNumber, int indexToRemove) {
-        PowerUpEffectPacket powerUpEffectPacket = new PowerUpEffectPacket(playerNumber, indexToRemove );
+        PowerUpEffectPacket powerUpEffectPacket = new PowerUpEffectPacket(playerNumber, indexToRemove);
         powerUpEffectPacket.setDamageMultiplier(multiplier);
         World.controller.getOutputConnection().sendPacket(powerUpEffectPacket);
     }

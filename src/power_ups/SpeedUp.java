@@ -11,7 +11,7 @@ import utilities.BufferedImageLoader;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class DamageUp extends PowerUp{
+public class SpeedUp extends PowerUp{
 
     public static final int EFFECT_TIME = 480; // in game ticks (= 8 seconds)
     private final float multiplier;
@@ -26,12 +26,12 @@ public class DamageUp extends PowerUp{
     private int floatState = 2;
     private boolean floatDirection = true;
 
-    public DamageUp(double x, double y, float multiplier) {
+    public SpeedUp(double x, double y, float multiplier) {
         super(x, y);
 
         this.multiplier = multiplier;
 
-        texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/DMG_sprite.png");
+        texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/SPEED_sprite.png");
         secondary_texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/up_arrow_orange_sprite.png");
     }
 
@@ -41,9 +41,9 @@ public class DamageUp extends PowerUp{
         Controller.powerUps.remove(indexToRemove);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController){
             if(playerNumber == Player.SERVER_PLAYER){
-                Controller.thisPlayer.setDamageMultiplier(multiplier);
+                Controller.thisPlayer.setSpeedMultiplier(multiplier);
             } else {
-                Controller.otherPlayer.setDamageMultiplier(multiplier);
+                Controller.otherPlayer.setSpeedMultiplier(multiplier);
             }
         }
 
@@ -80,8 +80,8 @@ public class DamageUp extends PowerUp{
 
     @Override
     protected void updateClient(int playerNumber, int indexToRemove) {
-        PowerUpEffectPacket powerUpEffectPacket = new PowerUpEffectPacket(playerNumber, indexToRemove );
-        powerUpEffectPacket.setDamageMultiplier(multiplier);
+        PowerUpEffectPacket powerUpEffectPacket = new PowerUpEffectPacket(playerNumber, indexToRemove);
+        powerUpEffectPacket.setSpeedMultiplier(multiplier);
         World.controller.getOutputConnection().sendPacket(powerUpEffectPacket);
     }
 

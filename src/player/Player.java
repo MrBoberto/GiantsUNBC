@@ -5,6 +5,7 @@ import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
 import power_ups.DamageUp;
+import power_ups.SpeedUp;
 import weapons.guns.AssaultRifle;
 import weapons.guns.Pistol;
 import weapons.guns.Shotgun;
@@ -31,6 +32,7 @@ public abstract class Player extends GameObject {
     protected final double VELSUPERDASH = 30;
     protected final int LANDINGTIMERMAX = 27;
     protected final int SUPERDASHTIMERMAX = 67;
+
     public MainMenu mainMenu;
     // The texture of the player being used in the current frame
     protected ImageFrame currentImage;
@@ -49,6 +51,9 @@ public abstract class Player extends GameObject {
     protected float damageMultiplier = DEFAULT_DAMAGE_MULTIPLIER;
     protected int damageMultiplierTimer = 0;
 
+    public static final float DEFAULT_SPEED_MULTIPLIER = 1;
+    protected float speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
+    protected int speedMultiplierTimer = 0;
 
     protected int playerNumber;
     protected String playerName;
@@ -371,6 +376,12 @@ public abstract class Player extends GameObject {
         } else {
             damageMultiplier = DEFAULT_DAMAGE_MULTIPLIER;
         }
+
+        if(speedMultiplierTimer > 0){
+            speedMultiplierTimer--;
+        } else {
+            speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
+        }
     }
 
     @Override
@@ -523,5 +534,12 @@ public abstract class Player extends GameObject {
 
     public void setRespawnPointY(double respawnPointY) {
         this.respawnPointY = respawnPointY;
+    }
+
+    public void setSpeedMultiplier(float speedMultiplier){
+        if(speedMultiplier != -1) {
+            this.speedMultiplier = speedMultiplier;
+            speedMultiplierTimer = SpeedUp.EFFECT_TIME;
+        }
     }
 }

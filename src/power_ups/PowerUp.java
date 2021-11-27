@@ -7,10 +7,10 @@ import java.awt.*;
 
 public abstract class PowerUp extends GameObject {
 
-    public static final int TIME_BEFORE_DESPAWN = 480; // in game ticks (= 8 seconds)
+    public static final int TIME_BEFORE_DESPAWN = 10 * 60; // = 10 seconds
     protected int lifetime = 0; //in game ticks
     public static final Dimension POWER_UP_DIMENSIONS = new Dimension(Controller.GRID_SIZE*3/4, Controller.GRID_SIZE*3/4);
-    public enum PowerUpType{DamageUp}
+    public enum PowerUpType{DamageUp,DamageDown,SpeedUp}
 
     protected PowerUp(double x, double y) {
         super(x, y);

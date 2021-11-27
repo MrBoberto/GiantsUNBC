@@ -8,8 +8,10 @@ import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
+import power_ups.DamageDown;
 import power_ups.DamageUp;
 import power_ups.PowerUp;
+import power_ups.SpeedUp;
 import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 
@@ -174,12 +176,18 @@ public class ServerController extends Controller {
                     }
                 }
             }
-            //TODO: replace 0 with World.getSRandom().nextInt([number of type of powerUps available])
-            switch (0){
+            switch (World.getSRandom().nextInt(PowerUp.PowerUpType.values().length)){
                 case 0:
                     powerUps.add(new DamageUp(x,y,2));
                     outputConnection.sendPacket(new CreatePowerUpPacket(x,y, PowerUp.PowerUpType.DamageUp));
                     break;
+                case 1:
+                    powerUps.add(new DamageDown(x,y, 0.5F));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x,y, PowerUp.PowerUpType.DamageDown));
+                    break;
+                case 2:
+                    powerUps.add(new SpeedUp(x,y,1.5F));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x,y, PowerUp.PowerUpType.SpeedUp));
             }
 
         } else if (currentPowerUpCooldown == 0){

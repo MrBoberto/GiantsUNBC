@@ -139,7 +139,7 @@ public class MainPlayer extends Player {
 
         // Determine distance travelled
         if((velX > 0 && !rightStop) || (velX < 0 && !leftStop)){
-            super.setX(super.getX() + velX);
+            super.setX(super.getX() + (velX*speedMultiplier));
 
             //Increase walking distance stat
             if(velY > 0 || velX > 0){
@@ -148,7 +148,7 @@ public class MainPlayer extends Player {
         }
 
         if((velY > 0 && !downStop) || (velY < 0 && !upStop)){
-            super.setY(super.getY() + velY);
+            super.setY(super.getY() + (velY*speedMultiplier));
 
             //Increase walking distance stat
             if(velY > 0 || velX > 0){

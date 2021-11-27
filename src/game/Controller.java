@@ -47,7 +47,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
     //Global PowerUps variables
     protected static int currentPowerUpCooldown = 0;
-    public static final int COOLDOWN_BETWEEN_POWER_UPS = 4 * 60; //in game ticks. 4 seconds before a new power up can appear.
+    public static final int COOLDOWN_BETWEEN_POWER_UPS = 2 * 60; //in game ticks. 2 seconds before a new power up can appear.
 
     //Players spawn points
     public static int thisX = 0;
