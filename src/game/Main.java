@@ -19,7 +19,7 @@ public class Main {
 
     }
 
-    public static void main(String[] args) {
+    public Main(){
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
@@ -88,4 +88,10 @@ public class Main {
     public static int getVolumeSFXActual() {
         return volumeSFX;
     }
+
+    public static void main(String[] args) {
+        Main main = new Main();
+    }
 }
+
+
