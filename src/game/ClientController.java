@@ -5,26 +5,25 @@ import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
+import power_ups.DamageUp;
 import utilities.BufferedImageLoader;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ClientController extends Controller{
+public class ClientController extends Controller {
 
     private Socket socket;
 
     private int shotgunAudioCount = 10;
     public SFXPlayer serverWeaponAudio;
 
-    public ClientController(){
+    public ClientController() {
         super();
-        new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
+        new GameWindow(WIDTH, HEIGHT, "THE BOYZ", this);
 
         this.addKeyListener(new KeyInput());
         this.addMouseListener(new MouseInput());
@@ -64,9 +63,9 @@ public class ClientController extends Controller{
 
     @Override
     public void packetReceived(Object object) {
-        if(object instanceof StartPacket packet){
+        if (object instanceof StartPacket packet) {
             //Loading level
-            level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level"+ packet.getMapSelected() +".png");
+            level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level" + packet.getMapSelected() + ".png");
             loadLevel(level);
 
 
@@ -77,9 +76,8 @@ public class ClientController extends Controller{
             thisPlayer.setY(packet.getY());
 
 
-
-        } else if(object instanceof ServerUpdatePacket packet){
-            if(otherPlayer != null) {
+        } else if (object instanceof ServerUpdatePacket packet) {
+            if (otherPlayer != null) {
 
                 otherPlayer.setWalking(packet.isWalking());
                 //otherPlayer.getPos().setLocation(packet.getX(), packet.getY());
@@ -92,7 +90,7 @@ public class ClientController extends Controller{
                 otherPlayer.setInvincible(packet.isInvincible()[0]);
                 thisPlayer.setInvincible(packet.isInvincible()[1]);
             }
-        } else if(object instanceof ServerBulletPacket packet){
+        } else if (object instanceof ServerBulletPacket packet) {
 
             movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
 
@@ -101,17 +99,34 @@ public class ClientController extends Controller{
             serverWeaponAudio.setFile(packet.getServerSFXInt());
             serverWeaponAudio.play();
 
-        } else if(object instanceof RespawnPacket){
+        } else if (object instanceof RespawnPacket) {
 
             thisPlayer.revive();
 
-        } else if (object instanceof EyeCandyPacket packet){
-            eyeCandy = new ArrayList<>(Arrays.asList(packet.getEyeCandy())) ;
-        } else if(object instanceof WinnerPacket packet){
+        } else if (object instanceof EyeCandyPacket packet) {
+            eyeCandy = new ArrayList<>(Arrays.asList(packet.getEyeCandy()));
+        } else if (object instanceof PowerUpEffectPacket packet) {
+            powerUps.remove(packet.getIndexToRemove());
+            switch (packet.getPlayerToBeAffected()) {
+                case Player.SERVER_PLAYER:
+                    otherPlayer.setDamageMultiplier(packet.getDamageMultiplier());
+                    /* here goes other property changes */
+                    break;
+                case Player.CLIENT_PLAYER:
+                    thisPlayer.setDamageMultiplier(packet.getDamageMultiplier());
+                    break;
+            }
+        } else if (object instanceof CreatePowerUpPacket packet) {
+            //Use default properties since server is the one that controls effects and collisions.
+            switch (packet.getPowerUpType()){
+                case DamageUp -> powerUps.add(new DamageUp(packet.getX(),packet.getY(),Player.DEFAULT_DAMAGE_MULTIPLIER));
+            }
+        }
+        else if (object instanceof WinnerPacket packet) {
 
 
             Player winner;
-            if(packet.getWinner() == Player.SERVER_PLAYER){
+            if (packet.getWinner() == Player.SERVER_PLAYER) {
                 winner = otherPlayer;
             } else {
                 winner = thisPlayer;
@@ -129,12 +144,12 @@ public class ClientController extends Controller{
 
                 //Print
                 System.out.format(format,
-                        (int)packet.getPlayerInfo()[i][0],
-                        (int)packet.getPlayerInfo()[i][1],
+                        (int) packet.getPlayerInfo()[i][0],
+                        (int) packet.getPlayerInfo()[i][1],
                         packet.getPlayerInfo()[i][2],
-                        (int)packet.getPlayerInfo()[i][3],
-                        (int)packet.getPlayerInfo()[i][4],
-                        (int)packet.getPlayerInfo()[i][5],
+                        (int) packet.getPlayerInfo()[i][3],
+                        (int) packet.getPlayerInfo()[i][4],
+                        (int) packet.getPlayerInfo()[i][5],
                         "???");
             }
             stop();

@@ -5,6 +5,7 @@ import mapObjects.Block;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
+import power_ups.PowerUp;
 import utilities.BufferedImageLoader;
 import weapons.ammo.Bullet;
 import weapons.guns.AssaultRifle;
@@ -40,8 +41,13 @@ public abstract class Controller extends Canvas implements Runnable {
     public static List<Player> players = Collections.synchronizedList(new ArrayList<>());
     public static List<Block> blocks = Collections.synchronizedList(new ArrayList<>());
     public static List<GameObject> eyeCandy = Collections.synchronizedList(new ArrayList<>());
+    public static List<PowerUp> powerUps = Collections.synchronizedList(new ArrayList<>());
     public static MainPlayer thisPlayer;
     public static OtherPlayer otherPlayer;
+
+    //Global PowerUps variables
+    protected static int currentPowerUpCooldown = 0;
+    public static final int COOLDOWN_BETWEEN_POWER_UPS = 4 * 60; //in game ticks. 4 seconds before a new power up can appear.
 
     //Players spawn points
     public static int thisX = 0;
@@ -141,6 +147,12 @@ public abstract class Controller extends Canvas implements Runnable {
                 movingAmmo.get(i).tick();
         }
 
+        for (int i = 0; i < powerUps.size(); i++) {
+            if(powerUps.get(i) != null){
+                powerUps.get(i).tick();
+            }
+        }
+
         if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 0 && thisPlayer.getWeaponSerial() == 003
                 && thisPlayer.getWeapons().getPrimary().getCurrentDelay() == 0) {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
@@ -189,6 +201,12 @@ public abstract class Controller extends Canvas implements Runnable {
         for (int i = 0; i < blocks.size(); i++) {
             if (blocks.get(i) != null){
                 blocks.get(i).render(g);
+            }
+        }
+
+        for (int i = 0; i < powerUps.size(); i++) {
+            if(powerUps.get(i) != null){
+                powerUps.get(i).render(g);
             }
         }
 

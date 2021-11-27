@@ -4,6 +4,7 @@ import game.MainMenu;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
+import power_ups.DamageUp;
 import weapons.guns.AssaultRifle;
 import weapons.guns.Pistol;
 import weapons.guns.Shotgun;
@@ -11,7 +12,6 @@ import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,8 +41,15 @@ public abstract class Player extends GameObject {
     protected int killCount = 0;
     protected int deathCount = 0;
     protected double kdr = -1;
-    protected long tdo = 0;
-    protected double damageMultiplier = 1;
+    protected double tdo = 0;
+
+    // Power Ups variables
+
+    public static final float DEFAULT_DAMAGE_MULTIPLIER = 1;
+    protected float damageMultiplier = DEFAULT_DAMAGE_MULTIPLIER;
+    protected int damageMultiplierTimer = 0;
+
+
     protected int playerNumber;
     protected String playerName;
     protected Color playerColour;
@@ -256,7 +263,7 @@ public abstract class Player extends GameObject {
      *
      * @param tdoMod Damage value to add
      */
-    public void addTDO(long tdoMod) {
+    public void addTDO(double tdoMod) {
         if (this.tdo > 1.6 * Math.pow(10, 308) || this.tdo < -1.6 * Math.pow(10, 308)) {
             System.out.println("ERROR: TDO overflow");
         } else {
@@ -268,8 +275,12 @@ public abstract class Player extends GameObject {
         return damageMultiplier;
     }
 
-    public void setDamageMultiplier(int damageMultiplier) {
-        this.damageMultiplier = damageMultiplier;
+    public void setDamageMultiplier(float damageMultiplier) {
+        if(damageMultiplier != -1) {
+            this.damageMultiplier = damageMultiplier;
+            damageMultiplierTimer = DamageUp.EFFECT_TIME;
+        }
+
     }
 
     /**
@@ -352,6 +363,13 @@ public abstract class Player extends GameObject {
             weaponSerial = weapons.getPrimary().getSERIAL();
         } else {
             weaponSerial = weapons.getSecondary().getSERIAL();
+        }
+
+        //Increase timer in powerUps if present.
+        if(damageMultiplierTimer > 0){
+            damageMultiplierTimer--;
+        } else {
+            damageMultiplier = DEFAULT_DAMAGE_MULTIPLIER;
         }
     }
 

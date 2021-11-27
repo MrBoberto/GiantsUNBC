@@ -3,10 +3,13 @@ package game;
 
 import audio.SFXPlayer;
 import eye_candy.DeathMark;
+import mapObjects.Block;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
+import power_ups.DamageUp;
+import power_ups.PowerUp;
 import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 
@@ -146,6 +149,53 @@ public class ServerController extends Controller {
                 }
             }
         }
+
+        for (int i = 0; i < powerUps.size(); i++) {
+            if(powerUps.get(i) != null){
+                checkPowerUpPickups(powerUps.get(i));
+            }
+        }
+
+        //Every COOLDOWN_BETWEEN_POWER_UPS there is a 50% chance of a power up spawning.
+        if(powerUps.size() < 4 && currentPowerUpCooldown == 0 && World.getSRandom().nextBoolean()){
+            currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
+
+            boolean loop = true;
+            int x = 0;
+            int y = 0;
+            while(loop) {
+                x = World.getSRandom().nextInt(WIDTH);
+                y = World.getSRandom().nextInt(HEIGHT);
+                loop = false;
+                for (Block block : blocks) {
+                    if ((new Rectangle(x, y, PowerUp.POWER_UP_DIMENSIONS.width, PowerUp.POWER_UP_DIMENSIONS.height)
+                            .intersects(block.getBounds()))) {
+                        loop = true;
+                    }
+                }
+            }
+            //TODO: replace 0 with World.getSRandom().nextInt([number of type of powerUps available])
+            switch (0){
+                case 0:
+                    powerUps.add(new DamageUp(x,y,2));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x,y, PowerUp.PowerUpType.DamageUp));
+                    break;
+            }
+
+        } else if (currentPowerUpCooldown == 0){
+            currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
+        } else {
+            currentPowerUpCooldown--;
+        }
+
+    }
+
+    private void checkPowerUpPickups(PowerUp powerUp) {
+        if(powerUp.getBounds().intersects(thisPlayer.getBounds())){
+            powerUp.applyPowerUp(Player.SERVER_PLAYER);
+        } else if (powerUp.getBounds().intersects(otherPlayer.getBounds())){
+            powerUp.applyPowerUp(Player.CLIENT_PLAYER);
+        }
     }
 
     private void checkVictims(Bullet bullet) {
@@ -169,11 +219,11 @@ public class ServerController extends Controller {
                 movingAmmo.remove(bullet);
             }
 
-
+            double damage = (-1 * bullet.getDamage() * killer.getDamageMultiplier());
             killer.incrementBulletHitCount();
-            victim.modifyHealth(-1 * bullet.getDamage());
+            victim.modifyHealth(damage);
             victim.resetHealTimer();
-            killer.addTDO(-1 * bullet.getDamage());
+            killer.addTDO(damage);
 
             if (victim.getHealth() == 0) {
 

@@ -7,7 +7,7 @@ import static java.lang.Integer.parseInt;
 
 public final class World {
     public static Controller controller;
-    private static SecureRandom sRandom = new SecureRandom();
+    public static SecureRandom sRandom = new SecureRandom();
 
     public World(int choice)
     {
