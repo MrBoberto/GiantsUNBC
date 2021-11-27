@@ -79,10 +79,6 @@ public abstract class Controller extends Canvas implements Runnable {
 
         Explosion.loadImageStrips();
 
-        //Loading level
-        level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level1.png");
-        loadLevel(level);
-
         // For focus of key inputs after component switch
         setFocusable(true);
     }

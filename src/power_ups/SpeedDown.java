@@ -20,7 +20,7 @@ public class SpeedDown extends PowerUp{
     //Graphics
     private final int SECONDARY_TEXTURE_MAX_TIMER = 10;
     private int secondaryTextureTimer = 0;
-    private int secondaryTextureState = 1;
+    private int secondaryTextureState = -1;
     private final int FLOAT_EFFECT_MAX_TIMER = 3;
     private int floatTimer = 0;
     private int floatState = 2;
@@ -32,7 +32,7 @@ public class SpeedDown extends PowerUp{
         this.multiplier = multiplier;
 
         texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/SPEED_sprite.png");
-        secondary_texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/up_arrow_orange_sprite.png");
+        secondary_texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/down_arrow_blue_sprite.png");
     }
 
     @Override
@@ -56,10 +56,10 @@ public class SpeedDown extends PowerUp{
 
         if(secondaryTextureTimer > SECONDARY_TEXTURE_MAX_TIMER){
             secondaryTextureTimer = 0;
-            if(secondaryTextureState == -1){
-                secondaryTextureState = 1;
+            if(secondaryTextureState == +1){
+                secondaryTextureState = -1;
             } else {
-                secondaryTextureState--;
+                secondaryTextureState++;
             }
         }
         if(floatTimer > FLOAT_EFFECT_MAX_TIMER){

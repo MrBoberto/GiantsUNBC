@@ -506,8 +506,13 @@ public abstract class Player extends GameObject {
         }
     }
 
+    //Client use only
     public void setInvincible(boolean invincible) {
         isInvincible = invincible;
+    }
+
+    public void setInvincible(int time){
+        invincibilityTimer = time;
     }
 
     public boolean isTimeForNextFrame(){

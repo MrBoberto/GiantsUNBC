@@ -7,6 +7,7 @@ import player.OtherPlayer;
 import player.Player;
 import power_ups.DamageDown;
 import power_ups.DamageUp;
+import power_ups.SpeedDown;
 import power_ups.SpeedUp;
 import weapons.aoe.Explosion;
 import utilities.BufferedImageLoader;
@@ -26,7 +27,6 @@ public class ClientController extends Controller {
 
     public ClientController() {
         super();
-        new GameWindow(WIDTH, HEIGHT, "THE BOYZ", this);
 
         serverWeaponAudio = new SFXPlayer();
 
@@ -131,6 +131,7 @@ public class ClientController extends Controller {
                 case DamageUp -> powerUps.add(new DamageUp(packet.getX(),packet.getY(),Player.DEFAULT_DAMAGE_MULTIPLIER));
                 case DamageDown -> powerUps.add(new DamageDown(packet.getX(),packet.getY(),Player.DEFAULT_DAMAGE_MULTIPLIER));
                 case SpeedUp -> powerUps.add(new SpeedUp(packet.getX(),packet.getY(),Player.DEFAULT_SPEED_MULTIPLIER));
+                case SpeedDown -> powerUps.add(new SpeedDown(packet.getX(),packet.getY(),Player.DEFAULT_SPEED_MULTIPLIER));
             }
         }
         else if (object instanceof WinnerPacket packet) {

@@ -59,7 +59,7 @@ public class RocketLauncher implements Weapon {
             }
         } else if (World.controller instanceof SingleController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
-            if (playerIBelongTo.getPlayerNumber() == 0) {
+            if (playerIBelongTo.getPlayerNumber() == Player.SERVER_PLAYER) {
                 for (int i = 0; i < ROUNDCOUNT; i++) {
                     new RocketLauncherBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
                 }

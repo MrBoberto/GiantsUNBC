@@ -19,6 +19,7 @@ public class RocketLauncherBullet extends Bullet {
 
     public RocketLauncherBullet(int player, double aimX, double aimY, int damage) {
         super(0,0,0);
+        System.out.println("I AM SUMMOOOOOONED");
         ProjectileTYPE = ProjectileType.RocketLauncherBullet;
 
         //iteration++;
@@ -75,7 +76,6 @@ public class RocketLauncherBullet extends Bullet {
             setVelY(World.cosAdj(speed, angle));
         }
 
-        Controller.movingAmmo.add(this);
 
         //System.out.println(iteration + " velX = " + getVelX() + ", velY = " + getVelY());
     }

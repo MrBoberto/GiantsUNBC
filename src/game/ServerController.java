@@ -3,15 +3,13 @@ package game;
 
 import audio.SFXPlayer;
 import eye_candy.DeathMark;
+import jdk.swing.interop.SwingInterOpUtils;
 import mapObjects.Block;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
-import power_ups.DamageDown;
-import power_ups.DamageUp;
-import power_ups.PowerUp;
-import power_ups.SpeedUp;
+import power_ups.*;
 import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 import weapons.aoe.Explosion;
@@ -211,18 +209,23 @@ public class ServerController extends Controller {
                     }
                 }
             }
-            switch (World.getSRandom().nextInt(PowerUp.PowerUpType.values().length)){
-                case 0:
-                    powerUps.add(new DamageUp(x,y,2));
-                    outputConnection.sendPacket(new CreatePowerUpPacket(x,y, PowerUp.PowerUpType.DamageUp));
-                    break;
-                case 1:
-                    powerUps.add(new DamageDown(x,y, 0.5F));
-                    outputConnection.sendPacket(new CreatePowerUpPacket(x,y, PowerUp.PowerUpType.DamageDown));
-                    break;
-                case 2:
-                    powerUps.add(new SpeedUp(x,y,1.5F));
-                    outputConnection.sendPacket(new CreatePowerUpPacket(x,y, PowerUp.PowerUpType.SpeedUp));
+            switch (World.getSRandom().nextInt(PowerUp.PowerUpType.values().length)) {
+                case 0 -> {
+                    powerUps.add(new DamageUp(x, y, 2));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.DamageUp));
+                }
+                case 1 -> {
+                    powerUps.add(new DamageDown(x, y, 0.5F));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.DamageDown));
+                }
+                case 2 -> {
+                    powerUps.add(new SpeedUp(x, y, 1.5F));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.SpeedUp));
+                }
+                case 3->{
+                    powerUps.add(new SpeedDown(x, y, 0.75F));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.SpeedDown));
+                }
             }
 
         } else if (currentPowerUpCooldown == 0){
@@ -244,7 +247,6 @@ public class ServerController extends Controller {
     private void checkVictims(Bullet bullet) {
         // Player who was hit (-1 if no one was hit)
         int victimNumber = EntityCollision.getBulletVictim(bullet);
-        System.out.println("CHECK");
 
         // Player
         Player killer;
@@ -259,8 +261,9 @@ public class ServerController extends Controller {
         }
 
         if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber() && !victim.isInvincible()) {
+            movingAmmo.remove(bullet);
+
             if (bullet.getSERIAL() == 004) {
-                movingAmmo.remove(bullet);
                 System.out.println("Rocket launcher victor: " + bullet.getPlayerIBelongToNumber());
                 explosions.add(new Explosion(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
                 outputConnection.sendPacket(new ServerExplosionPacket(bullet.x, bullet.y,
@@ -270,9 +273,9 @@ public class ServerController extends Controller {
                 clientWeaponAudio.setFile(-1);
                 clientWeaponAudio.play();
             }
-            if (bullet.getSERIAL() != 002) {
-                movingAmmo.remove(bullet);
-            }
+    //        if (bullet.getSERIAL() != 002) {
+
+     //       }
 
             double damage = (-1 * bullet.getDamage() * killer.getDamageMultiplier());
             System.out.println(damage);
@@ -331,12 +334,14 @@ public class ServerController extends Controller {
             }
         }
 
-        if (victim != null && explosion.isHarmful() && !victim.isInvincible()) {
+        double damage =  -1 * Explosion.DAMAGE * killer.getDamageMultiplier();
 
+        if (victim != null && explosion.isHarmful() && !victim.isInvincible()) {
+            System.out.println(damage);
             killer.incrementBulletHitCount();
-            victim.modifyHealth(-1 * Explosion.DAMAGE);
+            victim.modifyHealth(damage);
             victim.resetHealTimer();
-            killer.addTDO(-1 * Explosion.DAMAGE);
+            killer.addTDO(damage);
 
             if (victim.getHealth() == 0) {
 
@@ -359,10 +364,10 @@ public class ServerController extends Controller {
         } else if (victimNumber == -2 && explosion.isHarmful()) {
 
             if (!otherPlayer.isInvincible()) {
-                otherPlayer.modifyHealth(-1 * Explosion.DAMAGE);
+                otherPlayer.modifyHealth(damage);
                 otherPlayer.resetHealTimer();
                 if (otherPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
-                    killer.addTDO(-1 * Explosion.DAMAGE);
+                    killer.addTDO(damage);
                     killer.incrementBulletHitCount();
                 }
 
@@ -389,12 +394,12 @@ public class ServerController extends Controller {
                 }
             }
             if (!thisPlayer.isInvincible()) {
-                thisPlayer.modifyHealth(-1 * Explosion.DAMAGE);
+                thisPlayer.modifyHealth(damage);
                 thisPlayer.resetHealTimer();
                 System.out.println("I got memed");
 
                 if (thisPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
-                    killer.addTDO(-1 * Explosion.DAMAGE);
+                    killer.addTDO(damage);
                     killer.incrementBulletHitCount();
                 }
 

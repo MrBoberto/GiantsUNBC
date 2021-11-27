@@ -45,7 +45,6 @@ public class SniperRifleBullet extends Bullet {
 
         this.damage = damage;
         loadImage();
-        Controller.movingAmmo.add(this);
 
         if (angle <= -Math.PI) {
             angle += 2 * Math.PI;
