@@ -45,6 +45,7 @@ public class ShotgunItem extends InventoryItem {
             }
         }
 
+        if (World.controller instanceof SingleController) return;
         updateClient(playerNumber, indexToRemove);
     }
 

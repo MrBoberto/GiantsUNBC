@@ -281,12 +281,13 @@ public class AIPlayer extends OtherPlayer {
         // Determine whether to use shorter or longer ranged weapon
         if (Controller.thisPlayer.getX() < x - shortRangeBound || Controller.thisPlayer.getY() < y - shortRangeBound
                 || Controller.thisPlayer.getX() > x + shortRangeBound || Controller.thisPlayer.getY() > y + shortRangeBound) {
-            if (selectedWeapon == 0 && weapons.getPrimary().getSPEED() < weapons.getSecondary().getSPEED()) {
+        if (selectedWeapon == 0 && weapons.getSecondary() != null
+            && weapons.getPrimary().getSPEED() < weapons.getSecondary().getSPEED()) {
                 selectedWeapon = 1;
             } else if (selectedWeapon == 1 && weapons.getPrimary().getSPEED() > weapons.getSecondary().getSPEED()) {
                 selectedWeapon = 0;
             }
-        } else {
+        } else if (weapons.getSecondary() != null) {
             if (selectedWeapon == 1 && weapons.getPrimary().getSPEED() < weapons.getSecondary().getSPEED()) {
                 selectedWeapon = 0;
             } else if (selectedWeapon == 0 && weapons.getPrimary().getSPEED() > weapons.getSecondary().getSPEED()) {
@@ -343,7 +344,7 @@ public class AIPlayer extends OtherPlayer {
         if (weapons.getPrimary().getCurrentDelay() > 0) {
             weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getCurrentDelay() - 1);
         }
-        if (weapons.getSecondary().getCurrentDelay() > 0) {
+        if (weapons.getSecondary() != null && weapons.getSecondary().getCurrentDelay() > 0) {
             weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getCurrentDelay() - 1);
         }
 

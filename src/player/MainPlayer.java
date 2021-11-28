@@ -261,7 +261,7 @@ public class MainPlayer extends Player {
         if (weapons.getPrimary().getCurrentDelay() > 0) {
             weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getCurrentDelay() - 1);
         }
-        if (weapons.getSecondary().getCurrentDelay() > 0) {
+        if (weapons.getSecondary() != null && weapons.getSecondary().getCurrentDelay() > 0) {
             weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getCurrentDelay() - 1);
         }
 

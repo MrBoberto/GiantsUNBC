@@ -68,9 +68,22 @@ public class Arsenal {
                 primary = weapons.get(inventoryNum - 1);
                 return;
             } else {
-                weapons.add(primary);
+                Weapon newWeaponsArray[] = new Weapon[weapons.size()];
+                for (int i = 0; i < inventoryNum - 1; i++) {
+                    newWeaponsArray[i] = weapons.get(i);
+                }
+                newWeaponsArray[inventoryNum - 1] = primary;
                 primary = weapons.get(inventoryNum - 1);
                 weapons.remove(inventoryNum - 1);
+                for (int i = inventoryNum; i <= weapons.size(); i++) {
+                    newWeaponsArray[i] = weapons.get(i - 1);
+                }
+
+                weapons.clear();
+                for (int i = 0; i < newWeaponsArray.length; i++) {
+                    weapons.add(newWeaponsArray[i]);
+                }
+
                 return;
             }
         }
@@ -109,9 +122,22 @@ public class Arsenal {
                 secondary = weapons.get(inventoryNum - 1);
                 return;
             } else {
-                weapons.add(secondary);
+                Weapon newWeaponsArray[] = new Weapon[weapons.size()];
+                for (int i = 0; i < inventoryNum - 1; i++) {
+                    newWeaponsArray[i] = weapons.get(i);
+                }
+                newWeaponsArray[inventoryNum - 1] = secondary;
                 secondary = weapons.get(inventoryNum - 1);
                 weapons.remove(inventoryNum - 1);
+                for (int i = inventoryNum; i <= weapons.size(); i++) {
+                    newWeaponsArray[i] = weapons.get(i - 1);
+                }
+
+                weapons.clear();
+                for (int i = 0; i < newWeaponsArray.length; i++) {
+                    weapons.add(newWeaponsArray[i]);
+                }
+
                 return;
             }
         }
@@ -143,7 +169,7 @@ public class Arsenal {
     }
 
     public boolean hasWeapon(int SERIAL) {
-        if (primary.getSERIAL() == SERIAL || secondary.getSERIAL() == SERIAL) {
+        if (primary.getSERIAL() == SERIAL || (secondary != null && secondary.getSERIAL() == SERIAL)) {
             return true;
         } else {
             for (int i = 0; i < weapons.size(); i++) {

@@ -279,10 +279,6 @@ public class ServerController extends Controller {
                     outputConnection.sendPacket(new CreateInventoryItemPacket(x, y, InventoryItem.InventoryItemType.SniperRifle));
                 }
                 case 2 -> {
-                    inventoryItems.add(new PistolItem(x, y));
-                    outputConnection.sendPacket(new CreateInventoryItemPacket(x, y, InventoryItem.InventoryItemType.Pistol));
-                }
-                case 3->{
                     inventoryItems.add(new AssaultRifleItem(x, y));
                     outputConnection.sendPacket(new CreateInventoryItemPacket(x, y, InventoryItem.InventoryItemType.AssaultRifle));
                 }

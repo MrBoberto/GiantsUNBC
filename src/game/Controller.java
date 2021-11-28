@@ -257,7 +257,7 @@ public abstract class Controller extends Canvas implements Runnable {
             Controller.thisPlayer.getWeapons().getPrimary().setCurrentDelay(
                     AssaultRifle.MAX_DELAY);
         } else if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 1 && thisPlayer.getWeaponSerial() == 003
-                && thisPlayer.getWeapons().getSecondary().getCurrentDelay() == 0) {
+                && thisPlayer.getWeapons().getSecondary() != null && thisPlayer.getWeapons().getSecondary().getCurrentDelay() == 0) {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
             Point mouseRelativeToGame = new Point(mouseRelativeToScreen.x - getLocationOnScreen().x,
                     mouseRelativeToScreen.y - getLocationOnScreen().y);

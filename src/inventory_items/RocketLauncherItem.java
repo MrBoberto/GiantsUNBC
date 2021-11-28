@@ -45,6 +45,7 @@ public class RocketLauncherItem extends InventoryItem {
             }
         }
 
+        if (World.controller instanceof SingleController) return;
         updateClient(playerNumber, indexToRemove);
     }
 

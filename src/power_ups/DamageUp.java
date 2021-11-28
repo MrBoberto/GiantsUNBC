@@ -47,6 +47,7 @@ public class DamageUp extends PowerUp{
             }
         }
 
+        if (World.controller instanceof SingleController) return;
         updateClient(playerNumber, indexToRemove);
     }
 

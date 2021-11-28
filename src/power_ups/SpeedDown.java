@@ -47,6 +47,7 @@ public class SpeedDown extends PowerUp{
             }
         }
 
+        if (World.controller instanceof SingleController) return;
         updateClient(playerNumber, indexToRemove);
     }
 
