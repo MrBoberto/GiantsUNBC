@@ -46,7 +46,7 @@ public class ClientControllerAutomatic extends Controller {
         thisPlayer = new MainPlayer(Controller.otherX, Controller.otherY, 0, Color.RED);
         otherPlayer = new OtherPlayer(Controller.thisX, Controller.thisY, 0, Color.BLUE);
 
-        InetAddress correctAddress =InetAddress.getLocalHost(); //to make java happy, should not need to be initailzed
+        InetAddress correctAddress =InetAddress.getLocalHost();//to make java happy, should not need to be initailzed
         try {
             Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
             boolean firstAddress = false;
@@ -85,7 +85,7 @@ public class ClientControllerAutomatic extends Controller {
         try {
             System.out.println("waiting for connection...");
             //String ipAddress = MainMenu.ipaddress;
-
+            /*
             for(int i=1;i<=254;i++) {
                 final int j = i;  // i as non-final variable cannot be referenced from inner class
                 new Thread(new Runnable() {   // new thread for parallel execution
@@ -94,12 +94,14 @@ public class ClientControllerAutomatic extends Controller {
                             ip[3] = (byte)j;
                             InetAddress address = InetAddress.getByAddress(ip);
                             String output = address.toString().substring(1);
+                            if("142.207.63.55".equals(output))
+                            System.out.println("HEY IT SHOULD FIND THE SERVER");
                             try{
                                 socket = new Socket(output, game.Controller.PORT);
                                 System.out.println("FOUND SERVER");
                                 System.out.println(output + " is this the server");
                                 correctIp = output;
-                                socket.close();
+                                //socket.close();
                             }catch (Exception e) {//e.printStackTrace();}
                             }
                         } catch (Exception e) {
@@ -107,15 +109,42 @@ public class ClientControllerAutomatic extends Controller {
                         }
                     }
                 }).start();     // dont forget to start the thread
-            }
+            } */
+            /*
+            for(int i=54;i<=254;i++) {
+                final int j = i;  // i as non-final variable cannot be referenced from inner class
+                {
+                        try {
+                            ip[3] = (byte)j;
+                            InetAddress address = InetAddress.getByAddress(ip);
+                            String output = address.toString().substring(1);
+                            System.out.println("CHECKING: "+i);
+                            if("142.207.63.55".equals(output))
+                                System.out.println("HEY IT SHOULD FIND THE SERVER");
+                            try{
+                               // socketActual = new Socket(output, game.Controller.PORT2);
+                                System.out.println("FOUND SERVER");
+                                System.out.println(output + " is the server");
+                                correctIp = output;
+                                i = 255;
+                                //socket.close();
+                            }catch (Exception e) {//e.printStackTrace();}
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }     // dont forget to start the thread
 
-            TimeUnit.SECONDS.sleep(15);
+            */
+            socketActual = new Socket("142.207.63.55", game.Controller.PORT2);
+            //TimeUnit.SECONDS.sleep(1);
             System.out.println("The client:"+ correctAddress.getHostAddress() +"\n The server"+correctIp);
             if (correctAddress.getHostAddress().equals(correctIp)) {
                 //correctIp = ""; could be blank or not doesn't matter
                 System.out.println("THE SERVER AND CLIENT ARE ON THE SAME COMPUTER");
             }
-            socketActual = new Socket(correctIp, Controller.PORT2);
+            //socketActual = new Socket(correctIp, Controller.PORT2);
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socketActual);

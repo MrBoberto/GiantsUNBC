@@ -552,8 +552,11 @@ public abstract class Player extends GameObject {
     }
 
     public void setRicochet(int bounces, int ricochetTimer) {
-        this.ricochetTimer = ricochetTimer;
-        this.numberOfBulletBounces = bounces;
+
+        if(ricochetTimer != -1) {
+            this.ricochetTimer = ricochetTimer;
+            this.numberOfBulletBounces = bounces;
+        }
     }
 
     public int getNumberOfBulletBounces() {

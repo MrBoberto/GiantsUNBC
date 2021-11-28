@@ -18,7 +18,7 @@ public class RocketLauncherBullet extends Bullet {
     //private static int iteration = 0;
 
     public RocketLauncherBullet(int player, double aimX, double aimY, int damage) {
-        super(0,0,0);
+        super(0,0,0,player);
         System.out.println("I AM SUMMOOOOOONED");
         ProjectileTYPE = ProjectileType.RocketLauncherBullet;
 
@@ -29,7 +29,6 @@ public class RocketLauncherBullet extends Bullet {
         setVelX(-1);
         setVelY(-1);
 
-        playerIBelongToNumber = player;
         if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
                 || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController)
                 || (playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof SingleController)) {

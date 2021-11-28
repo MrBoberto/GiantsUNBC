@@ -53,6 +53,13 @@ public class ServerController extends Controller {
             System.out.println("waiting for connection...");
             socket = serverSocket.accept();
             System.out.println("connection accepted");
+            socket.close();
+            serverSocket.close();
+
+            serverSocket = new ServerSocket(Controller.PORT);
+            System.out.println("waiting for connection...");
+            socket = serverSocket.accept();
+            System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socket);
             System.out.println("output connection complete");
