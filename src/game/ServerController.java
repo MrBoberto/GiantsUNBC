@@ -49,13 +49,13 @@ public class ServerController extends Controller {
         }
 
         try {
-
+            /*
             serverSocket = new ServerSocket(Controller.PORT);
             System.out.println("waiting for Ip connection...");
             socket = serverSocket.accept();
             System.out.println("connection Ip accepted");
             socket.close();
-            serverSocket.close();
+            serverSocket.close(); */
 
             serverSocket = new ServerSocket(Controller.PORT);
             System.out.println("waiting for connection...");
