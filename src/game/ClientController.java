@@ -102,7 +102,7 @@ public class ClientController extends Controller {
                     }
                 }).start();     // dont forget to start the thread
             }
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(1);//
             System.out.println("The client:"+ correctAddress.getHostAddress() +"\n The server"+correctIp);
             if (correctAddress.getHostAddress().equals(correctIp)) {
                 //correctIp = ""; could be blank or not doesn't matter
@@ -112,8 +112,8 @@ public class ClientController extends Controller {
             System.out.println("waiting for connection...");
             String ipAddress = MainMenu.ipaddress;
 
-            if (ipAddress.equals("")) {
-                ipAddress = correctIp;
+            if (socket == null) {
+                socket = new Socket(ipAddress, Controller.PORT);
             }
             System.out.println("WHAT IS DEFAULT IP:"+ipAddress);
             //socket = new Socket(ipAddress, Controller.PORT); needed for 2 connections
