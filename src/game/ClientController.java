@@ -54,7 +54,7 @@ public class ClientController extends Controller {
                 while(Addresses.hasMoreElements())
                 {
                     InetAddress Address = Addresses.nextElement();
-                    if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1")&&!firstAddress)
+                    if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1")&&!firstAddress&&!Address.getHostAddress().contains("192.168.56.1"))
                     {
                         System.out.println(Address.getHostAddress() + " is on the network");
                         firstAddress = true;
@@ -88,14 +88,12 @@ public class ClientController extends Controller {
                             ip[3] = (byte)j;
                             InetAddress address = InetAddress.getByAddress(ip);
                             String output = address.toString().substring(1);
-                            if("142.207.63.55".equals(output))
-                                System.out.println("HEY IT SHOULD FIND THE SERVER");
                             try{
                                 socket = new Socket(output, game.Controller.PORT);
                                 System.out.println("FOUND SERVER");
                                 System.out.println(output + " is this the server");
                                 correctIp = output;
-                                socket.close();
+                                //socket.close();
                             }catch (Exception e) {//e.printStackTrace();}
                             }
                         } catch (Exception e) {
@@ -118,7 +116,7 @@ public class ClientController extends Controller {
                 ipAddress = correctIp;
             }
             System.out.println("WHAT IS DEFAULT IP:"+ipAddress);
-            socket = new Socket(ipAddress, Controller.PORT);
+            //socket = new Socket(ipAddress, Controller.PORT);
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socket);
