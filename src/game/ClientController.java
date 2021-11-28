@@ -99,7 +99,7 @@ public class ClientController extends Controller {
                                 try {
                                     socket = new Socket(output, game.Controller.PORT);
                                     System.out.println("FOUND SERVER");
-                                    System.out.println(output + " is this the server");
+                                    System.out.println(output + " this is the server");
                                     correctIp = output;
                                     //socket.close(); //needed if 2 connections tried
                                 } catch (Exception e) {//e.printStackTrace();}
