@@ -23,8 +23,9 @@ public abstract class Bullet extends GameObject implements Projectile {
     protected ProjectileType ProjectileTYPE = null;
     protected int damage;
 
-    protected Bullet(double x, double y, double angle) {
+    protected Bullet(double x, double y, double angle, int playerIBelongToNumber) {
         super(x, y, angle);
+        this.playerIBelongToNumber = playerIBelongToNumber;
         ID = nextID++;
         getBouncesLeft();
         Controller.movingAmmo.add(this);

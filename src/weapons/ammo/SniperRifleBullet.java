@@ -15,10 +15,9 @@ public class SniperRifleBullet extends Bullet {
     private final int SERIAL = 001;
 
     public SniperRifleBullet(int player, double aimX, double aimY, int damage) {
-        super(0,0,0);
+        super(0,0,0,player);
         ProjectileTYPE = ProjectileType.SniperRifleBullet;
 
-        playerIBelongToNumber = player;
         if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
                 || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController)
                 || (playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof SingleController)) {

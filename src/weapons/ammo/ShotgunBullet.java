@@ -17,8 +17,7 @@ public class ShotgunBullet extends Bullet {
 
 
     public ShotgunBullet(int player, double aimX, double aimY, int damage) {
-        super(0,0,0);
-        playerIBelongToNumber = player;
+        super(0,0,0,player);
         ProjectileTYPE = ProjectileType.ShotgunBullet;
 
         if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)

@@ -127,6 +127,7 @@ public class ClientController extends Controller {
 
                     if(packet.getRicochetBounces() != -1){
                         otherPlayer.setRicochet(packet.getRicochetBounces(), packet.getTime());
+
                     }
                 }
                 /* here goes other property changes */
@@ -141,6 +142,7 @@ public class ClientController extends Controller {
 
                     if(packet.getRicochetBounces() != -1){
                         thisPlayer.setRicochet(packet.getRicochetBounces(), packet.getTime());
+                        System.out.println(packet.getRicochetBounces());
                     }
                 }
             }
