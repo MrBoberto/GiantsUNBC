@@ -98,6 +98,11 @@ public class AIPlayer extends OtherPlayer {
             for (InventoryItem anInventoryItem: SingleController.getInventoryItems()) {
                 if (closestInventoryItem == null) {
                     closestInventoryItem = new Point((int) anInventoryItem.getX(), (int) anInventoryItem.getY());
+                } else {
+                    if (World.pythHyp(x - closestInventoryItem.x, y - closestInventoryItem.y)
+                            < World.pythHyp(x - anInventoryItem.getX(), y - anInventoryItem.getY())) {
+                        closestInventoryItem = new Point((int) anInventoryItem.getX(), (int) anInventoryItem.getY());
+                    }
                 }
             }
 
