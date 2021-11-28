@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Objects;
 
@@ -123,7 +124,11 @@ public class GameOver {
         startButton.addActionListener(f -> {
             mainMenuPanel.remove(startButton);
             gameOver.dispose();
-            var main = new Main();
+            try {
+                var main = new Main();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
 
 
         });

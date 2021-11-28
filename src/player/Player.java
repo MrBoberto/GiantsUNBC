@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public abstract class Player extends GameObject {
@@ -150,7 +151,6 @@ public abstract class Player extends GameObject {
     public int getKillCount() {
         return killCount;
     }
-
 
     /**
      * Increases killCount by 1 and updates kdr if there are more than 0 deaths
@@ -341,7 +341,7 @@ public abstract class Player extends GameObject {
         // Load weapon textures
         for (int i = 0; i < imgLocStr.size(); i++) {
             try {
-                weaponTextures.add(ImageIO.read(getClass().getResource("/resources/Textures/WEAPONS/" + imgLocStr.get(i))));
+                weaponTextures.add(ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/Textures/WEAPONS/" + imgLocStr.get(i)))));
             } catch (IOException exc) {
                 System.out.println("Could not find image file: " + exc.getMessage());
             }

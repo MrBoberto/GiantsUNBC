@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -313,9 +314,17 @@ public class MainMenu {
             }
             mainMenu.dispose();
             if(gameType == SERVER){
-                new World(1);
+                try {
+                    new World(1);
+                } catch (UnknownHostException ex) {
+                    ex.printStackTrace();
+                }
             } else {
-                new World(3);
+                try {
+                    new World(3);
+                } catch (UnknownHostException ex) {
+                    ex.printStackTrace();
+                }
             }
 
 
@@ -515,7 +524,11 @@ public class MainMenu {
             }
             mainMenu.dispose();
 
-            new World(2);
+            try {
+                new World(2);
+            } catch (UnknownHostException ex) {
+                ex.printStackTrace();
+            }
 
         }, "Client");
         c.gridy = 8;
