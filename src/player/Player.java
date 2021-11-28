@@ -4,6 +4,7 @@ import game.MainMenu;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
+import power_ups.PowerUp;
 import weapons.guns.*;
 
 import javax.imageio.ImageIO;
@@ -562,11 +563,52 @@ public abstract class Player extends GameObject {
         }
     }
 
+    public float getSpeedMultiplier() {
+        return speedMultiplier;
+    }
+
+    public boolean isDamageUp(){
+        return getDamageMultiplier() > DEFAULT_DAMAGE_MULTIPLIER;
+    }
+
+    public boolean isDamageDown(){
+        return getDamageMultiplier() < DEFAULT_DAMAGE_MULTIPLIER;
+    }
+
+    public boolean isSpeedUp(){
+        return getSpeedMultiplier() > DEFAULT_SPEED_MULTIPLIER;
+    }
+
+    public boolean isSpeedDown(){
+        return getSpeedMultiplier() < DEFAULT_SPEED_MULTIPLIER;
+    }
+
     public int getNumberOfBulletBounces() {
         return numberOfBulletBounces;
     }
 
     public void setArsenal(Arsenal arsenal) {
         this.arsenal = arsenal;
+    }
+
+    public PowerUp.PowerUpType[] getPowerUps(){
+        ArrayList<PowerUp.PowerUpType> powerUps = new ArrayList<>();
+
+        if(isDamageUp()){
+            powerUps.add(PowerUp.PowerUpType.DamageUp);
+        }
+        if(isDamageDown()){
+            powerUps.add(PowerUp.PowerUpType.DamageDown);
+        }
+        if(isSpeedUp()){
+            powerUps.add(PowerUp.PowerUpType.SpeedUp);
+        }
+        if(isSpeedDown()){
+            powerUps.add(PowerUp.PowerUpType.SpeedDown);
+        }
+        if(isRicochetEnabled()){
+            powerUps.add(PowerUp.PowerUpType.Ricochet);
+        }
+        return powerUps.toArray(new PowerUp.PowerUpType[0]);
     }
 }

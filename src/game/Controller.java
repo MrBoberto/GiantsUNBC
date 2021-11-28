@@ -249,6 +249,12 @@ public abstract class Controller extends Canvas implements Runnable {
                 explosions.get(i).tick();
         }
 
+        for (int i = 0; i < arsenals.size(); i++) {
+            if(arsenals.get(i) != null){
+                arsenals.get(i).tick();
+            }
+        }
+
         if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 0 && thisPlayer.getWeaponSerial() == 003
                 && thisPlayer.getArsenal().getPrimary().getCurrentDelay() == 0) {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();

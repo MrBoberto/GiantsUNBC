@@ -51,19 +51,21 @@ public class Ricochet extends PowerUp{
     public void tick() {
         super.tick();
 
-        if(floatTimer > FLOAT_EFFECT_MAX_TIMER){
-            floatTimer = 0;
-            if(floatState == 2 || floatState == -2) {
-                floatDirection = !floatDirection;
+        if(!isCosmetic()) {
+            if (floatTimer > FLOAT_EFFECT_MAX_TIMER) {
+                floatTimer = 0;
+                if (floatState == 2 || floatState == -2) {
+                    floatDirection = !floatDirection;
+                }
+                if (floatDirection) {
+                    floatState++;
+                } else {
+                    floatState--;
+                }
             }
-            if(floatDirection){
-                floatState++;
-            } else {
-                floatState--;
-            }
-        }
 
-        floatTimer++;
+            floatTimer++;
+        }
     }
 
     @Override
@@ -75,7 +77,13 @@ public class Ricochet extends PowerUp{
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(texture,(int)x,(int)y + floatState,POWER_UP_DIMENSIONS.width,POWER_UP_DIMENSIONS.height,World.controller);
+        Dimension currentDimension;
+        if(isCosmetic()){
+            currentDimension = POWER_UP_COSMETIC_DIMENSIONS;
+        } else {
+            currentDimension = POWER_UP_DIMENSIONS;
+        }
+        g.drawImage(texture,(int)x,(int)y + floatState,currentDimension.width,currentDimension.height,World.controller);
 
     }
 }

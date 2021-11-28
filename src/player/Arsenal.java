@@ -1,6 +1,7 @@
 package player;
 
 import game.*;
+import power_ups.*;
 import utilities.BufferedImageLoader;
 import weapons.guns.*;
 
@@ -23,17 +24,35 @@ public class Arsenal extends GameObject {
     BufferedImage profile;
     BufferedImage[] weaponTextures;
 
+    //PowerUps
+    private PowerUp[] cosmeticPowerUps;
+    private static final int HIDDEN_POS = -50;
+
     public Arsenal(double x, double y, Player playerIBelongTo) {
         super(x, y - 35);
         this.playerIBelongTo = playerIBelongTo;
         Controller.arsenals.add(this);
         loadGunTextures();
         add(new Pistol(playerIBelongTo));
+
+        cosmeticPowerUps = new PowerUp[PowerUp.PowerUpType.values().length];
+
+        cosmeticPowerUps[0] = new DamageUp(HIDDEN_POS, HIDDEN_POS,-1);
+        cosmeticPowerUps[1] = new DamageDown(HIDDEN_POS, HIDDEN_POS,-1);
+        cosmeticPowerUps[2] = new SpeedUp(HIDDEN_POS, HIDDEN_POS,-1);
+        cosmeticPowerUps[3] = new SpeedDown(HIDDEN_POS, HIDDEN_POS,-1);
+        cosmeticPowerUps[4] = new Ricochet(HIDDEN_POS, HIDDEN_POS,-1);
+
+        for(PowerUp powerUp: cosmeticPowerUps){
+            powerUp.setCosmetic(true);
+        }
     }
 
     @Override
     public void tick() {
-        /* empty */
+        for(PowerUp powerUp: cosmeticPowerUps){
+            powerUp.tick();
+        }
     }
 
     @Override
@@ -67,6 +86,20 @@ public class Arsenal extends GameObject {
                 g2d.drawImage(getWeaponTexture(weapons.get(i)), (int) x + 250 + i * 52, (int) y + 35, 55, 55, World.controller);
             }
 
+            //Powerups
+            for(PowerUp powerUp: cosmeticPowerUps){
+                powerUp.render(g2d);
+            }
+            for (int i = 0; i < playerIBelongTo.getPowerUps().length; i++) {
+                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setX(x + 250 + i * 25);
+                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setY(y);
+            }
+
+            for(PowerUp powerUp: getUnusedPowerUps()){
+                powerUp.setX(HIDDEN_POS);
+                powerUp.setY(HIDDEN_POS);
+            }
+
 
             } else {
             int offset = 5;
@@ -82,6 +115,34 @@ public class Arsenal extends GameObject {
         for (int i = 0; i < weaponTextures.length; i++) {
             weaponTextures[i] = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal (" + (i-1) + ").png");
         }
+    }
+    private PowerUp[] getUnusedPowerUps(){
+        ArrayList<PowerUp> notPresent = new ArrayList<>(java.util.List.of(cosmeticPowerUps));
+        for (int i = 0; i < playerIBelongTo.getPowerUps().length; i++) {
+            notPresent.remove(getPowerUpCosmetic( playerIBelongTo.getPowerUps()[i]));
+        }
+        return notPresent.toArray(new PowerUp[0]);
+    }
+
+    private PowerUp getPowerUpCosmetic(PowerUp.PowerUpType type) {
+        switch (type){
+            case DamageUp -> {
+                return cosmeticPowerUps[0];
+            }
+            case DamageDown -> {
+                return cosmeticPowerUps[1];
+            }
+            case SpeedUp -> {
+                return cosmeticPowerUps[2];
+            }
+            case SpeedDown -> {
+                return cosmeticPowerUps[3];
+            }
+            case Ricochet -> {
+                return cosmeticPowerUps[4];
+            }
+        }
+        return null;
     }
 
     private BufferedImage getWeaponTexture(Weapon weapon) {
