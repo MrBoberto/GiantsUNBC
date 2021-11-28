@@ -365,9 +365,6 @@ public class MainPlayer extends Player {
 
         // Draws the player's hitbox
         g.setColor(playerColour);
-        g.drawRect((int) x - currentImage.getImage().getWidth() / 4,
-                (int) y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
-                currentImage.getImage().getHeight() / 2);
 
         Font font = new Font("Arial", Font.BOLD, 15);
         g2d.setFont(font);

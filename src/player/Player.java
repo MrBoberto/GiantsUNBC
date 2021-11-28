@@ -301,8 +301,6 @@ public abstract class Player extends GameObject {
                 defLocStr = "/resources/Textures/PLAYER_TWO/";
             }
 
-
-
         // Builds image strip for standing facing right
         for (int i = 1; i <= 4; i++) {
             imgLocStr.add("stand (" + i + ").png");
