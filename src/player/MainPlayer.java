@@ -285,6 +285,51 @@ public class MainPlayer extends Player {
 
         Graphics2D g2d = (Graphics2D) g;
 
+
+        // displayInventory(g2d);
+
+        isWalking = (up || left || down || right);
+        if(isTimeForNextFrame()){
+            loadImage();
+            resetAnimationTimer();
+        }
+
+        if(currentImage == null) return;
+        // Sets up the axis of rotation
+        AffineTransform affTra = AffineTransform.getTranslateInstance(
+                x - currentImage.getImage().getWidth() / 2.0,
+                y - currentImage.getImage().getHeight() / 2.0);
+        // Rotates the frame
+        affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2.0,
+                currentImage.getImage().getHeight() / 2.0);
+
+        // Draws the rotated image
+        if(skipFrame) {
+            skipFrame = false;
+        } else {
+            g2d.drawImage(currentImage.getImage(), affTra, World.controller);
+        }
+
+        if (weaponSerial == -1 || weaponTextures.get(weaponSerial) == null) return;
+        g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);
+
+        // Draws the player's hitbox
+        g.setColor(playerColour);
+
+        Font font = new Font("Arial", Font.BOLD, 15);
+        g2d.setFont(font);
+        FontMetrics stringSize = g2d.getFontMetrics(font);
+
+        g2d.fillRect((int) x - currentImage.getImage().getWidth() / 4,
+                (int) y - currentImage.getImage().getHeight() / 4 - 5,
+                (currentImage.getImage().getWidth() * health / 200),
+                5);
+
+        g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,
+                (int) y - 10 - currentImage.getImage().getHeight() / 4);
+    }
+
+    private void displayInventory(Graphics2D g2d) {
         if (selectedWeapon == 0) {
             // If primary is selected, this is primary slot
             AffineTransform affTraPP = AffineTransform.getTranslateInstance(Controller.WIDTH - 240, 0);
