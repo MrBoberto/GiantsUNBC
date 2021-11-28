@@ -1,5 +1,6 @@
 package game;
 
+import inventory_items.InventoryItem;
 import audio.AudioPlayer;
 import mapObjects.Block;
 import player.MainPlayer;
@@ -11,7 +12,6 @@ import weapons.ammo.Bullet;
 import weapons.aoe.Explosion;
 import weapons.guns.AssaultRifle;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -47,6 +47,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static List<GameObject> eyeCandy = Collections.synchronizedList(new ArrayList<>());
     public static List<Explosion> explosions = Collections.synchronizedList(new ArrayList<>());
     public static List<PowerUp> powerUps = Collections.synchronizedList(new ArrayList<>());
+    public static List<InventoryItem> inventoryItems = Collections.synchronizedList(new ArrayList<>());
     public static MainPlayer thisPlayer;
     public static OtherPlayer otherPlayer;
     public static GameWindow gameWindow;
@@ -54,6 +55,10 @@ public abstract class Controller extends Canvas implements Runnable {
     //Global PowerUps variables
     protected static int currentPowerUpCooldown = 0;
     public static final int COOLDOWN_BETWEEN_POWER_UPS = 2 * 60; //in game ticks. 2 seconds before a new power up can appear.
+
+    //Global InventoryItems variables
+    protected static int currentInventoryItemCooldown = 0;
+    public static final int COOLDOWN_BETWEEN_INVENTORY_ITEMS = 3 * 60; //in game ticks. 3 seconds before a new inventory item can appear.
 
     //Players spawn points
     public static int thisX = 0;
@@ -230,6 +235,12 @@ public abstract class Controller extends Canvas implements Runnable {
             }
         }
 
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            if(inventoryItems.get(i) != null){
+                inventoryItems.get(i).tick();
+            }
+        }
+
         for (int i = 0; i < explosions.size(); i++) {
             if(explosions.get(i) != null)
                 explosions.get(i).tick();
@@ -293,6 +304,12 @@ public abstract class Controller extends Canvas implements Runnable {
         for (int i = 0; i < powerUps.size(); i++) {
             if(powerUps.get(i) != null){
                 powerUps.get(i).render(g);
+            }
+        }
+
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            if(inventoryItems.get(i) != null){
+                inventoryItems.get(i).render(g);
             }
         }
 
@@ -372,45 +389,13 @@ public abstract class Controller extends Canvas implements Runnable {
         Font font = new Font("Arial", Font.BOLD, 25);
         g2D.setFont(font);
         FontMetrics stringSize = g2D.getFontMetrics(font);
+        gameWindow.frame.dispose();
+        GameOver gameOver = new GameOver(winner,HEIGHT,g2D,players, WIDTH,stringSize);
+        //gameOver.printGame(winner,HEIGHT,g2D,players, WIDTH,stringSize);
 
-        g2D.drawString("The winner is " + winner.getPlayerName(),
-                WIDTH / 2 - (stringSize.stringWidth("The winner is ")), HEIGHT / 10);
-        g2D.drawString("Scores:" + winner.getPlayerName(), WIDTH / 2 - (stringSize.stringWidth("Scores:")),
-                HEIGHT / 5);
-        g2D.drawString("The winner is " + winner.getPlayerName(),
-                WIDTH / 2 - (stringSize.stringWidth("The winner is ")), 3 * HEIGHT / 10);
-        g2D.drawString(
-                "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                WIDTH / 2 - (stringSize.stringWidth(
-                        "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of")),
-                2 * HEIGHT / 5);
-        g2D.drawString(
-                "                                           Shot         Hit    Distance    Power-ups",
-                WIDTH / 2 - (stringSize.stringWidth(
-                        "                                           Shot         Hit    Distance    Power-ups")), HEIGHT / 2);
 
-        for (int i = 0; i < players.size(); i++) {
-            //Save data to send to client
-            Player player = players.get(i);
 
-            //Determine format
-            String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
-                    player.getKillCount(),
-                    player.getDeathCount(),
-                    player.getKdr(),
-                    player.getBulletCount(),
-                    player.getBulletHitCount(),
-                    player.getWalkingDistance(),
-                    "???");
 
-            if (i == 0) {
-                g2D.drawString(format,
-                        WIDTH / 2 - (stringSize.stringWidth(format)), 3 * HEIGHT / 5);
-            } else {
-                g2D.drawString(format,
-                        WIDTH / 2 - (stringSize.stringWidth(format)), 7 * HEIGHT / 10);
-            }
-        }
 
         //////////////////////////////////////
         g.dispose();

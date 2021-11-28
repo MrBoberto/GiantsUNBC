@@ -1,7 +1,7 @@
 package game;
 
 
-import inventory_items.*;
+import inventory_items.InventoryItem;
 import audio.SFXPlayer;
 import eye_candy.DeathMark;
 import mapObjects.Block;
@@ -13,6 +13,7 @@ import power_ups.*;
 import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 import weapons.aoe.Explosion;
+import inventory_items.*;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -21,13 +22,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerController extends Controller {
+public class ServerControllerAutomatic extends Controller {
 
     private ServerSocket serverSocket;
+    private ServerSocket serverSocketActual;
+    private Socket socketActual;
     private Socket socket;
     public SFXPlayer clientWeaponAudio;
 
-    public ServerController() {
+    public ServerControllerAutomatic() {
         super();
         clientWeaponAudio = new SFXPlayer();
 
@@ -49,14 +52,21 @@ public class ServerController extends Controller {
         }
 
         try {
-            serverSocket = new ServerSocket(Controller.PORT);
+            serverSocket = new ServerSocket(Controller.PORT); //this is used to find the ip
             System.out.println("waiting for connection...");
             socket = serverSocket.accept();
             System.out.println("connection accepted");
+            socket.close();
+            serverSocket.close();
+            //this is actual connection
+            serverSocketActual = new ServerSocket(Controller.PORT);
+            System.out.println("waiting for connection...2");
+            socketActual = serverSocketActual.accept();
+            System.out.println("connection accepted2");
 
-            outputConnection = new OutputConnection(this, socket);
+            outputConnection = new OutputConnection(this, socketActual);
             System.out.println("output connection complete");
-            inputConnection = new InputConnection(this, socket);
+            inputConnection = new InputConnection(this, socketActual);
             System.out.println("input connection complete");
 
             //          outputConnection.setGameRunning(true);
@@ -231,13 +241,9 @@ public class ServerController extends Controller {
                     powerUps.add(new SpeedDown(x, y, 0.75F));
                     outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.SpeedDown));
                 }
-                case 4->{
-                    powerUps.add(new Ricochet(x, y, 2));
-                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.Ricochet));
-                }
             }
 
-        } else if (currentPowerUpCooldown == 0) {
+        } else if (currentPowerUpCooldown == 0){
             currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
         } else {
             currentPowerUpCooldown--;
@@ -289,6 +295,7 @@ public class ServerController extends Controller {
         } else {
             currentInventoryItemCooldown--;
         }
+
     }
 
     private void checkPowerUpPickups(PowerUp powerUp) {
@@ -336,9 +343,9 @@ public class ServerController extends Controller {
                 clientWeaponAudio.setFile(-1);
                 clientWeaponAudio.play();
             }
-    //        if (bullet.getSERIAL() != 002) {
+            //        if (bullet.getSERIAL() != 002) {
 
-     //       }
+            //       }
 
             double damage = (-1 * bullet.getDamage() * killer.getDamageMultiplier());
             System.out.println(damage);
@@ -360,7 +367,7 @@ public class ServerController extends Controller {
                 }
 
                 killer.incrementKillCount();
-               // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
+                // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
                 if(victim.getDeathCount() >= 10){
                     declareWinner(killer);
                 }

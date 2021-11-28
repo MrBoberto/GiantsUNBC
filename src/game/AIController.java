@@ -20,6 +20,7 @@ import java.util.Scanner;
 public class AIController extends Controller{
 
     private Socket socket;
+    private GameOver gameOver;
 
     public AIController() {
         super();
@@ -68,8 +69,7 @@ public class AIController extends Controller{
             } else {
                 winner = thisPlayer;
             }
-
-            System.out.println("The winner is " + winner.getPlayerName());
+            System.out.println("The winner is " +winner.getPlayerName());
             System.out.println("Scores: ");
             String format = " %10d  %10d  %10f  %10d  %10d  %10d  %10s %n";
             System.out.format("      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of%n");
@@ -87,7 +87,11 @@ public class AIController extends Controller{
                         (int)packet.getPlayerInfo()[i][5],
                         "???");
             }
+
+
+
             stop();
+            gameWindow.frame.dispose();
         }
     }
 

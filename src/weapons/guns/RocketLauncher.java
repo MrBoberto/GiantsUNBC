@@ -25,7 +25,7 @@ public class RocketLauncher implements Weapon {
     public static final int MAX_DELAY = 250;
     private int currentDelay = 0;
     // Identifies type of gun
-    private static final int SERIAL = 004;
+    public static final int SERIAL = 004;
     public static final int DAMAGE = 40;
     public SFXPlayer audio;
 

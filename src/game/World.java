@@ -1,6 +1,7 @@
 package game;
 
 import javax.swing.*;
+import java.net.UnknownHostException;
 import java.security.SecureRandom;
 
 import static java.lang.Integer.parseInt;
@@ -9,8 +10,7 @@ public final class World {
     public static Controller controller;
     public static SecureRandom sRandom = new SecureRandom();
 
-    public World(int choice)
-    {
+    public World(int choice) throws UnknownHostException {
 
         if(choice==1){
             controller = new ServerController();

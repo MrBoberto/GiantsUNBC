@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -31,6 +32,7 @@ public class MainMenu {
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
     static SFXPlayer sfxPlayer;
+    GameOver gameOver;
 
     public MainMenu() {
         mainMenu = new JFrame("Doing your Mom");
@@ -65,12 +67,15 @@ public class MainMenu {
         backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
 
         JPanel mainMenuPanel = new JPanel(new GridBagLayout()){
-            @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
 
-            Graphics2D g2 = (Graphics2D)g;
-            g2.drawImage(backgroundImage,0,0, mainMenu.getWidth(), mainMenu.getHeight(),null);
+            @Override
+
+        protected void paintComponent(Graphics g) {
+
+                super.paintComponent(g);
+
+                Graphics2D g2 = (Graphics2D) g;
+                g2.drawImage(backgroundImage, 0, 0, mainMenu.getWidth(), mainMenu.getHeight(), null);
 
         }};
 
@@ -129,7 +134,7 @@ public class MainMenu {
         }
     }
 
-    private JPanel buttonsPanel(JPanel mainMenuPanel) {
+    public JPanel buttonsPanel(JPanel mainMenuPanel) {
         GridBagConstraints c = new GridBagConstraints();
         JPanel buttonsPanel = new JPanel(new GridBagLayout());
         buttonsPanel.setOpaque(false);
@@ -309,9 +314,17 @@ public class MainMenu {
             }
             mainMenu.dispose();
             if(gameType == SERVER){
-                new World(1);
+                try {
+                    new World(1);
+                } catch (UnknownHostException ex) {
+                    ex.printStackTrace();
+                }
             } else {
-                new World(3);
+                try {
+                    new World(3);
+                } catch (UnknownHostException ex) {
+                    ex.printStackTrace();
+                }
             }
 
 
@@ -511,7 +524,11 @@ public class MainMenu {
             }
             mainMenu.dispose();
 
-            new World(2);
+            try {
+                new World(2);
+            } catch (UnknownHostException ex) {
+                ex.printStackTrace();
+            }
 
         }, "Client");
         c.gridy = 8;
