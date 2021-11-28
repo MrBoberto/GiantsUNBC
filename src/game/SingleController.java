@@ -284,6 +284,9 @@ public class SingleController extends Controller {
                         + killer.getPlayerName() + "'s " + bullet.getSERIAL());
 
                 killer.incrementKillCount();
+                if (killer instanceof AIPlayer) {
+                    AIPlayer.setDialogue("I am inevitable.");
+                }
                 if(victim.getDeathCount() >= 10){
                     declareWinner(killer);
                 }

@@ -62,7 +62,6 @@ public class ClientController extends Controller {
                     InetAddress Address = Addresses.nextElement();
                     if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1")&&!firstAddress&&!Address.getHostAddress().contains("192.168.56.1"))
                     {
-                        System.out.println(Address.getHostAddress() + " is on the network");
                         firstAddress = true;
                         correctAddress =Address;
                     }
@@ -112,19 +111,16 @@ public class ClientController extends Controller {
                 }
             }else socket = new Socket(ipAddress, Controller.PORT);
             TimeUnit.SECONDS.sleep(1);//
-            System.out.println("The client:"+ correctAddress.getHostAddress() +"\n The server"+correctIp);
+            System.out.println("The client:"+ correctAddress.getHostAddress() +"\nThe server"+correctIp);
             if (correctAddress.getHostAddress().equals(correctIp)) {
-                //correctIp = ""; could be blank or not doesn't matter
                 System.out.println("THE SERVER AND CLIENT ARE ON THE SAME COMPUTER");
             }
-
             System.out.println("waiting for connection...");
 
             if (socket == null) {
                 socket = new Socket(ipAddress, Controller.PORT);
             }
-            System.out.println("WHAT IS DEFAULT IP:"+ipAddress);
-            //socket = new Socket(ipAddress, Controller.PORT); needed for 2 connections
+            System.out.println("THE INPUTTED IP IS:"+ipAddress);
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socket);

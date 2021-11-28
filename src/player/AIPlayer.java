@@ -5,6 +5,11 @@ import game.SingleController;
 import game.World;
 import inventory_items.InventoryItem;
 import mapObjects.Block;
+import power_ups.PowerUp;
+import weapons.guns.AssaultRifle;
+import weapons.guns.Pistol;
+import weapons.guns.Shotgun;
+import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -23,21 +28,27 @@ public class AIPlayer extends OtherPlayer {
     private int fear = 50;              // Max health advantage the player can have for the ai to want to attack them
     private int randAngleDuration = 0;
     private int randAngleDurationMax = 20;
-    private int tryToGetWeaponTimer = 0;
-    private int TRY_TO_GET_WEAPON_TIMER_MAX = 60;
+    private int tryToGetCollectTimer = 0;
+    private final int TRY_TO_GET_WEAPON_TIMER_MAX = 60;
     Point target;                       // May be a player, power up, or weapon; depends on Thanos' judgement
     private Point closestInventoryItem;
     private Point closestPowerUp;
+    private int targetType = 3;
+    private static String myDialogue = "";
+    private static int dialogueCount = 0;
 
 
     public AIPlayer(double x, double y, int playerNumber, Color color) {
         super(x, y, playerNumber, color);
         playerColour = new Color(200, 0, 255);
+        target = new Point(0, 0);
 
         // Graphics-related
 
         loadImageStrips();
         currentImage = standing.getHead();
+
+        setDialogue("Reality can be whatever I want.");
     }
 
 
@@ -90,56 +101,111 @@ public class AIPlayer extends OtherPlayer {
             right = false;
             left = false;
 
-            for (InventoryItem anInventoryItem: SingleController.getInventoryItems()) {
-                if (closestInventoryItem == null) {
-                    closestInventoryItem = new Point((int) anInventoryItem.getX(), (int) anInventoryItem.getY());
-                } else {
-                    if (World.pythHyp(x - closestInventoryItem.x, y - closestInventoryItem.y)
-                            < World.pythHyp(x - anInventoryItem.getX(), y - anInventoryItem.getY())) {
+            if (this.x - 15 < target.x && this.x + 15 > target.x && this.y - 15 < target.y && this.y + 15 > target.y && targetType > 0) {
+                System.out.println("Collected " + targetType);
+                tryToGetCollectTimer = 0;
+                closestInventoryItem = null;
+                closestPowerUp = null;
+            }
+
+            // If it is time to select a new target
+            if ((tryToGetCollectTimer < 1)) {
+                for (InventoryItem anInventoryItem: SingleController.getInventoryItems()) {
+                    if (closestInventoryItem == null) {
                         closestInventoryItem = new Point((int) anInventoryItem.getX(), (int) anInventoryItem.getY());
+                    } else {
+                        if (World.pythHyp(x - closestInventoryItem.x, y - closestInventoryItem.y)
+                                < World.pythHyp(x - anInventoryItem.getX(), y - anInventoryItem.getY())) {
+                            closestInventoryItem = new Point((int) anInventoryItem.getX(), (int) anInventoryItem.getY());
+                        }
                     }
+                }
+                if (closestInventoryItem == null) closestInventoryItem = new Point((int) Controller.thisPlayer.getX(), (int) Controller.thisPlayer.getY());
+
+                for (PowerUp aPowerUp: SingleController.getPowerUps()) {
+                    if (closestPowerUp == null) {
+                        closestPowerUp = new Point((int) aPowerUp.getX(), (int) aPowerUp.getY());
+                    } else {
+                        if (World.pythHyp(x - closestPowerUp.x, y - closestPowerUp.y)
+                                < World.pythHyp(x - aPowerUp.getX(), y - aPowerUp.getY())) {
+                            closestPowerUp = new Point((int) aPowerUp.getX(), (int) aPowerUp.getY());
+                        }
+                    }
+                }
+                if (closestPowerUp == null) closestPowerUp = new Point((int) Controller.thisPlayer.getX(), (int) Controller.thisPlayer.getY());
+
+                Point tempTarget = new Point((int) Controller.thisPlayer.getX(), (int) Controller.thisPlayer.getY());
+                if (World.pythHyp(closestInventoryItem.x - x, closestInventoryItem.y - y) * 2
+                        < World.pythHyp(closestPowerUp.x - x, closestPowerUp.y - y)) {
+                    if (World.pythHyp(tempTarget.x, tempTarget.y) * 2
+                            > World.pythHyp(closestInventoryItem.x - x, closestInventoryItem.y - y)) {
+                        tempTarget = new Point(closestInventoryItem.x, closestInventoryItem.y);
+                        targetType = 1;
+                    } else {
+                        targetType = 0;
+                    }
+                } else {
+                    if (World.pythHyp(tempTarget.x, tempTarget.y) * 2
+                            > World.pythHyp(closestPowerUp.x - x, closestPowerUp.y - y)) {
+                        tempTarget = new Point(closestPowerUp.x, closestPowerUp.y);
+                        targetType = 2;
+                    } else {
+                        targetType = 0;
+                    }
+                }
+
+                System.out.println("Target x = " + tempTarget.x + ", y = " + tempTarget.y);
+                target = tempTarget;
+                tryToGetCollectTimer = (int) World.pythHyp(tempTarget.x - x, tempTarget.y - y) / 3 - 1;
+                System.out.println("tryToGetCollectTimer = " + tryToGetCollectTimer);
+            } else {
+                tryToGetCollectTimer--;
+                if (targetType == 0) {
+                    target = new Point((int) Controller.thisPlayer.getX(), (int) Controller.thisPlayer.getY());
                 }
             }
 
-            if (Controller.thisPlayer.getHealth() <= health + fear) {
+            if (Controller.thisPlayer.getHealth() <= health + fear || targetType > 0) {
                 if (!attac) {
-                    System.out.println(playerName + ": You should have gone for the head.");
+                    setDialogue("You should have gone for the head.");
+                    dialogueCount = myDialogue.length() * 5;
                 }
                 attac = true;
-                if (Controller.thisPlayer.getY() < y - desiredOffset) {
+                if (target.y < y - desiredOffset) {
                     avgY++;
                     up = true;
                 }
-                if (Controller.thisPlayer.getX() > x + desiredOffset) {
+                if (target.x > x + desiredOffset) {
                     avgX++;
                     right = true;
                 }
-                if (Controller.thisPlayer.getY() > y + desiredOffset) {
+                if (target.y > y + desiredOffset) {
                     avgY--;
                     down = true;
                 }
-                if (Controller.thisPlayer.getX() < x - desiredOffset) {
+                if (target.x < x - desiredOffset) {
                     avgX--;
                     left = true;
                 }
             } else {
                 if (attac) {
-                    System.out.println(playerName + ": Your optimism is misplaced, Asgardian.");
+                    setDialogue("Your optimism is misplaced, Asgardian.");
+                    dialogueCount = myDialogue.length() * 5;
                 }
                 attac = false;
-                if (Controller.thisPlayer.getY() < y) {
+                if (target.y < y) {
                     avgY--;
                     down = true;
                 }
-                if (Controller.thisPlayer.getX() > x) {
+                if (target.x > x) {
                     avgX--;
                     left = true;
                 }
-                if (Controller.thisPlayer.getY() > y) {
+                if (target.y > y) {
                     avgY++;
                     up = true;
                 }
-                if (Controller.thisPlayer.getY() < x) {
+                if (target.x < x) {
                     avgX++;
                     right = true;
                 }
@@ -285,6 +351,7 @@ public class AIPlayer extends OtherPlayer {
     public void tick() {
         super.tick();
         setAngle();
+        if (dialogueCount > 0) dialogueCount--;
 
         // Determine whether to use shorter or longer ranged weapon
         if (Controller.thisPlayer.getX() < x - shortRangeBound || Controller.thisPlayer.getY() < y - shortRangeBound
@@ -436,12 +503,35 @@ public class AIPlayer extends OtherPlayer {
         if (weaponSerial == -1 || weaponTextures.get(weaponSerial) == null) return;
         g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);
 
+        if (dialogueCount > 0) {
+            g2d.setColor(Color.WHITE);
+            Font font1 = new Font("Times New Roman", Font.PLAIN, 10);
+            g2d.setFont(font1);
+            FontMetrics stringSize1 = g2d.getFontMetrics(font1);
+
+            g2d.fillRect((int) x - (stringSize1.stringWidth(myDialogue)) / 2 - 3,
+                    (int) y - 50 - currentImage.getImage().getHeight() / 4,
+                    stringSize1.stringWidth(myDialogue) + 6, 20);
+            g2d.setColor(Color.BLACK);
+            g2d.drawRect((int) x - (stringSize1.stringWidth(myDialogue)) / 2 - 3,
+                    (int) y - 50 - currentImage.getImage().getHeight() / 4,
+                    stringSize1.stringWidth(myDialogue) + 6, 20);
+            g2d.setColor(Color.WHITE);
+            g2d.fillPolygon(new int[] {(int) x - 2, (int) x, (int) x + 2}, new int[] { (int) y - 60, (int) y - 50, (int) y - 60}, 3);
+            g2d.setColor(Color.BLACK);
+            g2d.drawLine((int) x - 2, (int) y - 40, (int) x, (int) y - 50);
+            g2d.drawLine((int) x + 2, (int) y - 40, (int) x, (int) y - 50);
+
+            g2d.drawString(myDialogue, (int) x - (stringSize1.stringWidth(myDialogue)) / 2,
+                    (int) y - 40 - currentImage.getImage().getHeight() / 4);
+        }
+
         // Draws the player's hitbox
         g.setColor(playerColour);
 
-        Font font = new Font("Arial", Font.BOLD, 15);
-        g2d.setFont(font);
-        FontMetrics stringSize = g2d.getFontMetrics(font);
+        Font font2 = new Font("Arial", Font.BOLD, 15);
+        g2d.setFont(font2);
+        FontMetrics stringSize = g2d.getFontMetrics(font2);
 
         g2d.fillRect((int) x - currentImage.getImage().getWidth() / 4,
                 (int) y - currentImage.getImage().getHeight() / 4 - 5,
@@ -500,5 +590,10 @@ public class AIPlayer extends OtherPlayer {
             }
         }
         imageLoaded = true;
+    }
+
+    public static void setDialogue(String dialogue) {
+        myDialogue = dialogue;
+        dialogueCount = myDialogue.length() * 5;
     }
 }
