@@ -30,9 +30,6 @@ public class Main {
 
         InetAddress correctAddress =InetAddress.getLocalHost(); //to make java happy, should not need to be initailzed
         try {
-            String ipAddress = String.valueOf(InetAddress.getLocalHost());
-            String[] ipAddressClean = ipAddress.split("/", 2);
-            System.out.println("The ip address: "+ipAddress);
             Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
             boolean firstAddress = false;
             while(Interfaces.hasMoreElements())
@@ -44,7 +41,7 @@ public class Main {
                     InetAddress Address = Addresses.nextElement();
                     if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1")&&!firstAddress)
                     {
-                            System.out.println(Address.getHostAddress() + " is on the network");
+                            System.out.println("Your ip is:"+Address.getHostAddress());
                             firstAddress = true;
                             correctAddress =Address;
                     }
