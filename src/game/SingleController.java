@@ -13,12 +13,14 @@ import power_ups.*;
 import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 import weapons.aoe.Explosion;
+import weapons.guns.Weapon;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
+import java.util.List;
 
 public class SingleController extends Controller {
 
@@ -464,5 +466,13 @@ public class SingleController extends Controller {
         }
 
         isRunning = false;
+    }
+
+    public static List<InventoryItem> getInventoryItems() {
+        return inventoryItems;
+    }
+
+    public static List<PowerUp> getPowerUps() {
+        return powerUps;
     }
 }

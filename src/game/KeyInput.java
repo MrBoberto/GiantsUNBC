@@ -44,7 +44,6 @@ public class KeyInput extends KeyAdapter {
             } else {
                 Controller.thisPlayer.getWeapons().setSecondary(1);
             }
-            System.out.println("KeyInput: " + Controller.thisPlayer.getWeapons());
         }
         if (e.getKeyCode() == KeyEvent.VK_2 || e.getKeyCode() == KeyEvent.VK_NUMPAD2) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
@@ -52,7 +51,6 @@ public class KeyInput extends KeyAdapter {
             } else {
                 Controller.thisPlayer.getWeapons().setSecondary(2);
             }
-            System.out.println("KeyInput: " + Controller.thisPlayer.getWeapons());
         }
         if (e.getKeyCode() == KeyEvent.VK_3 || e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
@@ -60,7 +58,6 @@ public class KeyInput extends KeyAdapter {
             } else {
                 Controller.thisPlayer.getWeapons().setSecondary(3);
             }
-            System.out.println("KeyInput: " + Controller.thisPlayer.getWeapons());
         }
 
 //                if (key == KeyEvent.VK_SHIFT) {
