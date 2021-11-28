@@ -11,6 +11,7 @@ import power_ups.PowerUp;
 import utilities.BufferedImageLoader;
 import weapons.ammo.Bullet;
 import weapons.aoe.Explosion;
+import weapons.aoe.Slash;
 import weapons.guns.AssaultRifle;
 
 import java.awt.*;
@@ -48,6 +49,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static List<Block> blocks = Collections.synchronizedList(new ArrayList<>());
     public static List<GameObject> eyeCandy = Collections.synchronizedList(new ArrayList<>());
     public static List<Explosion> explosions = Collections.synchronizedList(new ArrayList<>());
+    public static List<Slash> slashes = Collections.synchronizedList(new ArrayList<>());
     public static List<PowerUp> powerUps = Collections.synchronizedList(new ArrayList<>());
     public static List<InventoryItem> inventoryItems = Collections.synchronizedList(new ArrayList<>());
     public static List<Arsenal> arsenals = Collections.synchronizedList(new ArrayList<>());
@@ -134,6 +136,8 @@ public abstract class Controller extends Canvas implements Runnable {
         movingAmmo.clear();
 
         explosions.clear();
+
+        slashes.clear();
 
         blocks.clear();
 
@@ -249,6 +253,11 @@ public abstract class Controller extends Canvas implements Runnable {
                 explosions.get(i).tick();
         }
 
+        for (int i = 0; i < slashes.size(); i++) {
+            if(slashes.get(i) != null)
+                slashes.get(i).tick();
+        }
+
         for (int i = 0; i < arsenals.size(); i++) {
             if(arsenals.get(i) != null){
                 arsenals.get(i).tick();
@@ -330,6 +339,11 @@ public abstract class Controller extends Canvas implements Runnable {
         for (int i = 0; i < explosions.size(); i++) {
             if(explosions.get(i) != null)
                 explosions.get(i).render(g);
+        }
+
+        for (int i = 0; i < slashes.size(); i++) {
+            if(slashes.get(i) != null)
+                slashes.get(i).render(g);
         }
 
         for (int i = 0; i < players.size(); i++) {

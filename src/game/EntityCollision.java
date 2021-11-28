@@ -4,6 +4,7 @@ import player.Player;
 import weapons.ammo.Bullet;
 import weapons.ammo.Projectile;
 import weapons.aoe.Explosion;
+import weapons.aoe.Slash;
 
 public class EntityCollision {
     public static int getBulletVictim(Bullet proj) {
@@ -36,6 +37,23 @@ public class EntityCollision {
             }
             // If only other
             if (explosion.getBounds().intersects(Controller.otherPlayer.getBounds())) {
+                return Player.CLIENT_PLAYER;
+            }
+
+        } catch (NullPointerException e){
+            /* empty */
+        }
+
+        return -1;
+    }
+
+    public static int getSlashVictim(Slash slash) {
+
+        try{
+            if (slash.getBounds().intersects(Controller.thisPlayer.getBounds())) {
+                return Player.SERVER_PLAYER;
+            }
+            if (slash.getBounds().intersects(Controller.otherPlayer.getBounds())) {
                 return Player.CLIENT_PLAYER;
             }
 

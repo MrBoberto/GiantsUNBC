@@ -2,9 +2,8 @@ package weapons.aoe;
 
 import animation.ImageFrame;
 import animation.ImageStrip;
-import game.Controller;
-import game.GameObject;
-import game.World;
+import game.*;
+import player.Player;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -14,29 +13,32 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Explosion extends GameObject implements Serializable {
+public class Slash extends GameObject implements Serializable {
     protected static ImageStrip animation;
     protected ImageFrame currentFrame;
     private int age = 0;
-    public final int MAX_AGE = 28;
+    public final int MAX_AGE = 2;
     protected boolean harmful = true;
-    public static final int DAMAGE = 80;
+    public static final int DAMAGE = 100;
     Rectangle boundRect;
     protected int playerIBelongToNumber;
 
-    public Explosion(double x, double y, int playerIBelongToNumber) {
+    public Slash(double x, double y, double angle, int playerIBelongToNumber, int damage) {
         super(x, y);
+
         loadImage();
 
         this.playerIBelongToNumber = playerIBelongToNumber;
 
-        System.out.println("EXPLOSION");
+        System.out.println("SLASH");
 
-        boundRect = new Rectangle((int)this.x - currentFrame.getImage().getWidth() / 3,
-                (int)this.y - currentFrame.getImage().getHeight() / 3, 2 * currentFrame.getImage().getWidth() / 3,
-                2 * currentFrame.getImage().getHeight() / 3);
+        boundRect = new Rectangle((int)this.x - currentFrame.getImage().getWidth() / 2,
+                (int)this.y - currentFrame.getImage().getHeight() / 2, currentFrame.getImage().getWidth(),
+                currentFrame.getImage().getHeight());
 
         System.out.println("boundRect created.");
+
+        Controller.slashes.add(this);
     }
 
     /**

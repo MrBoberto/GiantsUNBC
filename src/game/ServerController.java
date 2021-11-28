@@ -14,6 +14,7 @@ import power_ups.*;
 import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 import weapons.aoe.Explosion;
+import weapons.aoe.Slash;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -134,6 +135,18 @@ public class ServerController extends Controller {
                     packet.getX(),
                     packet.getY(),
                     packet.getPlayerNumber()
+            );
+            clientWeaponAudio.setFile(-1);
+            clientWeaponAudio.play();
+
+        } else if (object instanceof ClientSlashPacket packet) {
+
+            new Slash(
+                    packet.getX(),
+                    packet.getY(),
+                    packet.getAngle(),
+                    Player.CLIENT_PLAYER,
+                    packet.getDamage()
             );
             clientWeaponAudio.setFile(-1);
             clientWeaponAudio.play();

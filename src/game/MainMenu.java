@@ -31,7 +31,7 @@ public class MainMenu {
     GameOver gameOver;
 
     public MainMenu() {
-        mainMenu = new JFrame("Doing your Mom");
+        mainMenu = new JFrame("THE BOYZ Launcher");
 
         Image img;
         try {
@@ -509,7 +509,7 @@ public class MainMenu {
         multiplayerMenu.add(serverButton, c);
 
         MainMenuButton clientButton = new MainMenuButton(e -> {
-            ipaddress = JOptionPane.showInputDialog ("Please enter the server's ip address:");
+            ipaddress = JOptionPane.showInputDialog ("Please enter the server's ip address, or leave blank to search automatically:");
             try
             {
                 soundtrack.stop();

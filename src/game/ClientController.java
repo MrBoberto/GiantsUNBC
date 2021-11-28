@@ -10,6 +10,7 @@ import player.Player;
 import power_ups.*;
 import weapons.aoe.Explosion;
 import utilities.BufferedImageLoader;
+import weapons.aoe.Slash;
 import weapons.guns.*;
 
 import java.awt.*;
@@ -174,6 +175,18 @@ public class ClientController extends Controller {
         } else if(object instanceof ServerExplosionPacket packet){
 
             explosions.add(new Explosion(packet.getX(), packet.getY(), packet.getPlayerNumber()));
+            serverWeaponAudio.setFile(-1);
+            serverWeaponAudio.play();
+
+        } else if (object instanceof ClientSlashPacket packet) {
+
+            new Slash(
+                    packet.getX(),
+                    packet.getY(),
+                    packet.getAngle(),
+                    Player.CLIENT_PLAYER,
+                    packet.getDamage()
+            );
             serverWeaponAudio.setFile(-1);
             serverWeaponAudio.play();
 
