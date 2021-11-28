@@ -20,6 +20,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.concurrent.TimeUnit;
 
 
 public class ClientController extends Controller {
@@ -103,7 +104,7 @@ public class ClientController extends Controller {
                     }
                 }).start();     // dont forget to start the thread
             }
-
+            TimeUnit.SECONDS.sleep(1);
             System.out.println("The client:"+ correctAddress.getHostAddress() +"\n The server"+correctIp);
             if (correctAddress.getHostAddress().equals(correctIp)) {
                 //correctIp = ""; could be blank or not doesn't matter
@@ -112,8 +113,11 @@ public class ClientController extends Controller {
 
             System.out.println("waiting for connection...");
             String ipAddress = MainMenu.ipaddress;
-            if (ipAddress == "")
-                ipAddress =correctIp;
+
+            if (ipAddress.equals("")) {
+                ipAddress = correctIp;
+            }
+            System.out.println("WHAT IS DEFAULT IP:"+ipAddress);
             socket = new Socket(ipAddress, Controller.PORT);
             System.out.println("connection accepted");
 
