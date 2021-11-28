@@ -13,20 +13,25 @@ import weapons.guns.*;
 
 import java.awt.*;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 
 
 public class ClientController extends Controller {
 
     private Socket socket;
+    private String correctIp;
 
 
     private int shotgunAudioCount = 10;
     public SFXPlayer serverWeaponAudio;
 
-    public ClientController() {
+    public ClientController()throws UnknownHostException {
         super();
 
         serverWeaponAudio = new SFXPlayer();
@@ -37,6 +42,35 @@ public class ClientController extends Controller {
         thisPlayer = new MainPlayer(Controller.otherX, Controller.otherY, 0, Color.RED);
         otherPlayer = new OtherPlayer(Controller.thisX, Controller.thisY, 0, Color.BLUE);
 
+        InetAddress correctAddress =InetAddress.getLocalHost();//to make java happy, should not need to be initailzed
+        try {
+            Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
+            boolean firstAddress = false;
+            while(Interfaces.hasMoreElements())
+            {
+                NetworkInterface Interface = Interfaces.nextElement();
+                Enumeration<InetAddress> Addresses = Interface.getInetAddresses();
+                while(Addresses.hasMoreElements())
+                {
+                    InetAddress Address = Addresses.nextElement();
+                    if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1")&&!firstAddress)
+                    {
+                        System.out.println(Address.getHostAddress() + " is on the network");
+                        firstAddress = true;
+                        correctAddress =Address;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        final byte[] ip;
+        try {
+            ip = correctAddress.getAddress();
+        } catch (Exception e) {
+            return;     // exit method, otherwise "ip might not have been initialized"
+        }
 
         if (MainMenu.playerName.equals("")) {
             thisPlayer.setPlayerName("Guest");
@@ -45,8 +79,41 @@ public class ClientController extends Controller {
             thisPlayer.setPlayerName(MainMenu.playerName);
         }
         try {
+            for(int i=1;i<=254;i++) {
+                final int j = i;  // i as non-final variable cannot be referenced from inner class
+                new Thread(new Runnable() {   // new thread for parallel execution
+                    public void run() {
+                        try {
+                            ip[3] = (byte)j;
+                            InetAddress address = InetAddress.getByAddress(ip);
+                            String output = address.toString().substring(1);
+                            if("142.207.63.55".equals(output))
+                                System.out.println("HEY IT SHOULD FIND THE SERVER");
+                            try{
+                                socket = new Socket(output, game.Controller.PORT);
+                                System.out.println("FOUND SERVER");
+                                System.out.println(output + " is this the server");
+                                correctIp = output;
+                                socket.close();
+                            }catch (Exception e) {//e.printStackTrace();}
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();     // dont forget to start the thread
+            }
+
+            System.out.println("The client:"+ correctAddress.getHostAddress() +"\n The server"+correctIp);
+            if (correctAddress.getHostAddress().equals(correctIp)) {
+                //correctIp = ""; could be blank or not doesn't matter
+                System.out.println("THE SERVER AND CLIENT ARE ON THE SAME COMPUTER");
+            }
+
             System.out.println("waiting for connection...");
             String ipAddress = MainMenu.ipaddress;
+            if (ipAddress == "")
+                ipAddress =correctIp;
             socket = new Socket(ipAddress, Controller.PORT);
             System.out.println("connection accepted");
 
