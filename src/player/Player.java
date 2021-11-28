@@ -89,7 +89,8 @@ public abstract class Player extends GameObject {
     // Prevents dash from being held
     protected boolean canDash = true;
 
-    protected Arsenal weapons = new Arsenal();
+    //Arsenals
+    protected Arsenal arsenal;
     protected int selectedWeapon = 0;
     protected int weaponSerial = -1;
 
@@ -119,8 +120,10 @@ public abstract class Player extends GameObject {
     public static final int ANIMATION_DELAY = 1;
 
 
-    public Player(double x, double y, double angle, Color playerColour) {
-        super(x, y, angle);
+    public Player(double x, double y, int playerNumber, Color playerColour) {
+        super(x, y);
+
+        this.playerNumber = playerNumber;
 
         respawnPointX = x;
         respawnPointY = y;
@@ -132,7 +135,7 @@ public abstract class Player extends GameObject {
 
         Controller.players.add(this);
 
-        weapons.add(new Pistol(this));
+
     }
 
     public String getPlayerName() {
@@ -360,9 +363,9 @@ public abstract class Player extends GameObject {
         animationTimer++;
 
         if (selectedWeapon == 0) {
-            weaponSerial = weapons.getPrimary().getSERIAL();
+            weaponSerial = arsenal.getPrimary().getSERIAL();
         } else {
-            weaponSerial = weapons.getSecondary().getSERIAL();
+            weaponSerial = arsenal.getSecondary().getSERIAL();
         }
 
         //Increase timer in powerUps if present.
@@ -463,8 +466,8 @@ public abstract class Player extends GameObject {
         this.weaponSerial = weaponSerial;
     }
 
-    public Arsenal getWeapons() {
-        return weapons;
+    public Arsenal getArsenal() {
+        return arsenal;
     }
 
     public boolean isWalking() {
@@ -561,5 +564,9 @@ public abstract class Player extends GameObject {
 
     public int getNumberOfBulletBounces() {
         return numberOfBulletBounces;
+    }
+
+    public void setArsenal(Arsenal arsenal) {
+        this.arsenal = arsenal;
     }
 }

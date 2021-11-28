@@ -33,16 +33,16 @@ public class SniperRifleItem extends InventoryItem {
         int indexToRemove = Controller.inventoryItems.indexOf(this);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController) {
             if(playerNumber == Player.SERVER_PLAYER) {
-                if (!Controller.thisPlayer.getWeapons().hasWeapon(1)) {
+                if (!Controller.thisPlayer.getArsenal().hasWeapon(1)) {
                     Controller.inventoryItems.remove(indexToRemove);
-                    Controller.thisPlayer.getWeapons().add(new SniperRifle(Controller.thisPlayer));
+                    Controller.thisPlayer.getArsenal().add(new SniperRifle(Controller.thisPlayer));
                 } else {
                     indexToRemove = -1;
                 }
             } else {
-                if (!Controller.otherPlayer.getWeapons().hasWeapon(1)) {
+                if (!Controller.otherPlayer.getArsenal().hasWeapon(1)) {
                     Controller.inventoryItems.remove(indexToRemove);
-                    Controller.otherPlayer.getWeapons().add(new SniperRifle(Controller.otherPlayer));
+                    Controller.otherPlayer.getArsenal().add(new SniperRifle(Controller.otherPlayer));
                 } else {
                     indexToRemove = -1;
                 }

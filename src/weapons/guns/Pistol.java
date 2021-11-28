@@ -52,7 +52,7 @@ public class Pistol implements Weapon {
             }
         } else if (World.controller instanceof SingleController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
-            if (playerIBelongTo.getPlayerNumber() == 0) {
+            if (playerIBelongTo.getPlayerNumber() == Player.SERVER_PLAYER) {
                 for (int i = 0; i < ROUNDCOUNT; i++) {
                     new PistolBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
                 }

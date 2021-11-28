@@ -1,14 +1,80 @@
 package player;
 
+import game.*;
+import utilities.BufferedImageLoader;
+import weapons.guns.Pistol;
 import weapons.guns.Weapon;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Arsenal {
+public class Arsenal extends GameObject {
     // Default selected weapon(s) on startup
     private Weapon primary;
     private Weapon secondary;
+    private Player playerIBelongTo;
     private ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+
+    //Textures
+    BufferedImage shadow;
+    BufferedImage inventorySlots;
+    BufferedImage profile;
+
+    public Arsenal(double x, double y, Player playerIBelongTo) {
+        super(x, y - 35);
+        this.playerIBelongTo = playerIBelongTo;
+        Controller.arsenals.add(this);
+
+        add(new Pistol(playerIBelongTo));
+
+        System.out.println(playerIBelongTo.getClass().toString() + " + " + playerIBelongTo.getPlayerNumber());
+    }
+
+    @Override
+    public void tick() {
+        /* empty */
+    }
+
+    @Override
+    public void render(Graphics g) {
+        if(shadow == null){
+            loadImages();
+        }
+        Graphics2D g2d = (Graphics2D) g;
+        if(playerIBelongTo.getPlayerNumber()== Player.SERVER_PLAYER){
+            g2d.drawImage(shadow, (int) x, (int) y+15, shadow.getWidth(), shadow.getHeight(), World.controller);
+            g2d.drawImage(inventorySlots, (int) x , (int) y, inventorySlots.getWidth(), inventorySlots.getHeight(), World.controller);
+            g2d.setComposite(AlphaComposite.SrcOver.derive(0.75f));
+            g2d.drawImage(profile, (int) x , (int) y, inventorySlots.getHeight(),inventorySlots.getHeight(), World.controller);
+            } else {
+            int offset = 5;
+            g2d.drawImage(shadow, (int) x - offset, (int) y+15, shadow.getWidth(), shadow.getHeight(), World.controller);
+            g2d.drawImage(inventorySlots, (int) x - offset, (int) y, inventorySlots.getWidth(), inventorySlots.getHeight(), World.controller);
+            g2d.setComposite(AlphaComposite.SrcOver.derive(0.75f));
+            g2d.drawImage(profile, (int) x - offset+ inventorySlots.getWidth() - 100, (int) y, inventorySlots.getHeight(),inventorySlots.getHeight(), World.controller);
+        }
+    }
+
+    private void loadImages() {
+
+        if(playerIBelongTo.getPlayerNumber()== Player.SERVER_PLAYER) {
+            shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_shadow_gui_left_corner.png");
+            inventorySlots = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/inventory_slots_left.png");
+            profile = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_blue.png");
+        } else {
+            shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_shadow_gui_right_corner.png");
+            inventorySlots = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/inventory_slots_right.png");
+            profile = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_red.png");
+        }
+
+    }
+
+    @Override
+    public Rectangle getBounds() {
+        /* no bounds */
+        return null;
+    }
 
     public void add(Weapon weapon) {
         if (primary == null) {
@@ -196,4 +262,6 @@ public class Arsenal {
         return string;
 
     }
+
+
 }

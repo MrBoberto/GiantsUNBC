@@ -6,6 +6,7 @@ import audio.SFXPlayer;
 import eye_candy.DeathMark;
 import mapObjects.Block;
 import packets.*;
+import player.Arsenal;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
@@ -38,8 +39,11 @@ public class ServerController extends Controller {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
 
-        thisPlayer = new MainPlayer(Controller.thisX, Controller.thisY, 0, Color.BLUE);
-        otherPlayer = new OtherPlayer(Controller.otherX, Controller.otherY, 0, Color.RED);
+        thisPlayer = new MainPlayer(Controller.thisX, Controller.thisY, Player.SERVER_PLAYER, Color.BLUE);
+        otherPlayer = new OtherPlayer(Controller.otherX, Controller.otherY, Player.CLIENT_PLAYER, Color.RED);
+
+        thisPlayer.setArsenal(new Arsenal(0,620, thisPlayer));
+        otherPlayer.setArsenal(new Arsenal(816,620, otherPlayer));
 
         if (MainMenu.playerName.equals("")) {
             thisPlayer.setPlayerName("Host");

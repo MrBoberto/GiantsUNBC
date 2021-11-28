@@ -5,10 +5,6 @@ import game.SingleController;
 import game.World;
 import inventory_items.InventoryItem;
 import mapObjects.Block;
-import weapons.guns.AssaultRifle;
-import weapons.guns.Pistol;
-import weapons.guns.Shotgun;
-import weapons.guns.SniperRifle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -34,11 +30,10 @@ public class AIPlayer extends OtherPlayer {
     private Point closestPowerUp;
 
 
-    public AIPlayer(double x, double y, double angle, Color color) {
-        super(x, y, angle, color);
+    public AIPlayer(double x, double y, int playerNumber, Color color) {
+        super(x, y, playerNumber, color);
         playerColour = new Color(200, 0, 255);
 
-        playerNumber = 1;
         // Graphics-related
 
         loadImageStrips();
@@ -294,16 +289,16 @@ public class AIPlayer extends OtherPlayer {
         // Determine whether to use shorter or longer ranged weapon
         if (Controller.thisPlayer.getX() < x - shortRangeBound || Controller.thisPlayer.getY() < y - shortRangeBound
                 || Controller.thisPlayer.getX() > x + shortRangeBound || Controller.thisPlayer.getY() > y + shortRangeBound) {
-            if (selectedWeapon == 0 && weapons.getSecondary() != null
-                && weapons.getPrimary().getSPEED() < weapons.getSecondary().getSPEED()) {
+            if (selectedWeapon == 0 && arsenal.getSecondary() != null
+                && arsenal.getPrimary().getSPEED() < arsenal.getSecondary().getSPEED()) {
                     selectedWeapon = 1;
-            } else if (selectedWeapon == 1 && weapons.getPrimary().getSPEED() > weapons.getSecondary().getSPEED()) {
+            } else if (selectedWeapon == 1 && arsenal.getPrimary().getSPEED() > arsenal.getSecondary().getSPEED()) {
                     selectedWeapon = 0;
             }
-        } else if (weapons.getSecondary() != null) {
-            if (selectedWeapon == 1 && weapons.getPrimary().getSPEED() < weapons.getSecondary().getSPEED()) {
+        } else if (arsenal.getSecondary() != null) {
+            if (selectedWeapon == 1 && arsenal.getPrimary().getSPEED() < arsenal.getSecondary().getSPEED()) {
                 selectedWeapon = 0;
-            } else if (selectedWeapon == 0 && weapons.getPrimary().getSPEED() > weapons.getSecondary().getSPEED()) {
+            } else if (selectedWeapon == 0 && arsenal.getPrimary().getSPEED() > arsenal.getSecondary().getSPEED()) {
                 selectedWeapon = 1;
             }
         }
@@ -354,11 +349,11 @@ public class AIPlayer extends OtherPlayer {
 //        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
 
 
-        if (weapons.getPrimary().getCurrentDelay() > 0) {
-            weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getCurrentDelay() - 1);
+        if (arsenal.getPrimary().getCurrentDelay() > 0) {
+            arsenal.getPrimary().setCurrentDelay(arsenal.getPrimary().getCurrentDelay() - 1);
         }
-        if (weapons.getSecondary() != null && weapons.getSecondary().getCurrentDelay() > 0) {
-            weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getCurrentDelay() - 1);
+        if (arsenal.getSecondary() != null && arsenal.getSecondary().getCurrentDelay() > 0) {
+            arsenal.getSecondary().setCurrentDelay(arsenal.getSecondary().getCurrentDelay() - 1);
         }
 
         solidArea = new Rectangle(((int)this.x - currentImage.getImage().getWidth() / 2) + 40,

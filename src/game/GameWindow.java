@@ -3,7 +3,6 @@ package game;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.util.Objects;
 
 public class GameWindow {
@@ -20,7 +19,7 @@ public class GameWindow {
 
         Image img;
         try {
-            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/icon/icon.png")));
+            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/character_closeups/character_closeup_blue.png")));
             frame.setIconImage(img);
         } catch(Exception e) {
             System.out.println(e.getMessage());

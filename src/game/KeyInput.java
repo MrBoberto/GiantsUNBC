@@ -1,10 +1,7 @@
 package game;
 
-import player.Player;
-
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 
 public class KeyInput extends KeyAdapter {
     protected Controller controller;
@@ -40,23 +37,23 @@ public class KeyInput extends KeyAdapter {
         }
         if (e.getKeyCode() == KeyEvent.VK_1 || e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
-                Controller.thisPlayer.getWeapons().setPrimary(1);
+                Controller.thisPlayer.getArsenal().setPrimary(1);
             } else {
-                Controller.thisPlayer.getWeapons().setSecondary(1);
+                Controller.thisPlayer.getArsenal().setSecondary(1);
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_2 || e.getKeyCode() == KeyEvent.VK_NUMPAD2) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
-                Controller.thisPlayer.getWeapons().setPrimary(2);
+                Controller.thisPlayer.getArsenal().setPrimary(2);
             } else {
-                Controller.thisPlayer.getWeapons().setSecondary(2);
+                Controller.thisPlayer.getArsenal().setSecondary(2);
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_3 || e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
-                Controller.thisPlayer.getWeapons().setPrimary(3);
+                Controller.thisPlayer.getArsenal().setPrimary(3);
             } else {
-                Controller.thisPlayer.getWeapons().setSecondary(3);
+                Controller.thisPlayer.getArsenal().setSecondary(3);
             }
         }
 
