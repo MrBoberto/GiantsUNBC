@@ -22,6 +22,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
     //Constants
     public static final int PORT = 55555;
+    public static final int PORT2 = 55556;
     public static final int WIDTH = 1280;
     public static final int HEIGHT = WIDTH / 16 * 9;
     public static final double FRICTION = 0.5; // Friction acting on objects

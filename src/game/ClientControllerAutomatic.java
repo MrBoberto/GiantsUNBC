@@ -23,6 +23,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.concurrent.TimeUnit;
 
 public class ClientControllerAutomatic extends Controller {
 
@@ -108,12 +109,20 @@ public class ClientControllerAutomatic extends Controller {
                 }).start();     // dont forget to start the thread
             }
 
-            socketActual = new Socket(correctIp, Controller.PORT);
+            TimeUnit.SECONDS.sleep(15);
+            System.out.println("The client:"+ correctAddress.getHostAddress() +"\n The server"+correctIp);
+            if (correctAddress.getHostAddress().equals(correctIp)) {
+                //correctIp = ""; could be blank or not doesn't matter
+                System.out.println("THE SERVER AND CLIENT ARE ON THE SAME COMPUTER");
+            }
+            socketActual = new Socket(correctIp, Controller.PORT2);
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socketActual);
+            System.out.println("output connection complete");
             outputConnection.sendPacket(new StartRequest(thisPlayer.getPlayerName()));
             inputConnection = new InputConnection(this, socketActual);
+            System.out.println("input connection complete");
 
         } catch (Exception e) {
             e.printStackTrace();
