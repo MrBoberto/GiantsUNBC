@@ -91,7 +91,7 @@ public class Arsenal extends GameObject {
                 powerUp.render(g2d);
             }
             for (int i = 0; i < playerIBelongTo.getPowerUps().length; i++) {
-                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setX(x + 250 + i * 25);
+                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setX(x + 253 + i * 25);
                 getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setY(y);
             }
 
