@@ -4,6 +4,8 @@ import game.MainMenu;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
+import packets.ClientDashPacket;
+import packets.ServerDashPacket;
 import weapons.guns.*;
 
 import javax.imageio.ImageIO;
@@ -24,7 +26,7 @@ public abstract class Player extends GameObject {
     protected final double VELJUMP = -12;
     protected final double VELSNEAK = 2.2;
     protected final double VELJOG = 5.2;
-    protected final double VELDASH = 19;
+    protected final double VELDASH = 16;
     protected final double VELSUPERDASH = 30;
     protected final int LANDINGTIMERMAX = 27;
     protected final int SUPERDASHTIMERMAX = 67;
@@ -65,6 +67,8 @@ public abstract class Player extends GameObject {
     protected int landingTimer = LANDINGTIMERMAX;
     protected int superDashTimer = SUPERDASHTIMERMAX;
     protected int dashTimer = 0;
+    protected int dashAnimationTimer = 0;
+    public final int DASH_TIMER_MAX = 20;
     protected int jumpTimer = 0;
     // Animation strips for player. Action number is next to each.
     protected boolean imageLoaded = false;
@@ -186,8 +190,7 @@ public abstract class Player extends GameObject {
      * Determines which animation is being played and which frame should currently be played
      */
     protected void loadImage() {
-
-        if (dashTimer > 0 && dashing != null) {
+        if (dashAnimationTimer > 0) {
             if (lastAction == 6) {
                 currentImage = dashing.getNext(currentImage);
             } else {
@@ -195,19 +198,7 @@ public abstract class Player extends GameObject {
             }
             lastAction = 6;
             // Don't continue jump animation even if in midair
-            jumpTimer = 0;
-            dashTimer--;
-        } else if (getVelY() != 0 && (jumpTimer > 0 || lastAction == 5 || lastAction == -5) && jumping != null) {
-            if (jumpTimer == jumping.getLength()) {
-                currentImage = jumping.getHead();
-                jumpTimer--;
-            } else if (lastAction == 5 && jumpTimer > 0) {
-                currentImage = jumping.getNext(currentImage);
-                jumpTimer--;
-            } else {
-                currentImage = jumped.getHead();
-            }
-            lastAction = 5;
+            dashAnimationTimer--;
         } else if (isWalking && jogging != null ) {
             if (lastAction == 2) {
                 currentImage = jogging.getNext(currentImage);
@@ -561,5 +552,22 @@ public abstract class Player extends GameObject {
 
     public int getNumberOfBulletBounces() {
         return numberOfBulletBounces;
+    }
+
+    public void startDashTimer() {
+        if (dashTimer <= 1) {
+            dashTimer = DASH_TIMER_MAX;
+            dashAnimationTimer = dashing.getLength();
+
+            if (World.controller instanceof ServerController && playerNumber == 0) {
+                World.controller.getOutputConnection().sendPacket(new ServerDashPacket());
+            } else if (World.controller instanceof ClientController && playerNumber == 1) {
+                World.controller.getOutputConnection().sendPacket(new ClientDashPacket());
+            }
+        }
+    }
+
+    public int getDashTimer() {
+        return dashTimer;
     }
 }

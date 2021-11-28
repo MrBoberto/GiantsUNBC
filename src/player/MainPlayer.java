@@ -16,6 +16,7 @@ public class MainPlayer extends Player {
     //Main Player movement directions
     private boolean up = false, down = false,right = false,left = false;
     private boolean upStop = false, downStop = false,rightStop = false,leftStop = false;
+    private boolean dash = false;
     protected ArrayList<BufferedImage> slotTextures;
     protected boolean button1Held = false;
 
@@ -123,12 +124,12 @@ public class MainPlayer extends Player {
                     setVelX(0);
                 }
             }
-        } else if (ctrlIsHeld && canDash && getVelocity() <= VELJOG) {
+        } else if (dashTimer == DASH_TIMER_MAX) {
+            dashTimer--;
             setVelocity(VELDASH);
-            dashTimer = dashing.getLength();
         } else if (shiftIsHeld && (up || right || down || left)) {
             setVelocity(VELSNEAK);
-        } else if ((up || right || down || left) && !shiftIsHeld && getVelocity() < VELJOG) {
+        } else if ((up || right || down || left) && dashTimer <= 0) {
             setVelocity(VELJOG);
         } else if (shiftIsHeld) {
             setVelX(0);
@@ -213,6 +214,11 @@ public class MainPlayer extends Player {
     public void tick() {
         super.tick();
         setAngle();
+
+        if (dashTimer < DASH_TIMER_MAX && dashTimer > 0) {
+            dashTimer--;
+        }
+
         move();
 
         // Apply vertical friction

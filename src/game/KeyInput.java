@@ -38,6 +38,9 @@ public class KeyInput extends KeyAdapter {
         if (e.getKeyCode() == KeyEvent.VK_D) {
             Controller.thisPlayer.setRight(true);
         }
+        if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+            Controller.thisPlayer.startDashTimer();
+        }
         if (e.getKeyCode() == KeyEvent.VK_1 || e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
                 Controller.thisPlayer.getWeapons().setPrimary(1);

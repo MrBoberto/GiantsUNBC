@@ -310,12 +310,12 @@ public class AIPlayer extends OtherPlayer {
                     setVelX(0);
                 }
             }
-        } else if (ctrlIsHeld && canDash && getVelocity() <= VELJOG) {
+        } else if (dashTimer == DASH_TIMER_MAX) {
+            dashTimer--;
             setVelocity(VELDASH);
-            dashTimer = dashing.getLength();
         } else if (shiftIsHeld && (up || right || down || left)) {
             setVelocity(VELSNEAK);
-        } else if ((up || right || down || left) && !shiftIsHeld && getVelocity() < VELJOG) {
+        } else if ((up || right || down || left) && dashTimer <= 0) {
             setVelocity(VELJOG);
         } else if (shiftIsHeld) {
             setVelX(0);
@@ -369,6 +369,14 @@ public class AIPlayer extends OtherPlayer {
             } else if (selectedWeapon == 0 && weapons.getPrimary().getSPEED() > weapons.getSecondary().getSPEED()) {
                 selectedWeapon = 1;
             }
+        }
+
+        if (dashTimer <= 0) {
+            startDashTimer();
+        }
+
+        if (dashTimer < DASH_TIMER_MAX && dashTimer > 0) {
+            dashTimer--;
         }
 
         move();

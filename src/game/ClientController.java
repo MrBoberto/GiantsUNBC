@@ -182,6 +182,8 @@ public class ClientController extends Controller {
 
         } else if (object instanceof EyeCandyPacket packet) {
             eyeCandy = new ArrayList<>(Arrays.asList(packet.getEyeCandy()));
+        } else if (object instanceof ServerDashPacket) {
+            otherPlayer.startDashTimer();
         } else if (object instanceof PowerUpEffectPacket packet) {
             powerUps.remove(packet.getIndexToRemove());
             switch (packet.getPlayerToBeAffected()) {

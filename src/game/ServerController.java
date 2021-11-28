@@ -81,6 +81,8 @@ public class ServerController extends Controller {
             otherPlayer.setAngle(packet.getAngle());
             otherPlayer.setWeaponSerial(packet.getWeaponSerial());
 
+        } else if (object instanceof ClientDashPacket) {
+            otherPlayer.startDashTimer();
         } else if (object instanceof StartRequest packet) {
 
             outputConnection.sendPacket(new StartPacket(otherPlayer.getRespawnPointX(), otherPlayer.getRespawnPointY(), 0, thisPlayer.getPlayerName(), MainMenu.mapSelected));
