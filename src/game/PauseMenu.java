@@ -83,7 +83,7 @@ public class PauseMenu implements KeyListener {
             pauseMenuPanel.remove(buttonsPanel);
             controller.closePauseMenu();
         }, "Back To Game");
-        c.gridy = 3;
+        c.gridy = 7;
         buttonsPanel.add(backToGameButton, c);
 
         PauseMenuButton settingsButton = new PauseMenuButton(e -> {
@@ -99,8 +99,24 @@ public class PauseMenu implements KeyListener {
             pauseMenuPanel.repaint();
 
         }, "Settings");
-        c.gridy = 5;
+        c.gridy = 8;
         buttonsPanel.add(settingsButton, c);
+
+        PauseMenuButton controlsButton = new PauseMenuButton(e -> {
+            pauseMenuPanel.remove(buttonsPanel);
+            c.anchor = GridBagConstraints.CENTER;
+            c.fill = GridBagConstraints.BOTH;
+            c.gridy = 0;
+            c.gridx = 0;
+            c.weighty = 1.0;
+            c.weightx = 1.0;
+            pauseMenuPanel.add(controlsMenu(), c);
+            pauseMenuPanel.validate();
+            pauseMenuPanel.repaint();
+
+        }, "Controls");
+        c.gridy = 9;
+        buttonsPanel.add(controlsButton, c);
 
         PauseMenuButton menuButton = new PauseMenuButton(e -> {
             try
@@ -120,6 +136,44 @@ public class PauseMenu implements KeyListener {
         buttonsPanel.add(menuButton, c);
 
         return buttonsPanel;
+    }
+
+    private JPanel controlsMenu() {
+        GridBagConstraints c = new GridBagConstraints();
+        JPanel controlsMenu = new JPanel(new GridBagLayout());
+        controlsMenu.setOpaque(false);
+        c.fill = GridBagConstraints.CENTER;
+        c.weightx = 1.0;
+        c.insets = new Insets(5,5,10,10);
+
+
+        c.weighty = 1.0/9.0;
+        c.gridx = 0;
+
+        for (int i = 0; i <= 6; i++) {
+            c.gridy = i;
+            controlsMenu.add(createNewVoidPanel(), c);
+        }
+
+
+
+        PauseMenu.PauseMenuButton backButton = new PauseMenu.PauseMenuButton(f -> {
+            pauseMenuPanel.remove(controlsMenu);
+
+            JPanel bottomPanel = buttonsMenu();
+
+            c.fill = GridBagConstraints.CENTER;
+            c.weighty = 0.2;
+            c.weightx = 1.0;
+            c.insets = new Insets(5,5,10,10);
+            pauseMenuPanel.add(bottomPanel, c);
+            pauseMenuPanel.validate();
+            pauseMenuPanel.repaint();
+        }, "Back");
+        c.gridy = 9;
+        controlsMenu.add(backButton ,c);
+
+        return controlsMenu;
     }
 
     private JPanel settingsMenu() {

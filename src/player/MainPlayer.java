@@ -282,8 +282,6 @@ public class MainPlayer extends Player {
 
         Graphics2D g2d = (Graphics2D) g;
 
-
-
         if (selectedWeapon == 0) {
             // If primary is selected, this is primary slot
             AffineTransform affTraPP = AffineTransform.getTranslateInstance(Controller.WIDTH - 240, 0);

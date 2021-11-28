@@ -252,7 +252,7 @@ public class ServerController extends Controller {
         }
 
         //Every COOLDOWN_BETWEEN_INVENTORY_ITEMS there is a 50% chance of an inventory item spawning.
-        if(inventoryItems.size() < 5 && currentInventoryItemCooldown == 0 && World.getSRandom().nextBoolean()){
+        if(inventoryItems.size() < 7 && currentInventoryItemCooldown == 0 && World.getSRandom().nextBoolean()){
             currentInventoryItemCooldown = COOLDOWN_BETWEEN_INVENTORY_ITEMS;
 
             boolean loop = true;
