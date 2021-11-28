@@ -116,12 +116,14 @@ public class ClientController extends Controller {
                 ipAddress = correctIp;
             }
             System.out.println("WHAT IS DEFAULT IP:"+ipAddress);
-            //socket = new Socket(ipAddress, Controller.PORT);
+            socket = new Socket(ipAddress, Controller.PORT);
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socket);
+            System.out.println("output connection complete");
             outputConnection.sendPacket(new StartRequest(thisPlayer.getPlayerName()));
             inputConnection = new InputConnection(this, socket);
+            System.out.println("input connection complete");
 
         } catch (Exception e) {
             e.printStackTrace();
