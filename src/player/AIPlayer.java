@@ -8,8 +8,12 @@ import weapons.guns.Pistol;
 import weapons.guns.Shotgun;
 import weapons.guns.SniperRifle;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class AIPlayer extends OtherPlayer {
     //Main Player movement directions
@@ -25,6 +29,7 @@ public class AIPlayer extends OtherPlayer {
 
     public AIPlayer(double x, double y, double angle, Color color) {
         super(x, y, angle, color);
+        playerColour = new Color(200, 0, 255);
         weapons.clear();
         weapons.add(new SniperRifle(this));
         weapons.add(new AssaultRifle(this));
@@ -424,9 +429,6 @@ public class AIPlayer extends OtherPlayer {
 
         // Draws the player's hitbox
         g.setColor(playerColour);
-        g.drawRect((int) x - currentImage.getImage().getWidth() / 4,
-                (int) y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
-                currentImage.getImage().getHeight() / 2);
 
         Font font = new Font("Arial", Font.BOLD, 15);
         g2d.setFont(font);
@@ -439,5 +441,55 @@ public class AIPlayer extends OtherPlayer {
 
         g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,
                 (int) y - 10 - currentImage.getImage().getHeight() / 4);
+    }
+
+    @Override
+    /**
+     * Loads the image files into the image strips based upon their names
+     */
+    public void loadImageStrips() {
+        ArrayList<String> imgLocStr = new ArrayList<>();
+        String defLocStr;
+        ;
+        // Saves amount of text to be used
+        defLocStr = "/resources/Textures/PLAYER_THANOS/";
+
+        // Builds image strip for standing facing right
+        for (int i = 1; i <= 4; i++) {
+            imgLocStr.add("stand (" + i + ").png");
+        }
+        standing = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(standing.toString());
+        imgLocStr.clear();
+
+        // Builds image strip for jogging
+        for (int i = 1; i <= 20; i++) {
+            imgLocStr.add("jog (" + i + ").png");
+        }
+        jogging = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(jogging.toString());
+        imgLocStr.clear();
+
+        // Builds image strip for dashing
+        for (int i = 1; i <= 8; i++) {
+            imgLocStr.add("dash (" + i + ").png");
+        }
+        dashing = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(dashing.toString());
+        imgLocStr.clear();
+
+        for (int i = 0; i <= 4; i++) {
+            imgLocStr.add("weapon (" + i + ").png");
+        }
+        weaponTextures = new ArrayList<>();
+        // Load weapon textures
+        for (int i = 0; i < imgLocStr.size(); i++) {
+            try {
+                weaponTextures.add(ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/Textures/WEAPONS/" + imgLocStr.get(i)))));
+            } catch (IOException exc) {
+                System.out.println("Could not find image file: " + exc.getMessage());
+            }
+        }
+        imageLoaded = true;
     }
 }
