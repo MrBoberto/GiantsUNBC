@@ -10,6 +10,7 @@ public class PowerUpEffectPacket implements Serializable {
     //Possible changes. -1 == no change.
     private float damageMultiplier = -1;
     private float speedMultiplier = -1;
+    private int ricochetBounces = -1;
 
     public PowerUpEffectPacket(int playerToBeAffected, int indexToRemove, int time) {
         this.playerToBeAffected = playerToBeAffected;
@@ -19,6 +20,14 @@ public class PowerUpEffectPacket implements Serializable {
 
     public int getTime() {
         return time;
+    }
+
+    public void setRicochetBounces(int ricochetBounces) {
+        this.ricochetBounces = ricochetBounces;
+    }
+
+    public int getRicochetBounces() {
+        return ricochetBounces;
     }
 
     public void setDamageMultiplier(float damageMultiplier) {

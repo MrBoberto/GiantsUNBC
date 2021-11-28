@@ -87,6 +87,7 @@ public class SniperRifleBullet extends Bullet {
                 texture.getHeight());
          */
         }
+
     }
 
     public void loadImage() {

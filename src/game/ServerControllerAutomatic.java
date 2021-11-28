@@ -53,16 +53,17 @@ public class ServerControllerAutomatic extends Controller {
 
         try {
             serverSocket = new ServerSocket(Controller.PORT); //this is used to find the ip
-            System.out.println("waiting for connection...");
+            System.out.println("waiting for ip connection...");
             socket = serverSocket.accept();
-            System.out.println("connection accepted");
+            System.out.println("ip connection accepted");
             socket.close();
             serverSocket.close();
             //this is actual connection
-            serverSocketActual = new ServerSocket(Controller.PORT);
-            System.out.println("waiting for connection...2");
+
+            serverSocketActual = new ServerSocket(Controller.PORT2);
+            System.out.println("waiting for actual connection...");
             socketActual = serverSocketActual.accept();
-            System.out.println("connection accepted2");
+            System.out.println("connection for actual accepted");
 
             outputConnection = new OutputConnection(this, socketActual);
             System.out.println("output connection complete");

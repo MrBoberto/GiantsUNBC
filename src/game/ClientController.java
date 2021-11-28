@@ -6,10 +6,7 @@ import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
-import power_ups.DamageDown;
-import power_ups.DamageUp;
-import power_ups.SpeedDown;
-import power_ups.SpeedUp;
+import power_ups.*;
 import weapons.aoe.Explosion;
 import utilities.BufferedImageLoader;
 import weapons.guns.*;
@@ -119,15 +116,33 @@ public class ClientController extends Controller {
         } else if (object instanceof PowerUpEffectPacket packet) {
             powerUps.remove(packet.getIndexToRemove());
             switch (packet.getPlayerToBeAffected()) {
-                case Player.SERVER_PLAYER:
-                    otherPlayer.setDamageMultiplier(packet.getDamageMultiplier(), packet.getTime());
-                    otherPlayer.setSpeedMultiplier(packet.getSpeedMultiplier(), packet.getTime());
-                    /* here goes other property changes */
-                    break;
-                case Player.CLIENT_PLAYER:
-                    thisPlayer.setDamageMultiplier(packet.getDamageMultiplier(), packet.getTime());
-                    thisPlayer.setSpeedMultiplier(packet.getSpeedMultiplier(), packet.getTime());
-                    break;
+                case Player.SERVER_PLAYER -> {
+                    if(packet.getDamageMultiplier() != -1){
+                        otherPlayer.setDamageMultiplier(packet.getDamageMultiplier(), packet.getTime());
+                    }
+
+                    if(packet.getSpeedMultiplier() != -1){
+                        otherPlayer.setSpeedMultiplier(packet.getSpeedMultiplier(), packet.getTime());
+                    }
+
+                    if(packet.getRicochetBounces() != -1){
+                        otherPlayer.setRicochet(packet.getRicochetBounces(), packet.getTime());
+                    }
+                }
+                /* here goes other property changes */
+                case Player.CLIENT_PLAYER -> {
+                    if(packet.getDamageMultiplier() != -1){
+                        thisPlayer.setDamageMultiplier(packet.getDamageMultiplier(), packet.getTime());
+                    }
+
+                    if(packet.getSpeedMultiplier() != -1){
+                        thisPlayer.setSpeedMultiplier(packet.getSpeedMultiplier(), packet.getTime());
+                    }
+
+                    if(packet.getRicochetBounces() != -1){
+                        thisPlayer.setRicochet(packet.getRicochetBounces(), packet.getTime());
+                    }
+                }
             }
         } else if (object instanceof CreatePowerUpPacket packet) {
             //Use default properties since server is the one that controls effects and collisions.
@@ -136,6 +151,7 @@ public class ClientController extends Controller {
                 case DamageDown -> powerUps.add(new DamageDown(packet.getX(),packet.getY(),Player.DEFAULT_DAMAGE_MULTIPLIER));
                 case SpeedUp -> powerUps.add(new SpeedUp(packet.getX(),packet.getY(),Player.DEFAULT_SPEED_MULTIPLIER));
                 case SpeedDown -> powerUps.add(new SpeedDown(packet.getX(),packet.getY(),Player.DEFAULT_SPEED_MULTIPLIER));
+                case Ricochet -> powerUps.add(new Ricochet(packet.getX(),packet.getY(), Player.DEFAULT_NUMBER_OF_BOUNCES));
             }
         } else if (object instanceof InventoryItemPacket packet) {
             if (packet.getIndexToRemove() >= 0) {

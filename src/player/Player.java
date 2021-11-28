@@ -4,8 +4,6 @@ import game.MainMenu;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
-import power_ups.DamageUp;
-import power_ups.SpeedUp;
 import weapons.guns.*;
 
 import javax.imageio.ImageIO;
@@ -53,9 +51,15 @@ public abstract class Player extends GameObject {
     protected float speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
     protected int speedMultiplierTimer = 0;
 
+    public static final int DEFAULT_NUMBER_OF_BOUNCES = 1;
+    protected int numberOfBulletBounces = DEFAULT_NUMBER_OF_BOUNCES;
+    protected int ricochetTimer = 0;
+
+    //Player characteristics
     protected int playerNumber;
     protected String playerName;
     protected Color playerColour;
+
     // Determines what the player did last frame to help determine what animation to play.
     protected int lastAction = 1;
     protected int landingTimer = LANDINGTIMERMAX;
@@ -377,6 +381,10 @@ public abstract class Player extends GameObject {
         } else {
             speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
         }
+
+        if(ricochetTimer > 0){
+            ricochetTimer--;
+        }
     }
 
     @Override
@@ -541,5 +549,18 @@ public abstract class Player extends GameObject {
             this.speedMultiplier = speedMultiplier;
             speedMultiplierTimer = time;
         }
+    }
+
+    public boolean isRicochetEnabled(){
+        return ricochetTimer > 0;
+    }
+
+    public void setRicochet(int bounces, int ricochetTimer) {
+        this.ricochetTimer = ricochetTimer;
+        this.numberOfBulletBounces = bounces;
+    }
+
+    public int getNumberOfBulletBounces() {
+        return numberOfBulletBounces;
     }
 }

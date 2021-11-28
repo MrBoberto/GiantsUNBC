@@ -108,7 +108,6 @@ public class ShotgunBullet extends Bullet {
                 texture.getHeight());
          */
         }
-
     }
 
 

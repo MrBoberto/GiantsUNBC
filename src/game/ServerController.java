@@ -231,6 +231,10 @@ public class ServerController extends Controller {
                     powerUps.add(new SpeedDown(x, y, 0.75F));
                     outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.SpeedDown));
                 }
+                case 4->{
+                    powerUps.add(new Ricochet(x, y, 2));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.Ricochet));
+                }
             }
 
         } else if (currentPowerUpCooldown == 0) {

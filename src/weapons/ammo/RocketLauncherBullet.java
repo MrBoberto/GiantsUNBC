@@ -130,9 +130,9 @@ public class RocketLauncherBullet extends Bullet {
         }
 
         if (texture != null) {
-            boundRect = new Rectangle((int)x - texture.getWidth() / 4,
-                    (int)y- texture.getHeight() / 4, texture.getWidth() / 2,
-                    texture.getHeight() / 2);
+            boundRect = new Rectangle((int)x - 1,
+                    (int)y-1, 2,
+                    2);
         }
 
         checkBlockCollision();
