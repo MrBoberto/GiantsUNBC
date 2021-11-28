@@ -142,6 +142,19 @@ public class Arsenal {
         }
     }
 
+    public boolean hasWeapon(int SERIAL) {
+        if (primary.getSERIAL() == SERIAL || secondary.getSERIAL() == SERIAL) {
+            return true;
+        } else {
+            for (int i = 0; i < weapons.size(); i++) {
+                if (weapons.get(i).getSERIAL() == SERIAL) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     @Override
     public String toString() {
         String string = "Primary: " + primary + ", Secondary: " + secondary + ",\nInventory: {";

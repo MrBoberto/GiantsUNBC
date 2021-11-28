@@ -1,5 +1,6 @@
 package game;
 
+import InventoryItem.InventoryItem;
 import audio.AudioPlayer;
 import mapObjects.Block;
 import player.MainPlayer;
@@ -47,6 +48,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static List<GameObject> eyeCandy = Collections.synchronizedList(new ArrayList<>());
     public static List<Explosion> explosions = Collections.synchronizedList(new ArrayList<>());
     public static List<PowerUp> powerUps = Collections.synchronizedList(new ArrayList<>());
+    public static List<InventoryItem> inventoryItems = Collections.synchronizedList(new ArrayList<>());
     public static MainPlayer thisPlayer;
     public static OtherPlayer otherPlayer;
     public static GameWindow gameWindow;
@@ -230,6 +232,12 @@ public abstract class Controller extends Canvas implements Runnable {
             }
         }
 
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            if(inventoryItems.get(i) != null){
+                inventoryItems.get(i).tick();
+            }
+        }
+
         for (int i = 0; i < explosions.size(); i++) {
             if(explosions.get(i) != null)
                 explosions.get(i).tick();
@@ -293,6 +301,12 @@ public abstract class Controller extends Canvas implements Runnable {
         for (int i = 0; i < powerUps.size(); i++) {
             if(powerUps.get(i) != null){
                 powerUps.get(i).render(g);
+            }
+        }
+
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            if(inventoryItems.get(i) != null){
+                inventoryItems.get(i).render(g);
             }
         }
 
