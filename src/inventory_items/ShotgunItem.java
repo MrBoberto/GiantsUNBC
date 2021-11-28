@@ -1,6 +1,5 @@
-package InventoryItem;
+package inventory_items;
 
-import InventoryItem.InventoryItem;
 import game.Controller;
 import game.ServerController;
 import game.SingleController;
@@ -9,7 +8,6 @@ import packets.InventoryItemPacket;
 import player.Player;
 import utilities.BufferedImageLoader;
 import weapons.guns.Shotgun;
-import weapons.guns.SniperRifle;
 
 import java.awt.*;
 
@@ -27,22 +25,22 @@ public class ShotgunItem extends InventoryItem {
     public ShotgunItem(double x, double y) {
         super(x, y);
 
-        texture = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal(" + 0 + ").png");
+        texture = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal (" + 0 + ").png");
     }
 
     @Override
-    public void applyPowerUp(int playerNumber) {
+    public void giveItem(int playerNumber) {
         int indexToRemove = Controller.inventoryItems.indexOf(this);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController) {
             if(playerNumber == Player.SERVER_PLAYER) {
-                if (!Controller.thisPlayer.getWeapons().hasWeapon(1)) {
+                if (!Controller.thisPlayer.getWeapons().hasWeapon(0)) {
                     Controller.powerUps.remove(indexToRemove);
                     Controller.thisPlayer.getWeapons().add(new Shotgun(Controller.thisPlayer));
                 } else {
                     indexToRemove = -1;
                 }
             } else {
-                if (!Controller.otherPlayer.getWeapons().hasWeapon(1)) {
+                if (!Controller.otherPlayer.getWeapons().hasWeapon(0)) {
                     Controller.powerUps.remove(indexToRemove);
                     Controller.otherPlayer.getWeapons().add(new Shotgun(Controller.otherPlayer));
                 } else {
@@ -84,7 +82,7 @@ public class ShotgunItem extends InventoryItem {
 
     @Override
     protected void updateClient(int playerNumber, int indexToRemove) {
-        InventoryItemPacket inventoryItemPacket = new InventoryItemPacket(playerNumber, indexToRemove);
+        InventoryItemPacket inventoryItemPacket = new InventoryItemPacket(playerNumber, indexToRemove, Shotgun.SERIAL);
         World.controller.getOutputConnection().sendPacket(inventoryItemPacket);
     }
 

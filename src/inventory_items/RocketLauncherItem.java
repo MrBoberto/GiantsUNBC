@@ -1,6 +1,5 @@
-package InventoryItem;
+package inventory_items;
 
-import InventoryItem.InventoryItem;
 import game.Controller;
 import game.ServerController;
 import game.SingleController;
@@ -9,7 +8,6 @@ import packets.InventoryItemPacket;
 import player.Player;
 import utilities.BufferedImageLoader;
 import weapons.guns.RocketLauncher;
-import weapons.guns.SniperRifle;
 
 import java.awt.*;
 
@@ -27,11 +25,11 @@ public class RocketLauncherItem extends InventoryItem {
     public RocketLauncherItem(double x, double y) {
         super(x, y);
 
-        texture = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal(" + 1 + ").png");
+        texture = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal (" + 4 + ").png");
     }
 
     @Override
-    public void applyPowerUp(int playerNumber) {
+    public void giveItem(int playerNumber) {
         int indexToRemove = Controller.inventoryItems.indexOf(this);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController) {
             if(playerNumber == Player.SERVER_PLAYER) {
@@ -84,7 +82,7 @@ public class RocketLauncherItem extends InventoryItem {
 
     @Override
     protected void updateClient(int playerNumber, int indexToRemove) {
-        InventoryItemPacket inventoryItemPacket = new InventoryItemPacket(playerNumber, indexToRemove);
+        InventoryItemPacket inventoryItemPacket = new InventoryItemPacket(playerNumber, indexToRemove, RocketLauncher.SERIAL);
         World.controller.getOutputConnection().sendPacket(inventoryItemPacket);
     }
 

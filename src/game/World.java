@@ -13,10 +13,10 @@ public final class World {
     public World(int choice) throws UnknownHostException {
 
         if(choice==1){
-            controller = new ServerControllerAutomatic();
+            controller = new ServerController();
             System.out.println("IM SERVER");
         } else if(choice == 2){
-            controller = new ClientControllerAutomatic();
+            controller = new ClientController();
             System.out.println("IM CLIENT");
         } else if (choice == 3) {
             controller = new SingleController();

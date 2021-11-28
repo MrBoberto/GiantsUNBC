@@ -1,6 +1,6 @@
 package packets;
 
-import InventoryItem.InventoryItem;
+import inventory_items.InventoryItem;
 
 import java.io.Serializable;
 

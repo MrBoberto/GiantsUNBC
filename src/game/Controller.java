@@ -1,6 +1,6 @@
 package game;
 
-import InventoryItem.InventoryItem;
+import inventory_items.InventoryItem;
 import audio.AudioPlayer;
 import mapObjects.Block;
 import player.MainPlayer;
@@ -12,7 +12,6 @@ import weapons.ammo.Bullet;
 import weapons.aoe.Explosion;
 import weapons.guns.AssaultRifle;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -56,6 +55,10 @@ public abstract class Controller extends Canvas implements Runnable {
     //Global PowerUps variables
     protected static int currentPowerUpCooldown = 0;
     public static final int COOLDOWN_BETWEEN_POWER_UPS = 2 * 60; //in game ticks. 2 seconds before a new power up can appear.
+
+    //Global InventoryItems variables
+    protected static int currentInventoryItemCooldown = 0;
+    public static final int COOLDOWN_BETWEEN_INVENTORY_ITEMS = 3 * 60; //in game ticks. 3 seconds before a new inventory item can appear.
 
     //Players spawn points
     public static int thisX = 0;

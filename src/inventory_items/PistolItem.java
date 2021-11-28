@@ -1,6 +1,5 @@
-package InventoryItem;
+package inventory_items;
 
-import InventoryItem.InventoryItem;
 import game.Controller;
 import game.ServerController;
 import game.SingleController;
@@ -8,12 +7,11 @@ import game.World;
 import packets.InventoryItemPacket;
 import player.Player;
 import utilities.BufferedImageLoader;
-import weapons.guns.AssaultRifle;
-import weapons.guns.SniperRifle;
+import weapons.guns.Pistol;
 
 import java.awt.*;
 
-public class AssaultRifleItem extends InventoryItem {
+public class PistolItem extends InventoryItem {
 
     //Graphics
     private final int SECONDARY_TEXTURE_MAX_TIMER = 10;
@@ -24,27 +22,27 @@ public class AssaultRifleItem extends InventoryItem {
     private int floatState = 2;
     private boolean floatDirection = true;
 
-    public AssaultRifleItem(double x, double y) {
+    public PistolItem(double x, double y) {
         super(x, y);
 
-        texture = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal(" + 3 + ").png");
+        texture = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal (" + 2 + ").png");
     }
 
     @Override
-    public void applyPowerUp(int playerNumber) {
+    public void giveItem(int playerNumber) {
         int indexToRemove = Controller.inventoryItems.indexOf(this);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController) {
             if(playerNumber == Player.SERVER_PLAYER) {
                 if (!Controller.thisPlayer.getWeapons().hasWeapon(1)) {
                     Controller.powerUps.remove(indexToRemove);
-                    Controller.thisPlayer.getWeapons().add(new AssaultRifle(Controller.thisPlayer));
+                    Controller.thisPlayer.getWeapons().add(new Pistol(Controller.thisPlayer));
                 } else {
                     indexToRemove = -1;
                 }
             } else {
                 if (!Controller.otherPlayer.getWeapons().hasWeapon(1)) {
                     Controller.powerUps.remove(indexToRemove);
-                    Controller.otherPlayer.getWeapons().add(new AssaultRifle(Controller.otherPlayer));
+                    Controller.otherPlayer.getWeapons().add(new Pistol(Controller.otherPlayer));
                 } else {
                     indexToRemove = -1;
                 }
@@ -84,7 +82,7 @@ public class AssaultRifleItem extends InventoryItem {
 
     @Override
     protected void updateClient(int playerNumber, int indexToRemove) {
-        InventoryItemPacket inventoryItemPacket = new InventoryItemPacket(playerNumber, indexToRemove);
+        InventoryItemPacket inventoryItemPacket = new InventoryItemPacket(playerNumber, indexToRemove, Pistol.SERIAL);
         World.controller.getOutputConnection().sendPacket(inventoryItemPacket);
     }
 

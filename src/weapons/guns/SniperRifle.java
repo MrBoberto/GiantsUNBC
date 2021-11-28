@@ -28,7 +28,7 @@ public class SniperRifle implements Weapon {
     public static final int MAX_DELAY = 200;
     private int currentDelay = 0;
     // Identifies type of gun
-    private static final int SERIAL = 001;
+    public static final int SERIAL = 001;
     public static final int DAMAGE = 100;
     public SFXPlayer audio;
 

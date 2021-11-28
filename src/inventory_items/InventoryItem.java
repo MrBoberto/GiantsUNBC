@@ -1,4 +1,4 @@
-package InventoryItem;
+package inventory_items;
 
 import game.Controller;
 import game.GameObject;
@@ -21,7 +21,7 @@ public abstract class InventoryItem extends GameObject {
         lifetime++;
 
         if(lifetime > TIME_BEFORE_DESPAWN){
-            Controller.powerUps.remove(this);
+            Controller.inventoryItems.remove(this);
         }
     }
 
@@ -30,7 +30,7 @@ public abstract class InventoryItem extends GameObject {
         return new Rectangle((int)x,(int)y, INVENTORY_ITEM_DIMENSIONS.width,INVENTORY_ITEM_DIMENSIONS.height);
     }
 
-    public abstract void applyPowerUp(int playerNumber);
+    public abstract void giveItem(int playerNumber);
     protected abstract void updateClient(int playerNumber, int indexToRemove);
 
 }

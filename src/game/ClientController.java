@@ -1,7 +1,7 @@
 package game;
 
-import InventoryItem.*;
 import audio.SFXPlayer;
+import inventory_items.*;
 import packets.*;
 import player.MainPlayer;
 import player.OtherPlayer;
@@ -12,10 +12,10 @@ import power_ups.SpeedDown;
 import power_ups.SpeedUp;
 import weapons.aoe.Explosion;
 import utilities.BufferedImageLoader;
+import weapons.guns.*;
 
 import java.awt.*;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -136,6 +136,70 @@ public class ClientController extends Controller {
                 case DamageDown -> powerUps.add(new DamageDown(packet.getX(),packet.getY(),Player.DEFAULT_DAMAGE_MULTIPLIER));
                 case SpeedUp -> powerUps.add(new SpeedUp(packet.getX(),packet.getY(),Player.DEFAULT_SPEED_MULTIPLIER));
                 case SpeedDown -> powerUps.add(new SpeedDown(packet.getX(),packet.getY(),Player.DEFAULT_SPEED_MULTIPLIER));
+            }
+        } else if (object instanceof InventoryItemPacket packet) {
+            if (packet.getIndexToRemove() >= 0) {
+                inventoryItems.remove(packet.getIndexToRemove());
+                switch (packet.getPlayerToBeAffected()) {
+                    case Player.SERVER_PLAYER:
+                        switch (packet.getSerial()) {
+                            case 0:
+                                if (!Controller.otherPlayer.getWeapons().hasWeapon(0)) {
+                                    Controller.otherPlayer.getWeapons().add(new Shotgun(Controller.otherPlayer));
+                                }
+                                break;
+                            case 1:
+                                if (!Controller.otherPlayer.getWeapons().hasWeapon(1)) {
+                                    Controller.otherPlayer.getWeapons().add(new SniperRifle(Controller.otherPlayer));
+                                }
+                                break;
+                            case 2:
+                                if (!Controller.otherPlayer.getWeapons().hasWeapon(2)) {
+                                    Controller.otherPlayer.getWeapons().add(new Pistol(Controller.otherPlayer));
+                                }
+                                break;
+                            case 3:
+                                if (!Controller.otherPlayer.getWeapons().hasWeapon(3)) {
+                                    Controller.otherPlayer.getWeapons().add(new AssaultRifle(Controller.otherPlayer));
+                                }
+                                break;
+                            case 4:
+                                if (!Controller.otherPlayer.getWeapons().hasWeapon(4)) {
+                                    Controller.otherPlayer.getWeapons().add(new RocketLauncher(Controller.otherPlayer));
+                                }
+                                break;
+                        }
+                        break;
+                    case Player.CLIENT_PLAYER:
+                        switch (packet.getSerial()) {
+                            case 0:
+                                if (!Controller.thisPlayer.getWeapons().hasWeapon(0)) {
+                                    Controller.thisPlayer.getWeapons().add(new Shotgun(Controller.thisPlayer));
+                                }
+                                break;
+                            case 1:
+                                if (!Controller.thisPlayer.getWeapons().hasWeapon(1)) {
+                                    Controller.thisPlayer.getWeapons().add(new SniperRifle(Controller.thisPlayer));
+                                }
+                                break;
+                            case 2:
+                                if (!Controller.thisPlayer.getWeapons().hasWeapon(2)) {
+                                    Controller.thisPlayer.getWeapons().add(new Pistol(Controller.thisPlayer));
+                                }
+                                break;
+                            case 3:
+                                if (!Controller.thisPlayer.getWeapons().hasWeapon(3)) {
+                                    Controller.thisPlayer.getWeapons().add(new AssaultRifle(Controller.thisPlayer));
+                                }
+                                break;
+                            case 4:
+                                if (!Controller.thisPlayer.getWeapons().hasWeapon(4)) {
+                                    Controller.thisPlayer.getWeapons().add(new RocketLauncher(Controller.thisPlayer));
+                                }
+                                break;
+                        }
+                        break;
+                }
             }
         } else if (object instanceof CreateInventoryItemPacket packet) {
             //Use default properties since server is the one that controls effects and collisions.

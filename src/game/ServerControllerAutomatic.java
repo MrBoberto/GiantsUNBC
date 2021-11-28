@@ -1,9 +1,9 @@
 package game;
 
 
+import inventory_items.InventoryItem;
 import audio.SFXPlayer;
 import eye_candy.DeathMark;
-import jdk.swing.interop.SwingInterOpUtils;
 import mapObjects.Block;
 import packets.*;
 import player.MainPlayer;
@@ -13,12 +13,11 @@ import power_ups.*;
 import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 import weapons.aoe.Explosion;
+import inventory_items.*;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -201,6 +200,12 @@ public class ServerControllerAutomatic extends Controller {
             }
         }
 
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            if(inventoryItems.get(i) != null){
+                checkInventoryItemPickups(inventoryItems.get(i));
+            }
+        }
+
         //Every COOLDOWN_BETWEEN_POWER_UPS there is a 50% chance of a power up spawning.
         if(powerUps.size() < 4 && currentPowerUpCooldown == 0 && World.getSRandom().nextBoolean()){
             currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
@@ -244,6 +249,53 @@ public class ServerControllerAutomatic extends Controller {
             currentPowerUpCooldown--;
         }
 
+        //Every COOLDOWN_BETWEEN_INVENTORY_ITEMS there is a 50% chance of an inventory item spawning.
+        if(inventoryItems.size() < 5 && currentInventoryItemCooldown == 0 && World.getSRandom().nextBoolean()){
+            currentInventoryItemCooldown = COOLDOWN_BETWEEN_INVENTORY_ITEMS;
+
+            boolean loop = true;
+            int x = 0;
+            int y = 0;
+            while(loop) {
+                x = World.getSRandom().nextInt(WIDTH);
+                y = World.getSRandom().nextInt(HEIGHT);
+                loop = false;
+                for (Block block : blocks) {
+                    if ((new Rectangle(x, y, InventoryItem.INVENTORY_ITEM_DIMENSIONS.width, InventoryItem.INVENTORY_ITEM_DIMENSIONS.height)
+                            .intersects(block.getBounds()))) {
+                        loop = true;
+                    }
+                }
+            }
+            switch (World.getSRandom().nextInt(InventoryItem.InventoryItemType.values().length)) {
+                case 0 -> {
+                    inventoryItems.add(new ShotgunItem(x, y));
+                    outputConnection.sendPacket(new CreateInventoryItemPacket(x, y, InventoryItem.InventoryItemType.Shotgun));
+                }
+                case 1 -> {
+                    inventoryItems.add(new SniperRifleItem(x, y));
+                    outputConnection.sendPacket(new CreateInventoryItemPacket(x, y, InventoryItem.InventoryItemType.SniperRifle));
+                }
+                case 2 -> {
+                    inventoryItems.add(new PistolItem(x, y));
+                    outputConnection.sendPacket(new CreateInventoryItemPacket(x, y, InventoryItem.InventoryItemType.Pistol));
+                }
+                case 3->{
+                    inventoryItems.add(new AssaultRifleItem(x, y));
+                    outputConnection.sendPacket(new CreateInventoryItemPacket(x, y, InventoryItem.InventoryItemType.AssaultRifle));
+                }
+                case 4->{
+                    inventoryItems.add(new RocketLauncherItem(x, y));
+                    outputConnection.sendPacket(new CreateInventoryItemPacket(x, y, InventoryItem.InventoryItemType.RocketLauncher));
+                }
+            }
+
+        } else if (currentInventoryItemCooldown == 0){
+            currentInventoryItemCooldown = COOLDOWN_BETWEEN_INVENTORY_ITEMS;
+        } else {
+            currentInventoryItemCooldown--;
+        }
+
     }
 
     private void checkPowerUpPickups(PowerUp powerUp) {
@@ -251,6 +303,14 @@ public class ServerControllerAutomatic extends Controller {
             powerUp.applyPowerUp(Player.SERVER_PLAYER);
         } else if (powerUp.getBounds().intersects(otherPlayer.getBounds())){
             powerUp.applyPowerUp(Player.CLIENT_PLAYER);
+        }
+    }
+
+    private void checkInventoryItemPickups(InventoryItem inventoryItem) {
+        if(inventoryItem.getBounds().intersects(thisPlayer.getBounds())){
+            inventoryItem.giveItem(Player.SERVER_PLAYER);
+        } else if (inventoryItem.getBounds().intersects(otherPlayer.getBounds())){
+            inventoryItem.giveItem(Player.CLIENT_PLAYER);
         }
     }
 
