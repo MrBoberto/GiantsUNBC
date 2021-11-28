@@ -157,7 +157,8 @@ public class AIPlayer extends OtherPlayer {
 
                 System.out.println("Target x = " + tempTarget.x + ", y = " + tempTarget.y);
                 target = tempTarget;
-                tryToGetCollectTimer = (int) World.pythHyp(tempTarget.x - x, tempTarget.y - y) / 2 - 1;
+                tryToGetCollectTimer = (int) World.pythHyp(tempTarget.x - x, tempTarget.y - y) / 3 - 1;
+                System.out.println("tryToGetCollectTimer = " + tryToGetCollectTimer);
             } else {
                 tryToGetCollectTimer--;
                 if (targetType == 0) {
