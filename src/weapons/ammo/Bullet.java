@@ -114,45 +114,39 @@ public abstract class Bullet extends GameObject implements Projectile {
                     continue;
                 }
 
-                double up = 0, down = 0, left = 0, right = 0;
+                boolean up = false, down = false, left = false, right = false;
                 int xx = (int) x;
                 int yy = (int) y;
                 while (xx != (int) (x + getVelX())) {
                     while (yy != (int) (y + getVelY())) {
                         /////////////////
                         //Check upperBounds
-                        if((new Rectangle(xx, yy-1, 2, 2)).intersects(block.getBounds())
-                                && (angle > 1/2.0 * PI|| angle < -1/2.0 * PI) && getVelY()<0
-                                && !((new Rectangle(xx, yy+1, 2, 2)).intersects(block.getBounds())
-                                && (angle < 1/2.0 * PI|| angle > -1/2.0 * PI) && getVelY()>0
-                                && !((new Rectangle(xx-1, yy, 2, 2)).intersects(block.getBounds())
-                                && (angle < 1/1.0 * PI|| angle > -0/1.0 * PI) && getVelX()>0)
-                                && !((new Rectangle(xx+1, yy, 2, 2)).intersects(block.getBounds())
-                                && (angle > -1/1.0 * PI|| angle < 0/1.0 * PI) && getVelX()<0))){
+                        int offset = 5;
+                        up = (new Rectangle(xx, yy-offset, 1, 1)).intersects(block.getBounds())
+                                && (angle > 1/2.0 * PI|| angle < -1/2.0 * PI) && getVelY()<0;
+                        down = ((new Rectangle(xx, yy+offset, 1, 1)).intersects(block.getBounds())
+                                && (angle < 1/2.0 * PI|| angle > -1/2.0 * PI) && getVelY()>0);
+                        right =((new Rectangle(xx+offset, yy, 1, 1)).intersects(block.getBounds())
+                                && (angle < 1/1.0 * PI|| angle > -0/1.0 * PI) && getVelX()>0);
+                        left  = ((new Rectangle(xx-offset, yy, 1, 1)).intersects(block.getBounds())
+                                && (angle > -1/1.0 * PI|| angle < 0/1.0 * PI) && getVelX()<0);
+
+                        if(up && !down && !right && !left){
                             angle = Math.PI - angle;
                             bouncesLeft--;
                             return true;
-                        } else if((new Rectangle(xx, yy+1, 2, 2)).intersects(block.getBounds())
-                                && (angle < 1/2.0 * PI|| angle > -1/2.0 * PI) && getVelY()>0
-                                && !((new Rectangle(xx-1, yy, 2, 2)).intersects(block.getBounds())
-                                && (angle < 1/1.0 * PI|| angle > -0/1.0 * PI) && getVelX()>0)
-                                && !((new Rectangle(xx+1, yy, 2, 2)).intersects(block.getBounds())
-                                && (angle > -1/1.0 * PI|| angle < 0/1.0 * PI) && getVelX()<0)){
+                        } else if(down && !right && !left){
                             angle = Math.PI - angle;
                             bouncesLeft--;
                             return true;
                             //right
-                        }else if((new Rectangle(xx-1, yy, 2, 2)).intersects(block.getBounds())
-                                && (angle < 1/1.0 * PI|| angle > -0/1.0 * PI) && getVelX()>0
-                                && !((new Rectangle(xx+1, yy, 2, 2)).intersects(block.getBounds())
-                                && (angle > -1/1.0 * PI|| angle < 0/1.0 * PI) && getVelX()<0)){
+                        }else if(right && !left){
                             System.out.println("AEDFCVSED");
                             angle =  - angle;
                             bouncesLeft--;
                             return true;
                             //left
-                        }else if((new Rectangle(xx+1, yy, 2, 2)).intersects(block.getBounds())
-                                && (angle > -1/1.0 * PI|| angle < 0/1.0 * PI) && getVelX()<0){
+                        }else if(left){
                             angle = - angle;
                             bouncesLeft--;
                             return true;
