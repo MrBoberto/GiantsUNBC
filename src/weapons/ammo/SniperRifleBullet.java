@@ -87,6 +87,24 @@ public class SniperRifleBullet extends Bullet {
                 texture.getHeight());
          */
         }
+
+        g.setColor(Color.MAGENTA);
+        g.drawRect(                            (int)x +(int)(Math.abs(getVelX())* 4),
+                (int)y,
+                1,
+                1);
+        g.drawRect(                            (int)x,
+                (int)y + (int)(Math.abs(getVelY())* 4),
+                1,
+                1);
+        g.drawRect(                            (int)x -(int)(Math.abs(getVelX())* 4),
+                (int)y,
+                1,
+                1);
+        g.drawRect(                            (int) x,
+                (int) y - (int) (Math.abs(getVelY()) * 4),
+                1,
+                1);
     }
 
     public void loadImage() {

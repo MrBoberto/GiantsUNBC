@@ -52,9 +52,14 @@ public abstract class Player extends GameObject {
     protected float speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
     protected int speedMultiplierTimer = 0;
 
+    public static final int NUMBER_OF_BULLET_BOUNCES = 2;
+    protected int ricochetTimer = 1;
+
+    //Player characteristics
     protected int playerNumber;
     protected String playerName;
     protected Color playerColour;
+
     // Determines what the player did last frame to help determine what animation to play.
     protected int lastAction = 1;
     protected int landingTimer = LANDINGTIMERMAX;
@@ -544,5 +549,9 @@ public abstract class Player extends GameObject {
             this.speedMultiplier = speedMultiplier;
             speedMultiplierTimer = time;
         }
+    }
+
+    public boolean isRicochetEnabled(){
+        return ricochetTimer > 0;
     }
 }

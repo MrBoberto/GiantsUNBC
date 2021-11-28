@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class SniperRifle implements Weapon {
     private Player playerIBelongTo;
-    public static final double SPEED = 40;
+    public static final double SPEED = 30;
     public static final int ROUNDCOUNT = 1;
     public static final double INACCURACY = 0;
     public static final int MAX_DELAY = 200;

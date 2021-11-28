@@ -108,7 +108,12 @@ public class ShotgunBullet extends Bullet {
                 texture.getHeight());
          */
         }
-
+g.setColor(Color.MAGENTA);
+        g.drawRect(
+                (int)(x +getVelX()),
+                (int)(y + getVelY()),
+                1,
+                1);
     }
 
 
