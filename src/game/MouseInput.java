@@ -24,6 +24,7 @@ public class MouseInput extends MouseAdapter {
         }
 
          */
+        System.out.println(e.getPoint());
         if (e.getButton() == MouseEvent.BUTTON1) {
             Controller.thisPlayer.setButton1Held(true);
             if (Controller.thisPlayer.getSelectedWeapon() == Player.PRIMARY_WEAPON
