@@ -34,17 +34,13 @@ public class PistolItem extends InventoryItem {
         if(World.controller instanceof ServerController || World.controller instanceof SingleController) {
             if(playerNumber == Player.SERVER_PLAYER) {
                 if (!Controller.thisPlayer.getWeapons().hasWeapon(1)) {
-                    Controller.powerUps.remove(indexToRemove);
+                    Controller.inventoryItems.remove(indexToRemove);
                     Controller.thisPlayer.getWeapons().add(new Pistol(Controller.thisPlayer));
-                } else {
-                    indexToRemove = -1;
                 }
             } else {
                 if (!Controller.otherPlayer.getWeapons().hasWeapon(1)) {
-                    Controller.powerUps.remove(indexToRemove);
+                    Controller.inventoryItems.remove(indexToRemove);
                     Controller.otherPlayer.getWeapons().add(new Pistol(Controller.otherPlayer));
-                } else {
-                    indexToRemove = -1;
                 }
             }
         }

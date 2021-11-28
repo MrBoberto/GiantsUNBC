@@ -106,6 +106,7 @@ public class MainMenu {
         mainMenuPanel.add(startButton, c);
 
         startButton.addActionListener(f -> {
+            sfxPlayer.play();
             mainMenuPanel.remove(startButton);
 
             JPanel bottomPanel = buttonsPanel(mainMenuPanel);

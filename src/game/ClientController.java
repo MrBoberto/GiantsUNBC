@@ -139,33 +139,37 @@ public class ClientController extends Controller {
             }
         } else if (object instanceof InventoryItemPacket packet) {
             if (packet.getIndexToRemove() >= 0) {
-                inventoryItems.remove(packet.getIndexToRemove());
                 switch (packet.getPlayerToBeAffected()) {
                     case Player.SERVER_PLAYER:
                         switch (packet.getSerial()) {
                             case 0:
                                 if (!Controller.otherPlayer.getWeapons().hasWeapon(0)) {
                                     Controller.otherPlayer.getWeapons().add(new Shotgun(Controller.otherPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 1:
                                 if (!Controller.otherPlayer.getWeapons().hasWeapon(1)) {
                                     Controller.otherPlayer.getWeapons().add(new SniperRifle(Controller.otherPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 2:
                                 if (!Controller.otherPlayer.getWeapons().hasWeapon(2)) {
                                     Controller.otherPlayer.getWeapons().add(new Pistol(Controller.otherPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 3:
                                 if (!Controller.otherPlayer.getWeapons().hasWeapon(3)) {
                                     Controller.otherPlayer.getWeapons().add(new AssaultRifle(Controller.otherPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 4:
                                 if (!Controller.otherPlayer.getWeapons().hasWeapon(4)) {
                                     Controller.otherPlayer.getWeapons().add(new RocketLauncher(Controller.otherPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                         }
@@ -175,26 +179,31 @@ public class ClientController extends Controller {
                             case 0:
                                 if (!Controller.thisPlayer.getWeapons().hasWeapon(0)) {
                                     Controller.thisPlayer.getWeapons().add(new Shotgun(Controller.thisPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 1:
                                 if (!Controller.thisPlayer.getWeapons().hasWeapon(1)) {
                                     Controller.thisPlayer.getWeapons().add(new SniperRifle(Controller.thisPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 2:
                                 if (!Controller.thisPlayer.getWeapons().hasWeapon(2)) {
                                     Controller.thisPlayer.getWeapons().add(new Pistol(Controller.thisPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 3:
                                 if (!Controller.thisPlayer.getWeapons().hasWeapon(3)) {
                                     Controller.thisPlayer.getWeapons().add(new AssaultRifle(Controller.thisPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 4:
                                 if (!Controller.thisPlayer.getWeapons().hasWeapon(4)) {
                                     Controller.thisPlayer.getWeapons().add(new RocketLauncher(Controller.thisPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                         }
