@@ -4,8 +4,6 @@ import game.MainMenu;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
-import power_ups.DamageUp;
-import power_ups.SpeedUp;
 import weapons.guns.*;
 
 import javax.imageio.ImageIO;
@@ -52,8 +50,9 @@ public abstract class Player extends GameObject {
     protected float speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
     protected int speedMultiplierTimer = 0;
 
-    public static final int NUMBER_OF_BULLET_BOUNCES = 2;
-    protected int ricochetTimer = 1;
+    public static final int DEFAULT_NUMBER_OF_BOUNCES = 1;
+    protected int numberOfBulletBounces = DEFAULT_NUMBER_OF_BOUNCES;
+    protected int ricochetTimer = 0;
 
     //Player characteristics
     protected int playerNumber;
@@ -385,6 +384,10 @@ public abstract class Player extends GameObject {
         } else {
             speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
         }
+
+        if(ricochetTimer > 0){
+            ricochetTimer--;
+        }
     }
 
     @Override
@@ -553,5 +556,14 @@ public abstract class Player extends GameObject {
 
     public boolean isRicochetEnabled(){
         return ricochetTimer > 0;
+    }
+
+    public void setRicochet(int bounces, int ricochetTimer) {
+        this.ricochetTimer = ricochetTimer;
+        this.numberOfBulletBounces = bounces;
+    }
+
+    public int getNumberOfBulletBounces() {
+        return numberOfBulletBounces;
     }
 }

@@ -9,12 +9,11 @@ import player.Player;
 import utilities.BufferedImageLoader;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Ricochet extends PowerUp{
 
     public static final int EFFECT_TIME = 480; // in game ticks (= 8 seconds)
-    private final float multiplier;
+    private final int bounces;
 
 
     //Graphics
@@ -23,12 +22,12 @@ public class Ricochet extends PowerUp{
     private int floatState = 2;
     private boolean floatDirection = true;
 
-    public Ricochet(double x, double y, float multiplier) {
+    public Ricochet(double x, double y, int bounces) {
         super(x, y);
 
-        this.multiplier = multiplier;
+        this.bounces = bounces;
 
-        texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/DMG_sprite.png");
+        texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/ricochet_sprite.png");
 
     }
 
@@ -38,9 +37,9 @@ public class Ricochet extends PowerUp{
         Controller.powerUps.remove(indexToRemove);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController){
             if(playerNumber == Player.SERVER_PLAYER){
-                Controller.thisPlayer.setDamageMultiplier(multiplier, EFFECT_TIME);
+                Controller.thisPlayer.setRicochet(bounces, EFFECT_TIME);
             } else {
-                Controller.otherPlayer.setDamageMultiplier(multiplier, EFFECT_TIME);
+                Controller.otherPlayer.setRicochet(bounces, EFFECT_TIME);
             }
         }
 
@@ -69,7 +68,7 @@ public class Ricochet extends PowerUp{
     @Override
     protected void updateClient(int playerNumber, int indexToRemove) {
         PowerUpEffectPacket powerUpEffectPacket = new PowerUpEffectPacket(playerNumber, indexToRemove, EFFECT_TIME);
-        powerUpEffectPacket.setDamageMultiplier(multiplier);
+        powerUpEffectPacket.setRicochetBounces(bounces);
         World.controller.getOutputConnection().sendPacket(powerUpEffectPacket);
     }
 

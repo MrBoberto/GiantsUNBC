@@ -2,7 +2,6 @@ package weapons.ammo;
 
 import game.*;
 import mapObjects.Block;
-import player.MainPlayer;
 import player.Player;
 
 import java.awt.*;
@@ -34,11 +33,13 @@ public abstract class Bullet extends GameObject implements Projectile {
     private void getBouncesLeft() {
         if ((((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
                 || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController))
-                && Controller.thisPlayer.isRicochetEnabled())
-                || (((playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ServerController)
+                && Controller.thisPlayer.isRicochetEnabled())){
+            bouncesLeft = Controller.thisPlayer.getNumberOfBulletBounces();
+
+        } else if (((playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ServerController)
                 || (playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ClientController))
-                && Controller.otherPlayer.isRicochetEnabled())) {
-            bouncesLeft = Player.NUMBER_OF_BULLET_BOUNCES;
+                && Controller.otherPlayer.isRicochetEnabled()) {
+            bouncesLeft = Controller.otherPlayer.getNumberOfBulletBounces();
         }
     }
 
