@@ -1,6 +1,7 @@
 package game;
 
 
+import InventoryItem.InventoryItem;
 import audio.SFXPlayer;
 import eye_candy.DeathMark;
 import jdk.swing.interop.SwingInterOpUtils;
@@ -55,6 +56,7 @@ public class ServerController extends Controller {
             System.out.println("waiting for connection...");
             socket = serverSocket.accept();
             System.out.println("connection accepted");
+
             outputConnection = new OutputConnection(this, socket);
             System.out.println("output connection complete");
             inputConnection = new InputConnection(this, socket);
@@ -241,6 +243,14 @@ public class ServerController extends Controller {
             powerUp.applyPowerUp(Player.SERVER_PLAYER);
         } else if (powerUp.getBounds().intersects(otherPlayer.getBounds())){
             powerUp.applyPowerUp(Player.CLIENT_PLAYER);
+        }
+    }
+
+    private void checkItemInventoryPickups(InventoryItem inventoryItem) {
+        if(inventoryItem.getBounds().intersects(thisPlayer.getBounds())){
+            inventoryItem.applyPowerUp(Player.SERVER_PLAYER);
+        } else if (inventoryItem.getBounds().intersects(otherPlayer.getBounds())){
+            inventoryItem.applyPowerUp(Player.CLIENT_PLAYER);
         }
     }
 

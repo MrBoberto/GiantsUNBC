@@ -1,21 +1,19 @@
-package power_ups;
+package InventoryItem;
 
+import InventoryItem.InventoryItem;
 import game.Controller;
 import game.ServerController;
 import game.SingleController;
 import game.World;
-import packets.PowerUpEffectPacket;
+import packets.InventoryItemPacket;
 import player.Player;
 import utilities.BufferedImageLoader;
+import weapons.guns.Pistol;
 import weapons.guns.SniperRifle;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
-public class SniperRifleItem extends PowerUp{
-
-    public static final int EFFECT_TIME = 480; // in game ticks (= 8 seconds)
-    private final BufferedImage secondary_texture;
+public class PistolItem extends InventoryItem {
 
     //Graphics
     private final int SECONDARY_TEXTURE_MAX_TIMER = 10;
@@ -26,28 +24,27 @@ public class SniperRifleItem extends PowerUp{
     private int floatState = 2;
     private boolean floatDirection = true;
 
-    public SniperRifleItem(double x, double y) {
+    public PistolItem(double x, double y) {
         super(x, y);
 
-        texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/DMG_sprite.png");
-        secondary_texture = BufferedImageLoader.loadImage("/resources/Textures/power_ups/up_arrow_orange_sprite.png");
+        texture = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal(" + 2 + ").png");
     }
 
     @Override
     public void applyPowerUp(int playerNumber) {
-        int indexToRemove = Controller.powerUps.indexOf(this);
+        int indexToRemove = Controller.inventoryItems.indexOf(this);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController) {
             if(playerNumber == Player.SERVER_PLAYER) {
                 if (!Controller.thisPlayer.getWeapons().hasWeapon(1)) {
                     Controller.powerUps.remove(indexToRemove);
-                    Controller.thisPlayer.getWeapons().add(new SniperRifle(Controller.thisPlayer));
+                    Controller.thisPlayer.getWeapons().add(new Pistol(Controller.thisPlayer));
                 } else {
                     indexToRemove = -1;
                 }
             } else {
                 if (!Controller.otherPlayer.getWeapons().hasWeapon(1)) {
                     Controller.powerUps.remove(indexToRemove);
-                    Controller.otherPlayer.getWeapons().add(new SniperRifle(Controller.otherPlayer));
+                    Controller.otherPlayer.getWeapons().add(new Pistol(Controller.otherPlayer));
                 } else {
                     indexToRemove = -1;
                 }
@@ -87,14 +84,12 @@ public class SniperRifleItem extends PowerUp{
 
     @Override
     protected void updateClient(int playerNumber, int indexToRemove) {
-        PowerUpEffectPacket powerUpEffectPacket = new PowerUpEffectPacket(playerNumber, indexToRemove, EFFECT_TIME);
-        World.controller.getOutputConnection().sendPacket(powerUpEffectPacket);
+        InventoryItemPacket inventoryItemPacket = new InventoryItemPacket(playerNumber, indexToRemove);
+        World.controller.getOutputConnection().sendPacket(inventoryItemPacket);
     }
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(texture,(int)x,(int)y + floatState,POWER_UP_DIMENSIONS.width,POWER_UP_DIMENSIONS.height,World.controller);
-        g.drawImage(secondary_texture,(int)x,(int)y + (secondaryTextureState*2)+ floatState,POWER_UP_DIMENSIONS.width,POWER_UP_DIMENSIONS.height,World.controller);
-
+        g.drawImage(texture,(int)x,(int)y + floatState,INVENTORY_ITEM_DIMENSIONS.width,INVENTORY_ITEM_DIMENSIONS.height,World.controller);
     }
 }

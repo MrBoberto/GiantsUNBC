@@ -1,5 +1,6 @@
 package game;
 
+import InventoryItem.*;
 import audio.SFXPlayer;
 import packets.*;
 import player.MainPlayer;
@@ -133,6 +134,15 @@ public class ClientController extends Controller {
                 case DamageDown -> powerUps.add(new DamageDown(packet.getX(),packet.getY(),Player.DEFAULT_DAMAGE_MULTIPLIER));
                 case SpeedUp -> powerUps.add(new SpeedUp(packet.getX(),packet.getY(),Player.DEFAULT_SPEED_MULTIPLIER));
                 case SpeedDown -> powerUps.add(new SpeedDown(packet.getX(),packet.getY(),Player.DEFAULT_SPEED_MULTIPLIER));
+            }
+        } else if (object instanceof CreateInventoryItemPacket packet) {
+            //Use default properties since server is the one that controls effects and collisions.
+            switch (packet.getPowerUpType()){
+                case Shotgun -> inventoryItems.add(new ShotgunItem(packet.getX(),packet.getY()));
+                case SniperRifle -> inventoryItems.add(new SniperRifleItem(packet.getX(),packet.getY()));
+                case Pistol -> inventoryItems.add(new PistolItem(packet.getX(),packet.getY()));
+                case AssaultRifle -> inventoryItems.add(new AssaultRifleItem(packet.getX(),packet.getY()));
+                case RocketLauncher -> inventoryItems.add(new RocketLauncherItem(packet.getX(),packet.getY()));
             }
         }
         else if (object instanceof WinnerPacket packet) {
