@@ -43,6 +43,7 @@ public class Ricochet extends PowerUp{
             }
         }
 
+        if (World.controller instanceof SingleController) return;
         updateClient(playerNumber, indexToRemove);
     }
 

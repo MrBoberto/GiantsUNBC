@@ -132,9 +132,7 @@ public abstract class Player extends GameObject {
 
         Controller.players.add(this);
 
-        weapons.add(new AssaultRifle(this));
         weapons.add(new Pistol(this));
-
     }
 
     public String getPlayerName() {

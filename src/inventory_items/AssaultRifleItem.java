@@ -38,13 +38,14 @@ public class AssaultRifleItem extends InventoryItem {
                     Controller.thisPlayer.getWeapons().add(new AssaultRifle(Controller.thisPlayer));
                 }
             } else {
-                if (!Controller.otherPlayer.getWeapons().hasWeapon(1)) {
+                if (!Controller.otherPlayer.getWeapons().hasWeapon(AssaultRifle.SERIAL)) {
                     Controller.inventoryItems.remove(indexToRemove);
                     Controller.otherPlayer.getWeapons().add(new AssaultRifle(Controller.otherPlayer));
                 }
             }
         }
 
+        if (World.controller instanceof SingleController) return;
         updateClient(playerNumber, indexToRemove);
     }
 

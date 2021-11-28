@@ -2,13 +2,14 @@ package game;
 
 import audio.SFXPlayer;
 import eye_candy.DeathMark;
-import packets.EyeCandyPacket;
-import packets.RespawnPacket;
-import packets.WinnerPacket;
+import inventory_items.*;
+import mapObjects.Block;
+import packets.*;
 import player.AIPlayer;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
+import power_ups.*;
 import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 import weapons.aoe.Explosion;
@@ -102,6 +103,99 @@ public class SingleController extends Controller {
             }
         }
 
+        for (int i = 0; i < powerUps.size(); i++) {
+            if(powerUps.get(i) != null){
+                checkPowerUpPickups(powerUps.get(i));
+            }
+        }
+
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            if(inventoryItems.get(i) != null){
+                checkInventoryItemPickups(inventoryItems.get(i));
+            }
+        }
+
+        //Every COOLDOWN_BETWEEN_POWER_UPS there is a 50% chance of a power up spawning.
+        if(powerUps.size() < 4 && currentPowerUpCooldown == 0 && World.getSRandom().nextBoolean()){
+            currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
+
+            boolean loop = true;
+            int x = 0;
+            int y = 0;
+            while(loop) {
+                x = World.getSRandom().nextInt(WIDTH);
+                y = World.getSRandom().nextInt(HEIGHT);
+                loop = false;
+                for (Block block : blocks) {
+                    if ((new Rectangle(x, y, PowerUp.POWER_UP_DIMENSIONS.width, PowerUp.POWER_UP_DIMENSIONS.height)
+                            .intersects(block.getBounds()))) {
+                        loop = true;
+                    }
+                }
+            }
+            switch (World.getSRandom().nextInt(PowerUp.PowerUpType.values().length)) {
+                case 0 -> {
+                    powerUps.add(new DamageUp(x, y, 2));
+                }
+                case 1 -> {
+                    powerUps.add(new DamageDown(x, y, 0.5F));
+                }
+                case 2 -> {
+                    powerUps.add(new SpeedUp(x, y, 1.5F));
+                }
+                case 3->{
+                    powerUps.add(new SpeedDown(x, y, 0.75F));
+                }
+                case 4->{
+                    powerUps.add(new Ricochet(x, y, 2));
+                }
+            }
+
+        } else if (currentPowerUpCooldown == 0) {
+            currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
+        } else {
+            currentPowerUpCooldown--;
+        }
+
+        //Every COOLDOWN_BETWEEN_INVENTORY_ITEMS there is a 50% chance of an inventory item spawning.
+        if(inventoryItems.size() < 5 && currentInventoryItemCooldown == 0 && World.getSRandom().nextBoolean()){
+            currentInventoryItemCooldown = COOLDOWN_BETWEEN_INVENTORY_ITEMS;
+
+            boolean loop = true;
+            int x = 0;
+            int y = 0;
+            while(loop) {
+                x = World.getSRandom().nextInt(WIDTH);
+                y = World.getSRandom().nextInt(HEIGHT);
+                loop = false;
+                for (Block block : blocks) {
+                    if ((new Rectangle(x, y, InventoryItem.INVENTORY_ITEM_DIMENSIONS.width, InventoryItem.INVENTORY_ITEM_DIMENSIONS.height)
+                            .intersects(block.getBounds()))) {
+                        loop = true;
+                    }
+                }
+            }
+            switch (World.getSRandom().nextInt(InventoryItem.InventoryItemType.values().length)) {
+                case 0 -> {
+                    inventoryItems.add(new ShotgunItem(x, y));
+                }
+                case 1 -> {
+                    inventoryItems.add(new SniperRifleItem(x, y));
+                }
+                case 2 -> {
+                    inventoryItems.add(new AssaultRifleItem(x, y));
+                }
+                case 4->{
+                    inventoryItems.add(new RocketLauncherItem(x, y));
+                }
+            }
+
+        } else if (currentInventoryItemCooldown == 0){
+            currentInventoryItemCooldown = COOLDOWN_BETWEEN_INVENTORY_ITEMS;
+        } else {
+            currentInventoryItemCooldown--;
+        }
+
         // AI attempts to shoot if in range
         double distance = World.pythHyp(otherPlayer.x - thisPlayer.x, otherPlayer.y - thisPlayer.y);
         if (otherPlayer.getSelectedWeapon() == 0
@@ -115,6 +209,7 @@ public class SingleController extends Controller {
                         Controller.otherPlayer.getWeapons().getPrimary().getMAX_DELAY());
             }
         } else if (otherPlayer.getSelectedWeapon() == 1
+                && Controller.otherPlayer.getWeapons().getSecondary() != null
                 && Controller.otherPlayer.getWeapons().getSecondary().getCurrentDelay() == 0) {
             if ((otherPlayer.getWeapons().getSecondary().getSPEED() / 2) *
                     (otherPlayer.getWeapons().getSecondary().getSPEED() / FRICTION) > distance) {
@@ -124,6 +219,22 @@ public class SingleController extends Controller {
                 Controller.otherPlayer.getWeapons().getSecondary().setCurrentDelay(
                         Controller.otherPlayer.getWeapons().getSecondary().getMAX_DELAY());
             }
+        }
+    }
+
+    private void checkPowerUpPickups(PowerUp powerUp) {
+        if(powerUp.getBounds().intersects(thisPlayer.getBounds())){
+            powerUp.applyPowerUp(Player.SERVER_PLAYER);
+        } else if (powerUp.getBounds().intersects(otherPlayer.getBounds())){
+            powerUp.applyPowerUp(Player.CLIENT_PLAYER);
+        }
+    }
+
+    private void checkInventoryItemPickups(InventoryItem inventoryItem) {
+        if(inventoryItem.getBounds().intersects(thisPlayer.getBounds())){
+            inventoryItem.giveItem(Player.SERVER_PLAYER);
+        } else if (inventoryItem.getBounds().intersects(otherPlayer.getBounds())){
+            inventoryItem.giveItem(Player.CLIENT_PLAYER);
         }
     }
 
