@@ -8,8 +8,8 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 public class OtherPlayer extends Player {
-    public OtherPlayer(double x, double y, double angle, Color color) {
-        super(x, y, angle, color);
+    public OtherPlayer(double x, double y, int playerNumber, Color color) {
+        super(x, y, playerNumber, color);
         // Graphics-related
         loadImageStrips();
         currentImage = standing.getHead();

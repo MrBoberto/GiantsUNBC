@@ -24,25 +24,26 @@ public class MouseInput extends MouseAdapter {
         }
 
          */
+        System.out.println(e.getPoint());
         if (e.getButton() == MouseEvent.BUTTON1) {
             Controller.thisPlayer.setButton1Held(true);
             if (Controller.thisPlayer.getSelectedWeapon() == Player.PRIMARY_WEAPON
-                    && Controller.thisPlayer.getWeapons().getPrimary().getCurrentDelay() == 0)
+                    && Controller.thisPlayer.getArsenal().getPrimary().getCurrentDelay() == 0)
             {
-                Controller.thisPlayer.getWeapons().getPrimary().shoot(e.getX(), e.getY());
+                Controller.thisPlayer.getArsenal().getPrimary().shoot(e.getX(), e.getY());
                 //Controller.thisPlayer.getWeapons().getPrimary().playAudio();
 
-                Controller.thisPlayer.getWeapons().getPrimary().setCurrentDelay(
-                        Controller.thisPlayer.getWeapons().getPrimary().getMAX_DELAY());
+                Controller.thisPlayer.getArsenal().getPrimary().setCurrentDelay(
+                        Controller.thisPlayer.getArsenal().getPrimary().getMAX_DELAY());
 
             } else if (Controller.thisPlayer.getSelectedWeapon() == Player.SECONDARY_WEAPON
-                    && Controller.thisPlayer.getWeapons().getSecondary().getCurrentDelay() == 0) {
+                    && Controller.thisPlayer.getArsenal().getSecondary().getCurrentDelay() == 0) {
 
-                Controller.thisPlayer.getWeapons().getSecondary().shoot(e.getX(), e.getY());
+                Controller.thisPlayer.getArsenal().getSecondary().shoot(e.getX(), e.getY());
                 //Controller.thisPlayer.getWeapons().getSecondary().playAudio();
 
-                Controller.thisPlayer.getWeapons().getSecondary().setCurrentDelay(
-                        Controller.thisPlayer.getWeapons().getSecondary().getMAX_DELAY());
+                Controller.thisPlayer.getArsenal().getSecondary().setCurrentDelay(
+                        Controller.thisPlayer.getArsenal().getSecondary().getMAX_DELAY());
 
             }
         }
@@ -60,11 +61,11 @@ public class MouseInput extends MouseAdapter {
                 int selectedWeapon = Controller.thisPlayer.getSelectedWeapon();
                 // Switch between primary and secondary
                 if (selectedWeapon < 1) {
-                    if (selectedWeapon == 0 && Controller.thisPlayer.getWeapons().getSecondary() != null) {
+                    if (selectedWeapon == 0 && Controller.thisPlayer.getArsenal().getSecondary() != null) {
                         Controller.thisPlayer.setSelectedWeapon(1);
                     }
                 } else {
-                    if (selectedWeapon == 1 && Controller.thisPlayer.getWeapons().getSecondary() != null) {
+                    if (selectedWeapon == 1 && Controller.thisPlayer.getArsenal().getSecondary() != null) {
                         Controller.thisPlayer.setSelectedWeapon(0);
                     }
                 }

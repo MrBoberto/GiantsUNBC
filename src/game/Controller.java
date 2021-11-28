@@ -3,6 +3,7 @@ package game;
 import inventory_items.InventoryItem;
 import audio.AudioPlayer;
 import mapObjects.Block;
+import player.Arsenal;
 import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
@@ -49,6 +50,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static List<Explosion> explosions = Collections.synchronizedList(new ArrayList<>());
     public static List<PowerUp> powerUps = Collections.synchronizedList(new ArrayList<>());
     public static List<InventoryItem> inventoryItems = Collections.synchronizedList(new ArrayList<>());
+    public static List<Arsenal> arsenals = Collections.synchronizedList(new ArrayList<>());
     public static MainPlayer thisPlayer;
     public static OtherPlayer otherPlayer;
     public static GameWindow gameWindow;
@@ -122,7 +124,7 @@ public abstract class Controller extends Canvas implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//TODO ADD POWER UPS HERE
+//TODO ADD POWER UPS && Items HERE
         mouseInside = false;
         isWon = false;
         hasPauseMenu = false;
@@ -247,23 +249,29 @@ public abstract class Controller extends Canvas implements Runnable {
                 explosions.get(i).tick();
         }
 
+        for (int i = 0; i < arsenals.size(); i++) {
+            if(arsenals.get(i) != null){
+                arsenals.get(i).tick();
+            }
+        }
+
         if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 0 && thisPlayer.getWeaponSerial() == 003
-                && thisPlayer.getWeapons().getPrimary().getCurrentDelay() == 0) {
+                && thisPlayer.getArsenal().getPrimary().getCurrentDelay() == 0) {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
             Point mouseRelativeToGame = new Point(mouseRelativeToScreen.x - getLocationOnScreen().x,
                     mouseRelativeToScreen.y - getLocationOnScreen().y);
-            thisPlayer.getWeapons().getPrimary().shoot(mouseRelativeToGame.x, mouseRelativeToGame.y);
+            thisPlayer.getArsenal().getPrimary().shoot(mouseRelativeToGame.x, mouseRelativeToGame.y);
 
-            Controller.thisPlayer.getWeapons().getPrimary().setCurrentDelay(
+            Controller.thisPlayer.getArsenal().getPrimary().setCurrentDelay(
                     AssaultRifle.MAX_DELAY);
         } else if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 1 && thisPlayer.getWeaponSerial() == 003
-                && thisPlayer.getWeapons().getSecondary() != null && thisPlayer.getWeapons().getSecondary().getCurrentDelay() == 0) {
+                && thisPlayer.getArsenal().getSecondary() != null && thisPlayer.getArsenal().getSecondary().getCurrentDelay() == 0) {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
             Point mouseRelativeToGame = new Point(mouseRelativeToScreen.x - getLocationOnScreen().x,
                     mouseRelativeToScreen.y - getLocationOnScreen().y);
-            thisPlayer.getWeapons().getSecondary().shoot(mouseRelativeToGame.x, mouseRelativeToGame.y);
+            thisPlayer.getArsenal().getSecondary().shoot(mouseRelativeToGame.x, mouseRelativeToGame.y);
 
-            Controller.thisPlayer.getWeapons().getSecondary().setCurrentDelay(
+            Controller.thisPlayer.getArsenal().getSecondary().setCurrentDelay(
                     AssaultRifle.MAX_DELAY);
         }
     }
@@ -327,6 +335,13 @@ public abstract class Controller extends Canvas implements Runnable {
         for (int i = 0; i < players.size(); i++) {
             if(players.get(i) != null) {
                 players.get(i).render(g);
+            }
+        }
+
+        //Render in-game UI
+        for (int i = 0; i < arsenals.size(); i++) {
+            if(arsenals.get(i) != null){
+                arsenals.get(i).render(g);
             }
         }
 

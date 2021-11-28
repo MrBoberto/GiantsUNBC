@@ -23,7 +23,7 @@ public class GameOver {
 
         Image img;
         try {
-            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/icon/icon.png")));
+            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/character_closeups/character_closeup_blue.png")));
             gameOver.setIconImage(img);
         } catch(Exception e) {
             System.out.println(e.getMessage());

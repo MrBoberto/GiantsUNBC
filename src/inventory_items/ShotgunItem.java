@@ -33,14 +33,14 @@ public class ShotgunItem extends InventoryItem {
         int indexToRemove = Controller.inventoryItems.indexOf(this);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController) {
             if(playerNumber == Player.SERVER_PLAYER) {
-                if (!Controller.thisPlayer.getWeapons().hasWeapon(0)) {
+                if (!Controller.thisPlayer.getArsenal().hasWeapon(0)) {
                     Controller.inventoryItems.remove(indexToRemove);
-                    Controller.thisPlayer.getWeapons().add(new Shotgun(Controller.thisPlayer));
+                    Controller.thisPlayer.getArsenal().add(new Shotgun(Controller.thisPlayer));
                 }
             } else {
-                if (!Controller.otherPlayer.getWeapons().hasWeapon(0)) {
+                if (!Controller.otherPlayer.getArsenal().hasWeapon(0)) {
                     Controller.inventoryItems.remove(indexToRemove);
-                    Controller.otherPlayer.getWeapons().add(new Shotgun(Controller.otherPlayer));
+                    Controller.otherPlayer.getArsenal().add(new Shotgun(Controller.otherPlayer));
                 }
             }
         }

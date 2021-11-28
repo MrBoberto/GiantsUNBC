@@ -4,21 +4,15 @@ import audio.SFXPlayer;
 import eye_candy.DeathMark;
 import inventory_items.*;
 import mapObjects.Block;
-import packets.*;
-import player.AIPlayer;
-import player.MainPlayer;
-import player.OtherPlayer;
-import player.Player;
+import player.*;
 import power_ups.*;
 import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 import weapons.aoe.Explosion;
-import weapons.guns.Weapon;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
-import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.util.List;
 
@@ -37,8 +31,11 @@ public class SingleController extends Controller {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
 
-        thisPlayer = new MainPlayer(Controller.thisX, Controller.thisY, 0, Color.BLUE);
-        otherPlayer = new AIPlayer(Controller.otherX, Controller.otherY, 0, Color.RED);
+        thisPlayer = new MainPlayer(Controller.thisX, Controller.thisY, Player.SERVER_PLAYER, Color.BLUE);
+        otherPlayer = new AIPlayer(Controller.otherX, Controller.otherY, Player.CLIENT_PLAYER, Color.RED);
+
+        thisPlayer.setArsenal(new Arsenal(0,620, thisPlayer));
+        otherPlayer.setArsenal(new Arsenal(816,620, otherPlayer));
 
         if (MainMenu.playerName.equals("")) {
             thisPlayer.setPlayerName("Player");
@@ -201,25 +198,25 @@ public class SingleController extends Controller {
         // AI attempts to shoot if in range
         double distance = World.pythHyp(otherPlayer.x - thisPlayer.x, otherPlayer.y - thisPlayer.y);
         if (otherPlayer.getSelectedWeapon() == 0
-                && Controller.otherPlayer.getWeapons().getPrimary().getCurrentDelay() == 0) {
-            if ((otherPlayer.getWeapons().getPrimary().getSPEED() / 2) *
-                    (otherPlayer.getWeapons().getPrimary().getSPEED() / FRICTION) > distance) {
-                Controller.otherPlayer.getWeapons().getPrimary().shoot(thisPlayer.x, thisPlayer.y);
-                Controller.otherPlayer.getWeapons().getPrimary().playAudio();
+                && Controller.otherPlayer.getArsenal().getPrimary().getCurrentDelay() == 0) {
+            if ((otherPlayer.getArsenal().getPrimary().getSPEED() / 2) *
+                    (otherPlayer.getArsenal().getPrimary().getSPEED() / FRICTION) > distance) {
+                Controller.otherPlayer.getArsenal().getPrimary().shoot(thisPlayer.x, thisPlayer.y);
+                Controller.otherPlayer.getArsenal().getPrimary().playAudio();
 
-                Controller.otherPlayer.getWeapons().getPrimary().setCurrentDelay(
-                        Controller.otherPlayer.getWeapons().getPrimary().getMAX_DELAY());
+                Controller.otherPlayer.getArsenal().getPrimary().setCurrentDelay(
+                        Controller.otherPlayer.getArsenal().getPrimary().getMAX_DELAY());
             }
         } else if (otherPlayer.getSelectedWeapon() == 1
-                && Controller.otherPlayer.getWeapons().getSecondary() != null
-                && Controller.otherPlayer.getWeapons().getSecondary().getCurrentDelay() == 0) {
-            if ((otherPlayer.getWeapons().getSecondary().getSPEED() / 2) *
-                    (otherPlayer.getWeapons().getSecondary().getSPEED() / FRICTION) > distance) {
-                Controller.otherPlayer.getWeapons().getSecondary().shoot(thisPlayer.x, thisPlayer.y);
-                Controller.otherPlayer.getWeapons().getSecondary().playAudio();
+                && Controller.otherPlayer.getArsenal().getSecondary() != null
+                && Controller.otherPlayer.getArsenal().getSecondary().getCurrentDelay() == 0) {
+            if ((otherPlayer.getArsenal().getSecondary().getSPEED() / 2) *
+                    (otherPlayer.getArsenal().getSecondary().getSPEED() / FRICTION) > distance) {
+                Controller.otherPlayer.getArsenal().getSecondary().shoot(thisPlayer.x, thisPlayer.y);
+                Controller.otherPlayer.getArsenal().getSecondary().playAudio();
 
-                Controller.otherPlayer.getWeapons().getSecondary().setCurrentDelay(
-                        Controller.otherPlayer.getWeapons().getSecondary().getMAX_DELAY());
+                Controller.otherPlayer.getArsenal().getSecondary().setCurrentDelay(
+                        Controller.otherPlayer.getArsenal().getSecondary().getMAX_DELAY());
             }
         }
     }

@@ -1,6 +1,8 @@
 package player;
 
+import game.ClientController;
 import game.Controller;
+import game.ServerController;
 import game.World;
 import mapObjects.Block;
 
@@ -20,8 +22,9 @@ public class MainPlayer extends Player {
     protected ArrayList<BufferedImage> slotTextures;
     protected boolean button1Held = false;
 
-    public MainPlayer(double x, double y, double angle, Color color) {
-        super(x, y, angle, color);
+    public MainPlayer(double x, double y, int playerNumber, Color color) {
+        super(x, y, playerNumber, color);
+
 
         // Graphics-related
 
@@ -264,11 +267,11 @@ public class MainPlayer extends Player {
 //        double entityTopWorldX = super.getY() + solidArea.y;
 //        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
 
-        if (weapons.getPrimary().getCurrentDelay() > 0) {
-            weapons.getPrimary().setCurrentDelay(weapons.getPrimary().getCurrentDelay() - 1);
+        if (arsenal.getPrimary().getCurrentDelay() > 0) {
+            arsenal.getPrimary().setCurrentDelay(arsenal.getPrimary().getCurrentDelay() - 1);
         }
-        if (weapons.getSecondary() != null && weapons.getSecondary().getCurrentDelay() > 0) {
-            weapons.getSecondary().setCurrentDelay(weapons.getSecondary().getCurrentDelay() - 1);
+        if (arsenal.getSecondary() != null && arsenal.getSecondary().getCurrentDelay() > 0) {
+            arsenal.getSecondary().setCurrentDelay(arsenal.getSecondary().getCurrentDelay() - 1);
         }
 
         solidArea = new Rectangle(((int)this.x - currentImage.getImage().getWidth() / 2) + 40,
@@ -288,59 +291,8 @@ public class MainPlayer extends Player {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        if (selectedWeapon == 0) {
-            // If primary is selected, this is primary slot
-            AffineTransform affTraPP = AffineTransform.getTranslateInstance(Controller.WIDTH - 240, 0);
-            // If primary is selected, this is secondary slot
-            AffineTransform affTraPS = AffineTransform.getTranslateInstance(Controller.WIDTH - 90, 30);
-            affTraPS.scale(0.5, 0.5);
-            if (weapons.getPrimary() != null) {
-                g2d.drawImage(slotTextures.get(weapons.getPrimary().getSERIAL() + 1), affTraPP, World.controller);
-                if (weapons.getSecondary() != null) {
-                    g2d.drawImage(slotTextures.get(weapons.getSecondary().getSERIAL() + 1), affTraPS, World.controller);
-                    AffineTransform affTraI = AffineTransform.getTranslateInstance((Controller.WIDTH) - (weapons.size() * 70), 120);
-                    affTraI.scale(0.5, 0.5);
-                    int j = 240;
-                    for (int i = 0; i < weapons.size(); i++) {
-                        affTraI.translate(i * j, 0);
-                        g2d.drawImage(slotTextures.get(weapons.get(i).getSERIAL() + 1), affTraI, World.controller);
-                        j /= 2;
-                    }
-                } else {
-                    // The empty texture is a placeholder in case a background is made for inventory slots
-                    g2d.drawImage(slotTextures.get(0), affTraPS, World.controller);
-                }
-            } else {
-                // The empty texture is a placeholder in case a background is made for inventory slots
-                g2d.drawImage(slotTextures.get(0), affTraPP, World.controller);
-            }
-        } else {
-            // If secondary is selected, this is primary slot
-            AffineTransform affTraSP = AffineTransform.getTranslateInstance(Controller.WIDTH - 210, 30);
-            // If secondary is selected, this is secondary slot
-            AffineTransform affTraSS = AffineTransform.getTranslateInstance(Controller.WIDTH - 120, 0);
-            affTraSP.scale(0.5, 0.5);
-            if (weapons.getPrimary() != null) {
-                g2d.drawImage(slotTextures.get(weapons.getPrimary().getSERIAL() + 1), affTraSP, World.controller);
-                if (weapons.getSecondary() != null) {
-                    g2d.drawImage(slotTextures.get(weapons.getSecondary().getSERIAL() + 1), affTraSS, World.controller);
-                    AffineTransform affTraI = AffineTransform.getTranslateInstance((Controller.WIDTH) - (weapons.size() * 70), 120);
-                    affTraI.scale(0.5, 0.5);
-                    int j = 240;
-                    for (int i = 0; i < weapons.size(); i++) {
-                        affTraI.translate(i * j, 0);
-                        g2d.drawImage(slotTextures.get(weapons.get(i).getSERIAL() + 1), affTraI, World.controller);
-                        j /= 2;
-                    }
-                } else {
-                    // The empty texture is a placeholder in case a background is made for inventory slots
-                    g2d.drawImage(slotTextures.get(0), affTraSS, World.controller);
-                }
-            } else {
-                // The empty texture is a placeholder in case a background is made for inventory slots
-                g2d.drawImage(slotTextures.get(0), affTraSP, World.controller);
-            }
-        }
+
+        // displayInventory(g2d);
 
         isWalking = (up || left || down || right);
         if(isTimeForNextFrame()){
@@ -381,6 +333,62 @@ public class MainPlayer extends Player {
 
         g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,
                 (int) y - 10 - currentImage.getImage().getHeight() / 4);
+    }
+
+    private void displayInventory(Graphics2D g2d) {
+        if (selectedWeapon == 0) {
+            // If primary is selected, this is primary slot
+            AffineTransform affTraPP = AffineTransform.getTranslateInstance(Controller.WIDTH - 240, 0);
+            // If primary is selected, this is secondary slot
+            AffineTransform affTraPS = AffineTransform.getTranslateInstance(Controller.WIDTH - 90, 30);
+            affTraPS.scale(0.5, 0.5);
+            if (arsenal.getPrimary() != null) {
+                g2d.drawImage(slotTextures.get(arsenal.getPrimary().getSERIAL() + 1), affTraPP, World.controller);
+                if (arsenal.getSecondary() != null) {
+                    g2d.drawImage(slotTextures.get(arsenal.getSecondary().getSERIAL() + 1), affTraPS, World.controller);
+                    AffineTransform affTraI = AffineTransform.getTranslateInstance((Controller.WIDTH) - (arsenal.size() * 70), 120);
+                    affTraI.scale(0.5, 0.5);
+                    int j = 240;
+                    for (int i = 0; i < arsenal.size(); i++) {
+                        affTraI.translate(i * j, 0);
+                        g2d.drawImage(slotTextures.get(arsenal.get(i).getSERIAL() + 1), affTraI, World.controller);
+                        j /= 2;
+                    }
+                } else {
+                    // The empty texture is a placeholder in case a background is made for inventory slots
+                    g2d.drawImage(slotTextures.get(0), affTraPS, World.controller);
+                }
+            } else {
+                // The empty texture is a placeholder in case a background is made for inventory slots
+                g2d.drawImage(slotTextures.get(0), affTraPP, World.controller);
+            }
+        } else {
+            // If secondary is selected, this is primary slot
+            AffineTransform affTraSP = AffineTransform.getTranslateInstance(Controller.WIDTH - 210, 30);
+            // If secondary is selected, this is secondary slot
+            AffineTransform affTraSS = AffineTransform.getTranslateInstance(Controller.WIDTH - 120, 0);
+            affTraSP.scale(0.5, 0.5);
+            if (arsenal.getPrimary() != null) {
+                g2d.drawImage(slotTextures.get(arsenal.getPrimary().getSERIAL() + 1), affTraSP, World.controller);
+                if (arsenal.getSecondary() != null) {
+                    g2d.drawImage(slotTextures.get(arsenal.getSecondary().getSERIAL() + 1), affTraSS, World.controller);
+                    AffineTransform affTraI = AffineTransform.getTranslateInstance((Controller.WIDTH) - (arsenal.size() * 70), 120);
+                    affTraI.scale(0.5, 0.5);
+                    int j = 240;
+                    for (int i = 0; i < arsenal.size(); i++) {
+                        affTraI.translate(i * j, 0);
+                        g2d.drawImage(slotTextures.get(arsenal.get(i).getSERIAL() + 1), affTraI, World.controller);
+                        j /= 2;
+                    }
+                } else {
+                    // The empty texture is a placeholder in case a background is made for inventory slots
+                    g2d.drawImage(slotTextures.get(0), affTraSS, World.controller);
+                }
+            } else {
+                // The empty texture is a placeholder in case a background is made for inventory slots
+                g2d.drawImage(slotTextures.get(0), affTraSP, World.controller);
+            }
+        }
     }
 
     public boolean isUp() {

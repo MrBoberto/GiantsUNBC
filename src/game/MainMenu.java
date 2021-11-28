@@ -11,14 +11,10 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
-
-import static com.sun.java.accessibility.util.SwingEventMonitor.addChangeListener;
 
 public class MainMenu {
 
@@ -39,7 +35,7 @@ public class MainMenu {
 
         Image img;
         try {
-            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/icon/icon.png")));
+            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/character_closeups/character_closeup_blue.png")));
             mainMenu.setIconImage(img);
         } catch(Exception e) {
             System.out.println(e.getMessage());
