@@ -149,6 +149,10 @@ public abstract class Controller extends Canvas implements Runnable {
         blocks = Collections.synchronizedList(new ArrayList<>());
         eyeCandy = Collections.synchronizedList(new ArrayList<>());
         explosions = Collections.synchronizedList(new ArrayList<>());
+        slashes = Collections.synchronizedList(new ArrayList<>());
+        powerUps = Collections.synchronizedList(new ArrayList<>());
+        inventoryItems = Collections.synchronizedList(new ArrayList<>());
+        arsenals = Collections.synchronizedList(new ArrayList<>());
         thisPlayer = null;
         otherPlayer = null;
 
