@@ -79,29 +79,32 @@ public class ClientController extends Controller {
         } else {
             thisPlayer.setPlayerName(MainMenu.playerName);
         }
+        String ipAddress = MainMenu.ipaddress;
         try {
-            for(int i=1;i<=254;i++) {
-                final int j = i;  // i as non-final variable cannot be referenced from inner class
-                new Thread(new Runnable() {   // new thread for parallel execution
-                    public void run() {
-                        try {
-                            ip[3] = (byte)j;
-                            InetAddress address = InetAddress.getByAddress(ip);
-                            String output = address.toString().substring(1);
-                            try{
-                                socket = new Socket(output, game.Controller.PORT);
-                                System.out.println("FOUND SERVER");
-                                System.out.println(output + " is this the server");
-                                correctIp = output;
-                                //socket.close(); //needed if 2 connections tried
-                            }catch (Exception e) {//e.printStackTrace();}
+            if(ipAddress.equals("")) {
+                for (int i = 1; i <= 254; i++) {
+                    final int j = i;  // i as non-final variable cannot be referenced from inner class
+                    new Thread(new Runnable() {   // new thread for parallel execution
+                        public void run() {
+                            try {
+                                ip[3] = (byte) j;
+                                InetAddress address = InetAddress.getByAddress(ip);
+                                String output = address.toString().substring(1);
+                                try {
+                                    socket = new Socket(output, game.Controller.PORT);
+                                    System.out.println("FOUND SERVER");
+                                    System.out.println(output + " is this the server");
+                                    correctIp = output;
+                                    //socket.close(); //needed if 2 connections tried
+                                } catch (Exception e) {//e.printStackTrace();}
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
-                    }
-                }).start();     // dont forget to start the thread
-            }
+                    }).start();     // dont forget to start the thread
+                }
+            }else socket = new Socket(ipAddress, Controller.PORT);
             TimeUnit.SECONDS.sleep(1);//
             System.out.println("The client:"+ correctAddress.getHostAddress() +"\n The server"+correctIp);
             if (correctAddress.getHostAddress().equals(correctIp)) {
@@ -110,7 +113,6 @@ public class ClientController extends Controller {
             }
 
             System.out.println("waiting for connection...");
-            String ipAddress = MainMenu.ipaddress;
 
             if (socket == null) {
                 socket = new Socket(ipAddress, Controller.PORT);
