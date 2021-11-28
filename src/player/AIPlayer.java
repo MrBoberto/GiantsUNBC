@@ -1,7 +1,9 @@
 package player;
 
 import game.Controller;
+import game.SingleController;
 import game.World;
+import inventory_items.InventoryItem;
 import mapObjects.Block;
 import weapons.guns.AssaultRifle;
 import weapons.guns.Pistol;
@@ -25,16 +27,16 @@ public class AIPlayer extends OtherPlayer {
     private int fear = 50;              // Max health advantage the player can have for the ai to want to attack them
     private int randAngleDuration = 0;
     private int randAngleDurationMax = 20;
+    private int tryToGetWeaponTimer = 0;
+    private int TRY_TO_GET_WEAPON_TIMER_MAX = 60;
+    Point target;                       // May be a player, power up, or weapon; depends on Thanos' judgement
+    private Point closestInventoryItem;
+    private Point closestPowerUp;
 
 
     public AIPlayer(double x, double y, double angle, Color color) {
         super(x, y, angle, color);
         playerColour = new Color(200, 0, 255);
-        weapons.clear();
-        weapons.add(new SniperRifle(this));
-        weapons.add(new AssaultRifle(this));
-        weapons.add(new Pistol(this));
-        weapons.add(new Shotgun(this));
 
         playerNumber = 1;
         // Graphics-related
@@ -92,6 +94,12 @@ public class AIPlayer extends OtherPlayer {
             up = false;
             right = false;
             left = false;
+
+            for (InventoryItem anInventoryItem: SingleController.getInventoryItems()) {
+                if (closestInventoryItem == null) {
+                    closestInventoryItem = new Point((int) anInventoryItem.getX(), (int) anInventoryItem.getY());
+                }
+            }
 
             if (Controller.thisPlayer.getHealth() <= health + fear) {
                 if (!attac) {
@@ -281,11 +289,11 @@ public class AIPlayer extends OtherPlayer {
         // Determine whether to use shorter or longer ranged weapon
         if (Controller.thisPlayer.getX() < x - shortRangeBound || Controller.thisPlayer.getY() < y - shortRangeBound
                 || Controller.thisPlayer.getX() > x + shortRangeBound || Controller.thisPlayer.getY() > y + shortRangeBound) {
-        if (selectedWeapon == 0 && weapons.getSecondary() != null
-            && weapons.getPrimary().getSPEED() < weapons.getSecondary().getSPEED()) {
-                selectedWeapon = 1;
+            if (selectedWeapon == 0 && weapons.getSecondary() != null
+                && weapons.getPrimary().getSPEED() < weapons.getSecondary().getSPEED()) {
+                    selectedWeapon = 1;
             } else if (selectedWeapon == 1 && weapons.getPrimary().getSPEED() > weapons.getSecondary().getSPEED()) {
-                selectedWeapon = 0;
+                    selectedWeapon = 0;
             }
         } else if (weapons.getSecondary() != null) {
             if (selectedWeapon == 1 && weapons.getPrimary().getSPEED() < weapons.getSecondary().getSPEED()) {

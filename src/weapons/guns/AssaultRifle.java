@@ -20,7 +20,7 @@ public class AssaultRifle implements Weapon {
     private int currentDelay = 0;
     // Identifies type of gun
     public static final int SERIAL = 003;
-    public static int DAMAGE = 14;
+    public static int DAMAGE = 8;
     public SFXPlayer audio;
 
     public AssaultRifle(Player playerIBelongTo) {
