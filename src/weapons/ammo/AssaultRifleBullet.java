@@ -17,8 +17,7 @@ public class AssaultRifleBullet extends Bullet {
     private static final double INACCURACY = 0.05;
 
     public AssaultRifleBullet(int player, double aimX, double aimY, int damage) {
-        super(0,0,0);
-        playerIBelongToNumber = player;
+        super(0,0,0,player);
         ProjectileTYPE = ProjectileType.AssaultRifleBullet;
 
         if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
