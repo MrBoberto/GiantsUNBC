@@ -57,7 +57,8 @@ public abstract class Bullet extends GameObject implements Projectile {
 
             boolean bounced = checkBlockCollision();
         if(bounced){
-            boxCooldown = 10;
+            x -= getVelX();
+            y -= getVelY();
         }
 
 
@@ -82,11 +83,10 @@ public abstract class Bullet extends GameObject implements Projectile {
             setVelY(0);
         }
 
-
+        if(!bounced) {
             x += getVelX();
             y += getVelY();
-
-
+        }
     }
 
     protected boolean checkBlockCollision() {
@@ -141,7 +141,6 @@ public abstract class Bullet extends GameObject implements Projectile {
                             return true;
                             //right
                         }else if(right && !left){
-                            System.out.println("AEDFCVSED");
                             angle =  - angle;
                             bouncesLeft--;
                             return true;
