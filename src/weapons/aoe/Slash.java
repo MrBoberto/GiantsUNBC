@@ -17,7 +17,7 @@ public class Slash extends GameObject implements Serializable {
     protected static ImageStrip animation;
     protected ImageFrame currentFrame;
     private int age = 0;
-    public final int MAX_AGE = 2;
+    public final int MAX_AGE = 5;
     protected boolean harmful = true;
     public static final int DAMAGE = 100;
     Rectangle boundRect;
@@ -53,7 +53,7 @@ public class Slash extends GameObject implements Serializable {
             if (isLeft) {
                 currentFrame = animation.getHead();
             } else {
-                currentFrame = animation.getHead().getNext().getNext().getNext();
+                currentFrame = animation.getHead().getNext().getNext().getNext().getNext().getNext().getNext();
             }
 
         } else {
@@ -130,7 +130,7 @@ public class Slash extends GameObject implements Serializable {
         defLocStr = "/resources/VFX/slash/slash_blue/";
 
         // Builds image strip for explosion animation
-        for (int i = 1; i <= 6; i++) {
+        for (int i = 1; i <= 12; i++) {
             imgLocStr.add("slash (" + i + ").png");
         }
         animation = buildImageStrip(imgLocStr, defLocStr);
