@@ -91,7 +91,7 @@ public class Arsenal extends GameObject {
                 powerUp.render(g2d);
             }
             for (int i = 0; i < playerIBelongTo.getPowerUps().length; i++) {
-                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setX(x + 253 + i * 25);
+                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setX(x + 258 + i * 25);
                 getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setY(y);
             }
 
@@ -114,16 +114,16 @@ public class Arsenal extends GameObject {
 
             //Primary && secondary
             if(playerIBelongTo.getSelectedWeapon() == Player.PRIMARY_WEAPON) {
-                g2d.drawImage(getWeaponTexture(primary), (int) x + 1095, (int) y + 20, 65, 65, World.controller);
-                g2d.drawImage(getWeaponTexture(secondary), (int) x + 1035, (int) y + 46, 46, 46, World.controller);
+                g2d.drawImage(getWeaponTexture(primary), (int) x + 275, (int) y + 20, 65, 65, World.controller);
+                g2d.drawImage(getWeaponTexture(secondary), (int) x + 217, (int) y + 46, 46, 46, World.controller);
             } else {
-                g2d.drawImage(getWeaponTexture(secondary), (int) x + 1095, (int) y + 20, 65, 65, World.controller);
-                g2d.drawImage(getWeaponTexture(primary), (int) x + 1035, (int) y + 46, 46, 46, World.controller);
+                g2d.drawImage(getWeaponTexture(secondary), (int) x + 275, (int) y + 20, 65, 65, World.controller);
+                g2d.drawImage(getWeaponTexture(primary), (int) x + 217, (int) y + 46, 46, 46, World.controller);
             }
 
             //Rest of inventory
             for (int i = 0; i < weapons.size(); i++) {
-                g2d.drawImage(getWeaponTexture(weapons.get(i)), (int) x + 975 - i * 52, (int) y + 35, 55, 55, World.controller);
+                g2d.drawImage(getWeaponTexture(weapons.get(i)), (int) x + i * 52, (int) y + 35, 55, 55, World.controller);
             }
 
             //Powerups
@@ -131,7 +131,7 @@ public class Arsenal extends GameObject {
                 powerUp.render(g2d);
             }
             for (int i = 0; i < playerIBelongTo.getPowerUps().length; i++) {
-                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setX(x + 253 + i * 25);
+                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setX(x + 173 - i * 25);
                 getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setY(y);
             }
 
