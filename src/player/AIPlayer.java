@@ -6,10 +6,7 @@ import game.World;
 import inventory_items.InventoryItem;
 import mapObjects.Block;
 import power_ups.PowerUp;
-import weapons.guns.AssaultRifle;
-import weapons.guns.Pistol;
-import weapons.guns.Shotgun;
-import weapons.guns.SniperRifle;
+import weapons.guns.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -353,19 +350,24 @@ public class AIPlayer extends OtherPlayer {
         setAngle();
         if (dialogueCount > 0) dialogueCount--;
 
-        // Determine whether to use shorter or longer ranged weapon
+        // Determine whether to use a longer or shorter ranged weapon
         if (Controller.thisPlayer.getX() < x - shortRangeBound || Controller.thisPlayer.getY() < y - shortRangeBound
                 || Controller.thisPlayer.getX() > x + shortRangeBound || Controller.thisPlayer.getY() > y + shortRangeBound) {
             if (selectedWeapon == 0 && arsenal.getSecondary() != null
-                && arsenal.getPrimary().getSPEED() < arsenal.getSecondary().getSPEED()) {
+                    && (arsenal.getPrimary().getSPEED() < arsenal.getSecondary().getSPEED()
+                    || arsenal.getSecondary().getSERIAL() == RocketLauncher.SERIAL)) {
                     selectedWeapon = 1;
-            } else if (selectedWeapon == 1 && arsenal.getPrimary().getSPEED() > arsenal.getSecondary().getSPEED()) {
+            } else if (selectedWeapon == 1
+                    && (arsenal.getPrimary().getSPEED() > arsenal.getSecondary().getSPEED()
+                    || arsenal.getPrimary().getSERIAL() == RocketLauncher.SERIAL)) {
                     selectedWeapon = 0;
             }
         } else if (arsenal.getSecondary() != null) {
-            if (selectedWeapon == 1 && arsenal.getPrimary().getSPEED() < arsenal.getSecondary().getSPEED()) {
+            if (selectedWeapon == 1 && (arsenal.getPrimary().getSPEED() < arsenal.getSecondary().getSPEED()
+                    || arsenal.getPrimary().getSERIAL() == LightningSword.SERIAL)) {
                 selectedWeapon = 0;
-            } else if (selectedWeapon == 0 && arsenal.getPrimary().getSPEED() > arsenal.getSecondary().getSPEED()) {
+            } else if (selectedWeapon == 0 && (arsenal.getPrimary().getSPEED() > arsenal.getSecondary().getSPEED()
+                    || arsenal.getSecondary().getSERIAL() == LightningSword.SERIAL)) {
                 selectedWeapon = 1;
             }
         }

@@ -12,6 +12,9 @@ import utilities.BufferedImageLoader;
 import weapons.ammo.*;
 import weapons.aoe.Explosion;
 import weapons.aoe.Slash;
+import weapons.guns.LightningSword;
+import weapons.guns.RocketLauncher;
+import weapons.guns.Weapon;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -215,26 +218,30 @@ public class SingleController extends Controller {
 
         // AI attempts to shoot if in range
         double distance = World.pythHyp(otherPlayer.x - thisPlayer.x, otherPlayer.y - thisPlayer.y);
+        Weapon primary = otherPlayer.getArsenal().getPrimary();            // Graphics version of this is unreliable
+        Weapon secondary = otherPlayer.getArsenal().getSecondary();         // Graphics version of this is unreliable
         if (otherPlayer.getSelectedWeapon() == 0
-                && Controller.otherPlayer.getArsenal().getPrimary().getCurrentDelay() == 0) {
-            if ((otherPlayer.getArsenal().getPrimary().getSPEED() / 2) *
-                    (otherPlayer.getArsenal().getPrimary().getSPEED() / FRICTION) > distance) {
-                Controller.otherPlayer.getArsenal().getPrimary().shoot(thisPlayer.x, thisPlayer.y);
-                Controller.otherPlayer.getArsenal().getPrimary().playAudio();
+                && primary.getCurrentDelay() == 0) {
+            if ((primary.getSPEED() / 2) *
+                    (primary.getSPEED() / FRICTION) > distance
+                    || primary.getSERIAL() == LightningSword.SERIAL || primary.getSERIAL() == RocketLauncher.SERIAL) {
+                primary.shoot(thisPlayer.x, thisPlayer.y);
+                primary.playAudio();
 
-                Controller.otherPlayer.getArsenal().getPrimary().setCurrentDelay(
-                        Controller.otherPlayer.getArsenal().getPrimary().getMAX_DELAY());
+                primary.setCurrentDelay(
+                        primary.getMAX_DELAY());
             }
         } else if (otherPlayer.getSelectedWeapon() == 1
-                && Controller.otherPlayer.getArsenal().getSecondary() != null
-                && Controller.otherPlayer.getArsenal().getSecondary().getCurrentDelay() == 0) {
-            if ((otherPlayer.getArsenal().getSecondary().getSPEED() / 2) *
-                    (otherPlayer.getArsenal().getSecondary().getSPEED() / FRICTION) > distance) {
-                Controller.otherPlayer.getArsenal().getSecondary().shoot(thisPlayer.x, thisPlayer.y);
-                Controller.otherPlayer.getArsenal().getSecondary().playAudio();
+                && secondary != null
+                && secondary.getCurrentDelay() == 0) {
+            if ((secondary.getSPEED() / 2) *
+                    (secondary.getSPEED() / FRICTION) > distance
+                    || secondary.getSERIAL() == LightningSword.SERIAL || secondary.getSERIAL() == RocketLauncher.SERIAL) {
+                secondary.shoot(thisPlayer.x, thisPlayer.y);
+                secondary.playAudio();
 
-                Controller.otherPlayer.getArsenal().getSecondary().setCurrentDelay(
-                        Controller.otherPlayer.getArsenal().getSecondary().getMAX_DELAY());
+                secondary.setCurrentDelay(
+                        secondary.getMAX_DELAY());
             }
         }
     }

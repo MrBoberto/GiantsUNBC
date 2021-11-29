@@ -182,10 +182,10 @@ public class ClientController extends Controller {
                     packet.getY(),
                     packet.getAngle(),
                     packet.isLeft(),
-                    Player.CLIENT_PLAYER,
+                    Player.SERVER_PLAYER,
                     packet.getDamage()
             );
-            serverWeaponAudio.setFile(-1);
+            serverWeaponAudio.setFile(-2);
             serverWeaponAudio.play();
 
         } else if (object instanceof ServerSFXPacket packet) {

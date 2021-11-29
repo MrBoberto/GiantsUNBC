@@ -93,9 +93,14 @@ public class LightningSword implements Weapon {
         }
 
         if (World.controller instanceof ServerController) {
-            World.controller.getOutputConnection().sendPacket(new ServerSFXPacket(SERIAL));
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             new Slash(x, y, angle, isLeft, Player.SERVER_PLAYER, DAMAGE);
+            World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(SERIAL));
+            for (int i = 0; i < ROUNDCOUNT; i++) {
+                World.controller.getOutputConnection().sendPacket(
+                        new ClientSlashPacket(x, y, angle, isLeft, DAMAGE)
+                );
+            }
         } else if (World.controller instanceof SingleController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             if (playerIBelongTo.getPlayerNumber() == 0) {
@@ -104,7 +109,7 @@ public class LightningSword implements Weapon {
                 new Slash(x, y, angle, isLeft, Player.CLIENT_PLAYER, DAMAGE);
             }
         } else {
-            World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(SERIAL));
+            new Slash(x, y, angle, isLeft, playerIBelongTo.getPlayerNumber(), DAMAGE);
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 World.controller.getOutputConnection().sendPacket(
                         new ClientSlashPacket(x, y, angle, isLeft, DAMAGE)

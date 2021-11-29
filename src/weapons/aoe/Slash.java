@@ -14,7 +14,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Slash extends GameObject implements Serializable {
-    protected static ImageStrip animation;
+    protected static ImageStrip animation_blue;
+    protected static ImageStrip animation_red;
+    protected static ImageStrip animation_thanos;
+    protected ImageStrip animation;
     protected ImageFrame currentFrame;
     private int age = 0;
     public final int MAX_AGE = 5;
@@ -30,9 +33,17 @@ public class Slash extends GameObject implements Serializable {
         this.isLeft = isLeft;
         this.angle = angle;
 
-        loadImage();
-
         this.playerIBelongToNumber = playerIBelongToNumber;
+
+        if (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof SingleController) {
+            animation = animation_thanos;
+        } else if (playerIBelongToNumber == Player.SERVER_PLAYER) {
+            animation = animation_blue;
+        } else {
+            animation = animation_red;
+        }
+
+        loadImage();
 
         System.out.println("SLASH");
 
@@ -127,13 +138,29 @@ public class Slash extends GameObject implements Serializable {
         String defLocStr;
 
         // Saves amount of text to be used
-        defLocStr = "/resources/VFX/slash/slash_blue/";
+        defLocStr = "/resources/VFX/slash/slash_";
+
+        // Builds image strip for blue slash animation
+        for (int i = 1; i <= 12; i++) {
+            imgLocStr.add("blue/slash (" + i + ").png");
+        }
+        animation_blue = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(standing.toString());
+        imgLocStr.clear();
+
+        // Builds image strip for red slash animation
+        for (int i = 1; i <= 12; i++) {
+            imgLocStr.add("red/slash (" + i + ").png");
+        }
+        animation_red = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(standing.toString());
+        imgLocStr.clear();
 
         // Builds image strip for explosion animation
         for (int i = 1; i <= 12; i++) {
-            imgLocStr.add("slash (" + i + ").png");
+            imgLocStr.add("thanos/slash (" + i + ").png");
         }
-        animation = buildImageStrip(imgLocStr, defLocStr);
+        animation_thanos = buildImageStrip(imgLocStr, defLocStr);
 //        System.out.println(standing.toString());
         imgLocStr.clear();
     }

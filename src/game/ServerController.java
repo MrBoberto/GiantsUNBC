@@ -150,7 +150,7 @@ public class ServerController extends Controller {
                     Player.CLIENT_PLAYER,
                     packet.getDamage()
             );
-            clientWeaponAudio.setFile(-1);
+            clientWeaponAudio.setFile(-2);
             clientWeaponAudio.play();
 
         } else if (object instanceof ClientSFXPacket packet) {
