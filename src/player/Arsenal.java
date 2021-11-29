@@ -188,7 +188,9 @@ public class Arsenal extends GameObject {
             return weaponTextures[AssaultRifle.SERIAL +1];
         }else if (weapon instanceof RocketLauncher){
             return weaponTextures[RocketLauncher.SERIAL +1];
-        } else {
+        }else if (weapon instanceof LightningSword){
+            return weaponTextures[LightningSword.SERIAL +1];
+        }  else {
             return weaponTextures[0];
         }
     }
