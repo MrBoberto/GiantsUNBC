@@ -7,6 +7,7 @@ import power_ups.*;
 import utilities.BufferedImageLoader;
 import weapons.guns.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -155,7 +156,8 @@ public class Arsenal extends GameObject {
     }
 
     private void loadGunTextures() {
-        weaponTextures = new BufferedImage[Objects.requireNonNull(new File("src/resources/GUI/arsenal_slot").list()).length];
+        //weaponTextures = new BufferedImage[Objects.requireNonNull(new File("src/resources/GUI/arsenal_slot").list()).length];
+        weaponTextures = new BufferedImage[5];
         for (int i = 0; i < weaponTextures.length; i++) {
             weaponTextures[i] = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal (" + (i-1) + ").png");
         }
