@@ -64,7 +64,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
     //Global InventoryItems variables
     protected static int currentInventoryItemCooldown;
-    public static final int COOLDOWN_BETWEEN_INVENTORY_ITEMS = 1 * 60; //in game ticks. 3 seconds before a new inventory item can appear.
+    public static final int COOLDOWN_BETWEEN_INVENTORY_ITEMS = 5 * 60; //in game ticks. 3 seconds before a new inventory item can appear.
 
     //Players spawn points
     public static int thisX;
