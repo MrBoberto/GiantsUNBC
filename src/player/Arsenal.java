@@ -15,8 +15,8 @@ public class Arsenal extends GameObject {
     // Default selected weapon(s) on startup
     private Weapon primary;
     private Weapon secondary;
-    private Player playerIBelongTo;
-    private ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+    private final Player playerIBelongTo;
+    private final ArrayList<Weapon> weapons = new ArrayList<Weapon>();
 
     //Textures
     BufferedImage shadow;
@@ -25,7 +25,7 @@ public class Arsenal extends GameObject {
     BufferedImage[] weaponTextures;
 
     //PowerUps
-    private PowerUp[] cosmeticPowerUps;
+    private final PowerUp[] cosmeticPowerUps;
     private static final int HIDDEN_POS = -50;
 
     public Arsenal(double x, double y, Player playerIBelongTo) {
@@ -103,10 +103,42 @@ public class Arsenal extends GameObject {
 
             } else {
             int offset = 5;
-            g2d.drawImage(shadow, (int) x - offset, (int) y+15, shadow.getWidth(), shadow.getHeight(), World.controller);
+
+            //Inventory slots
+            g2d.drawImage(shadow, (int) 0, (int) y+15, shadow.getWidth(), shadow.getHeight(), World.controller);
             g2d.drawImage(inventorySlots, (int) x - offset, (int) y, inventorySlots.getWidth(), inventorySlots.getHeight(), World.controller);
+
+            //Player image
             g2d.setComposite(AlphaComposite.SrcOver.derive(0.75f));
             g2d.drawImage(profile, (int) x - offset+ inventorySlots.getWidth() - 100, (int) y, inventorySlots.getHeight(),inventorySlots.getHeight(), World.controller);
+
+            //Primary && secondary
+            if(playerIBelongTo.getSelectedWeapon() == Player.PRIMARY_WEAPON) {
+                g2d.drawImage(getWeaponTexture(primary), (int) x + 1095, (int) y + 20, 65, 65, World.controller);
+                g2d.drawImage(getWeaponTexture(secondary), (int) x + 1035, (int) y + 46, 46, 46, World.controller);
+            } else {
+                g2d.drawImage(getWeaponTexture(secondary), (int) x + 1095, (int) y + 20, 65, 65, World.controller);
+                g2d.drawImage(getWeaponTexture(primary), (int) x + 1035, (int) y + 46, 46, 46, World.controller);
+            }
+
+            //Rest of inventory
+            for (int i = 0; i < weapons.size(); i++) {
+                g2d.drawImage(getWeaponTexture(weapons.get(i)), (int) x + 975 - i * 52, (int) y + 35, 55, 55, World.controller);
+            }
+
+            //Powerups
+            for(PowerUp powerUp: cosmeticPowerUps){
+                powerUp.render(g2d);
+            }
+            for (int i = 0; i < playerIBelongTo.getPowerUps().length; i++) {
+                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setX(x + 253 + i * 25);
+                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setY(y);
+            }
+
+            for(PowerUp powerUp: getUnusedPowerUps()){
+                powerUp.setX(HIDDEN_POS);
+                powerUp.setY(HIDDEN_POS);
+            }
         }
     }
 
@@ -170,7 +202,7 @@ public class Arsenal extends GameObject {
 
 
         } else {
-            shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_shadow_gui_right_corner.png");
+            shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_shadow_gui_left_corner.png");
             inventorySlots = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/inventory_slots_right.png");
             profile = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_red.png");
         }

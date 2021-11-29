@@ -10,6 +10,7 @@ import weapons.aoe.Explosion;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Arrays;
 
 public class OutputConnection implements Runnable {
@@ -87,7 +88,11 @@ public class OutputConnection implements Runnable {
             outputStream.reset();
             outputStream.writeObject(object);
             outputStream.flush();
-        } catch (IOException e) {
+        } catch (SocketException e){
+            World.controller.getGameWindow().frame.dispose();
+            running = false;
+            new MainMenu();
+        }catch (IOException e) {
             e.printStackTrace();
         }
     }

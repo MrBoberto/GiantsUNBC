@@ -33,6 +33,11 @@ public class MainMenu {
     public MainMenu() {
         mainMenu = new JFrame("THE BOYZ Launcher");
 
+        if(World.controller !=null){
+            World.controller.close();
+            World.controller = null;
+        }
+
         Image img;
         try {
             img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/character_closeups/character_closeup_blue.png")));
@@ -312,13 +317,13 @@ public class MainMenu {
             mainMenu.dispose();
             if(gameType == SERVER){
                 try {
-                    new World(1);
+                    World.world(1);
                 } catch (UnknownHostException ex) {
                     ex.printStackTrace();
                 }
             } else {
                 try {
-                    new World(3);
+                    World.world(3);
                 } catch (UnknownHostException ex) {
                     ex.printStackTrace();
                 }
@@ -522,7 +527,7 @@ public class MainMenu {
             mainMenu.dispose();
 
             try {
-                new World(2);
+                World.world(2);
             } catch (UnknownHostException ex) {
                 ex.printStackTrace();
             }

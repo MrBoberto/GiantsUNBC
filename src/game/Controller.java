@@ -30,9 +30,9 @@ public abstract class Controller extends Canvas implements Runnable {
     public static final double FRICTION = 0.5; // Friction acting on objects
 
     //Mouse controllers
-    public static boolean mouseInside = false;
-    public static boolean isWon = false;
-    public boolean hasPauseMenu = false;
+    public static boolean mouseInside;
+    public static boolean isWon;
+    public boolean hasPauseMenu;
     public PauseMenu pauseMenu;
 
     //Multiplayer
@@ -40,36 +40,36 @@ public abstract class Controller extends Canvas implements Runnable {
     protected OutputConnection outputConnection;
 
     //Game loop
-    protected boolean isRunning = false;
+    protected boolean isRunning;
     private Thread thread;
 
     //All GameObjects
-    public static List<Bullet> movingAmmo = Collections.synchronizedList(new ArrayList<>());
-    public static List<Player> players = Collections.synchronizedList(new ArrayList<>());
-    public static List<Block> blocks = Collections.synchronizedList(new ArrayList<>());
-    public static List<GameObject> eyeCandy = Collections.synchronizedList(new ArrayList<>());
-    public static List<Explosion> explosions = Collections.synchronizedList(new ArrayList<>());
-    public static List<Slash> slashes = Collections.synchronizedList(new ArrayList<>());
-    public static List<PowerUp> powerUps = Collections.synchronizedList(new ArrayList<>());
-    public static List<InventoryItem> inventoryItems = Collections.synchronizedList(new ArrayList<>());
-    public static List<Arsenal> arsenals = Collections.synchronizedList(new ArrayList<>());
+    public static List<Bullet> movingAmmo ;
+    public static List<Player> players ;
+    public static List<Block> blocks ;
+    public static List<GameObject> eyeCandy;
+    public static List<Explosion> explosions;
+    public static List<Slash> slashes ;
+    public static List<PowerUp> powerUps ;
+    public static List<InventoryItem> inventoryItems ;
+    public static List<Arsenal> arsenals;
     public static MainPlayer thisPlayer;
     public static OtherPlayer otherPlayer;
     public static GameWindow gameWindow;
 
     //Global PowerUps variables
-    protected static int currentPowerUpCooldown = 0;
+    protected static int currentPowerUpCooldown;
     public static final int COOLDOWN_BETWEEN_POWER_UPS = 2 * 60; //in game ticks. 2 seconds before a new power up can appear.
 
     //Global InventoryItems variables
-    protected static int currentInventoryItemCooldown = 0;
+    protected static int currentInventoryItemCooldown;
     public static final int COOLDOWN_BETWEEN_INVENTORY_ITEMS = 3 * 60; //in game ticks. 3 seconds before a new inventory item can appear.
 
     //Players spawn points
-    public static int thisX = 0;
-    public static int thisY = 0;
-    public static int otherX = 0;
-    public static int otherY = 0;
+    public static int thisX;
+    public static int thisY;
+    public static int otherX;
+    public static int otherY;
 
     //Music
     AudioPlayer soundtrack;
@@ -80,6 +80,35 @@ public abstract class Controller extends Canvas implements Runnable {
     public static final int GRID_SIZE = 58;
 
     protected Controller() {
+
+        //Resetting values:
+        //////////////////////
+        movingAmmo = Collections.synchronizedList(new ArrayList<>());
+        players = Collections.synchronizedList(new ArrayList<>());
+        blocks = Collections.synchronizedList(new ArrayList<>());
+         eyeCandy = Collections.synchronizedList(new ArrayList<>());
+         explosions = Collections.synchronizedList(new ArrayList<>());
+         slashes = Collections.synchronizedList(new ArrayList<>());
+        powerUps = Collections.synchronizedList(new ArrayList<>());
+        inventoryItems = Collections.synchronizedList(new ArrayList<>());
+         arsenals = Collections.synchronizedList(new ArrayList<>());
+
+        isRunning = false;
+
+     mouseInside = false;
+       isWon = false;
+        hasPauseMenu = false;
+
+       currentPowerUpCooldown = 0;
+        currentInventoryItemCooldown = 0;
+
+        //Players spawn points
+         thisX = 0;
+         thisY = 0;
+      otherX = 0;
+      otherY = 0;
+        //////////////////////////////////
+
         gameWindow = new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
         this.addKeyListener(new KeyInput(this));
         this.addMouseListener(new MouseInput(this));
@@ -91,6 +120,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
         // For focus of key inputs after component switch
         setFocusable(true);
+
     }
 
     public void start(){
@@ -126,7 +156,6 @@ public abstract class Controller extends Canvas implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//TODO ADD POWER UPS && Items HERE
         mouseInside = false;
         isWon = false;
         hasPauseMenu = false;
@@ -144,6 +173,8 @@ public abstract class Controller extends Canvas implements Runnable {
         eyeCandy.clear();
 
         //All GameObjects
+        thisPlayer = null;
+        otherPlayer = null;
         movingAmmo = Collections.synchronizedList(new ArrayList<>());
         players = Collections.synchronizedList(new ArrayList<>());
         blocks = Collections.synchronizedList(new ArrayList<>());
@@ -153,8 +184,6 @@ public abstract class Controller extends Canvas implements Runnable {
         powerUps = Collections.synchronizedList(new ArrayList<>());
         inventoryItems = Collections.synchronizedList(new ArrayList<>());
         arsenals = Collections.synchronizedList(new ArrayList<>());
-        thisPlayer = null;
-        otherPlayer = null;
 
         //Players spawn points
         thisX = 0;
@@ -293,7 +322,7 @@ public abstract class Controller extends Canvas implements Runnable {
      * Graphics tick. Happens a whole bunch of times per second.
      */
     public void render(){
-        if (isWon || hasPauseMenu) {
+        if (isWon || hasPauseMenu || !isRunning) {
             return;
         }
 
@@ -423,6 +452,7 @@ public abstract class Controller extends Canvas implements Runnable {
         Font font = new Font("Arial", Font.BOLD, 25);
         g2D.setFont(font);
         FontMetrics stringSize = g2D.getFontMetrics(font);
+        isRunning = false;
         gameWindow.frame.dispose();
         GameOver gameOver = new GameOver(winner,HEIGHT,g2D,players, WIDTH,stringSize);
         //gameOver.printGame(winner,HEIGHT,g2D,players, WIDTH,stringSize);
