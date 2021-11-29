@@ -39,7 +39,7 @@ public class Main {
                 while(Addresses.hasMoreElements())
                 {
                     InetAddress Address = Addresses.nextElement();
-                    if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1")&&!firstAddress)
+                    if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1")&&!firstAddress&&!firstAddress&&!Address.getHostAddress().contains("192.168.56.1"))
                     {
                             System.out.println("Your ip is:"+Address.getHostAddress());
                             firstAddress = true;
