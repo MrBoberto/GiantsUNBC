@@ -157,7 +157,7 @@ public class Arsenal extends GameObject {
 
     private void loadGunTextures() {
         //weaponTextures = new BufferedImage[Objects.requireNonNull(new File("src/resources/GUI/arsenal_slot").list()).length];
-        weaponTextures = new BufferedImage[5];
+        weaponTextures = new BufferedImage[6];
         for (int i = 0; i < weaponTextures.length; i++) {
             weaponTextures[i] = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal (" + (i-1) + ").png");
         }

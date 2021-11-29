@@ -27,7 +27,9 @@ public class SFXPlayer {
         } else if (fileInt == 3) {
             fileLocation = "/resources/SFX/Assault Rifle.wav";
         } else if (fileInt == 4) {
-            fileLocation = "/resources/SFX/Pistol.wav";
+            fileLocation = "/resources/SFX/Rocket Launcher.wav";
+        } else if (fileInt == 5) {
+            fileLocation = "/resources/SFX/Slash.wav";
         } else if (fileInt == -1) {
             fileLocation = "/resources/SFX/Explosion1.wav";
         } else {

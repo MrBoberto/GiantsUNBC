@@ -186,7 +186,7 @@ public class ClientController extends Controller {
                     packet.getDamage()
             );
             otherPlayer.setSwordLeft(!packet.isLeft());
-            serverWeaponAudio.setFile(-2);
+            serverWeaponAudio.setFile(5);
             serverWeaponAudio.play();
 
         } else if (object instanceof ServerSFXPacket packet) {
