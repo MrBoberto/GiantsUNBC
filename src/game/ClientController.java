@@ -181,6 +181,7 @@ public class ClientController extends Controller {
                     packet.getX(),
                     packet.getY(),
                     packet.getAngle(),
+                    packet.isLeft(),
                     Player.CLIENT_PLAYER,
                     packet.getDamage()
             );

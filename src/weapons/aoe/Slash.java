@@ -22,9 +22,12 @@ public class Slash extends GameObject implements Serializable {
     public static final int DAMAGE = 100;
     Rectangle boundRect;
     protected int playerIBelongToNumber;
+    public final boolean isLeft;
 
-    public Slash(double x, double y, double angle, int playerIBelongToNumber, int damage) {
+    public Slash(double x, double y, double angle, boolean isLeft, int playerIBelongToNumber, int damage) {
         super(x, y);
+
+        this.isLeft = isLeft;
 
         loadImage();
 
@@ -46,7 +49,12 @@ public class Slash extends GameObject implements Serializable {
      */
     protected void loadImage() {
         if (age == 0) {
-            currentFrame = animation.getHead();
+            if (isLeft) {
+                currentFrame = animation.getHead();
+            } else {
+                currentFrame = animation.getHead().getNext().getNext().getNext();
+            }
+
         } else {
             if (currentFrame.getNext() != animation.getHead()) {
                 currentFrame = animation.getNext(currentFrame);
@@ -108,11 +116,11 @@ public class Slash extends GameObject implements Serializable {
         String defLocStr;
 
         // Saves amount of text to be used
-        defLocStr = "/resources/VFX/explosion/";
+        defLocStr = "/resources/VFX/slash/slash_blue/";
 
         // Builds image strip for explosion animation
-        for (int i = 1; i <= 29; i++) {
-            imgLocStr.add("explosion (" + i + ").png");
+        for (int i = 1; i <= 6; i++) {
+            imgLocStr.add("slash (" + i + ").png");
         }
         animation = buildImageStrip(imgLocStr, defLocStr);
 //        System.out.println(standing.toString());

@@ -61,6 +61,7 @@ public class SingleController extends Controller {
     @Override
     public void close() {
         try {
+            if (World.controller instanceof SingleController) return;
             inputConnection.close();
             outputConnection.close();
         } catch (IOException e) {

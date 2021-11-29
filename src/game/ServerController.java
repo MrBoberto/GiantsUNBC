@@ -146,6 +146,7 @@ public class ServerController extends Controller {
                     packet.getX(),
                     packet.getY(),
                     packet.getAngle(),
+                    packet.isLeft(),
                     Player.CLIENT_PLAYER,
                     packet.getDamage()
             );

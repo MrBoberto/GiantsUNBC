@@ -22,6 +22,7 @@ public class LightningSword implements Weapon {
     public static final int SERIAL = 005;
     public static int DAMAGE = 100;
     public static int HALF_LENGTH = 60;         // The length of half of one side
+    public boolean isLeft = true;
     public SFXPlayer audio;
 
     public LightningSword(Player playerIBelongTo) {
@@ -94,21 +95,26 @@ public class LightningSword implements Weapon {
         if (World.controller instanceof ServerController) {
             World.controller.getOutputConnection().sendPacket(new ServerSFXPacket(SERIAL));
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
-            new Slash(x, y, angle, Player.SERVER_PLAYER, DAMAGE);
+            new Slash(x, y, angle, isLeft, Player.SERVER_PLAYER, DAMAGE);
         } else if (World.controller instanceof SingleController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             if (playerIBelongTo.getPlayerNumber() == 0) {
-                new Slash(x, y, angle, Player.SERVER_PLAYER, DAMAGE);
+                new Slash(x, y, angle, isLeft, Player.SERVER_PLAYER, DAMAGE);
             } else {
-                new Slash(x, y, angle, Player.CLIENT_PLAYER, DAMAGE);
+                new Slash(x, y, angle, isLeft, Player.CLIENT_PLAYER, DAMAGE);
             }
         } else {
             World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(SERIAL));
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 World.controller.getOutputConnection().sendPacket(
-                        new ClientSlashPacket(x, y, angle, DAMAGE)
+                        new ClientSlashPacket(x, y, angle, isLeft, DAMAGE)
                 );
             }
+        }
+        if (isLeft) {
+            isLeft = false;
+        } else {
+            isLeft = true;
         }
     }
 
