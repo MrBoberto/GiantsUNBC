@@ -221,6 +221,10 @@ public class Arsenal extends GameObject {
             inventorySlots = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/inventory_slots_left.png");
             profile = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_blue.png");
 
+        } else if(playerIBelongTo instanceof AIPlayer) {
+            shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_shadow_gui_left_corner.png");
+            inventorySlots = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/inventory_slots_right.png");
+            profile = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_thanos.png");
 
         } else {
             shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_shadow_gui_left_corner.png");
@@ -431,7 +435,7 @@ public class Arsenal extends GameObject {
         // Saves amount of text to be used
         if (playerIBelongTo.playerNumber == 0) {
             defLocStr = "/resources/GUI/sword/sword_blue (";
-        } else if (World.controller instanceof SingleController) {
+        } else if (playerIBelongTo instanceof AIPlayer) {
             defLocStr = "/resources/GUI/sword/sword_thanos (";
         } else {
             defLocStr = "/resources/GUI/sword/sword_red (";
