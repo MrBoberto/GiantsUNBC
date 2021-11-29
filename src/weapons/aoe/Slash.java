@@ -177,7 +177,7 @@ public class Slash extends GameObject implements Serializable {
         String imageFileSubstring = "";
         for (int i = 0; i < imgLocStr.size(); i++) {
             try {
-                images.add(ImageIO.read(Explosion.class.getResource(defaultFileLocation + "" + imgLocStr.get(i))));
+                images.add(ImageIO.read(Slash.class.getResource(defaultFileLocation + "" + imgLocStr.get(i))));
             } catch (IOException exc) {
                 System.out.println("Could not find image file: " + exc.getMessage());
             }

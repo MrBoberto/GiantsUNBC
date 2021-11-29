@@ -117,9 +117,12 @@ public abstract class Controller extends Canvas implements Runnable {
         //Load background
         background = BufferedImageLoader.loadImage("/resources/Textures/BG/wood_background.png");
 
+        // Load static ImageStrips
         Explosion.loadImageStrips();
         Slash.loadImageStrips();
+        // World.controller does not give correct value
         LightningSwordItem.loadImageStrips(this);
+        PauseMenu.loadImageStrips();
 
         // For focus of key inputs after component switch
         setFocusable(true);
@@ -351,7 +354,14 @@ public abstract class Controller extends Canvas implements Runnable {
      * Graphics tick. Happens a whole bunch of times per second.
      */
     public void render(){
-        if (isWon || hasPauseMenu || !isRunning) {
+
+        if (hasPauseMenu) {
+            // Play pause menu animation
+            gameWindow.getFrame().repaint();
+            return;
+        }
+
+        if (isWon || !isRunning) {
             return;
         }
 

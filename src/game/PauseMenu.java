@@ -1,16 +1,23 @@
 package game;
 
+import animation.ImageFrame;
+import animation.ImageStrip;
 import audio.AudioPlayer;
 import audio.SFXPlayer;
 import utilities.BufferedImageLoader;
+import weapons.aoe.Slash;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import static weapons.aoe.Slash.buildImageStrip;
 
 public class PauseMenu implements KeyListener {
 
@@ -19,12 +26,26 @@ public class PauseMenu implements KeyListener {
     Controller controller;
     KeyInput keyInput;
     static SFXPlayer sfxPlayer;
+    static ImageStrip blueBackground;
+    static ImageStrip redBackground;
+    static ImageStrip thisBackground;
+    static ImageFrame currentBackground;
+
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
 
     public PauseMenu(JFrame frame, Controller controller) {
         this.frame = frame;
         this.controller = controller;
+
+        if (controller instanceof ClientController) {
+            thisBackground = redBackground;
+        } else {
+            thisBackground = blueBackground;
+        }
+
+        currentBackground = thisBackground.getHead();
+
         BufferedImage backgroundImage;
         backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
         sfxPlayer = new SFXPlayer();
@@ -36,7 +57,8 @@ public class PauseMenu implements KeyListener {
                 super.paintComponent(g);
 
                 Graphics2D g2 = (Graphics2D)g;
-                g2.drawImage(backgroundImage,0,0, frame.getWidth(), frame.getHeight(),null);
+                g2.drawImage(currentBackground.getImage(),0,0, frame.getWidth(), frame.getHeight(),null);
+                currentBackground = currentBackground.getNext();
             }
         };
 
@@ -525,5 +547,57 @@ public class PauseMenu implements KeyListener {
             }
 
         }
+    }
+
+    public static void loadImageStrips() {
+        ArrayList<String> imgLocStr = new ArrayList<>();
+        String defLocStr;
+
+        // Saves amount of text to be used
+        defLocStr = "/resources/GUI/pause_menu/pause_back (";
+
+        // Builds image strip for standing facing right
+        for (int i = 1; i <= 4; i++) {
+            imgLocStr.add(i + ").png");
+        }
+        blueBackground = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(standing.toString());
+        imgLocStr.clear();
+
+        // Builds image strip for standing facing right
+        for (int i = 5; i <= 8; i++) {
+            imgLocStr.add(i + ").png");
+        }
+        redBackground = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(standing.toString());
+        imgLocStr.clear();
+    }
+
+    /**
+     * Builds the animation.ImageStrip for a specific animation
+     *
+     * @param imgLocStr           All file names to be loaded into the animation.ImageStrip for animation
+     * @param defaultFileLocation The file path of the images
+     * @return An animation.ImageStrip for animation
+     */
+    public static ImageStrip buildImageStrip(ArrayList<String> imgLocStr, String defaultFileLocation) {
+        // The ArrayList of image files to be put into the animation.ImageStrip
+        ArrayList<BufferedImage> images = new ArrayList<>();
+        // Used to track images that are loaded
+        String imageFileNames = "";
+        String imageFileSubstring = "";
+        for (int i = 0; i < imgLocStr.size(); i++) {
+            try {
+                images.add(ImageIO.read(PauseMenu.class.getResource(defaultFileLocation + "" + imgLocStr.get(i))));
+            } catch (IOException exc) {
+                System.out.println("Could not find image file: " + exc.getMessage());
+            }
+            imageFileNames += defaultFileLocation + imgLocStr.get(i) + ", ";
+        }
+        // Used for the toString() method of this animation.ImageStrip
+        for (int i = 0; i < imageFileNames.length() - 2; i++) {
+            imageFileSubstring += imageFileNames.charAt(i);
+        }
+        return new ImageStrip(images, imageFileSubstring);
     }
 }
