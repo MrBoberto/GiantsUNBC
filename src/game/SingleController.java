@@ -161,7 +161,7 @@ public class SingleController extends Controller {
                     powerUps.add(new SpeedUp(x, y, 1.5F));
                 }
                 case 3->{
-                    powerUps.add(new SpeedDown(x, y, 0.75F));
+                    powerUps.add(new SpeedDown(x, y, 0.25F));
                 }
                 case 4->{
                     powerUps.add(new Ricochet(x, y, 2));

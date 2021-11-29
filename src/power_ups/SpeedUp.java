@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 
 public class SpeedUp extends PowerUp{
 
-    public static final int EFFECT_TIME = 480; // in game ticks (= 8 seconds)
+    public static final int EFFECT_TIME = 10 * 60; // in ticks
     private final float multiplier;
     private final BufferedImage secondary_texture;
 
