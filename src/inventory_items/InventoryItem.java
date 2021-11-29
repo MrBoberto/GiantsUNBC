@@ -10,7 +10,7 @@ public abstract class InventoryItem extends GameObject {
     public static final int TIME_BEFORE_DESPAWN = 10 * 60; // = 10 seconds
     protected int lifetime = 0; //in game ticks
     public static final Dimension INVENTORY_ITEM_DIMENSIONS = new Dimension(Controller.GRID_SIZE*3/4, Controller.GRID_SIZE*3/4);
-    public enum InventoryItemType{Shotgun,SniperRifle,Pistol,AssaultRifle,RocketLauncher}
+    public enum InventoryItemType{Shotgun,SniperRifle,Pistol,AssaultRifle,RocketLauncher,LightningSword}
 
     protected InventoryItem(double x, double y) {
         super(x, y);

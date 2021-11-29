@@ -331,7 +331,7 @@ public abstract class Player extends GameObject {
 //        System.out.println(jumping.toString());
         imgLocStr.clear();
 
-        for (int i = 0; i <= 4; i++) {
+        for (int i = 0; i <= 5; i++) {
             imgLocStr.add("weapon (" + i + ").png");
         }
         weaponTextures = new ArrayList<>();

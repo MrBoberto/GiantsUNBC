@@ -56,30 +56,39 @@ public class LightningSword implements Weapon {
                 0
         );
 
+        System.out.println(Math.toDegrees(angle));
+
         if (angle <= -3 * Math.PI / 4 && angle > -Math.PI) {
             y = playerIBelongTo.getY() - HALF_LENGTH;
             x = playerIBelongTo.getX() - HALF_LENGTH * Math.tan(angle);
-        } else if (angle <= -Math.PI / 2) {
+        }
+        else if (angle <= -Math.PI / 2) {
             x = playerIBelongTo.getX() - HALF_LENGTH;
             y = playerIBelongTo.getY() - HALF_LENGTH * Math.tan(Math.PI / 2 - angle);
-        } else if (angle <= -Math.PI / 4) {
+        }
+        else if (angle <= -Math.PI / 4) {
             x = playerIBelongTo.getX() - HALF_LENGTH;
-            y = playerIBelongTo.getY() + HALF_LENGTH * Math.tan(angle);
-        } else if (angle <= 0) {
-            y = playerIBelongTo.getY() + HALF_LENGTH;
-            x = playerIBelongTo.getX() - HALF_LENGTH * Math.tan(Math.PI / 2 - angle);
-        } else if (angle <= Math.PI / 4) {
+            y = playerIBelongTo.getY() + HALF_LENGTH * Math.tan(angle + Math.PI / 2);
+        }
+        else if (angle <= 0) {
             y = playerIBelongTo.getY() + HALF_LENGTH;
             x = playerIBelongTo.getX() + HALF_LENGTH * Math.tan(angle);
-        } else if (angle <= Math.PI / 2) {
+        }
+        else if (angle <= Math.PI / 4) {
+            y = playerIBelongTo.getY() + HALF_LENGTH;
+            x = playerIBelongTo.getX() + HALF_LENGTH * Math.tan(angle);
+        }
+        else if (angle <= Math.PI / 2) {
             x = playerIBelongTo.getX() + HALF_LENGTH;
-            y = playerIBelongTo.getY() - HALF_LENGTH * Math.tan(angle);
-        } else if (angle <= 3 * Math.PI / 4) {
+            y = playerIBelongTo.getY() + HALF_LENGTH * Math.tan(Math.PI / 2 - angle);
+        }
+        else if (angle <= 3 * Math.PI / 4) {
             x = playerIBelongTo.getX() + HALF_LENGTH;
-            y = playerIBelongTo.getY() + HALF_LENGTH * Math.tan(angle);
-        } else {
+            y = playerIBelongTo.getY() - HALF_LENGTH * Math.tan(angle - Math.PI / 2);
+        }
+        else {
             y = playerIBelongTo.getY() - HALF_LENGTH;
-            x = playerIBelongTo.getX() + HALF_LENGTH * Math.tan(angle);
+            x = playerIBelongTo.getX() + HALF_LENGTH * Math.tan(-angle);
         }
 
         if (World.controller instanceof ServerController) {

@@ -280,6 +280,12 @@ public class ClientController extends Controller {
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
+                            case 5:
+                                if (!Controller.otherPlayer.getArsenal().hasWeapon(5)) {
+                                    Controller.otherPlayer.getArsenal().add(new LightningSword(Controller.otherPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
+                                }
+                                break;
                         }
                         break;
                     case Player.CLIENT_PLAYER:
@@ -314,6 +320,12 @@ public class ClientController extends Controller {
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
+                            case 5:
+                                if (!Controller.thisPlayer.getArsenal().hasWeapon(5)) {
+                                    Controller.thisPlayer.getArsenal().add(new LightningSword(Controller.thisPlayer));
+                                    inventoryItems.remove(packet.getIndexToRemove());
+                                }
+                                break;
                         }
                         break;
                 }
@@ -326,6 +338,7 @@ public class ClientController extends Controller {
                 case Pistol -> inventoryItems.add(new PistolItem(packet.getX(),packet.getY()));
                 case AssaultRifle -> inventoryItems.add(new AssaultRifleItem(packet.getX(),packet.getY()));
                 case RocketLauncher -> inventoryItems.add(new RocketLauncherItem(packet.getX(),packet.getY()));
+                case LightningSword -> inventoryItems.add(new LightningSwordItem(packet.getX(),packet.getY()));
             }
         }
         else if (object instanceof WinnerPacket packet) {

@@ -477,7 +477,7 @@ public class MainPlayer extends Player {
 
         ArrayList<String> imgLocStr = new ArrayList<>();
 
-        for (int i = -1; i <= 4; i++) {
+        for (int i = -1; i <= 5; i++) {
             imgLocStr.add("arsenal (" + i + ").png");
         }
         slotTextures = new ArrayList<>();

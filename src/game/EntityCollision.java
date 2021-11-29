@@ -51,10 +51,16 @@ public class EntityCollision {
 
         try{
             if (slash.getBounds().intersects(Controller.thisPlayer.getBounds())) {
-                return Player.SERVER_PLAYER;
+                if (slash.getPlayerIBelongToNumber() != Controller.thisPlayer.getPlayerNumber()) {
+                    System.out.println("Hit thisPlayer");
+                    return Player.SERVER_PLAYER;
+                }
             }
             if (slash.getBounds().intersects(Controller.otherPlayer.getBounds())) {
-                return Player.CLIENT_PLAYER;
+                if (slash.getPlayerIBelongToNumber() != Controller.otherPlayer.getPlayerNumber()) {
+                    System.out.println("Hit otherPlayer");
+                    return Player.CLIENT_PLAYER;
+                }
             }
 
         } catch (NullPointerException e){

@@ -203,6 +203,17 @@ public class ServerController extends Controller {
             }
         }
 
+        for (int j = 0; j < slashes.size(); j++) {
+            if (slashes.get(j) != null) {
+                Slash slash = slashes.get(j);
+                if (slash.hasDied()) {
+                    slashes.remove(slash);
+                } else {
+                    checkVictims(slash);
+                }
+            }
+        }
+
         for (int i = 0; i < powerUps.size(); i++) {
             if(powerUps.get(i) != null){
                 checkPowerUpPickups(powerUps.get(i));
@@ -296,6 +307,10 @@ public class ServerController extends Controller {
                 case 4->{
                     inventoryItems.add(new RocketLauncherItem(x, y));
                     outputConnection.sendPacket(new CreateInventoryItemPacket(x, y, InventoryItem.InventoryItemType.RocketLauncher));
+                }
+                case 5-> {
+                    inventoryItems.add(new LightningSwordItem(x, y));
+                    outputConnection.sendPacket(new CreateInventoryItemPacket(x, y, InventoryItem.InventoryItemType.LightningSword));
                 }
             }
 
@@ -497,6 +512,55 @@ public class ServerController extends Controller {
                         }
                     }
                     System.out.println(thisPlayer.getPlayerName() + " was memed by " + killer.getPlayerName());
+                }
+            }
+        }
+    }
+
+    private void checkVictims(Slash slash) {
+        // Player who was hit (-1 if no one was hit)
+        int victimNumber = EntityCollision.getSlashVictim(slash);
+
+        // Player
+        Player killer;
+        Player victim;
+        if (slash.getPlayerIBelongToNumber() == Player.SERVER_PLAYER) {
+            killer = thisPlayer;
+            victim = otherPlayer;
+
+        } else {
+            killer = otherPlayer;
+            victim = thisPlayer;
+        }
+
+        if (victimNumber != -1 && victimNumber != slash.getPlayerIBelongToNumber() && !victim.isInvincible()) {
+            //        if (bullet.getSERIAL() != 002) {
+
+            //       }
+
+            double damage = (-1 * Slash.DAMAGE * killer.getDamageMultiplier());
+            System.out.println(damage);
+            killer.incrementBulletHitCount();
+            victim.modifyHealth(damage);
+            victim.resetHealTimer();
+            killer.addTDO(damage);
+
+            if (victim.getHealth() == 0) {
+
+                //Handle death markers on the floor
+                new DeathMark(victim.getX(), victim.getY(), victimNumber);
+                outputConnection.sendPacket(new EyeCandyPacket(eyeCandy.toArray(new GameObject[0])));
+
+                victim.incrementDeathCount();
+                victim.revive();
+                if(victim == otherPlayer){
+                    outputConnection.sendPacket(new RespawnPacket());
+                }
+
+                killer.incrementKillCount();
+                // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
+                if(victim.getDeathCount() >= 10){
+                    declareWinner(killer);
                 }
             }
         }

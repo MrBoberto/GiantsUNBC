@@ -585,7 +585,7 @@ public class AIPlayer extends OtherPlayer {
 //        System.out.println(dashing.toString());
         imgLocStr.clear();
 
-        for (int i = 0; i <= 4; i++) {
+        for (int i = 0; i <= 5; i++) {
             imgLocStr.add("weapon (" + i + ").png");
         }
         weaponTextures = new ArrayList<>();
