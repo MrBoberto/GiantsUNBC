@@ -206,6 +206,21 @@ public class PauseMenu implements KeyListener {
             settingsMenu.add(createNewVoidPanel(), c);
         }
 
+        PauseMenu.PauseMenuButton backButton = new PauseMenu.PauseMenuButton(f -> {
+            pauseMenuPanel.remove(settingsMenu);
+
+            JPanel bottomPanel = buttonsMenu();
+
+            c.fill = GridBagConstraints.CENTER;
+            c.weighty = 0.2;
+            c.weightx = 1.0;
+            c.insets = new Insets(5,5,10,10);
+            pauseMenuPanel.add(bottomPanel, c);
+            pauseMenuPanel.validate();
+            pauseMenuPanel.repaint();
+        }, "Back");
+        c.gridy = 8;
+        settingsMenu.add(backButton ,c);
 
         MainMenu.MainMenuButton videoButton = new MainMenu.MainMenuButton(e -> {
 
@@ -224,7 +239,7 @@ public class PauseMenu implements KeyListener {
              */
 
         }, "Video Settings");
-        c.gridy = 7;
+        c.gridy = 9;
         settingsMenu.add(videoButton, c);
 
         MainMenu.MainMenuButton audioButton = new MainMenu.MainMenuButton(e -> {
@@ -241,24 +256,8 @@ public class PauseMenu implements KeyListener {
             pauseMenuPanel.repaint();
 
         }, "Audio Settings");
-        c.gridy = 8;
+        c.gridy = 10;
         settingsMenu.add(audioButton, c);
-
-        PauseMenu.PauseMenuButton backButton = new PauseMenu.PauseMenuButton(f -> {
-            pauseMenuPanel.remove(settingsMenu);
-
-            JPanel bottomPanel = buttonsMenu();
-
-            c.fill = GridBagConstraints.CENTER;
-            c.weighty = 0.2;
-            c.weightx = 1.0;
-            c.insets = new Insets(5,5,10,10);
-            pauseMenuPanel.add(bottomPanel, c);
-            pauseMenuPanel.validate();
-            pauseMenuPanel.repaint();
-        }, "Back");
-        c.gridy = 9;
-        settingsMenu.add(backButton ,c);
 
         return settingsMenu;
     }
@@ -280,21 +279,6 @@ public class PauseMenu implements KeyListener {
             audioMenu.add(createNewVoidPanel(), c);
         }
 
-        PauseMenu.PauseMenuSlider masterSlider = new PauseMenu.PauseMenuSlider("Master Volume", VOL_MIN, VOL_MAX);
-        c.gridy = 3;
-        audioMenu.add(masterSlider, c);
-        audioMenu.add(masterSlider.getJSlider(), c);
-
-        PauseMenu.PauseMenuSlider gameSlider = new PauseMenu.PauseMenuSlider("Game Volume", VOL_MIN, VOL_MAX);
-        c.gridy = 5;
-        audioMenu.add(gameSlider, c);
-        audioMenu.add(gameSlider.getJSlider(), c);
-
-        PauseMenu.PauseMenuSlider musicSlider = new PauseMenu.PauseMenuSlider("Music Volume", VOL_MIN, VOL_MAX);
-        c.gridy = 7;
-        audioMenu.add(musicSlider, c);
-        audioMenu.add(musicSlider.getJSlider(), c);
-
         MainMenu.MainMenuButton backButton = new MainMenu.MainMenuButton(f -> {
             pauseMenuPanel.remove(audioMenu);
             c.anchor = GridBagConstraints.CENTER;
@@ -307,8 +291,23 @@ public class PauseMenu implements KeyListener {
             pauseMenuPanel.validate();
             pauseMenuPanel.repaint();
         }, "Back");
-        c.gridy = 9;
+        c.gridy = 7;
         audioMenu.add(backButton ,c);
+
+        PauseMenu.PauseMenuSlider masterSlider = new PauseMenu.PauseMenuSlider("Master Volume", VOL_MIN, VOL_MAX);
+        c.gridy = 8;
+        audioMenu.add(masterSlider, c);
+        audioMenu.add(masterSlider.getJSlider(), c);
+
+        PauseMenu.PauseMenuSlider gameSlider = new PauseMenu.PauseMenuSlider("Game Volume", VOL_MIN, VOL_MAX);
+        c.gridy = 9;
+        audioMenu.add(gameSlider, c);
+        audioMenu.add(gameSlider.getJSlider(), c);
+
+        PauseMenu.PauseMenuSlider musicSlider = new PauseMenu.PauseMenuSlider("Music Volume", VOL_MIN, VOL_MAX);
+        c.gridy = 10;
+        audioMenu.add(musicSlider, c);
+        audioMenu.add(musicSlider.getJSlider(), c);
 
         return audioMenu;
     }
