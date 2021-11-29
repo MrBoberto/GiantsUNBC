@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 
 public class SpeedDown extends PowerUp{
 
-    public static final int EFFECT_TIME = 4 * 60;
+    public static final int EFFECT_TIME = 3 * 60; // in ticks
     private final float multiplier;
     private final BufferedImage secondary_texture;
 

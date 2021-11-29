@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 
 public class DamageDown extends PowerUp{
 
-    public static final int EFFECT_TIME = 6 * 60;
+    public static final int EFFECT_TIME = 8 * 60; // in ticks
     private final float multiplier;
     private final BufferedImage secondary_texture;
 

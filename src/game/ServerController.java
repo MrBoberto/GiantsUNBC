@@ -270,7 +270,7 @@ public class ServerController extends Controller {
                     outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.SpeedUp));
                 }
                 case 3->{
-                    powerUps.add(new SpeedDown(x, y, 0.75F));
+                    powerUps.add(new SpeedDown(x, y, 0.25F));
                     outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.SpeedDown));
                 }
                 case 4->{

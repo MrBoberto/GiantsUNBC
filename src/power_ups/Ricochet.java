@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class Ricochet extends PowerUp{
 
-    public static final int EFFECT_TIME = 60 * 14;
+    public static final int EFFECT_TIME = 60 * 14; // in ticks
     private final int bounces;
 
 
