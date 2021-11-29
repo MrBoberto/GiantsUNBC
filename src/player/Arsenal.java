@@ -45,7 +45,6 @@ public class Arsenal extends GameObject {
         loadGunTextures();
 
         // Starting weapon(s)
-        add(new LightningSword(playerIBelongTo));
         add(new Pistol(playerIBelongTo));
 
         cosmeticPowerUps = new PowerUp[PowerUp.PowerUpType.values().length];
