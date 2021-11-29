@@ -33,7 +33,6 @@ public class Arsenal extends GameObject {
         this.playerIBelongTo = playerIBelongTo;
         Controller.arsenals.add(this);
         loadGunTextures();
-        add(new LightningSword(playerIBelongTo));
         add(new Pistol(playerIBelongTo));
 
         cosmeticPowerUps = new PowerUp[PowerUp.PowerUpType.values().length];
