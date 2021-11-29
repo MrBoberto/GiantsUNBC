@@ -10,6 +10,7 @@ public final class BufferedImageLoader {
 
     public static BufferedImage loadImage(String path){
         try {
+            System.out.println(path);
             image = ImageIO.read(Objects.requireNonNull(BufferedImageLoader.class.getResource(path)));
         } catch (IOException e) {
             e.printStackTrace();

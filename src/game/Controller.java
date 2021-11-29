@@ -34,6 +34,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static boolean mouseInside;
     public static boolean isWon;
     public boolean hasPauseMenu;
+    public boolean isPauseMenuScreen = true;        // Only false in pause menu submenus
     public PauseMenu pauseMenu;
 
     //Multiplayer
@@ -356,8 +357,10 @@ public abstract class Controller extends Canvas implements Runnable {
     public void render(){
 
         if (hasPauseMenu) {
-            // Play pause menu animation
-            gameWindow.getFrame().repaint();
+            if (isPauseMenuScreen) {
+                // Play pause menu animation
+                gameWindow.getFrame().repaint();
+            }
             return;
         }
 

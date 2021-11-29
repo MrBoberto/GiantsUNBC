@@ -30,6 +30,7 @@ public class PauseMenu implements KeyListener {
     static ImageStrip redBackground;
     static ImageStrip thisBackground;
     static ImageFrame currentBackground;
+    BufferedImage backgroundImage;          // Still version
 
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
@@ -40,14 +41,24 @@ public class PauseMenu implements KeyListener {
 
         if (controller instanceof ClientController) {
             thisBackground = redBackground;
+            try {
+                backgroundImage = ImageIO.read(PauseMenu.class.getResource("/resources/GUI/pause_menu/pause_back (10).png"));
+            } catch (IOException ioException) {
+
+            }
+
         } else {
             thisBackground = blueBackground;
+            try {
+                backgroundImage = ImageIO.read(PauseMenu.class.getResource("/resources/GUI/pause_menu/pause_back (5).png"));
+            } catch (IOException ioException) {
+
+            }
         }
 
         currentBackground = thisBackground.getHead();
 
-        BufferedImage backgroundImage;
-        backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
+
         sfxPlayer = new SFXPlayer();
         sfxPlayer.setFile(-2);
 
@@ -57,8 +68,14 @@ public class PauseMenu implements KeyListener {
                 super.paintComponent(g);
 
                 Graphics2D g2 = (Graphics2D)g;
-                g2.drawImage(currentBackground.getImage(),0,0, frame.getWidth(), frame.getHeight(),null);
-                currentBackground = currentBackground.getNext();
+                if (controller.isPauseMenuScreen) {
+                    g2.drawImage(currentBackground.getImage(),0,0, frame.getWidth(), frame.getHeight(),null);
+                    currentBackground = currentBackground.getNext();
+                } else {
+                    g2.drawImage(backgroundImage,0,0, frame.getWidth(), frame.getHeight(),null);
+                }
+
+
             }
         };
 
@@ -118,6 +135,7 @@ public class PauseMenu implements KeyListener {
             c.weightx = 1.0;
             pauseMenuPanel.add(settingsMenu(), c);
             pauseMenuPanel.validate();
+            controller.isPauseMenuScreen = false;
             pauseMenuPanel.repaint();
 
         }, "Settings");
@@ -130,21 +148,6 @@ public class PauseMenu implements KeyListener {
                             "1 -> Swap with Slot 1\n2 -> Swap with Slot 2\n3 -> Swap with Slot 3\n4 -> Swap with Slot 4\n" +
                             "LEFT MOUSE BUTTON -> Shoot\nRIGHT MOUSE BUTTON -> Swap between Primary and Secondary weapon",
                     "Controls:", JOptionPane.INFORMATION_MESSAGE);
-
-
-            /*
-            pauseMenuPanel.remove(buttonsPanel);
-            c.anchor = GridBagConstraints.CENTER;
-            c.fill = GridBagConstraints.BOTH;
-            c.gridy = 0;
-            c.gridx = 0;
-            c.weighty = 1.0;
-            c.weightx = 1.0;
-            pauseMenuPanel.add(controlsMenu(), c);
-            pauseMenuPanel.validate();
-            pauseMenuPanel.repaint();
-
-             */
 
         }, "Controls");
         c.gridy = 9;
@@ -169,47 +172,6 @@ public class PauseMenu implements KeyListener {
 
         return buttonsPanel;
     }
-
-    /*
-    private JPanel controlsMenu() {
-        GridBagConstraints c = new GridBagConstraints();
-        JPanel controlsMenu = new JPanel(new GridBagLayout());
-        controlsMenu.setOpaque(false);
-        c.fill = GridBagConstraints.CENTER;
-        c.weightx = 1.0;
-        c.insets = new Insets(5,5,10,10);
-
-
-        c.weighty = 1.0/9.0;
-        c.gridx = 0;
-
-        for (int i = 0; i <= 6; i++) {
-            c.gridy = i;
-            controlsMenu.add(createNewVoidPanel(), c);
-        }
-
-
-
-        PauseMenu.PauseMenuButton backButton = new PauseMenu.PauseMenuButton(f -> {
-            pauseMenuPanel.remove(controlsMenu);
-
-            JPanel bottomPanel = buttonsMenu();
-
-            c.fill = GridBagConstraints.CENTER;
-            c.weighty = 0.2;
-            c.weightx = 1.0;
-            c.insets = new Insets(5,5,10,10);
-            pauseMenuPanel.add(bottomPanel, c);
-            pauseMenuPanel.validate();
-            pauseMenuPanel.repaint();
-        }, "Back");
-        c.gridy = 9;
-        controlsMenu.add(backButton ,c);
-
-        return controlsMenu;
-    }
-
-     */
 
     private JPanel settingsMenu() {
         GridBagConstraints c = new GridBagConstraints();
@@ -240,6 +202,7 @@ public class PauseMenu implements KeyListener {
             pauseMenuPanel.add(bottomPanel, c);
             pauseMenuPanel.validate();
             pauseMenuPanel.repaint();
+            controller.isPauseMenuScreen = true;
         }, "Back");
         c.gridy = 8;
         settingsMenu.add(backButton ,c);
@@ -565,7 +528,7 @@ public class PauseMenu implements KeyListener {
         imgLocStr.clear();
 
         // Builds image strip for standing facing right
-        for (int i = 5; i <= 8; i++) {
+        for (int i = 6; i <= 9; i++) {
             imgLocStr.add(i + ").png");
         }
         redBackground = buildImageStrip(imgLocStr, defLocStr);
