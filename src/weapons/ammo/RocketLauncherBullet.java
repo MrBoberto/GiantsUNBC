@@ -19,7 +19,6 @@ public class RocketLauncherBullet extends Bullet {
 
     public RocketLauncherBullet(int player, double aimX, double aimY, int damage) {
         super(0,0,0,player);
-        System.out.println("I AM SUMMOOOOOONED");
         ProjectileTYPE = ProjectileType.RocketLauncherBullet;
 
         //iteration++;

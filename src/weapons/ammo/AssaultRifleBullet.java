@@ -18,6 +18,11 @@ public class AssaultRifleBullet extends Bullet {
 
     public AssaultRifleBullet(int player, double aimX, double aimY, int damage) {
         super(0,0,0,player);
+
+        // If initialized to 0, sometimes bullet is deleted before constructor finishes.
+        setVelX(-1);
+        setVelY(-1);
+
         ProjectileTYPE = ProjectileType.AssaultRifleBullet;
 
         if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)

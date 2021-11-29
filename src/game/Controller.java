@@ -310,6 +310,24 @@ public abstract class Controller extends Canvas implements Runnable {
             }
         }
 
+        for (int j = 0; j < explosions.size(); j++) {
+            if (explosions.get(j) != null) {
+                Explosion explosion = explosions.get(j);
+                if (explosion.hasDied()) {
+                    explosions.remove(explosion);
+                }
+            }
+        }
+
+        for (int j = 0; j < slashes.size(); j++) {
+            if (slashes.get(j) != null) {
+                Slash slash = slashes.get(j);
+                if (slash.hasDied()) {
+                    slashes.remove(slash);
+                }
+            }
+        }
+
         if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 0 && thisPlayer.getWeaponSerial() == 003
                 && thisPlayer.getArsenal().getPrimary().getCurrentDelay() == 0) {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();

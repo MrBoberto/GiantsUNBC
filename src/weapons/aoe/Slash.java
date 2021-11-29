@@ -64,7 +64,8 @@ public class Slash extends GameObject implements Serializable {
             }
 
         } else {
-            if (currentFrame.getNext() != animation.getHead()) {
+            if (currentFrame.getNext() != animation.getHead() && currentFrame.getNext()
+                    != animation.getHead().getNext().getNext().getNext().getNext().getNext().getNext()) {
                 currentFrame = animation.getNext(currentFrame);
             }
         }
