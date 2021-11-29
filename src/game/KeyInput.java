@@ -59,6 +59,13 @@ public class KeyInput extends KeyAdapter {
                 Controller.thisPlayer.getArsenal().setSecondary(3);
             }
         }
+        if (e.getKeyCode() == KeyEvent.VK_4 || e.getKeyCode() == KeyEvent.VK_NUMPAD4) {
+            if (Controller.thisPlayer.getSelectedWeapon() == 0) {
+                Controller.thisPlayer.getArsenal().setPrimary(4);
+            } else {
+                Controller.thisPlayer.getArsenal().setSecondary(4);
+            }
+        }
 
 //                if (key == KeyEvent.VK_SHIFT) {
 //                    shiftIsHeld = true;

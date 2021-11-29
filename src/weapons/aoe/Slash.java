@@ -28,6 +28,7 @@ public class Slash extends GameObject implements Serializable {
         super(x, y);
 
         this.isLeft = isLeft;
+        this.angle = angle;
 
         loadImage();
 
@@ -94,6 +95,16 @@ public class Slash extends GameObject implements Serializable {
         AffineTransform affTra = AffineTransform.getTranslateInstance(
                 x - currentFrame.getImage().getWidth() / 2.0,
                 y - currentFrame.getImage().getHeight() / 2.0);
+
+        double tempAngle = angle + Math.PI;
+
+        if (tempAngle > Math.PI) {
+            tempAngle -= 2 * Math.PI;
+        }
+        tempAngle *= -1;
+
+        affTra.rotate(tempAngle, currentFrame.getImage().getWidth() / 2.0,
+                currentFrame.getImage().getHeight() / 2.0);
 
         g2d.drawImage(currentFrame.getImage(), affTra, World.controller);
     }
