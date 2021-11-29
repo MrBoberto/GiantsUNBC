@@ -510,8 +510,11 @@ public class AIPlayer extends OtherPlayer {
             g2d.drawImage(currentImage.getImage(), affTra, World.controller);
         }
 
-        if (weaponSerial == -1 || weaponTextures.get(weaponSerial) == null) return;
-        g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);
+        if (weaponSerial >= 0 && weaponSerial < 5) {
+            g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);
+        } else if (weaponSerial == 5) {
+            g2d.drawImage(currentSwordFrame.getImage(), affTra, World.controller);
+        }
 
         if (dialogueCount > 0) {
             g2d.setColor(Color.WHITE);
@@ -559,7 +562,7 @@ public class AIPlayer extends OtherPlayer {
     public void loadImageStrips() {
         ArrayList<String> imgLocStr = new ArrayList<>();
         String defLocStr;
-        ;
+
         // Saves amount of text to be used
         defLocStr = "/resources/Textures/PLAYER_THANOS/";
 
@@ -587,7 +590,25 @@ public class AIPlayer extends OtherPlayer {
 //        System.out.println(dashing.toString());
         imgLocStr.clear();
 
-        for (int i = 0; i <= 5; i++) {
+        defLocStr = "/resources/Textures/WEAPONS/";
+
+        // Builds image strip for jumping
+        for (int i = 1; i <= 7; i++) {
+            imgLocStr.add("sword_thanos (" + i + ").png");
+        }
+        leftwardSwordTextures = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(jumping.toString());
+        imgLocStr.clear();
+
+        // Builds image strip for jumping
+        for (int i = 8; i <= 14; i++) {
+            imgLocStr.add("sword_thanos (" + i + ").png");
+        }
+        rightwardSwordTextures = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(jumping.toString());
+        imgLocStr.clear();
+
+        for (int i = 0; i <= 4; i++) {
             imgLocStr.add("weapon (" + i + ").png");
         }
         weaponTextures = new ArrayList<>();

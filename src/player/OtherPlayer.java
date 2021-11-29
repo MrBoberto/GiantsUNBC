@@ -2,10 +2,12 @@ package player;
 
 import game.ClientController;
 import game.ServerController;
+import game.SingleController;
 import game.World;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 
 public class OtherPlayer extends Player {
     public OtherPlayer(double x, double y, int playerNumber, Color color) {
@@ -49,8 +51,11 @@ public class OtherPlayer extends Player {
             g2d.drawImage(currentImage.getImage(), affTra, World.controller);
         }
 
-        if (weaponSerial == -1 || weaponTextures.get(weaponSerial) == null) return;
-        g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);
+        if (weaponSerial >= 0 && weaponSerial < 5) {
+            g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);
+        } else if (weaponSerial == 5) {
+            g2d.drawImage(currentSwordFrame.getImage(), affTra, World.controller);
+        }
 
         // Draws the player's hitbox
         g.setColor(playerColour);

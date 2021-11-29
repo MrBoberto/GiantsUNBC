@@ -82,6 +82,14 @@ public abstract class Player extends GameObject {
     protected ImageStrip dashing;    // 6
     protected ImageStrip landing;    // 7
     protected ArrayList<BufferedImage> weaponTextures;
+    protected ImageStrip leftwardSwordTextures;
+    protected ImageStrip rightwardSwordTextures;
+    protected ImageFrame currentSwordFrame;
+    protected boolean isSwordLeft;
+    protected int swordTextureCount = 0;
+    protected final int SWORD_TEXTURE_MAX = 3;
+    protected int swordAnimationCount = 0;
+    protected int SWORD_ANIMATION_MAX = 3;
     protected boolean shiftIsHeld = false;
     protected boolean spaceIsHeld = false;
     protected boolean ctrlIsHeld = false;
@@ -139,8 +147,6 @@ public abstract class Player extends GameObject {
 
 
         Controller.players.add(this);
-
-
     }
 
     public String getPlayerName() {
@@ -223,6 +229,38 @@ public abstract class Player extends GameObject {
             }
             lastAction = 1;
         }
+
+        if (currentSwordFrame == null || swordTextureCount == 0 && swordAnimationCount <= 0) {
+            if (isSwordLeft) {
+                currentSwordFrame = rightwardSwordTextures.getHead();
+            } else {
+                currentSwordFrame = leftwardSwordTextures.getHead();
+            }
+            swordTextureCount++;
+        } else if (weaponSerial == 5 && swordAnimationCount == SWORD_ANIMATION_MAX) {
+            swordAnimationCount--;
+            if (isSwordLeft) {
+                currentSwordFrame = rightwardSwordTextures.getHead().getNext().getNext().getNext().getNext();
+            } else {
+                currentSwordFrame = leftwardSwordTextures.getHead().getNext().getNext().getNext().getNext();
+            }
+            swordTextureCount = SWORD_TEXTURE_MAX + 1;
+        } else if (weaponSerial == 5 && swordAnimationCount > 0) {
+            swordAnimationCount--;
+            currentSwordFrame = currentSwordFrame.getNext();
+        } else if (weaponSerial == 5) {
+            if (swordTextureCount >= SWORD_TEXTURE_MAX) {
+                if (isSwordLeft) {
+                    currentSwordFrame = leftwardSwordTextures.getHead();
+                } else {
+                    currentSwordFrame = rightwardSwordTextures.getHead();
+                }
+                swordTextureCount = 0;
+            } else {
+                currentSwordFrame = currentSwordFrame.getNext();
+            }
+            swordTextureCount++;
+        }
     }
 
     public boolean isFalling() {
@@ -291,7 +329,7 @@ public abstract class Player extends GameObject {
     public void loadImageStrips() {
         ArrayList<String> imgLocStr = new ArrayList<>();
         String defLocStr;
-        ;
+
         // Saves amount of text to be used
         if (playerColour == Color.BLUE) {
                 defLocStr = "/resources/Textures/PLAYER_ONE/";
@@ -331,7 +369,7 @@ public abstract class Player extends GameObject {
 //        System.out.println(jumping.toString());
         imgLocStr.clear();
 
-        for (int i = 0; i <= 5; i++) {
+        for (int i = 0; i <= 4; i++) {
             imgLocStr.add("weapon (" + i + ").png");
         }
         weaponTextures = new ArrayList<>();
@@ -343,6 +381,30 @@ public abstract class Player extends GameObject {
                 System.out.println("Could not find image file: " + exc.getMessage());
             }
         }
+        imgLocStr.clear();
+
+        if (playerNumber == 0) {
+            defLocStr = "/resources/Textures/WEAPONS/sword_blue (";
+        } else {
+            defLocStr = "/resources/Textures/WEAPONS/sword_red (";
+        }
+
+        // Builds image strip for jumping
+        for (int i = 1; i <= 7; i++) {
+            imgLocStr.add(i + ").png");
+        }
+        leftwardSwordTextures = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(jumping.toString());
+        imgLocStr.clear();
+
+        // Builds image strip for jumping
+        for (int i = 8; i <= 14; i++) {
+            imgLocStr.add(i + ").png");
+        }
+        rightwardSwordTextures = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(jumping.toString());
+        imgLocStr.clear();
+
         imageLoaded = true;
     }
 
@@ -623,5 +685,14 @@ public abstract class Player extends GameObject {
             powerUps.add(PowerUp.PowerUpType.Ricochet);
         }
         return powerUps.toArray(new PowerUp.PowerUpType[0]);
+    }
+
+    public boolean isSwordLeft() {
+        return isSwordLeft;
+    }
+
+    public void setSwordLeft(boolean swordLeft) {
+        isSwordLeft = swordLeft;
+        swordAnimationCount = SWORD_ANIMATION_MAX;
     }
 }

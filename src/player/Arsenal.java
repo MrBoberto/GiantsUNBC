@@ -1,5 +1,7 @@
 package player;
 
+import animation.ImageFrame;
+import animation.ImageStrip;
 import game.*;
 import power_ups.*;
 import utilities.BufferedImageLoader;
@@ -11,12 +13,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static weapons.aoe.Explosion.buildImageStrip;
+
 public class Arsenal extends GameObject {
     // Default selected weapon(s) on startup
     private Weapon primary;
     private Weapon secondary;
     private final Player playerIBelongTo;
     private final ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+    protected ImageStrip swordAnimationStrip;
+    protected ImageFrame swordFrame;
 
     //Textures
     BufferedImage shadow;
@@ -30,9 +36,16 @@ public class Arsenal extends GameObject {
 
     public Arsenal(double x, double y, Player playerIBelongTo) {
         super(x, y - 35);
+
         this.playerIBelongTo = playerIBelongTo;
         Controller.arsenals.add(this);
+
+        loadImageStrips();
+        swordFrame = swordAnimationStrip.getHead();
         loadGunTextures();
+
+        // Starting weapon(s)
+        add(new LightningSword(playerIBelongTo));
         add(new Pistol(playerIBelongTo));
 
         cosmeticPowerUps = new PowerUp[PowerUp.PowerUpType.values().length];
@@ -148,6 +161,11 @@ public class Arsenal extends GameObject {
             weaponTextures[i] = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal (" + (i-1) + ").png");
         }
     }
+
+    private void setCurrentSwordFrame() {
+        swordFrame = swordFrame.getNext();
+    }
+
     private PowerUp[] getUnusedPowerUps(){
         ArrayList<PowerUp> notPresent = new ArrayList<>(java.util.List.of(cosmeticPowerUps));
         for (int i = 0; i < playerIBelongTo.getPowerUps().length; i++) {
@@ -188,8 +206,9 @@ public class Arsenal extends GameObject {
             return weaponTextures[AssaultRifle.SERIAL +1];
         }else if (weapon instanceof RocketLauncher){
             return weaponTextures[RocketLauncher.SERIAL +1];
-        }else if (weapon instanceof LightningSword){
-            return weaponTextures[LightningSword.SERIAL +1];
+        } else if (weapon instanceof LightningSword){
+            setCurrentSwordFrame();
+            return swordFrame.getImage();
         }  else {
             return weaponTextures[0];
         }
@@ -405,5 +424,25 @@ public class Arsenal extends GameObject {
 
     }
 
+    public void loadImageStrips() {
+        ArrayList<String> imgLocStr = new ArrayList<>();
+        String defLocStr;
 
+        // Saves amount of text to be used
+        if (playerIBelongTo.playerNumber == 0) {
+            defLocStr = "/resources/GUI/sword/sword_blue (";
+        } else if (World.controller instanceof SingleController) {
+            defLocStr = "/resources/GUI/sword/sword_thanos (";
+        } else {
+            defLocStr = "/resources/GUI/sword/sword_red (";
+        }
+
+        // Builds image strip for respective sword colour
+        for (int i = 1; i <= 4; i++) {
+            imgLocStr.add(i + ").png");
+        }
+        swordAnimationStrip = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(standing.toString());
+        imgLocStr.clear();
+    }
 }

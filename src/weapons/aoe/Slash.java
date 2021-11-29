@@ -45,13 +45,9 @@ public class Slash extends GameObject implements Serializable {
 
         loadImage();
 
-        System.out.println("SLASH");
-
         boundRect = new Rectangle((int)this.x - currentFrame.getImage().getWidth() / 2,
                 (int)this.y - currentFrame.getImage().getHeight() / 2, currentFrame.getImage().getWidth(),
                 currentFrame.getImage().getHeight());
-
-        System.out.println("boundRect created.");
 
         Controller.slashes.add(this);
     }

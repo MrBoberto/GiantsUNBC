@@ -150,6 +150,7 @@ public class ServerController extends Controller {
                     Player.CLIENT_PLAYER,
                     packet.getDamage()
             );
+            otherPlayer.setSwordLeft(!packet.isLeft());
             clientWeaponAudio.setFile(-2);
             clientWeaponAudio.play();
 

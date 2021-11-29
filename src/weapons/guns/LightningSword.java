@@ -22,7 +22,6 @@ public class LightningSword implements Weapon {
     public static final int SERIAL = 005;
     public static int DAMAGE = 100;
     public static int HALF_LENGTH = 60;         // The length of half of one side
-    public boolean isLeft = true;
     public SFXPlayer audio;
 
     public LightningSword(Player playerIBelongTo) {
@@ -34,7 +33,7 @@ public class LightningSword implements Weapon {
         }
         catch (Exception ex)
         {
-            System.out.println("Error with playing shotgun sound.");
+            System.out.println("Error with playing lightning sword sound.");
             ex.printStackTrace();
         }
     }
@@ -56,8 +55,6 @@ public class LightningSword implements Weapon {
                 mouseY - playerIBelongTo.getY(),
                 0
         );
-
-        System.out.println(Math.toDegrees(angle));
 
         if (angle <= -3 * Math.PI / 4 && angle > -Math.PI) {
             y = playerIBelongTo.getY() - HALF_LENGTH;
@@ -94,32 +91,32 @@ public class LightningSword implements Weapon {
 
         if (World.controller instanceof ServerController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
-            new Slash(x, y, angle, isLeft, Player.SERVER_PLAYER, DAMAGE);
+            new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.SERVER_PLAYER, DAMAGE);
             World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(SERIAL));
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 World.controller.getOutputConnection().sendPacket(
-                        new ClientSlashPacket(x, y, angle, isLeft, DAMAGE)
+                        new ClientSlashPacket(x, y, angle, playerIBelongTo.isSwordLeft(), DAMAGE)
                 );
             }
         } else if (World.controller instanceof SingleController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             if (playerIBelongTo.getPlayerNumber() == 0) {
-                new Slash(x, y, angle, isLeft, Player.SERVER_PLAYER, DAMAGE);
+                new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.SERVER_PLAYER, DAMAGE);
             } else {
-                new Slash(x, y, angle, isLeft, Player.CLIENT_PLAYER, DAMAGE);
+                new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.CLIENT_PLAYER, DAMAGE);
             }
         } else {
-            new Slash(x, y, angle, isLeft, playerIBelongTo.getPlayerNumber(), DAMAGE);
+            new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), playerIBelongTo.getPlayerNumber(), DAMAGE);
             for (int i = 0; i < ROUNDCOUNT; i++) {
                 World.controller.getOutputConnection().sendPacket(
-                        new ClientSlashPacket(x, y, angle, isLeft, DAMAGE)
+                        new ClientSlashPacket(x, y, angle, playerIBelongTo.isSwordLeft(), DAMAGE)
                 );
             }
         }
-        if (isLeft) {
-            isLeft = false;
+        if (playerIBelongTo.isSwordLeft()) {
+            playerIBelongTo.setSwordLeft(false);
         } else {
-            isLeft = true;
+            playerIBelongTo.setSwordLeft(true);
         }
     }
 

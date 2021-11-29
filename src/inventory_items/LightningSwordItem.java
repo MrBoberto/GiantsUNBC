@@ -1,5 +1,7 @@
 package inventory_items;
 
+import animation.ImageFrame;
+import animation.ImageStrip;
 import game.Controller;
 import game.ServerController;
 import game.SingleController;
@@ -11,6 +13,9 @@ import weapons.guns.AssaultRifle;
 import weapons.guns.LightningSword;
 
 import java.awt.*;
+import java.util.ArrayList;
+
+import static weapons.aoe.Slash.buildImageStrip;
 
 public class LightningSwordItem extends InventoryItem {
 
@@ -22,11 +27,16 @@ public class LightningSwordItem extends InventoryItem {
     private int floatTimer = 0;
     private int floatState = 2;
     private boolean floatDirection = true;
+    private int textureFrameCount;
+    private int TEXTURE_FRAME_MAX;
+    protected static ImageStrip swordAnimationStrip;
+    protected ImageFrame currentFrame;
 
     public LightningSwordItem(double x, double y) {
         super(x, y);
 
-        texture = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal (" + 5 + ").png");
+        currentFrame = swordAnimationStrip.getHead();
+        texture = currentFrame.getImage();
     }
 
     @Override
@@ -86,6 +96,28 @@ public class LightningSwordItem extends InventoryItem {
 
     @Override
     public void render(Graphics g) {
+        texture = currentFrame.getNext().getImage();
+
         g.drawImage(texture,(int)x,(int)y + floatState,INVENTORY_ITEM_DIMENSIONS.width,INVENTORY_ITEM_DIMENSIONS.height,World.controller);
+    }
+
+    public static void loadImageStrips(Controller controller) {
+        ArrayList<String> imgLocStr = new ArrayList<>();
+        String defLocStr;
+
+        // Saves amount of text to be used
+        if (controller instanceof ServerController || controller instanceof SingleController) {
+            defLocStr = "/resources/GUI/sword/sword_blue (";
+        } else {
+            defLocStr = "/resources/GUI/sword/sword_red (";
+        }
+
+        // Builds image strip for standing facing right
+        for (int i = 1; i <= 4; i++) {
+            imgLocStr.add(i + ").png");
+        }
+        swordAnimationStrip = buildImageStrip(imgLocStr, defLocStr);
+//        System.out.println(standing.toString());
+        imgLocStr.clear();
     }
 }

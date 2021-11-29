@@ -278,6 +278,10 @@ public class MainPlayer extends Player {
                 ((int)this.y - currentImage.getImage().getHeight() / 2) + 40, currentImage.getImage().getWidth() - 85,
                 currentImage.getImage().getHeight() - 85);
 
+
+        if (selectedWeapon >= 0 && selectedWeapon < 5) {
+
+        }
     }
 
     /**
@@ -316,8 +320,11 @@ public class MainPlayer extends Player {
             g2d.drawImage(currentImage.getImage(), affTra, World.controller);
         }
 
-        if (weaponSerial == -1 || weaponTextures.get(weaponSerial) == null) return;
-        g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);
+        if (weaponSerial >= 0 && weaponSerial < 5) {
+            g2d.drawImage(weaponTextures.get(weaponSerial), affTra, World.controller);
+        } else if (weaponSerial == 5) {
+            g2d.drawImage(currentSwordFrame.getImage(), affTra, World.controller);
+        }
 
         // Draws the player's hitbox
         g.setColor(playerColour);
@@ -477,7 +484,7 @@ public class MainPlayer extends Player {
 
         ArrayList<String> imgLocStr = new ArrayList<>();
 
-        for (int i = -1; i <= 5; i++) {
+        for (int i = -1; i <= 4; i++) {
             imgLocStr.add("arsenal (" + i + ").png");
         }
         slotTextures = new ArrayList<>();
