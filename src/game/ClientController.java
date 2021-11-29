@@ -15,10 +15,7 @@ import weapons.guns.*;
 
 import java.awt.*;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -371,15 +368,26 @@ public class ClientController extends Controller {
                         (int) packet.getPlayerInfo()[i][5],
                         "???");
             }
-            stop();
+            isRunning = false;
         }
     }
 
     @Override
     public void close() {
         try {
-            inputConnection.close();
             outputConnection.close();
+
+        }catch (IOException ignored) {
+           /* empty */
+        }
+
+        try {
+            inputConnection.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();

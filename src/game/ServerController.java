@@ -22,6 +22,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ServerController extends Controller {
 
@@ -160,8 +161,18 @@ public class ServerController extends Controller {
     @Override
     public void close() {
         try {
-            inputConnection.close();
             outputConnection.close();
+
+        }catch (IOException ignored) {
+            /* empty */
+        }
+        try {
+            inputConnection.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
             serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();

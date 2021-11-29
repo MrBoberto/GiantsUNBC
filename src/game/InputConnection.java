@@ -49,7 +49,6 @@ public class InputConnection implements Runnable{
 
     public void close() throws IOException {
         running = false;
-
         inputStream.close();
     }
 
