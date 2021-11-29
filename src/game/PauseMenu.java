@@ -103,6 +103,14 @@ public class PauseMenu implements KeyListener {
         buttonsPanel.add(settingsButton, c);
 
         PauseMenuButton controlsButton = new PauseMenuButton(e -> {
+            JOptionPane.showMessageDialog(buttonsPanel, "W -> Forward\nA -> Left\n" +
+                            "S -> Back\nD -> Right\nSHIFT -> Dash\n" +
+                            "1 -> Swap with Slot 1\n2 -> Swap with Slot 2\n3 -> Swap with Slot 3\n4 -> Swap with Slot 4\n" +
+                            "LEFT MOUSE BUTTON -> Shoot\nRIGHT MOUSE BUTTON -> Swap between Primary and Secondary weapon",
+                    "Controls:", JOptionPane.INFORMATION_MESSAGE);
+
+
+            /*
             pauseMenuPanel.remove(buttonsPanel);
             c.anchor = GridBagConstraints.CENTER;
             c.fill = GridBagConstraints.BOTH;
@@ -113,6 +121,8 @@ public class PauseMenu implements KeyListener {
             pauseMenuPanel.add(controlsMenu(), c);
             pauseMenuPanel.validate();
             pauseMenuPanel.repaint();
+
+             */
 
         }, "Controls");
         c.gridy = 9;
@@ -138,6 +148,7 @@ public class PauseMenu implements KeyListener {
         return buttonsPanel;
     }
 
+    /*
     private JPanel controlsMenu() {
         GridBagConstraints c = new GridBagConstraints();
         JPanel controlsMenu = new JPanel(new GridBagLayout());
@@ -175,6 +186,8 @@ public class PauseMenu implements KeyListener {
 
         return controlsMenu;
     }
+
+     */
 
     private JPanel settingsMenu() {
         GridBagConstraints c = new GridBagConstraints();

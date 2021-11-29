@@ -208,7 +208,6 @@ public class MainMenu {
             {
                 System.out.println("Error with playing sound.");
                 ex.printStackTrace();
-
             }
             mainMenu.dispose();
         }, "Quit");
@@ -371,6 +370,13 @@ public class MainMenu {
             settingsMenu.add(createNewVoidPanel(), c);
         }
 
+        MainMenuButton nameButton = new MainMenuButton(e -> {
+
+            playerName = JOptionPane.showInputDialog ("Please enter the desired name for your avatar:");
+
+        }, "Set Username");
+        c.gridy = 7;
+        settingsMenu.add(nameButton, c);
 
         MainMenuButton videoButton = new MainMenuButton(e -> {
 
@@ -389,7 +395,7 @@ public class MainMenu {
              */
 
         }, "Video Settings");
-        c.gridy = 7;
+        c.gridy = 8;
         settingsMenu.add(videoButton, c);
 
         MainMenuButton audioButton = new MainMenuButton(e -> {
@@ -406,7 +412,7 @@ public class MainMenu {
             mainMenuPanel.repaint();
 
         }, "Audio Settings");
-        c.gridy = 8;
+        c.gridy = 9;
         settingsMenu.add(audioButton, c);
 
         MainMenuButton backButton = new MainMenuButton(f -> {
@@ -422,7 +428,7 @@ public class MainMenu {
             mainMenuPanel.validate();
             mainMenuPanel.repaint();
         }, "Back");
-        c.gridy = 9;
+        c.gridy = 10;
         settingsMenu.add(backButton ,c);
 
         return settingsMenu;
