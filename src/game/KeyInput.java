@@ -20,6 +20,8 @@ public class KeyInput extends KeyAdapter {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             if (controller.getGameWindow().canPause) {
                 controller.openPauseMenu();
+
+                // Ensures the pause command is not executed too quickly to process
                 controller.getGameWindow().setCanPause(false);
             }
         }

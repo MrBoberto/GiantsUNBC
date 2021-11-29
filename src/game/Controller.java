@@ -241,8 +241,6 @@ public abstract class Controller extends Canvas implements Runnable {
     }
 
     public void openPauseMenu() {
-        //this.removeKeyListener(keyInput);
-        //this.removeMouseListener();
         hasPauseMenu = true;
         pauseMenu = new PauseMenu(gameWindow.getFrame(), this);
         gameWindow.getFrame().remove(this);
