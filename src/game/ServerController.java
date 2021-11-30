@@ -92,8 +92,13 @@ public class ServerController extends Controller {
             otherPlayer.startDashTimer();
         } else if (object instanceof StartRequest packet) {
 
-            outputConnection.sendPacket(new StartPacket(otherPlayer.getRespawnPointX(), otherPlayer.getRespawnPointY(), 0, thisPlayer.getPlayerName(), MainMenu.mapSelected));
-            otherPlayer.setPlayerName(packet.getClientName());
+            outputConnection.sendPacket(new StartPacket(otherPlayer.getRespawnPointX(), otherPlayer.getRespawnPointY(), 0, MainMenu.playerName, MainMenu.mapSelected));
+            System.out.println("Sent packet w/ playerName");
+            if (packet.getClientName() == null || packet.getClientName() == "") {
+                otherPlayer.setPlayerName("Guest");
+            } else {
+                otherPlayer.setPlayerName(packet.getClientName());
+            }
             System.out.println("Start request received and resent.");
         } else if (object instanceof ClientBulletPacket packet) {
             switch (packet.getType()) {

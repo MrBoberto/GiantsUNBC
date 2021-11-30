@@ -78,7 +78,6 @@ public class ClientController extends Controller {
 
         if (MainMenu.playerName.equals("")) {
             thisPlayer.setPlayerName("Guest");
-            otherPlayer.setPlayerName("Host");
         } else {
             thisPlayer.setPlayerName(MainMenu.playerName);
         }
@@ -140,11 +139,19 @@ public class ClientController extends Controller {
     public void packetReceived(Object object) {
         if (object instanceof StartPacket packet) {
             //Loading level
+
+            System.out.println("StartPacket received");
+
+            if (packet.getPlayerName() == null || packet.getPlayerName() == "") {
+                otherPlayer.setPlayerName("Host");
+            } else {
+                otherPlayer.setPlayerName(packet.getPlayerName());
+            }
+
             level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level" + packet.getMapSelected() + ".png");
             loadLevel(level);
 
 
-            otherPlayer.setPlayerName(packet.getPlayerName());
             thisPlayer.setRespawnPointX(packet.getX());
             thisPlayer.setRespawnPointY(packet.getY());
             thisPlayer.setX(packet.getX());
