@@ -29,6 +29,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static final int WIDTH = 1280;
     public static final int HEIGHT = WIDTH / 16 * 9;
     public static final double FRICTION = 0.5; // Friction acting on objects
+    public static final int PLAYER_LIVES = 10;
 
     //Mouse controllers
     public static boolean mouseInside;

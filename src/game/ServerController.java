@@ -26,6 +26,7 @@ import java.net.SocketException;
 
 public class ServerController extends Controller {
 
+
     private ServerSocket serverSocket;
     private Socket socket;
     public SFXPlayer clientWeaponAudio;
@@ -389,6 +390,7 @@ public class ServerController extends Controller {
                 outputConnection.sendPacket(new EyeCandyPacket(eyeCandy.toArray(new GameObject[0])));
 
                 victim.incrementDeathCount();
+                outputConnection.sendPacket(new DeathCountPacket(thisPlayer.getDeathCount(), otherPlayer.getDeathCount()));
                 victim.revive();
                 if(victim == otherPlayer){
                     outputConnection.sendPacket(new RespawnPacket());
@@ -452,7 +454,7 @@ public class ServerController extends Controller {
                 if(victim == otherPlayer){
                     outputConnection.sendPacket(new RespawnPacket());
                 }
-
+                outputConnection.sendPacket(new DeathCountPacket(thisPlayer.getDeathCount(), otherPlayer.getDeathCount()));
                 killer.incrementKillCount();
                 // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
                 if(victim.getDeathCount() >= 10){
@@ -557,6 +559,7 @@ public class ServerController extends Controller {
                 outputConnection.sendPacket(new EyeCandyPacket(eyeCandy.toArray(new GameObject[0])));
 
                 victim.incrementDeathCount();
+                outputConnection.sendPacket(new DeathCountPacket(thisPlayer.getDeathCount(), otherPlayer.getDeathCount()));
                 victim.revive();
                 if(victim == otherPlayer){
                     outputConnection.sendPacket(new RespawnPacket());
@@ -564,7 +567,7 @@ public class ServerController extends Controller {
 
                 killer.incrementKillCount();
                 // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
-                if(victim.getDeathCount() >= 10){
+                if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
             }

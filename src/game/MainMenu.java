@@ -31,7 +31,11 @@ public class MainMenu {
     GameOver gameOver;
 
     public MainMenu() {
-        mainMenu = new JFrame("THE BOYZ Launcher");
+        if (mainMenu == null) {
+            mainMenu = new JFrame("THE BOYZ Launcher");
+        } else {
+            return;
+        }
 
         if(World.controller !=null){
             World.controller.close();

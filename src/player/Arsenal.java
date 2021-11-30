@@ -84,6 +84,9 @@ public class Arsenal extends GameObject {
             //Player image
             g2d.setComposite(AlphaComposite.SrcOver.derive(0.75f));
             g2d.drawImage(profile, (int) x , (int) y, inventorySlots.getHeight(),inventorySlots.getHeight(), World.controller);
+            g2d.setColor(Color.BLUE);
+            g2d.drawString(String.valueOf(Controller.PLAYER_LIVES - playerIBelongTo.getDeathCount()),(int) x + 90, (int) y - 10);
+
 
             //Primary && secondary
             if(playerIBelongTo.getSelectedWeapon() == Player.PRIMARY_WEAPON) {
@@ -124,6 +127,13 @@ public class Arsenal extends GameObject {
             //Player image
             g2d.setComposite(AlphaComposite.SrcOver.derive(0.75f));
             g2d.drawImage(profile, (int) x - offset+ inventorySlots.getWidth() - 100, (int) y, inventorySlots.getHeight(),inventorySlots.getHeight(), World.controller);
+            if(playerIBelongTo instanceof AIPlayer){
+                g2d.setColor(Color.MAGENTA);
+            } else {
+                g2d.setColor(Color.RED);
+            }
+
+            g2d.drawString(String.valueOf(Controller.PLAYER_LIVES - playerIBelongTo.getDeathCount()),(int) x - offset+ inventorySlots.getWidth() - 100, (int) y - 10);
 
             //Primary && secondary
             if(playerIBelongTo.getSelectedWeapon() == Player.PRIMARY_WEAPON) {

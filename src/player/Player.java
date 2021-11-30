@@ -695,4 +695,8 @@ public abstract class Player extends GameObject {
         isSwordLeft = swordLeft;
         swordAnimationCount = SWORD_ANIMATION_MAX;
     }
+
+    public void setDeathCount(int deathCount){
+        this.deathCount = deathCount;
+    }
 }

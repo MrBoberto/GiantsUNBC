@@ -175,6 +175,9 @@ public class ClientController extends Controller {
             serverWeaponAudio.setFile(-1);
             serverWeaponAudio.play();
 
+        } else if (object instanceof DeathCountPacket packet){
+            thisPlayer.setDeathCount(packet.getClientDeaths());
+            otherPlayer.setDeathCount(packet.getServerDeaths());
         } else if (object instanceof ClientSlashPacket packet) {
 
             new Slash(
