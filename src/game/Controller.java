@@ -441,6 +441,17 @@ public abstract class Controller extends Canvas implements Runnable {
     }
 
     public void renderWinner(int winnerNumber, double[][] playerInfo) {
+
+        try
+        {
+            soundtrack.stop();
+        }
+        catch (Exception ex)
+        {
+            System.out.println("Error with stopping sound.");
+            ex.printStackTrace();
+        }
+
         System.out.println("renderWinner");
 
         BufferStrategy bs = this.getBufferStrategy();
@@ -495,16 +506,6 @@ public abstract class Controller extends Canvas implements Runnable {
         Font font = new Font("Arial", Font.BOLD, 25);
         g2D.setFont(font);
         FontMetrics stringSize = g2D.getFontMetrics(font);
-
-        try
-        {
-            soundtrack.stop();
-        }
-        catch (Exception ex)
-        {
-            System.out.println("Error with stopping sound.");
-            ex.printStackTrace();
-        }
 
         isRunning = false;
         gameWindow.frame.dispose();
