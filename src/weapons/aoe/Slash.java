@@ -22,7 +22,7 @@ public class Slash extends GameObject implements Serializable {
     private int age = 0;
     public final int MAX_AGE = 5;
     protected boolean harmful = true;
-    public static final int DAMAGE = 100;
+    public static final int DAMAGE = 55;
     Rectangle boundRect;
     protected int playerIBelongToNumber;
     public final boolean isLeft;

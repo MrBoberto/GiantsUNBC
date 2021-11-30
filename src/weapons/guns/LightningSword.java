@@ -20,7 +20,7 @@ public class LightningSword implements Weapon {
     private int currentDelay = 0;
     // Identifies type of gun
     public static final int SERIAL = 005;
-    public static int DAMAGE = 100;
+    public static int DAMAGE = 55;
     public static int HALF_LENGTH = 60;         // The length of half of one side
     public SFXPlayer audio;
 
