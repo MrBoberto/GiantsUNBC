@@ -1,5 +1,6 @@
 package game;
 
+
 import audio.AudioPlayer;
 import audio.SFXPlayer;
 import player.Player;
@@ -16,9 +17,12 @@ import java.util.Objects;
 public class GameOver {
     //public static MainMenu gameOverMenu;
     JFrame gameOver;
+    public int move = 0;
+
 
     public GameOver(Player winner, int HEIGHT, Graphics2D g2D, List<Player> players, int WIDTH, FontMetrics stringSize){
         this.gameOver = new JFrame("Game over Window");
+        System.out.println("This is the height is "+ HEIGHT +" and the width is "+WIDTH );
 
 
         Image img;
@@ -68,17 +72,17 @@ public class GameOver {
                 g2.setFont(fontResult);
                 String text =        "           Game Ends  " +
                         "Click anywhere to return to the main screen";
-
-                g2.drawString("The winner is " + winner.getPlayerName(),
-                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,30);
-                g2.drawString("Scores:" + winner.getPlayerName(), Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,50);
+                g2.drawString("---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,30);
+                g2.drawString("                            The winner is  " + winner.getPlayerName(),
+                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,90);
+                g2.drawString("                                  Scores:" + winner.getPlayerName(), Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,150);
 
                 g2.drawString(
-                        "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,120);
+                        "Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
+                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,250);
                 g2.drawString(
-                        "                                                     Shot         Hit     Distance     Power-ups",
-                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,150);
+                        "                                               Shot         Hit     Distance     Power-ups",
+                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,300);
 
                 for (int i = 0; i < players.size(); i++) {
                     //Save data to send to client
@@ -99,14 +103,35 @@ public class GameOver {
 //                                Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,200);
                     } else {
                         g2.drawString(format,
-                                Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,200);
+                                Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,330);
                     }
                 }
+                g2.drawString("---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,360);
                 g2.setFont(font);
 
                 g2.drawString(text, Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 3/4);
-                //g2.drawString(text, Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 2/4);
+
+//                while(move < 1000){
+//                    try {
+//                        TimeUnit.MILLISECONDS.sleep(5);
+//
+                       // g2.drawRect(300,100,50,50);
+//                        move++;
+//                        if(move == 1000){
+//                            move =0;
+//                        }
+//                        repaint();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//
+//                }
+
             }
+
+
+
         };
 
 
@@ -157,7 +182,7 @@ public class GameOver {
 
 
     public void printGame(Player winner, int HEIGHT, Graphics2D g2D, List<Player> players, int WIDTH, FontMetrics stringSize) {
-        g2D.drawString("The winner is " + winner.getPlayerName(),
+        g2D.drawString("           The winner is  %n wow this prints" + winner.getPlayerName(),
                 WIDTH / 2 - (stringSize.stringWidth("The winner is ")), HEIGHT / 10);
         g2D.drawString("Scores:" + winner.getPlayerName(), WIDTH / 2 - (stringSize.stringWidth("Scores:")),
                 HEIGHT / 5);
