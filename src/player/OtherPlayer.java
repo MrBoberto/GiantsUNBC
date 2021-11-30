@@ -69,8 +69,6 @@ public class OtherPlayer extends Player {
                 (currentImage.getImage().getWidth() * health / 200),
                 5);
 
-        System.out.println("playerName = " + playerName);
-
         if (playerName == null) return;
 
         g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,

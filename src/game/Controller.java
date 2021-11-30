@@ -502,9 +502,8 @@ public abstract class Controller extends Canvas implements Runnable {
         }
         catch (Exception ex)
         {
-            System.out.println("Error with playing sound.");
+            System.out.println("Error with stopping sound.");
             ex.printStackTrace();
-
         }
 
         isRunning = false;
