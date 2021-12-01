@@ -134,7 +134,6 @@ public class GameOver {
 
         };
 
-
         startButton.setOpaque(false);
         startButton.setContentAreaFilled(false);
         startButton.setBorderPainted(false);
@@ -160,6 +159,8 @@ public class GameOver {
 
         gameOver.setVisible(true);
 
+        // Things get wild
+        /*
         try
         {
             AudioPlayer soundtrack = new AudioPlayer("/resources/Music/The_Number_J.wav");
@@ -170,6 +171,8 @@ public class GameOver {
             ex.printStackTrace();
 
         }
+
+         */
 
 
 
@@ -221,5 +224,4 @@ public class GameOver {
             }
         }
     }
-
 }

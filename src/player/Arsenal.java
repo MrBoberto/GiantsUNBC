@@ -228,17 +228,17 @@ public class Arsenal extends GameObject {
     private void loadImages() {
 
         if(playerIBelongTo.getPlayerNumber()== Player.SERVER_PLAYER) {
-            shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_shadow_gui_left_corner.png");
+            shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_light_gui_left_corner.png");
             inventorySlots = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/inventory_slots_left.png");
             profile = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_blue.png");
 
         } else if(playerIBelongTo instanceof AIPlayer) {
-            shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_shadow_gui_left_corner.png");
+            shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_light_gui_left_corner.png");
             inventorySlots = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/inventory_slots_right.png");
             profile = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_thanos.png");
 
         } else {
-            shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_shadow_gui_left_corner.png");
+            shadow = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/background_light_gui_left_corner.png");
             inventorySlots = BufferedImageLoader.loadImage("/resources/GUI/in-game_gui/inventory_slots_right.png");
             profile = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_red.png");
         }

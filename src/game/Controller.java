@@ -113,11 +113,12 @@ public abstract class Controller extends Canvas implements Runnable {
         //////////////////////////////////
 
         gameWindow = new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
+        World.setGameWindow(gameWindow);
         this.addKeyListener(new KeyInput(this));
         this.addMouseListener(new MouseInput(this));
 
         //Load background
-        background = BufferedImageLoader.loadImage("/resources/Textures/BG/wood_background.png");
+        background = BufferedImageLoader.loadImage("/resources/Textures/BG/sci-fi_background.png");
 
         // Load static ImageStrips
         Explosion.loadImageStrips();
@@ -208,6 +209,8 @@ public abstract class Controller extends Canvas implements Runnable {
             ex.printStackTrace();
 
         }
+
+
     }
 
     public void run(){
@@ -509,7 +512,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
         isRunning = false;
         gameWindow.frame.dispose();
-        GameOver gameOver = new GameOver(winner,HEIGHT,g2D,players, WIDTH,stringSize);
+        World.setGameOver(new GameOver(winner,HEIGHT,g2D,players, WIDTH,stringSize));
         //gameOver.printGame(winner,HEIGHT,g2D,players, WIDTH,stringSize);
 
 

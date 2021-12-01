@@ -79,13 +79,17 @@ public class Slash extends GameObject implements Serializable {
 
         if (!harmful) return;
 
-        if (age > 1 && boundRect != null) {
+        if (age > 0 && boundRect != null) {
             harmful = false;
         }
     }
 
     public boolean isHarmful() {
         return harmful;
+    }
+
+    public void setHarmful() {
+        harmful = true;
     }
 
     public boolean hasDied() {

@@ -2,6 +2,7 @@ package eye_candy;
 
 import game.Controller;
 import game.GameObject;
+import game.SingleController;
 import game.World;
 import player.Player;
 import utilities.BufferedImageLoader;
@@ -24,6 +25,8 @@ public class DeathMark extends GameObject {
     private void loadImage() {
         if(playerNumber == Player.SERVER_PLAYER){
             texture = BufferedImageLoader.loadImage("/resources/Textures/eye_candy/death_mark_blue.png");
+        } else if (World.controller instanceof SingleController) {
+            texture = BufferedImageLoader.loadImage("/resources/Textures/eye_candy/death_mark_thanos.png");
         } else {
             texture = BufferedImageLoader.loadImage("/resources/Textures/eye_candy/death_mark_red.png");
         }

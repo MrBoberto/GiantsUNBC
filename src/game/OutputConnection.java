@@ -89,9 +89,14 @@ public class OutputConnection implements Runnable {
             outputStream.writeObject(object);
             outputStream.flush();
         } catch (SocketException e){
-            World.controller.getGameWindow().frame.dispose();
+            if (World.getGameWindow() != null) {
+                World.getGameWindow().frame.dispose();
+                World.setGameWindow(null);
+                if (World.getGameOver() == null || World.getGameOver().gameOver == null || !World.getGameOver().gameOver.isVisible()) {
+                    new MainMenu();
+                }
+            }
             running = false;
-            new MainMenu();
         }catch (IOException e) {
             e.printStackTrace();
         }

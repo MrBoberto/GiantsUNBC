@@ -9,6 +9,8 @@ import static java.lang.Integer.parseInt;
 public class World {
     public static Controller controller;
     public static SecureRandom sRandom = new SecureRandom();
+    protected static GameWindow gameWindow;
+    protected static GameOver gameOver;                       // Should be null except at the end
 
     public static void world(int choice) throws UnknownHostException {
 
@@ -32,6 +34,21 @@ public class World {
         return Math.sqrt((Math.pow(c, 2)) - (Math.pow(a, 2)));
     }
 
+    public static GameWindow getGameWindow() {
+        return gameWindow;
+    }
+
+    public static void setGameWindow(GameWindow gameWindow) {
+        World.gameWindow = gameWindow;
+    }
+
+    public static GameOver getGameOver() {
+        return gameOver;
+    }
+
+    public static void setGameOver(GameOver gameOver) {
+        World.gameOver = gameOver;
+    }
 
     public static double atan(double x, double y, double angle) {
         if (x == 0 && y == 0) {
