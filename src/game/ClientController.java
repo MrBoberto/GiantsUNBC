@@ -337,26 +337,23 @@ public class ClientController extends Controller {
                 winner = thisPlayer;
             }
 
-            renderWinner(packet.getWinner(), packet.playerInfo());
 
-            System.out.println("The winner is " + winner.getPlayerName());
-            System.out.println("Scores: ");
-            String format = " %10d  %10d  %10f  %10d  %10d  %10d  %10s %n";
-            System.out.format("      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of%n");
-            System.out.format("                                           Shot         Hit    Distance    Power-ups%n");
-            System.out.format("------------------------------------------------------------------------------------%n");
-            for (int i = 0; i < players.size(); i++) {
+                thisPlayer.setKillCount((int) packet.playerInfo()[1][0]);
+            thisPlayer.setDeathCount((int) packet.playerInfo()[1][1]);
+            thisPlayer.setBulletsShot((int) packet.playerInfo()[1][3]);
+            thisPlayer.setBulletsHit((int) packet.playerInfo()[1][4]);
+            thisPlayer.setWalkingDistance((int) packet.playerInfo()[1][5]);
+            thisPlayer.setPickedUpPowerUps((int) packet.playerInfo()[1][6]);
 
-                //Print
-                System.out.format(format,
-                        (int) packet.getPlayerInfo()[i][0],
-                        (int) packet.getPlayerInfo()[i][1],
-                        packet.getPlayerInfo()[i][2],
-                        (int) packet.getPlayerInfo()[i][3],
-                        (int) packet.getPlayerInfo()[i][4],
-                        (int) packet.getPlayerInfo()[i][5],
-                        (int) packet.getPlayerInfo()[i][6]);
-            }
+            otherPlayer.setKillCount((int) packet.playerInfo()[0][0]);
+            otherPlayer.setDeathCount((int) packet.playerInfo()[0][1]);
+            otherPlayer.setBulletsShot((int) packet.playerInfo()[0][3]);
+            otherPlayer.setBulletsHit((int) packet.playerInfo()[0][4]);
+            otherPlayer.setWalkingDistance((int) packet.playerInfo()[0][5]);
+            otherPlayer.setPickedUpPowerUps((int) packet.playerInfo()[0][6]);
+
+
+            renderWinner(packet.getWinner());
             isRunning = false;
         } else if(object instanceof ArsenalPacket packet){
             otherPlayer.getArsenal().setInventory(packet.primary(),packet.secondary(),packet.selected(),packet.inventory());

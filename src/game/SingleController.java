@@ -449,7 +449,7 @@ public class SingleController extends Controller {
             playerInfo[i][6] = player.getPickedUpPowerUps();
         }
 
-        renderWinner(winnerNumber, playerInfo);
+        renderWinner(winnerNumber);
 
 
         System.out.println("The winner is " + winner.getPlayerName());

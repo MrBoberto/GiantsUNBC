@@ -405,7 +405,7 @@ public abstract class Controller extends Canvas implements Runnable {
         bs.show();
     }
 
-    public void renderWinner(int winnerNumber, double[][] playerInfo) {
+    public void renderWinner(int winnerNumber) {
 
         try
         {

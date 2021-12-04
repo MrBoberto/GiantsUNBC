@@ -577,7 +577,7 @@ public class ServerController extends Controller {
         }
 
         outputConnection.sendPacket(new WinnerPacket(winnerNumber, playerInfo));
-        renderWinner(winnerNumber, playerInfo);
+        renderWinner(winnerNumber);
 
         System.out.println("The winner is " + winner.getPlayerName());
         System.out.println("Scores: ");
@@ -597,9 +597,6 @@ public class ServerController extends Controller {
                     player.getWalkingDistance(),
                     player.getPickedUpPowerUps());
         }
-
-        //Send to client
-        outputConnection.sendPacket(new WinnerPacket(winnerNumber, playerInfo));
 
         // Kill the music
         soundtrack.stop();
