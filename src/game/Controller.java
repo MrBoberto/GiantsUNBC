@@ -112,7 +112,7 @@ public abstract class Controller extends Canvas implements Runnable {
       otherY = 0;
         //////////////////////////////////
 
-        gameWindow = new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
+        gameWindow = new GameWindow(WIDTH,HEIGHT,"THE BOYZ, You're IP is:"+Main.getAddress().getHostAddress(), this);
         World.setGameWindow(gameWindow);
         this.addKeyListener(new KeyInput());
         this.addMouseListener(new MouseInput());

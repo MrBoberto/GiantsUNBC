@@ -46,27 +46,7 @@ public class ClientController extends Controller {
         thisPlayer.setArsenal(new Arsenal(816,620,thisPlayer ));
 
 
-        InetAddress correctAddress =InetAddress.getLocalHost();//to make java happy, should not need to be initialized
-        try {
-            Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
-            boolean firstAddress = false;
-            while(Interfaces.hasMoreElements())
-            {
-                NetworkInterface Interface = Interfaces.nextElement();
-                Enumeration<InetAddress> Addresses = Interface.getInetAddresses();
-                while(Addresses.hasMoreElements())
-                {
-                    InetAddress Address = Addresses.nextElement();
-                    if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1")&&!firstAddress&&!Address.getHostAddress().contains("192.168.56.1"))
-                    {
-                        firstAddress = true;
-                        correctAddress =Address;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        InetAddress correctAddress = Main.getAddress();//to make java happy, should not need to be initialized
 
         final byte[] ip;
         try {
