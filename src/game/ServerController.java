@@ -573,6 +573,7 @@ public class ServerController extends Controller {
             playerInfo[i][3] = player.getBulletCount();
             playerInfo[i][4] = player.getBulletHitCount();
             playerInfo[i][5] = player.getWalkingDistance();
+            playerInfo[i][6] = player.getPickedUpPowerUps();
         }
 
         renderWinner(winnerNumber);

@@ -1,9 +1,9 @@
 package game;
 
-import javax.imageio.ImageIO;
+import utilities.BufferedImageLoader;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 public class GameWindow {
     protected final JFrame frame;
@@ -19,7 +19,7 @@ public class GameWindow {
 
         Image img;
         try {
-            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/character_closeups/character_closeup_blue.png")));
+            img = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_blue.png");
             frame.setIconImage(img);
         } catch(Exception e) {
             System.out.println(e.getMessage());

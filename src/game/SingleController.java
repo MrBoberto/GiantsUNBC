@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class SingleController extends Controller {
 
     public final SFXPlayer weaponAudio;
@@ -77,7 +78,7 @@ public class SingleController extends Controller {
                 Bullet bullet = movingAmmo.get(j);
                 if (bullet.hasStopped()) {
                     movingAmmo.remove(bullet);
-                    if (bullet.getSERIAL() == 004 &&
+                    if (bullet.getSERIAL() == 4 &&
                             EntityCollision.getBulletVictim(bullet) != bullet.getPlayerIBelongToNumber()) {
                         //System.out.println("Rocket stopped moving!");
                         movingAmmo.remove(bullet);
@@ -245,7 +246,7 @@ public class SingleController extends Controller {
         }
 
         if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber() && !victim.isInvincible()) {
-            if (bullet.getSERIAL() == 004) {
+            if (bullet.getSERIAL() == 4) {
                 movingAmmo.remove(bullet);
                 bullet.setVelX(0);
                 bullet.setVelY(0);
@@ -254,7 +255,7 @@ public class SingleController extends Controller {
 
                 weaponAudio.setFile(-1);
                 weaponAudio.play();
-            } else if (bullet.getSERIAL() != 002) {
+            } else if (bullet.getSERIAL() != 2) {
                 movingAmmo.remove(bullet);
             }
 
@@ -278,7 +279,7 @@ public class SingleController extends Controller {
                 if (killer instanceof AIPlayer) {
                     AIPlayer.setDialogue("I am inevitable.");
                 }
-                if(victim.getDeathCount() >= 10){
+                if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
             }
@@ -321,7 +322,7 @@ public class SingleController extends Controller {
                 victim.revive();
 
                 killer.incrementKillCount();
-                if(victim.getDeathCount() >= 10){
+                if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
             }
@@ -345,7 +346,7 @@ public class SingleController extends Controller {
 
                     if (otherPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
                         killer.incrementKillCount();
-                        if(otherPlayer.getDeathCount() >= 10){
+                        if(otherPlayer.getDeathCount() >=PLAYER_LIVES){
                             declareWinner(killer);
                         }
                     }
@@ -373,7 +374,7 @@ public class SingleController extends Controller {
 
                     if (thisPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
                         killer.incrementKillCount();
-                        if(thisPlayer.getDeathCount() >= 10){
+                        if(thisPlayer.getDeathCount() >=PLAYER_LIVES){
                             declareWinner(killer);
                         }
                     }
@@ -418,7 +419,7 @@ public class SingleController extends Controller {
 
                 killer.incrementKillCount();
                 // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
-                if(victim.getDeathCount() >= 10){
+                if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
             }
@@ -453,7 +454,7 @@ public class SingleController extends Controller {
                     player.getBulletCount(),
                     player.getBulletHitCount(),
                     player.getWalkingDistance(),
-                    "???");
+                    player.getPickedUpPowerUps());
         }
 
         // Kill the music
