@@ -93,10 +93,14 @@ public class ClientController extends Controller {
                 }catch (Exception e) {//e.printStackTrace();}
                 }}catch (Exception e) {//e.printStackTrace();}
                     System.out.println("USER CLICKED CANCEL");
+                    gameWindow.getFrame().dispose();
+                    new MainMenu();
+                    break;
                 }
             TimeUnit.SECONDS.sleep(1);//
-                if (socket == null)
-                        ipAddress = JOptionPane.showInputDialog("Could not find ip/invalid address please enter server's ip: ");
+                if (socket == null) {
+                    ipAddress = JOptionPane.showInputDialog("Could not find ip/invalid address please enter server's ip: ");
+                }
         }
 
             System.out.println("The client:"+ correctAddress.getHostAddress() +"\nThe server"+correctIp);
@@ -416,7 +420,7 @@ public class ClientController extends Controller {
         try {
             inputConnection.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackaTrace();
         }
 
         try {
