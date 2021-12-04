@@ -59,7 +59,7 @@ public class PauseMenu implements KeyListener {
         sfxPlayer = new SFXPlayer();
         sfxPlayer.setFile(-2);
 
-        pauseMenuPanel = new JPanel(new GridBagLayout()) {
+        pauseMenuPanel = new PauseButtonPanel(new GridBagLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -71,14 +71,11 @@ public class PauseMenu implements KeyListener {
                 } else {
                     g2.drawImage(backgroundImage,0,0, frame.getWidth(), frame.getHeight(),null);
                 }
-
-
             }
         };
 
-        pauseMenuPanel.setFocusable(true);
-        pauseMenuPanel.requestFocusInWindow();
         pauseMenuPanel.addKeyListener(this);
+        pauseMenuPanel.setFocusable(true);
         pauseMenuPanel.setOpaque(false);
 
         GridBagConstraints c = new GridBagConstraints();
@@ -94,6 +91,10 @@ public class PauseMenu implements KeyListener {
 
         controller.getGameWindow().setCanPause(true);
         System.out.println(controller.getGameWindow().canPause());
+    }
+
+    public boolean requestFocus() {
+        return pauseMenuPanel.requestFocusInWindow();
     }
 
     private JPanel buttonsMenu() {
@@ -296,11 +297,11 @@ public class PauseMenu implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
+    public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.out.println("ESCAPE DETECTED");
             if (controller.getGameWindow().canPause) {
-                pauseMenuPanel.removeKeyListener(this);
+                frame.remove(pauseMenuPanel);
                 controller.closePauseMenu();
                 controller.getGameWindow().setCanPause(false);
             }
@@ -308,13 +309,41 @@ public class PauseMenu implements KeyListener {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void keyTyped(KeyEvent e) {
 
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) controller.getGameWindow().setCanPause(true);
+    }
+
+    class PauseButtonPanel extends JPanel implements KeyListener{
+        public PauseButtonPanel(LayoutManager layout) {
+            super(layout, true);
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                System.out.println("ESCAPE DETECTED");
+                if (controller.getGameWindow().canPause) {
+                    frame.remove(pauseMenuPanel);
+                    controller.closePauseMenu();
+                    controller.getGameWindow().setCanPause(false);
+                }
+            }
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) controller.getGameWindow().setCanPause(true);
+        }
     }
 
     static class PauseMenuButton extends JComponent implements MouseListener {
