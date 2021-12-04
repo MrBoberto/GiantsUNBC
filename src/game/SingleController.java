@@ -96,30 +96,26 @@ public class SingleController extends Controller {
         }
 
         for (int i = 0; i < explosions.size(); i++) {
-            Explosion item = explosions.get(i);
-            if (item != null) {
-                checkVictims(item);
+            if (explosions.get(i) != null) {
+                checkVictims(explosions.get(i));
             }
         }
 
         for (int i = 0; i < slashes.size(); i++) {
-            Slash value = slashes.get(i);
-            if (value != null) {
-                checkVictims(value);
+            if (slashes.get(i) != null) {
+                checkVictims(slashes.get(i));
             }
         }
 
         for (int i = 0; i < powerUps.size(); i++) {
-            PowerUp powerUp = powerUps.get(i);
-            if (powerUp != null) {
-                checkPowerUpPickups(powerUp);
+            if (powerUps.get(i) != null) {
+                checkPowerUpPickups(powerUps.get(i));
             }
         }
 
         for (int i = 0; i < inventoryItems.size(); i++) {
-            InventoryItem inventoryItem = inventoryItems.get(i);
-            if (inventoryItem != null) {
-                checkInventoryItemPickups(inventoryItem);
+            if (inventoryItems.get(i) != null) {
+                checkInventoryItemPickups(inventoryItems.get(i));
             }
         }
 
