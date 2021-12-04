@@ -16,12 +16,13 @@ import java.util.Objects;
 
 import static weapons.aoe.Explosion.buildImageStrip;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class Arsenal extends GameObject {
     // Default selected weapon(s) on startup
     private Weapon primary;
     private Weapon secondary;
     private final Player playerIBelongTo;
-    private final ArrayList<Weapon> weapons = new ArrayList<>();
+    private ArrayList<Weapon> weapons = new ArrayList<>();
     protected ImageStrip swordAnimationStrip;
     protected ImageFrame swordFrame;
 
@@ -383,5 +384,50 @@ public class Arsenal extends GameObject {
         swordAnimationStrip = buildImageStrip(imgLocStr, defLocStr);
 //        System.out.println(standing.toString());
         imgLocStr.clear();
+    }
+
+    public Weapon.WeaponType[] getInventory() {
+        Weapon.WeaponType[] weaponTypes = new Weapon.WeaponType[weapons.size()];
+        for (int i = 0; i < weapons.size(); i++) {
+            weaponTypes[i] = weapons.get(i).getWeaponType();
+        }
+        return weaponTypes;
+    }
+
+    public void setInventory(Weapon.WeaponType primary, Weapon.WeaponType secondary, int selected, Weapon.WeaponType[] inventory){
+        switch (primary){
+            case Shotgun -> this.primary = new Shotgun(playerIBelongTo);
+            case SniperRifle -> this.primary = new SniperRifle(playerIBelongTo);
+            case Pistol -> this.primary = new Pistol(playerIBelongTo);
+            case AssaultRifle -> this.primary = new AssaultRifle(playerIBelongTo);
+            case RocketLauncher -> this.primary = new RocketLauncher(playerIBelongTo);
+            case LightningSword -> this.primary = new LightningSword(playerIBelongTo);
+        }
+
+        switch (secondary){
+            case Shotgun -> this.secondary = new Shotgun(playerIBelongTo);
+            case SniperRifle -> this.secondary = new SniperRifle(playerIBelongTo);
+            case Pistol -> this.secondary = new Pistol(playerIBelongTo);
+            case AssaultRifle -> this.secondary = new AssaultRifle(playerIBelongTo);
+            case RocketLauncher -> this.secondary = new RocketLauncher(playerIBelongTo);
+            case LightningSword -> this.secondary = new LightningSword(playerIBelongTo);
+        }
+
+        playerIBelongTo.setSelectedWeapon(selected);
+
+        ArrayList<Weapon> newWeapons = new ArrayList<>();
+        for (int i = 0; i < inventory.length; i++) {
+            switch (inventory[i]){
+                case Shotgun -> newWeapons.add(new Shotgun(playerIBelongTo));
+                case SniperRifle -> newWeapons.add(new SniperRifle(playerIBelongTo));
+                case Pistol -> newWeapons.add(new Pistol(playerIBelongTo));
+                case AssaultRifle -> newWeapons.add(new AssaultRifle(playerIBelongTo));
+                case RocketLauncher -> newWeapons.add(new RocketLauncher(playerIBelongTo));
+                case LightningSword -> newWeapons.add(new LightningSword(playerIBelongTo));
+            }
+        }
+
+        weapons = newWeapons;
+
     }
 }

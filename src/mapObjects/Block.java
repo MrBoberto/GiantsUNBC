@@ -18,7 +18,7 @@ public class Block extends GameObject {
         super(x, y);
 
         Random random = new Random();
-        String path = "/resources/Textures/blocks/sci-fi_texture (" + (random.nextInt(5)+1) + ").png";
+        String path = "/resources/Textures/blocks/sci-fi_texture (" + (random.nextInt(4)+2) + ").png";
 
         try {
             texture =  ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)));

@@ -1,13 +1,15 @@
 package game;
 
+import packets.ArsenalPacket;
 import player.Player;
+import weapons.guns.Weapon;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class MouseInput extends MouseAdapter {
 
-    public MouseInput(){
+    public MouseInput() {
         /* empty */
     }
 
@@ -17,8 +19,7 @@ public class MouseInput extends MouseAdapter {
         if (e.getButton() == MouseEvent.BUTTON1) {
             Controller.thisPlayer.setButton1Held(true);
             if (Controller.thisPlayer.getSelectedWeapon() == Player.PRIMARY_WEAPON
-                    && Controller.thisPlayer.getArsenal().getPrimary().getCurrentDelay() == 0)
-            {
+                    && Controller.thisPlayer.getArsenal().getPrimary().getCurrentDelay() == 0) {
                 Controller.thisPlayer.getArsenal().getPrimary().shoot(e.getX(), e.getY());
                 Controller.thisPlayer.getArsenal().getPrimary().playAudio();
 
@@ -58,6 +59,12 @@ public class MouseInput extends MouseAdapter {
                         Controller.thisPlayer.setSelectedWeapon(0);
                     }
                 }
+
+                World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
+                        Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
+                        Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
+                        Controller.thisPlayer.getSelectedWeapon(),
+                        Controller.thisPlayer.getArsenal().getInventory()));
             }
         }
     }

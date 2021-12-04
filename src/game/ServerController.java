@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class ServerController extends Controller {
 
 
@@ -148,6 +149,8 @@ public class ServerController extends Controller {
         } else if (object instanceof ClientSFXPacket packet) {
             clientWeaponAudio.setFile(packet.getClientSFXInt());
             clientWeaponAudio.play();
+        } else if(object instanceof ArsenalPacket packet){
+            otherPlayer.getArsenal().setInventory(packet.primary(),packet.secondary(),packet.selected(),packet.inventory());
         }
     }
 
@@ -196,27 +199,29 @@ public class ServerController extends Controller {
             }
         }
 
-        for (Explosion item : explosions) {
-            if (item != null) {
-                checkVictims(item);
+        for (int j = 0; j < explosions.size(); j++) {
+            if (explosions.get(j) != null) {
+                Explosion explosion = explosions.get(j);
+                checkVictims(explosion);
             }
         }
 
-        for (Slash value : slashes) {
-            if (value != null) {
-                checkVictims(value);
+        for (int j = 0; j < slashes.size(); j++) {
+            if (slashes.get(j) != null) {
+                Slash slash = slashes.get(j);
+                checkVictims(slash);
             }
         }
 
-        for (PowerUp powerUp : powerUps) {
-            if (powerUp != null) {
-                checkPowerUpPickups(powerUp);
+        for (int i = 0; i < powerUps.size(); i++) {
+            if(powerUps.get(i) != null){
+                checkPowerUpPickups(powerUps.get(i));
             }
         }
 
-        for (InventoryItem inventoryItem : inventoryItems) {
-            if (inventoryItem != null) {
-                checkInventoryItemPickups(inventoryItem);
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            if(inventoryItems.get(i) != null){
+                checkInventoryItemPickups(inventoryItems.get(i));
             }
         }
 

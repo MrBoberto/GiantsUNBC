@@ -378,6 +378,8 @@ public class ClientController extends Controller {
                         "???");
             }
             isRunning = false;
+        } else if(object instanceof ArsenalPacket packet){
+            otherPlayer.getArsenal().setInventory(packet.primary(),packet.secondary(),packet.selected(),packet.inventory());
         }
     }
 

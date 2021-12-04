@@ -18,6 +18,7 @@ public class RocketLauncher implements Weapon {
     private int currentDelay = 0;
     // Identifies type of gun
     public static final int SERIAL = 004;
+    public static final WeaponType WEAPON_TYPE = WeaponType.RocketLauncher;
     public static final int DAMAGE = 40;
     public SFXPlayer audio;
 
@@ -118,5 +119,10 @@ public class RocketLauncher implements Weapon {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public WeaponType getWeaponType() {
+        return WEAPON_TYPE;
     }
 }

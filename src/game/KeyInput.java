@@ -1,13 +1,12 @@
 package game;
 
+import packets.ArsenalPacket;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class KeyInput extends KeyAdapter {
-    protected final Controller controller;
-
-    public KeyInput(Controller controller){
-        this.controller = controller;
+    public KeyInput(){
         /* empty */
     }
 
@@ -18,11 +17,11 @@ public class KeyInput extends KeyAdapter {
 
             //if(tmp != null){
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            if (controller.getGameWindow().canPause) {
-                controller.openPauseMenu();
+            if (World.controller.getGameWindow().canPause) {
+                World.controller.openPauseMenu();
 
                 // Ensures the pause command is not executed too quickly to process
-                controller.getGameWindow().setCanPause(false);
+                World.controller.getGameWindow().setCanPause(false);
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_W) {
@@ -46,6 +45,11 @@ public class KeyInput extends KeyAdapter {
             } else {
                 Controller.thisPlayer.getArsenal().setSecondary(1);
             }
+            World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
+                    Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
+                    Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
+                    Controller.thisPlayer.getSelectedWeapon(),
+                    Controller.thisPlayer.getArsenal().getInventory()));
         }
         if (e.getKeyCode() == KeyEvent.VK_2 || e.getKeyCode() == KeyEvent.VK_NUMPAD2) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
@@ -53,6 +57,11 @@ public class KeyInput extends KeyAdapter {
             } else {
                 Controller.thisPlayer.getArsenal().setSecondary(2);
             }
+            World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
+                    Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
+                    Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
+                    Controller.thisPlayer.getSelectedWeapon(),
+                    Controller.thisPlayer.getArsenal().getInventory()));
         }
         if (e.getKeyCode() == KeyEvent.VK_3 || e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
@@ -60,6 +69,11 @@ public class KeyInput extends KeyAdapter {
             } else {
                 Controller.thisPlayer.getArsenal().setSecondary(3);
             }
+            World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
+                    Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
+                    Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
+                    Controller.thisPlayer.getSelectedWeapon(),
+                    Controller.thisPlayer.getArsenal().getInventory()));
         }
         if (e.getKeyCode() == KeyEvent.VK_4 || e.getKeyCode() == KeyEvent.VK_NUMPAD4) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
@@ -67,20 +81,12 @@ public class KeyInput extends KeyAdapter {
             } else {
                 Controller.thisPlayer.getArsenal().setSecondary(4);
             }
+            World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
+                    Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
+                    Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
+                    Controller.thisPlayer.getSelectedWeapon(),
+                    Controller.thisPlayer.getArsenal().getInventory()));
         }
-
-//                if (key == KeyEvent.VK_SHIFT) {
-//                    shiftIsHeld = true;
-//                    isSneaking = true;
-//                }
-//                if (key == KeyEvent.VK_CONTROL) {
-//                    ctrlIsHeld = true;
-//                }
-//                if (key == KeyEvent.VK_T) {
-//                    tIsHeld = true;
-//                }
-            //2}
-        //}
     }
 
     public void keyReleased(KeyEvent e){
@@ -92,7 +98,7 @@ public class KeyInput extends KeyAdapter {
             if(tmp != null){
 
                 switch (key){
-                    case KeyEvent.VK_ESCAPE -> controller.getGameWindow().setCanPause(true);
+                    case KeyEvent.VK_ESCAPE -> World.controller.getGameWindow().setCanPause(true);
                     case KeyEvent.VK_W -> Controller.thisPlayer.setUp(false);
                     case KeyEvent.VK_A -> Controller.thisPlayer.setLeft(false);
                     case KeyEvent.VK_S -> Controller.thisPlayer.setDown(false);
