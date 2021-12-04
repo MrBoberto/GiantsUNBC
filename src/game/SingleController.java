@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class SingleController extends Controller {
 
     public final SFXPlayer weaponAudio;
@@ -94,25 +95,29 @@ public class SingleController extends Controller {
             }
         }
 
-        for (Explosion item : explosions) {
+        for (int i = 0; i < explosions.size(); i++) {
+            Explosion item = explosions.get(i);
             if (item != null) {
                 checkVictims(item);
             }
         }
 
-        for (Slash value : slashes) {
+        for (int i = 0; i < slashes.size(); i++) {
+            Slash value = slashes.get(i);
             if (value != null) {
                 checkVictims(value);
             }
         }
 
-        for (PowerUp powerUp : powerUps) {
+        for (int i = 0; i < powerUps.size(); i++) {
+            PowerUp powerUp = powerUps.get(i);
             if (powerUp != null) {
                 checkPowerUpPickups(powerUp);
             }
         }
 
-        for (InventoryItem inventoryItem : inventoryItems) {
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            InventoryItem inventoryItem = inventoryItems.get(i);
             if (inventoryItem != null) {
                 checkInventoryItemPickups(inventoryItem);
             }
@@ -453,7 +458,7 @@ public class SingleController extends Controller {
                     player.getBulletCount(),
                     player.getBulletHitCount(),
                     player.getWalkingDistance(),
-                    "???");
+                    player.getPickedUpPowerUps());
         }
 
         // Kill the music
