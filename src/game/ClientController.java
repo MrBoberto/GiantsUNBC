@@ -13,6 +13,7 @@ import weapons.aoe.Explosion;
 import weapons.aoe.Slash;
 import weapons.guns.*;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -63,30 +64,41 @@ public class ClientController extends Controller {
         }
         String ipAddress = MainMenu.ipaddress;
         try {
-            if(ipAddress.equals("")) {
-                for (int i = 1; i <= 254; i++) {
-                    final int j = i;  // i as non-final variable cannot be referenced from inner class
-                    // new thread for parallel execution
-                    new Thread(() -> {
-                        try {
-                            ip[3] = (byte) j;
-                            InetAddress address = InetAddress.getByAddress(ip);
-                            String output = address.toString().substring(1);
+            while (socket == null){
+                try {
+                if (ipAddress.equals("")) {
+                    for (int i = 1; i <= 254; i++) {
+                        final int j = i;  // i as non-final variable cannot be referenced from inner class
+                        // new thread for parallel execution
+                        new Thread(() -> {
                             try {
-                                socket = new Socket(output, Controller.PORT);
-                                System.out.println("FOUND SERVER");
-                                System.out.println(output + " is this the server");
-                                correctIp = output;
-                                //socket.close(); //needed if 2 connections tried
-                            } catch (Exception e) {//e.printStackTrace();}
+                                ip[3] = (byte) j;
+                                InetAddress address = InetAddress.getByAddress(ip);
+                                String output = address.toString().substring(1);
+                                try {
+                                    socket = new Socket(output, Controller.PORT);
+                                    System.out.println("FOUND SERVER");
+                                    System.out.println(output + " is this the server");
+                                    correctIp = output;
+                                    //socket.close(); //needed if 2 connections tried
+                                } catch (Exception e) {//e.printStackTrace();}
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }).start();     // don't forget to start the thread
+                        }).start();     // don't forget to start the thread
+                    }
+                } else try {
+                    socket = new Socket(ipAddress, Controller.PORT);
+                }catch (Exception e) {//e.printStackTrace();}
+                }}catch (Exception e) {//e.printStackTrace();}
+                    System.out.println("USER CLICKED CANCEL");
                 }
-            }else socket = new Socket(ipAddress, Controller.PORT);
             TimeUnit.SECONDS.sleep(1);//
+                if (socket == null)
+                        ipAddress = JOptionPane.showInputDialog("Could not find ip/invalid address please enter server's ip: ");
+        }
+
             System.out.println("The client:"+ correctAddress.getHostAddress() +"\nThe server"+correctIp);
             if (correctAddress.getHostAddress().equals(correctIp)) {
                 System.out.println("THE SERVER AND CLIENT ARE ON THE SAME COMPUTER");
@@ -191,6 +203,7 @@ public class ClientController extends Controller {
         } else if (object instanceof ServerDashPacket) {
             otherPlayer.startDashTimer();
         } else if (object instanceof PowerUpEffectPacket packet) {
+
             powerUps.remove(packet.getIndexToRemove());
             switch (packet.getPlayerToBeAffected()) {
                 case Player.SERVER_PLAYER -> {
