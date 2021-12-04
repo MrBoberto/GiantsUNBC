@@ -18,14 +18,12 @@ public class OutputConnection implements Runnable {
 
     public OutputConnection(Controller controller, Socket socket) {
         this.controller = controller;
-
         try {
             outputStream = new ObjectOutputStream(socket.getOutputStream());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         new Thread(this).start();
     }
 
@@ -35,32 +33,7 @@ public class OutputConnection implements Runnable {
         while (running) {
 
             // Send current state of game to clients.
-            if (controller instanceof ServerController) {
-
-                int[] serverHealths = {Controller.thisPlayer.getHealth(), Controller.otherPlayer.getHealth()};
-
-                sendPacket(new ServerUpdatePacket(
-                        Controller.thisPlayer.getX(),
-                        Controller.thisPlayer.getY(),
-                        Controller.thisPlayer.getAngle(),
-                        serverHealths,
-                        Controller.thisPlayer.isWalking(),
-                        Controller.thisPlayer.getWeaponSerial(),
-                        new boolean[] {Controller.thisPlayer.isInvincible(), Controller.otherPlayer.isInvincible() }
-                ));
-
-                sendPacket(new ServerBulletPacket(Controller.movingAmmo.toArray(new Bullet[0])));
-            } else {
-                if (controller.getPlayer() != null) {
-                    sendPacket(new ClientUpdatePacket(
-                            controller.getPlayer().getX(),
-                            controller.getPlayer().getY(),
-                            controller.getPlayer().getAngle(),
-                            controller.getPlayer().isWalking(),
-                            controller.getPlayer().getWeaponSerial()));
-                }
-
-            }
+            sendUpdateToConnection();
 
             try {
                 //noinspection BusyWait
@@ -70,7 +43,35 @@ public class OutputConnection implements Runnable {
             }
 
         }
-        System.out.println("OUTPUT ERROR");
+    }
+
+    private void sendUpdateToConnection() {
+        if (controller instanceof ServerController) {
+
+            int[] serverHealths = {Controller.thisPlayer.getHealth(), Controller.otherPlayer.getHealth()};
+
+            sendPacket(new ServerUpdatePacket(
+                    Controller.thisPlayer.getX(),
+                    Controller.thisPlayer.getY(),
+                    Controller.thisPlayer.getAngle(),
+                    serverHealths,
+                    Controller.thisPlayer.isWalking(),
+                    Controller.thisPlayer.getWeaponSerial(),
+                    new boolean[]{Controller.thisPlayer.isInvincible(), Controller.otherPlayer.isInvincible()}
+            ));
+
+            sendPacket(new ServerBulletPacket(Controller.movingAmmo.toArray(new Bullet[0])));
+        } else {
+            if (controller.getPlayer() != null) {
+                sendPacket(new ClientUpdatePacket(
+                        controller.getPlayer().getX(),
+                        controller.getPlayer().getY(),
+                        controller.getPlayer().getAngle(),
+                        controller.getPlayer().isWalking(),
+                        controller.getPlayer().getWeaponSerial()));
+            }
+
+        }
     }
 
     public void close() throws IOException {
@@ -83,7 +84,7 @@ public class OutputConnection implements Runnable {
             outputStream.reset();
             outputStream.writeObject(object);
             outputStream.flush();
-        } catch (SocketException e){
+        } catch (SocketException e) {
             if (World.getGameWindow() != null) {
                 World.getGameWindow().frame.dispose();
                 World.setGameWindow(null);
@@ -92,7 +93,7 @@ public class OutputConnection implements Runnable {
                 }
             }
             running = false;
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

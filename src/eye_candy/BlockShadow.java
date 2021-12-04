@@ -18,22 +18,22 @@ public class BlockShadow extends GameObject {
 
     @Override
     public void render(Graphics g) {
-        g.setColor(new Color(0,0,0,64));
+        g.setColor(new Color(0, 0, 0, 64));
 
         //Main block shadow
-        g.fillRect((int) x + Controller.GRID_SIZE/2,
-                (int) y - Controller.GRID_SIZE/2,
+        g.fillRect((int) x + Controller.GRID_SIZE / 2,
+                (int) y - Controller.GRID_SIZE / 2,
                 Controller.GRID_SIZE,
                 Controller.GRID_SIZE);
 
         //Small shadows to make blocks pop out more
-        g.fillRect((int) x ,
-                (int) y+ Controller.GRID_SIZE ,
+        g.fillRect((int) x,
+                (int) y + Controller.GRID_SIZE,
                 Controller.GRID_SIZE,
                 1);
 
-        g.fillRect((int) x -1,
-                (int) y ,
+        g.fillRect((int) x - 1,
+                (int) y,
                 1,
                 Controller.GRID_SIZE);
 
@@ -42,31 +42,31 @@ public class BlockShadow extends GameObject {
         boolean skipShadow2 = false;
 
         for (int i = 0; i < Controller.blocks.size(); i++) {
-            if(Controller.blocks.get(i).getShadowBounds().intersects(new Rectangle(
-                    (int) x - Controller.GRID_SIZE/2,
-                    (int) y - Controller.GRID_SIZE/2,
+            if (Controller.blocks.get(i).getShadowBounds().intersects(new Rectangle(
+                    (int) x - Controller.GRID_SIZE / 2,
+                    (int) y - Controller.GRID_SIZE / 2,
                     Controller.GRID_SIZE,
-                    Controller.GRID_SIZE))){
-                skipShadow1 =true;
+                    Controller.GRID_SIZE))) {
+                skipShadow1 = true;
             }
         }
-        if(!skipShadow1) g.fillPolygon(new Polygon(
-                new int[] {(int) x, (int) x + Controller.GRID_SIZE/2, (int) x + Controller.GRID_SIZE/2},
-                new int[] {(int) y, (int) y, (int) y - Controller.GRID_SIZE/2},
+        if (!skipShadow1) g.fillPolygon(new Polygon(
+                new int[]{(int) x, (int) x + Controller.GRID_SIZE / 2, (int) x + Controller.GRID_SIZE / 2},
+                new int[]{(int) y, (int) y, (int) y - Controller.GRID_SIZE / 2},
                 3));
 
         for (int i = 0; i < Controller.blocks.size(); i++) {
-            if(Controller.blocks.get(i).getShadowBounds().intersects(new Rectangle(
-                    (int) x + Controller.GRID_SIZE/2,
-                    (int) y + Controller.GRID_SIZE/2,
+            if (Controller.blocks.get(i).getShadowBounds().intersects(new Rectangle(
+                    (int) x + Controller.GRID_SIZE / 2,
+                    (int) y + Controller.GRID_SIZE / 2,
                     Controller.GRID_SIZE,
-                    Controller.GRID_SIZE))){
-                skipShadow2 =true;
+                    Controller.GRID_SIZE))) {
+                skipShadow2 = true;
             }
         }
-        if(!skipShadow2) g.fillPolygon(new Polygon(
-                new int[] {(int) x + Controller.GRID_SIZE, (int) x + Controller.GRID_SIZE, (int) x + Controller.GRID_SIZE*3/2},
-                new int[] {(int) y + Controller.GRID_SIZE/2, (int) y + Controller.GRID_SIZE, (int) y + Controller.GRID_SIZE/2},
+        if (!skipShadow2) g.fillPolygon(new Polygon(
+                new int[]{(int) x + Controller.GRID_SIZE, (int) x + Controller.GRID_SIZE, (int) x + Controller.GRID_SIZE * 3 / 2},
+                new int[]{(int) y + Controller.GRID_SIZE / 2, (int) y + Controller.GRID_SIZE, (int) y + Controller.GRID_SIZE / 2},
                 3));
 
     }

@@ -6,17 +6,17 @@ import weapons.aoe.Explosion;
 import weapons.aoe.Slash;
 
 public class EntityCollision {
-    public static int getBulletVictim(Bullet proj) {
+    public static int getBulletVictim(Bullet bullet) {
 
-        try{
-            if (proj.getBounds().intersects(Controller.thisPlayer.getBounds())) {
+        try {
+            if (bullet.getBounds().intersects(Controller.thisPlayer.getBounds())) {
                 return Player.SERVER_PLAYER;
             }
-            if (proj.getBounds().intersects(Controller.otherPlayer.getBounds())) {
+            if (bullet.getBounds().intersects(Controller.otherPlayer.getBounds())) {
                 return Player.CLIENT_PLAYER;
             }
 
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             /* empty */
         }
 
@@ -25,7 +25,7 @@ public class EntityCollision {
 
     public static int getExplosionVictim(Explosion explosion) {
 
-        try{
+        try {
             if (explosion.getBounds().intersects(Controller.thisPlayer.getBounds())) {
                 // If both
                 if (explosion.getBounds().intersects(Controller.otherPlayer.getBounds())) {
@@ -39,7 +39,7 @@ public class EntityCollision {
                 return Player.CLIENT_PLAYER;
             }
 
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             /* empty */
         }
 
@@ -48,7 +48,7 @@ public class EntityCollision {
 
     public static int getSlashVictim(Slash slash) {
 
-        try{
+        try {
             if (slash.getBounds().intersects(Controller.thisPlayer.getBounds())) {
                 if (slash.getPlayerIBelongToNumber() != Controller.thisPlayer.getPlayerNumber()) {
                     System.out.println("Hit thisPlayer");
@@ -62,7 +62,7 @@ public class EntityCollision {
                 }
             }
 
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             /* empty */
         }
 

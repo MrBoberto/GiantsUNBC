@@ -1,7 +1,6 @@
 package game;
 
 
-
 import javax.swing.*;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -15,9 +14,6 @@ public class Main {
     private static int volumeMusic = 100;
     private static int volumeSFX = 100;
     private static InetAddress correctAddress;//to make java happy, should not need to be initialized
-
-    public Main() {
-    }
 
     public static int getVolumeMaster() {
         return volumeMaster;
@@ -51,36 +47,42 @@ public class Main {
         return volumeSFX;
     }
 
-    public static InetAddress getAddress(){
+    public static InetAddress getAddress() {
         return correctAddress;
     }
 
     public static void main(String[] args) throws UnknownHostException {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
+        setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
         new MainMenu();
 
+        handleIPCorrectness();
+    }
+
+    private static void handleIPCorrectness() {
         try {
             Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
             boolean firstAddress = false;
-            while(Interfaces.hasMoreElements())
-            {
+            while (Interfaces.hasMoreElements()) {
                 NetworkInterface Interface = Interfaces.nextElement();
                 Enumeration<InetAddress> Addresses = Interface.getInetAddresses();
-                while(Addresses.hasMoreElements())
-                {
+                while (Addresses.hasMoreElements()) {
                     InetAddress Address = Addresses.nextElement();
-                    if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1")&&!firstAddress&&!Address.getHostAddress().contains("192.168.56.1"))
-                    {
+                    if (!Address.getHostAddress().contains("f") && !Address.getHostAddress().contains(":") && !Address.getHostAddress().contains("127.0.0.1") && !firstAddress && !Address.getHostAddress().contains("192.168.56.1")) {
                         firstAddress = true;
-                        correctAddress =Address;
+                        correctAddress = Address;
                     }
                 }
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void setLookAndFeel(String lookAndFeel) {
+        try {
+            UIManager.setLookAndFeel(lookAndFeel);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
     }

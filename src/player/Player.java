@@ -537,11 +537,8 @@ public abstract class Player extends GameObject {
         return respawnPointY;
     }
 
-    public void setRespawnPointX(double respawnPointX) {
+    public void setRespawnPoint(double respawnPointX, double respawnPointY) {
         this.respawnPointX = respawnPointX;
-    }
-
-    public void setRespawnPointY(double respawnPointY) {
         this.respawnPointY = respawnPointY;
     }
 
@@ -591,7 +588,7 @@ public abstract class Player extends GameObject {
     public void startDashTimer() {
         if (dashTimer <= 1) {
             dashTimer = DASH_TIMER_MAX;
-            dashAnimationTimer = dashing.getLength();
+            dashAnimationTimer = dashing.getAnimationLength();
 
             if (World.controller instanceof ServerController && playerNumber == 0) {
                 World.controller.getOutputConnection().sendPacket(new ServerDashPacket());

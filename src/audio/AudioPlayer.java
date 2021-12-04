@@ -1,6 +1,7 @@
 package audio;
 // Java program to play an Audio
 // file using Clip Object
+
 import game.Main;
 
 import java.io.IOException;
@@ -8,8 +9,7 @@ import java.net.URL;
 
 import javax.sound.sampled.*;
 
-public class AudioPlayer
-{
+public class AudioPlayer {
 
     static Clip clip;
 
@@ -22,12 +22,14 @@ public class AudioPlayer
     static final double gain = 1;
     protected static float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
 
-
-    // constructor to initialize streams and clip
+    /**
+     * Constructor to initialize streams and clip.
+     * @param filePath where to get the music files.
+     */
     public AudioPlayer(String filePath) {
         // create AudioInputStream object
-
         URL audioUrl = this.getClass().getResource(filePath);
+
         try {
             assert audioUrl != null;
             audioInputStream = AudioSystem.getAudioInputStream(audioUrl);
@@ -55,16 +57,19 @@ public class AudioPlayer
         gainControl.setValue(dB);
     }
 
-    // Method to play the audio
-    public void play()
-    {
+    /**
+     * Play audio
+     */
+    public void play() {
         //start the clip
         clip.start();
 
         status = "play";
     }
 
-    // Method to stop the audio
+    /**
+     * Stop audio
+     */
     public void stop() {
         clip.stop();
         clip.close();

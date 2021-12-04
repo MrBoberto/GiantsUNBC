@@ -4,7 +4,6 @@ import audio.AudioPlayer;
 import audio.SFXPlayer;
 import utilities.BufferedImageLoader;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -13,7 +12,6 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MainMenu implements KeyListener {
 
@@ -33,21 +31,16 @@ public class MainMenu implements KeyListener {
     public static JPanel mainMenuPanel;
 
     public MainMenu() {
-            mainMenu = new JFrame("THE BOYZ Launcher");
+        mainMenu = new JFrame("THE BOYZ Launcher");
 
-
-        if(World.controller !=null){
+        if (World.controller != null) {
             World.controller.close();
             World.controller = null;
         }
 
-        Image img;
-        try {
-            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/character_closeups/character_closeup_blue.png")));
-            mainMenu.setIconImage(img);
-        } catch(Exception e) {
-            System.out.println(e.getMessage());
-        }
+        setIcon();
+        createSFXPlayer();
+        backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
 
         Dimension size = new Dimension(Controller.WIDTH, Controller.HEIGHT);
         mainMenu.setSize(size);
@@ -57,46 +50,52 @@ public class MainMenu implements KeyListener {
         mainMenu.setResizable(false);
         mainMenu.setLocationRelativeTo(null);
         mainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         mainMenu.getContentPane().setBackground(Color.BLUE);
+
+        setClickableScreen();
+
+        mainMenu.setVisible(true);
+
+        playAudio();
+    }
+
+    private void playAudio() {
+        try {
+            soundtrack = new AudioPlayer("/resources/Music/The_Number_J.wav");
+            soundtrack.play();
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+        }
+    }
+
+    private void setClickableScreen() {
         GridBagConstraints c = new GridBagConstraints();
-
-        sfxPlayer = new SFXPlayer();
-        sfxPlayer.setFile(-2);
-
-        // to make window appear on the screen
-        // max size was incorrect on my multi-display monitor, so I changed it - Noah
-        System.out.println("Size" + mainMenu.getWidth()+"width"+ mainMenu.getHeight());
-
-        backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
-
-        mainMenuPanel = new JPanel(new GridBagLayout()){
-
+        JPanel mainMenuPanel = new JPanel(new GridBagLayout()) {
             @Override
-
-        protected void paintComponent(Graphics g) {
+            protected void paintComponent(Graphics g) {
 
                 super.paintComponent(g);
 
                 Graphics2D g2 = (Graphics2D) g;
                 g2.drawImage(backgroundImage, 0, 0, mainMenu.getWidth(), mainMenu.getHeight(), null);
 
-        }};
+            }
+        };
 
-        mainMenuPanel.setFocusable(true);
         mainMenuPanel.setOpaque(false);
         mainMenu.add(mainMenuPanel);
 
-        JButton startButton = new JButton(){
+        JButton startButton = new JButton() {
             @Override
-            public void paintComponent(Graphics g){
+            public void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 Font font = new Font("Bauhaus 93", Font.PLAIN, 30);
                 FontMetrics fontMetrics = g2.getFontMetrics(font);
                 g2.setColor(Color.WHITE);
                 g2.setFont(font);
                 String text = "Click the screen to start...";
-                g2.drawString(text, Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 3/4);
+                g2.drawString(text, Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, Controller.HEIGHT * 3 / 4);
             }
         };
         startButton.setOpaque(false);
@@ -119,26 +118,27 @@ public class MainMenu implements KeyListener {
             c.fill = GridBagConstraints.CENTER;
             c.weighty = 0.2;
             c.weightx = 1.0;
-            c.insets = new Insets(5,5,10,10);
+            c.insets = new Insets(5, 5, 10, 10);
             mainMenuPanel.add(bottomPanel, c);
             mainMenuPanel.requestFocusInWindow();
             mainMenuPanel.addKeyListener(this);
             mainMenuPanel.validate();
             mainMenuPanel.repaint();
         });
+    }
 
-        mainMenu.setVisible(true);
+    private void createSFXPlayer() {
+        sfxPlayer = new SFXPlayer();
+        sfxPlayer.setFile(-2);
+    }
 
-        try
-        {
-            soundtrack = new AudioPlayer("/resources/Music/The_Number_J.wav");
-            soundtrack.play();
-        }
-        catch (Exception ex)
-        {
-            System.out.println("Error with playing sound.");
-            ex.printStackTrace();
-
+    private void setIcon() {
+        Image img;
+        try {
+            img = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_blue.png");
+            mainMenu.setIconImage(img);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -150,10 +150,10 @@ public class MainMenu implements KeyListener {
         buttonsPanel.setOpaque(false);
         c.fill = GridBagConstraints.CENTER;
         c.weightx = 1.0;
-        c.insets = new Insets(5,5,10,10);
+        c.insets = new Insets(5, 5, 10, 10);
 
 
-        c.weighty = 1.0/10.0;
+        c.weighty = 1.0 / 10.0;
         c.gridx = 0;
 
         for (int i = 0; i <= 6; i++) {
@@ -208,12 +208,9 @@ public class MainMenu implements KeyListener {
         buttonsPanel.add(settingsButton, c);
 
         MainMenuButton quitButton = new MainMenuButton(e -> {
-            try
-            {
+            try {
                 soundtrack.stop();
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 System.out.println("Error with playing sound.");
                 ex.printStackTrace();
             }
@@ -227,7 +224,7 @@ public class MainMenu implements KeyListener {
     private JPanel mapSelection(JPanel mainMenuPanel, int gameType) {
         panelType = PanelType.MapSelection;
         JPanel mapSelectionPanel = new JPanel(new GridBagLayout());
-        mapSelectionPanel.setMinimumSize(new Dimension(Controller.WIDTH,Controller.HEIGHT));
+        mapSelectionPanel.setMinimumSize(new Dimension(Controller.WIDTH, Controller.HEIGHT));
         mapSelectionPanel.setOpaque(false);
         ArrayList<BufferedImage> maps = new ArrayList<>();
 
@@ -239,8 +236,8 @@ public class MainMenu implements KeyListener {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 1.0;
-        c.insets = new Insets(5,5,10,10);
-        c.weighty = 1.0/9.0;
+        c.insets = new Insets(5, 5, 10, 10);
+        c.weighty = 1.0 / 9.0;
 
         c.gridx = 0;
 
@@ -248,7 +245,7 @@ public class MainMenu implements KeyListener {
             c.gridy = i;
             mapSelectionPanel.add(createNewVoidPanel(), c);
         }
-        JPanel instructions = new JPanel(){
+        JPanel instructions = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
@@ -257,7 +254,7 @@ public class MainMenu implements KeyListener {
                 g2.setColor(Color.WHITE);
                 g2.setFont(font);
                 String text = "Select a map...     ";
-                g2.drawString(text, Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,20);
+                g2.drawString(text, Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 20);
             }
         };
         c.gridy = 6;
@@ -266,27 +263,27 @@ public class MainMenu implements KeyListener {
         mapSelectionPanel.add(instructions, c);
 
 
-        JPanel mapsPanel = new JPanel(new GridLayout(2, maps.size()/2,10,10));
+        JPanel mapsPanel = new JPanel(new GridLayout(2, maps.size() / 2, 10, 10));
         mapsPanel.setOpaque(false);
 
         for (int i = 0, mapsSize = maps.size(); i < mapsSize; i++) {
             BufferedImage map = maps.get(i);
             int finalI1 = i;
-            JButton button = new JButton(){
+            JButton button = new JButton() {
                 @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     Graphics2D g2 = (Graphics2D) g;
-                    g2.drawImage(map,0,0,map.getWidth() * 5, map.getHeight() * 5,null);
-                    if(mapSelected == finalI1 +1){
+                    g2.drawImage(map, 0, 0, map.getWidth() * 5, map.getHeight() * 5, null);
+                    if (mapSelected == finalI1 + 1) {
                         g2.setColor(Color.RED);
                         g2.setStroke(new BasicStroke(3));
-                        g2.drawRect(0,0,map.getWidth() * 5, map.getHeight() * 5);
+                        g2.drawRect(0, 0, map.getWidth() * 5, map.getHeight() * 5);
                         mapsPanel.repaint();
                     }
                 }
             };
-            int finalI = i+1;
+            int finalI = i + 1;
             button.addActionListener(e -> mapSelected = finalI);
             button.setFocusPainted(false);
             button.setPreferredSize(new Dimension(map.getWidth() * 5, map.getHeight() * 5));
@@ -299,18 +296,15 @@ public class MainMenu implements KeyListener {
         mapSelectionPanel.add(mapsPanel, c);
 
         MainMenuButton startButton = new MainMenuButton(e -> {
-            try
-            {
+            try {
                 soundtrack.stop();
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 System.out.println("Error with stopping sound.");
                 ex.printStackTrace();
 
             }
             mainMenu.dispose();
-            if(gameType == SERVER){
+            if (gameType == SERVER) {
                 try {
                     World.world(1);
                 } catch (UnknownHostException ex) {
@@ -327,7 +321,7 @@ public class MainMenu implements KeyListener {
 
         }, "Start");
         c.gridy = 8;
-        c.ipady = 0 ;
+        c.ipady = 0;
         c.fill = GridBagConstraints.CENTER;
         mapSelectionPanel.add(startButton, c);
         MainMenuButton backButton = new MainMenuButton(e -> {
@@ -338,7 +332,7 @@ public class MainMenu implements KeyListener {
             c.fill = GridBagConstraints.CENTER;
             c.weighty = 0.2;
             c.weightx = 1.0;
-            c.insets = new Insets(5,5,10,10);
+            c.insets = new Insets(5, 5, 10, 10);
             mainMenuPanel.add(bottomPanel, c);
             mainMenuPanel.validate();
             mainMenuPanel.repaint();
@@ -356,10 +350,10 @@ public class MainMenu implements KeyListener {
         settingsMenu.setOpaque(false);
         c.fill = GridBagConstraints.CENTER;
         c.weightx = 1.0;
-        c.insets = new Insets(5,5,10,10);
+        c.insets = new Insets(5, 5, 10, 10);
 
 
-        c.weighty = 1.0/9.0;
+        c.weighty = 1.0 / 9.0;
         c.gridx = 0;
 
         for (int i = 0; i <= 6; i++) {
@@ -367,7 +361,7 @@ public class MainMenu implements KeyListener {
             settingsMenu.add(createNewVoidPanel(), c);
         }
 
-        MainMenuButton nameButton = new MainMenuButton(e -> playerName = JOptionPane.showInputDialog ("Please enter the desired name for your avatar:"), "Set Username");
+        MainMenuButton nameButton = new MainMenuButton(e -> playerName = JOptionPane.showInputDialog("Please enter the desired name for your avatar:"), "Set Username");
         c.gridy = 7;
         settingsMenu.add(nameButton, c);
 
@@ -402,13 +396,13 @@ public class MainMenu implements KeyListener {
             c.fill = GridBagConstraints.CENTER;
             c.weighty = 0.2;
             c.weightx = 1.0;
-            c.insets = new Insets(5,5,10,10);
+            c.insets = new Insets(5, 5, 10, 10);
             mainMenuPanel.add(bottomPanel, c);
             mainMenuPanel.validate();
             mainMenuPanel.repaint();
         }, "Back");
         c.gridy = 10;
-        settingsMenu.add(backButton ,c);
+        settingsMenu.add(backButton, c);
 
         return settingsMenu;
     }
@@ -420,10 +414,10 @@ public class MainMenu implements KeyListener {
         audioMenu.setOpaque(false);
         c.fill = GridBagConstraints.CENTER;
         c.weightx = 1.0;
-        c.insets = new Insets(5,5,10,10);
+        c.insets = new Insets(5, 5, 10, 10);
 
 
-        c.weighty = 1.0/9.0;
+        c.weighty = 1.0 / 9.0;
         c.gridx = 0;
 
         for (int i = 0; i <= 6; i++) {
@@ -459,7 +453,7 @@ public class MainMenu implements KeyListener {
             mainMenuPanel.repaint();
         }, "Back");
         c.gridy = 9;
-        audioMenu.add(backButton ,c);
+        audioMenu.add(backButton, c);
 
         return audioMenu;
     }
@@ -471,10 +465,10 @@ public class MainMenu implements KeyListener {
         multiplayerMenu.setOpaque(false);
         c.fill = GridBagConstraints.CENTER;
         c.weightx = 1.0;
-        c.insets = new Insets(5,5,10,10);
+        c.insets = new Insets(5, 5, 10, 10);
 
 
-        c.weighty = 1.0/9.0;
+        c.weighty = 1.0 / 9.0;
         c.gridx = 0;
 
         for (int i = 0; i <= 6; i++) {
@@ -501,12 +495,10 @@ public class MainMenu implements KeyListener {
         multiplayerMenu.add(serverButton, c);
 
         MainMenuButton clientButton = new MainMenuButton(e -> {
-            ipaddress = JOptionPane.showInputDialog ("Please enter the server's ip address, or leave blank to search automatically:");
-            try
-            {
+            ipaddress = JOptionPane.showInputDialog("Please enter the server's ip address, or leave blank to search automatically:");
+            try {
                 soundtrack.stop();
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 System.out.println("Error with stopping soundtrack.");
                 ex.printStackTrace();
 
@@ -531,7 +523,7 @@ public class MainMenu implements KeyListener {
             c.fill = GridBagConstraints.CENTER;
             c.weighty = 0.2;
             c.weightx = 1.0;
-            c.insets = new Insets(5,5,10,10);
+            c.insets = new Insets(5, 5, 10, 10);
             mainMenuPanel.add(bottomPanel, c);
             mainMenuPanel.validate();
             mainMenuPanel.repaint();
@@ -541,7 +533,7 @@ public class MainMenu implements KeyListener {
         return multiplayerMenu;
     }
 
-    private JPanel createNewVoidPanel(){
+    private JPanel createNewVoidPanel() {
         JPanel voidPanel = new JPanel();
         voidPanel.setBackground(new Color(0,0,0,0));
         return voidPanel;
@@ -612,7 +604,7 @@ public class MainMenu implements KeyListener {
 
         private final ArrayList<ActionListener> listeners = new ArrayList<>();
 
-        public MainMenuButton(ActionListener e, String text){
+        public MainMenuButton(ActionListener e, String text) {
             super();
             enableInputMethods(true);
             addMouseListener(this);
@@ -621,23 +613,23 @@ public class MainMenu implements KeyListener {
             unselectedTexture = BufferedImageLoader.loadImage("/resources/GUI/main_menu/unselected_option.png");
             selectedTexture = BufferedImageLoader.loadImage("/resources/GUI/main_menu/selected_option.png");
             setOpaque(false);
-            setSize(selectedTexture.getWidth(),selectedTexture.getHeight());
+            setSize(selectedTexture.getWidth(), selectedTexture.getHeight());
             this.text = text;
-            setBackground(new Color(0,255,0,0));
+            setBackground(new Color(0, 255, 0, 0));
         }
 
         @Override
-        public Dimension getPreferredSize(){
-            return new Dimension(selectedTexture.getWidth() + 20,selectedTexture.getHeight() + 20);
+        public Dimension getPreferredSize() {
+            return new Dimension(selectedTexture.getWidth() + 20, selectedTexture.getHeight() + 20);
         }
 
         @Override
-        public Dimension getMinimumSize(){
+        public Dimension getMinimumSize() {
             return getPreferredSize();
         }
 
         @Override
-        public Dimension getMaximumSize(){
+        public Dimension getMaximumSize() {
             return getPreferredSize();
         }
 
@@ -646,19 +638,20 @@ public class MainMenu implements KeyListener {
 
             Graphics2D g2 = (Graphics2D) g;
             g2.setFont(new Font("Bauhaus 93", Font.PLAIN, 30));
-            if(mouseEntered){
-                g2.drawImage(selectedTexture,20,0,selectedTexture.getWidth(),selectedTexture.getHeight(),null);
+            if (mouseEntered) {
+                g2.drawImage(selectedTexture, 20, 0, selectedTexture.getWidth(), selectedTexture.getHeight(), null);
                 g2.setColor(Color.WHITE);
-                g2.drawString(text,50,50);
+                g2.drawString(text, 50, 50);
             } else {
-                g2.drawImage(unselectedTexture,0,0,unselectedTexture.getWidth(),unselectedTexture.getHeight(),null);
+                g2.drawImage(unselectedTexture, 0, 0, unselectedTexture.getWidth(), unselectedTexture.getHeight(), null);
                 g2.setColor(Color.GRAY);
-                g2.drawString(text,30,50);
+                g2.drawString(text, 30, 50);
             }
         }
 
         @Override
-        public void mouseClicked(MouseEvent e) {}
+        public void mouseClicked(MouseEvent e) {
+        }
 
         @Override
         public void mousePressed(MouseEvent e) {
@@ -687,11 +680,9 @@ public class MainMenu implements KeyListener {
             repaint();
         }
 
-        private void notifyListeners(MouseEvent e)
-        {
+        private void notifyListeners(MouseEvent e) {
             ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "", e.getWhen(), e.getModifiersEx());
-            synchronized(listeners)
-            {
+            synchronized (listeners) {
                 for (ActionListener tmp : listeners) {
                     tmp.actionPerformed(evt);
                 }
@@ -724,7 +715,7 @@ public class MainMenu implements KeyListener {
 
             setOpaque(false);
             this.text = text;
-            setBackground(new Color(0,255,0,0));
+            setBackground(new Color(0, 255, 0, 0));
         }
 
         public JSlider getJSlider() {
@@ -732,26 +723,26 @@ public class MainMenu implements KeyListener {
         }
 
         @Override
-        public Dimension getPreferredSize(){
-            return new Dimension(unselectedTexture.getWidth() + 20,unselectedTexture.getHeight() + 20);
+        public Dimension getPreferredSize() {
+            return new Dimension(unselectedTexture.getWidth() + 20, unselectedTexture.getHeight() + 20);
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
             g2.setFont(new Font("Bauhaus 93", Font.PLAIN, 30));
-            g2.drawImage(unselectedTexture,0,0,unselectedTexture.getWidth(),unselectedTexture.getHeight(),null);
+            g2.drawImage(unselectedTexture, 0, 0, unselectedTexture.getWidth(), unselectedTexture.getHeight(), null);
             g2.setColor(Color.GRAY);
-            g2.drawString(text,30,30);
+            g2.drawString(text, 30, 30);
         }
 
         @Override
-        public Dimension getMinimumSize(){
+        public Dimension getMinimumSize() {
             return getPreferredSize();
         }
 
         @Override
-        public Dimension getMaximumSize(){
+        public Dimension getMaximumSize() {
             return getPreferredSize();
         }
 

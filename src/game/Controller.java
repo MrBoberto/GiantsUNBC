@@ -48,14 +48,14 @@ public abstract class Controller extends Canvas implements Runnable {
     private Thread thread;
 
     //All GameObjects
-    public static List<Bullet> movingAmmo ;
-    public static List<Player> players ;
-    public static List<Block> blocks ;
+    public static List<Bullet> movingAmmo;
+    public static List<Player> players;
+    public static List<Block> blocks;
     public static List<GameObject> eyeCandy;
     public static List<Explosion> explosions;
-    public static List<Slash> slashes ;
-    public static List<PowerUp> powerUps ;
-    public static List<InventoryItem> inventoryItems ;
+    public static List<Slash> slashes;
+    public static List<PowerUp> powerUps;
+    public static List<InventoryItem> inventoryItems;
     public static List<Arsenal> arsenals;
     public static MainPlayer thisPlayer;
     public static OtherPlayer otherPlayer;
@@ -85,61 +85,72 @@ public abstract class Controller extends Canvas implements Runnable {
 
     protected Controller() {
 
-        //Resetting values:
-        //////////////////////
-        movingAmmo = Collections.synchronizedList(new ArrayList<>());
-        players = Collections.synchronizedList(new ArrayList<>());
-        blocks = Collections.synchronizedList(new ArrayList<>());
-         eyeCandy = Collections.synchronizedList(new ArrayList<>());
-         explosions = Collections.synchronizedList(new ArrayList<>());
-         slashes = Collections.synchronizedList(new ArrayList<>());
-        powerUps = Collections.synchronizedList(new ArrayList<>());
-        inventoryItems = Collections.synchronizedList(new ArrayList<>());
-         arsenals = Collections.synchronizedList(new ArrayList<>());
+        resetValues();
 
-        isRunning = false;
-
-     mouseInside = false;
-       isWon = false;
-        hasPauseMenu = false;
-
-       currentPowerUpCooldown = 0;
-        currentInventoryItemCooldown = 0;
-
-        //Players spawn points
-         thisX = 0;
-         thisY = 0;
-      otherX = 0;
-      otherY = 0;
-        //////////////////////////////////
-
-        gameWindow = new GameWindow(WIDTH,HEIGHT,"THE BOYZ, Your IP is: "+Main.getAddress().getHostAddress(), this);
-        World.setGameWindow(gameWindow);
-        this.addKeyListener(new KeyInput());
-        this.addMouseListener(new MouseInput());
+        createGameWindow();
 
         //Load background
         background = BufferedImageLoader.loadImage("/resources/Textures/BG/sci-fi_background.png");
 
-        // Load static ImageStrips
-        Explosion.loadImageStrips();
-        Slash.loadImageStrips();
-        // World.controller does not give correct value
-        LightningSwordItem.loadImageStrips(this);
-        PauseMenu.loadImageStrips();
+        loadImageStrips();
 
         // For focus of key inputs after component switch
         setFocusable(true);
 
     }
 
-    public void start(){
+    private void loadImageStrips() {
+        Explosion.loadImageStrips();
+        Slash.loadImageStrips();
+        LightningSwordItem.loadImageStrips(this);
+        PauseMenu.loadImageStrips();
+    }
+
+    private void createGameWindow() {
+        gameWindow = new GameWindow(WIDTH, HEIGHT, "THE BOYZ, Your IP is: " + Main.getAddress().getHostAddress(), this);
+        World.setGameWindow(gameWindow);
+        this.addKeyListener(new KeyInput());
+        this.addMouseListener(new MouseInput());
+    }
+
+    private void resetValues() {
+        movingAmmo = Collections.synchronizedList(new ArrayList<>());
+        players = Collections.synchronizedList(new ArrayList<>());
+        blocks = Collections.synchronizedList(new ArrayList<>());
+        eyeCandy = Collections.synchronizedList(new ArrayList<>());
+        explosions = Collections.synchronizedList(new ArrayList<>());
+        slashes = Collections.synchronizedList(new ArrayList<>());
+        powerUps = Collections.synchronizedList(new ArrayList<>());
+        inventoryItems = Collections.synchronizedList(new ArrayList<>());
+        arsenals = Collections.synchronizedList(new ArrayList<>());
+
+        isRunning = false;
+
+        mouseInside = false;
+        isWon = false;
+        hasPauseMenu = false;
+
+        currentPowerUpCooldown = 0;
+        currentInventoryItemCooldown = 0;
+
+        //Players spawn points
+        thisX = 0;
+        thisY = 0;
+        otherX = 0;
+        otherY = 0;
+    }
+
+    public void start() {
         isRunning = true;
 
+        loadSoundtrack();
 
-        // Load soundtrack
-        try
-        {
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    private void loadSoundtrack() {
+        try {
             int randomMusic = World.sRandom.nextInt(10);
             if (randomMusic < 5) {
                 soundtrack = new AudioPlayer("/resources/Music/Trananozixa.wav");
@@ -147,19 +158,14 @@ public abstract class Controller extends Canvas implements Runnable {
                 soundtrack = new AudioPlayer("/resources/Music/The_Colour_Three.wav");
             }
             soundtrack.play();
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             System.out.println("Error with playing sound.");
             ex.printStackTrace();
 
         }
-
-        thread = new Thread(this);
-        thread.start();
     }
 
-    protected void stop(){
+    protected void stop() {
         isRunning = false;
         try {
             thread.join();
@@ -169,12 +175,9 @@ public abstract class Controller extends Canvas implements Runnable {
         mouseInside = false;
         isWon = false;
         hasPauseMenu = false;
-        try
-        {
+        try {
             soundtrack.stop();
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             System.out.println("Error with stopping sound.");
             ex.printStackTrace();
 
@@ -183,7 +186,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
     }
 
-    public void run(){
+    public void run() {
         this.requestFocus();
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
@@ -191,18 +194,18 @@ public abstract class Controller extends Canvas implements Runnable {
         double delta = 0;
         long timer = System.currentTimeMillis();
         int frames = 0;
-        while(isRunning){
+        while (isRunning) {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
             lastTime = now;
-            while(delta >= 1){
+            while (delta >= 1) {
                 tick();
                 delta--;
             }
             render();
             frames++;
 
-            if(System.currentTimeMillis() - timer > 1000){
+            if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
                 frames = 0;
             }
@@ -239,41 +242,41 @@ public abstract class Controller extends Canvas implements Runnable {
     /**
      * Game logic tick. Happens 60 times per second
      */
-    public void tick(){
+    public void tick() {
         for (int i = 0; i < players.size(); i++) {
-            if(players.get(i) != null)
-            players.get(i).tick();
+            if (players.get(i) != null)
+                players.get(i).tick();
         }
 
         for (int i = 0; i < movingAmmo.size(); i++) {
-            if(movingAmmo.get(i) != null)
+            if (movingAmmo.get(i) != null)
                 movingAmmo.get(i).tick();
         }
 
         for (int i = 0; i < powerUps.size(); i++) {
-            if(powerUps.get(i) != null){
+            if (powerUps.get(i) != null) {
                 powerUps.get(i).tick();
             }
         }
 
         for (int i = 0; i < inventoryItems.size(); i++) {
-            if(inventoryItems.get(i) != null){
+            if (inventoryItems.get(i) != null) {
                 inventoryItems.get(i).tick();
             }
         }
 
         for (int i = 0; i < explosions.size(); i++) {
-            if(explosions.get(i) != null)
+            if (explosions.get(i) != null)
                 explosions.get(i).tick();
         }
 
         for (int i = 0; i < slashes.size(); i++) {
-            if(slashes.get(i) != null)
+            if (slashes.get(i) != null)
                 slashes.get(i).tick();
         }
 
         for (int i = 0; i < arsenals.size(); i++) {
-            if(arsenals.get(i) != null){
+            if (arsenals.get(i) != null) {
                 arsenals.get(i).tick();
             }
         }
@@ -296,6 +299,10 @@ public abstract class Controller extends Canvas implements Runnable {
             }
         }
 
+        handleAssaultRifle();
+    }
+
+    private void handleAssaultRifle() {
         if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 0 && thisPlayer.getWeaponSerial() == 003
                 && thisPlayer.getArsenal().getPrimary().getCurrentDelay() == 0) {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
@@ -320,7 +327,7 @@ public abstract class Controller extends Canvas implements Runnable {
     /**
      * Graphics tick. Happens a bunch of times per second.
      */
-    public void render(){
+    public void render() {
 
         if (hasPauseMenu) {
             if (isPauseMenuScreen) {
@@ -335,7 +342,7 @@ public abstract class Controller extends Canvas implements Runnable {
         }
 
         BufferStrategy bs = this.getBufferStrategy();
-        if(bs == null){
+        if (bs == null) {
             this.createBufferStrategy(3);
             return;
         }
@@ -345,57 +352,56 @@ public abstract class Controller extends Canvas implements Runnable {
         // Update graphics in this section:
         //////////////////////////////////////
 
-        g.drawImage(background,0,0,WIDTH,HEIGHT,this);
+        g.drawImage(background, 0, 0, WIDTH, HEIGHT, this);
 
-        //Render eye candy
         for (int i = 0; i < eyeCandy.size(); i++) {
-            if(eyeCandy.get(i) != null){
+            if (eyeCandy.get(i) != null) {
                 eyeCandy.get(i).render(g);
             }
         }
 
         for (int i = 0; i < blocks.size(); i++) {
-            if (blocks.get(i) != null){
+            if (blocks.get(i) != null) {
                 blocks.get(i).render(g);
             }
         }
 
         for (int i = 0; i < powerUps.size(); i++) {
-            if(powerUps.get(i) != null){
+            if (powerUps.get(i) != null) {
                 powerUps.get(i).render(g);
             }
         }
 
         for (int i = 0; i < inventoryItems.size(); i++) {
-            if(inventoryItems.get(i) != null){
+            if (inventoryItems.get(i) != null) {
                 inventoryItems.get(i).render(g);
             }
         }
 
         for (int i = 0; i < movingAmmo.size(); i++) {
-            if(movingAmmo.get(i) != null)
+            if (movingAmmo.get(i) != null)
                 movingAmmo.get(i).render(g);
         }
 
         for (int i = 0; i < explosions.size(); i++) {
-            if(explosions.get(i) != null)
+            if (explosions.get(i) != null)
                 explosions.get(i).render(g);
         }
 
         for (int i = 0; i < slashes.size(); i++) {
-            if(slashes.get(i) != null)
+            if (slashes.get(i) != null)
                 slashes.get(i).render(g);
         }
 
         for (int i = 0; i < players.size(); i++) {
-            if(players.get(i) != null) {
+            if (players.get(i) != null) {
                 players.get(i).render(g);
             }
         }
 
         //Render in-game UI
         for (int i = 0; i < arsenals.size(); i++) {
-            if(arsenals.get(i) != null){
+            if (arsenals.get(i) != null) {
                 arsenals.get(i).render(g);
             }
         }
@@ -405,10 +411,37 @@ public abstract class Controller extends Canvas implements Runnable {
         bs.show();
     }
 
+    public void renderWinner(int winnerNumber) {
+        gameWindow.frame.dispose();
+        try {
+            soundtrack.stop();
+        } catch (Exception ex) {
+            System.out.println("Error with stopping sound.");
+            ex.printStackTrace();
+        }
 
+        System.out.println("renderWinner");
+
+
+        Player winner;
+        Player loser;
+        if (winnerNumber == thisPlayer.getPlayerNumber()) {
+            winner = thisPlayer;
+            loser = otherPlayer;
+        } else {
+            winner = otherPlayer;
+            loser = thisPlayer;
+        }
+
+
+        isRunning = false;
+        gameWindow.frame.dispose();
+        World.setGameOver(new GameOver(loser, winner, HEIGHT, players, WIDTH));
+
+    }
 
     //Loading the level
-    void loadLevel(BufferedImage image){
+    void loadLevel(BufferedImage image) {
         int w = image.getWidth();
         int h = image.getHeight();
 
@@ -416,26 +449,26 @@ public abstract class Controller extends Canvas implements Runnable {
             for (int yy = 0; yy < h; yy++) {
 
                 //Getting colors from pixels
-                int pixel = image.getRGB(xx,yy);
+                int pixel = image.getRGB(xx, yy);
                 int red = (pixel >> 16) & 0xff;
                 int green = (pixel >> 8) & 0xff;
                 int blue = (pixel) & 0xff;
 
                 //Player 2 spawn point if red
-                if(red == 255 && green == 0 && blue == 0){
-                    otherX = xx*GRID_SIZE + GRID_SIZE/2;
-                    otherY = yy*GRID_SIZE + GRID_SIZE/2;
+                if (red == 255 && green == 0 && blue == 0) {
+                    otherX = xx * GRID_SIZE + GRID_SIZE / 2;
+                    otherY = yy * GRID_SIZE + GRID_SIZE / 2;
                 }
 
                 //Create block if white
-                if(red == 255 && green == 255 && blue == 255){
-                    blocks.add(new Block(xx*GRID_SIZE, yy*GRID_SIZE));
+                if (red == 255 && green == 255 && blue == 255) {
+                    blocks.add(new Block(xx * GRID_SIZE, yy * GRID_SIZE));
                 }
 
                 //Player 1 spawn point if blue
-                if(red == 0 && green == 0 && blue == 255){
-                    thisX = xx*GRID_SIZE + GRID_SIZE/2;
-                    thisY = yy*GRID_SIZE + GRID_SIZE/2;
+                if (red == 0 && green == 0 && blue == 255) {
+                    thisX = xx * GRID_SIZE + GRID_SIZE / 2;
+                    thisY = yy * GRID_SIZE + GRID_SIZE / 2;
                 }
             }
         }

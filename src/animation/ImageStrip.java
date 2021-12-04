@@ -6,19 +6,19 @@ import java.util.ArrayList;
 
 public class ImageStrip {
     private final ImageFrame head;
-    private final int length;
+    private final int animationLength;
     private final String imageFileNames;
 
     public ImageStrip(ArrayList<BufferedImage> images, String imageFileNames) {
-        this.length = images.size();
+        this.animationLength = images.size();
         head = new ImageFrame(images.get(0));
         ImageFrame prevImage = head;
         ImageFrame newImage;
 
         // Make sure head is next for head
-        if (length > 1) {
+        if (animationLength > 1) {
             // Set the next for each image we have
-            for (int i = 1; i < length; i++) {
+            for (int i = 1; i < animationLength; i++) {
                 newImage = new ImageFrame(images.get(i));
                 prevImage.setNext(newImage);
                 prevImage = newImage;
@@ -37,6 +37,7 @@ public class ImageStrip {
 
     /**
      * Returns the animation.ImageFrame after the given one. If no animation.ImageFrame is given, returns head.
+     *
      * @param current animation.ImageFrame
      * @return
      */
@@ -47,19 +48,22 @@ public class ImageStrip {
         return head;
     }
 
-    /** For animations that do not loop
+    /**
+     * For animations that do not loop
+     *
      * @return head animation.ImageFrame
      */
     public ImageFrame getHead() {
         return head;
     }
 
-    /** For setting animation length automatically
+    /**
+     * For setting animation length automatically
      *
      * @return length int
      */
-    public int getLength() {
-        return length;
+    public int getAnimationLength() {
+        return animationLength;
     }
 
     public String toString() {

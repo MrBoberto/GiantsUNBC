@@ -32,8 +32,7 @@ public class ServerController extends Controller {
         clientWeaponAudio = new SFXPlayer();
 
         //Loading level
-        level = BufferedImageLoader.loadImage("/resources/mapLayouts/Level" + MainMenu.mapSelected +".png");
-        loadLevel(level);
+        loadLevel(BufferedImageLoader.loadImage("/resources/mapLayouts/Level" + MainMenu.mapSelected +".png"));
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(0, 0, 0));
@@ -470,9 +469,6 @@ public class ServerController extends Controller {
                             declareWinner(killer);
                         }
                     }
-
-                    // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
-
                 }
             }
             if (!thisPlayer.isInvincible()) {
@@ -545,7 +541,6 @@ public class ServerController extends Controller {
                 }
 
                 killer.incrementKillCount();
-                // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
                 if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
@@ -578,25 +573,6 @@ public class ServerController extends Controller {
 
         outputConnection.sendPacket(new WinnerPacket(winnerNumber, playerInfo));
         renderWinner(winnerNumber);
-
-        System.out.println("The winner is " + winner.getPlayerName());
-        System.out.println("Scores: ");
-        String format1 = " %10d  %10d  %10f  %10d  %10d  %10d  %10s %n";
-        System.out.format("      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of%n");
-        System.out.format("                                           Shot         Hit    Distance    Power-ups%n");
-        System.out.format("------------------------------------------------------------------------------------%n");
-        for (Player player : players) {
-            //Save data to send to client
-            //Print
-            System.out.format(format1,
-                    player.getKillCount(),
-                    player.getDeathCount(),
-                    player.getKdr(),
-                    player.getBulletCount(),
-                    player.getBulletHitCount(),
-                    player.getWalkingDistance(),
-                    player.getPickedUpPowerUps());
-        }
 
         // Kill the music
         soundtrack.stop();

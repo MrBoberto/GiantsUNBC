@@ -12,10 +12,6 @@ public abstract class GameObject implements Serializable {
     private double velY = 0;
     transient protected BufferedImage texture;
 
-    public abstract void tick();
-    public abstract void render(Graphics g);
-    public abstract Rectangle getBounds();
-
     public GameObject(double x, double y, double angle) {
         this.x = x;
         this.y = y;
@@ -33,7 +29,7 @@ public abstract class GameObject implements Serializable {
     @Serial
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        if(texture == null) {
+        if (texture == null) {
             return;
         }
         out.writeInt(1); // how many images are serialized?
@@ -45,6 +41,12 @@ public abstract class GameObject implements Serializable {
         in.defaultReadObject();
         if (texture != null) texture = ImageIO.read(in);
     }
+
+    public abstract void tick();
+
+    public abstract void render(Graphics g);
+
+    public abstract Rectangle getBounds();
 
     public double getVelX() {
         return velX;

@@ -3,28 +3,24 @@ package game;
 
 import audio.SFXPlayer;
 import player.Player;
+import utilities.BufferedImageLoader;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.Objects;
 
 public class GameOver {
     //public static MainMenu gameOverMenu;
     final JFrame gameOver;
 
-
-    public GameOver(Player loser, Player winner, int HEIGHT, List<Player> players, int WIDTH){
+    public GameOver(Player loser, Player winner, int HEIGHT, List<Player> players, int WIDTH) {
         this.gameOver = new JFrame("Game over Window");
-        System.out.println("This is the height is "+ HEIGHT +" and the width is "+WIDTH );
-
 
         Image img;
         try {
-            img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/GUI/character_closeups/character_closeup_blue.png")));
+            img = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_blue.png");
             gameOver.setIconImage(img);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
@@ -45,42 +41,56 @@ public class GameOver {
 
         // to make window appear on the screen
         // max size was incorrect on my multi-display monitor, so I changed it - Noah
-        System.out.println("Size" + gameOver.getWidth()+"width"+ gameOver.getHeight());
+        System.out.println("Size" + gameOver.getWidth() + "width" + gameOver.getHeight());
 
         JPanel mainMenuPanel = new JPanel(new GridBagLayout());
 
         mainMenuPanel.setOpaque(false);
         gameOver.add(mainMenuPanel);
 
-        JButton startButton = new JButton(){
+        JButton screen = createScreenButton(loser, winner, players, mainMenuPanel);
+
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        c.gridy = 0;
+        c.gridx = 0;
+        c.weighty = 1.0;
+        c.weightx = 1.0;
+        mainMenuPanel.add(screen, c);
+
+        gameOver.setVisible(true);
+    }
+
+    private JButton createScreenButton(Player loser, Player winner, List<Player> players, JPanel mainMenuPanel) {
+        JButton button = new JButton() {
             @Override
-            public void paintComponent(Graphics g){
+            public void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 Font font = new Font("Bauhaus 93", Font.PLAIN, 30);
                 Font MainFont = new Font("Bauhaus 93", Font.PLAIN, 50);
 
-                Font fontResult = new Font("Apple Casual",Font.PLAIN,30);
+                Font fontResult = new Font("Apple Casual", Font.PLAIN, 30);
                 FontMetrics fontMetrics = g2.getFontMetrics(font);
                 g2.setColor(Color.WHITE);
 
                 g2.setFont(MainFont);
-                String text =        "           Game Ends  " +
+                String text = "           Game Ends  " +
                         "Click anywhere to return to the main screen";
-                g2.drawString("                         Score Board:" , Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,60);
+                g2.drawString("                         Score Board:", Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 60);
 
 
                 g2.setFont(fontResult);
-                g2.drawString("   ---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,30);
+                g2.drawString("   ---------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 30);
                 g2.drawString("                                   The winner is  " + winner.getPlayerName(),
-                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,130);
-                g2.drawString("                                         Scores:" + winner.getPlayerName(), Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,170);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 130);
+                g2.drawString("                                         Scores:" + winner.getPlayerName(), Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 170);
 
                 g2.drawString(
                         "   Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,250);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 250);
                 g2.drawString(
                         "                                               Shot         Hit     Distance     Power-ups",
-                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,300);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 300);
 
                 for (int i = 0; i < players.size(); i++) {
                     //Save data to send to client
@@ -98,19 +108,19 @@ public class GameOver {
 
                     if (i != 0) {
                         g2.drawString(format,
-                                Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,330);
+                                Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 330);
                     }
                 }
-                g2.drawString("   ---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,360);
+                g2.drawString("   ---------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 360);
 
-                g2.drawString("                                  Scores:" + loser.getPlayerName(), Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,400);
+                g2.drawString("                                  Scores:" + loser.getPlayerName(), Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 400);
 
                 g2.drawString(
                         "   Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,440);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 440);
                 g2.drawString(
                         "                                               Shot         Hit     Distance     Power-ups",
-                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,480);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 480);
 
                 for (int i = 0; i < players.size(); i++) {
                     //Save data to send to client
@@ -128,50 +138,30 @@ public class GameOver {
 
                     if (i != 0) {
                         g2.drawString(format,
-                                Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,520);
+                                Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 520);
                     }
                 }
-                g2.drawString("   ---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,560);
-
+                g2.drawString("   ---------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 560);
 
 
                 g2.setFont(font);
 
-                g2.drawString(text, Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,640);
+                g2.drawString(text, Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 640);
 
             }
 
 
-
         };
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
 
-        startButton.setOpaque(false);
-        startButton.setContentAreaFilled(false);
-        startButton.setBorderPainted(false);
-        c.anchor = GridBagConstraints.CENTER;
-        c.fill = GridBagConstraints.BOTH;
-        c.gridy = 0;
-        c.gridx = 0;
-        c.weighty = 1.0;
-        c.weightx = 1.0;
-        mainMenuPanel.add(startButton, c);
-
-        startButton.addActionListener(f -> {
-            mainMenuPanel.remove(startButton);
+        button.addActionListener(f -> {
+            mainMenuPanel.remove(button);
             gameOver.dispose();
             new MainMenu();
-
-
         });
-
-        gameOver.setVisible(true);
-
-        // Things get wild
-
-
-        System.out.println("I am in the game over Window");
-
-        // gameOverMenu = new MainMenu();
+        return button;
     }
 
 

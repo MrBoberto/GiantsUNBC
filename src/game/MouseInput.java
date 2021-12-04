@@ -2,7 +2,6 @@ package game;
 
 import packets.ArsenalPacket;
 import player.Player;
-import weapons.guns.Weapon;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -15,29 +14,31 @@ public class MouseInput extends MouseAdapter {
 
     public void mousePressed(MouseEvent e) {
         // Shoot at the selected point
-        System.out.println(e.getPoint());
         if (e.getButton() == MouseEvent.BUTTON1) {
             Controller.thisPlayer.setButton1Held(true);
-            if (Controller.thisPlayer.getSelectedWeapon() == Player.PRIMARY_WEAPON
-                    && Controller.thisPlayer.getArsenal().getPrimary().getCurrentDelay() == 0) {
-                Controller.thisPlayer.getArsenal().getPrimary().shoot(e.getX(), e.getY());
-                Controller.thisPlayer.getArsenal().getPrimary().playAudio();
-                Controller.thisPlayer.incrementBulletCount();
+            performShooting(e);
+        }
+    }
 
-                Controller.thisPlayer.getArsenal().getPrimary().setCurrentDelay(
-                        Controller.thisPlayer.getArsenal().getPrimary().getMAX_DELAY());
+    private void performShooting(MouseEvent e) {
+        if (Controller.thisPlayer.getSelectedWeapon() == Player.PRIMARY_WEAPON
+                && Controller.thisPlayer.getArsenal().getPrimary().getCurrentDelay() == 0) {
 
-            } else if (Controller.thisPlayer.getSelectedWeapon() == Player.SECONDARY_WEAPON
-                    && Controller.thisPlayer.getArsenal().getSecondary().getCurrentDelay() == 0) {
+            Controller.thisPlayer.getArsenal().getPrimary().shoot(e.getX(), e.getY());
+            Controller.thisPlayer.getArsenal().getPrimary().playAudio();
+            Controller.thisPlayer.incrementBulletCount();
+            Controller.thisPlayer.getArsenal().getPrimary().setCurrentDelay(
+                    Controller.thisPlayer.getArsenal().getPrimary().getMAX_DELAY());
 
-                Controller.thisPlayer.getArsenal().getSecondary().shoot(e.getX(), e.getY());
-                Controller.thisPlayer.getArsenal().getSecondary().playAudio();
-                Controller.thisPlayer.incrementBulletCount();
+        } else if (Controller.thisPlayer.getSelectedWeapon() == Player.SECONDARY_WEAPON
+                && Controller.thisPlayer.getArsenal().getSecondary().getCurrentDelay() == 0) {
 
-                Controller.thisPlayer.getArsenal().getSecondary().setCurrentDelay(
-                        Controller.thisPlayer.getArsenal().getSecondary().getMAX_DELAY());
+            Controller.thisPlayer.getArsenal().getSecondary().shoot(e.getX(), e.getY());
+            Controller.thisPlayer.getArsenal().getSecondary().playAudio();
+            Controller.thisPlayer.incrementBulletCount();
+            Controller.thisPlayer.getArsenal().getSecondary().setCurrentDelay(
+                    Controller.thisPlayer.getArsenal().getSecondary().getMAX_DELAY());
 
-            }
         }
     }
 

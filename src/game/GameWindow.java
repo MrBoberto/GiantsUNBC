@@ -21,10 +21,9 @@ public class GameWindow {
         try {
             img = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_blue.png");
             frame.setIconImage(img);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
 
         frame.add(controller);
         frame.setResizable(false);

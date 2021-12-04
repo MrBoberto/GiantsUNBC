@@ -38,22 +38,7 @@ public class PauseMenu implements KeyListener {
         this.frame = frame;
         this.controller = controller;
 
-        if (controller instanceof ClientController) {
-            thisBackground = redBackground;
-            try {
-                backgroundImage = ImageIO.read(Objects.requireNonNull(PauseMenu.class.getResource("/resources/GUI/pause_menu/pause_back (10).png")));
-            } catch (IOException ignored) {
-
-            }
-
-        } else {
-            thisBackground = blueBackground;
-            try {
-                backgroundImage = ImageIO.read(Objects.requireNonNull(PauseMenu.class.getResource("/resources/GUI/pause_menu/pause_back (5).png")));
-            } catch (IOException ignored) {
-
-            }
-        }
+        setBackground(controller);
 
         currentBackground = thisBackground.getHead();
 
@@ -92,6 +77,16 @@ public class PauseMenu implements KeyListener {
 
         controller.getGameWindow().setCanPause(true);
         System.out.println(controller.getGameWindow().canPause());
+    }
+
+    private void setBackground(Controller controller) {
+        if (controller instanceof ClientController) {
+            thisBackground = redBackground;
+            backgroundImage = BufferedImageLoader.loadImage("/resources/GUI/pause_menu/pause_back (10).png");
+        } else {
+            thisBackground = blueBackground;
+            backgroundImage = BufferedImageLoader.loadImage("/resources/GUI/pause_menu/pause_back (5).png");
+        }
     }
 
     public boolean requestFocusInWindow() {
@@ -534,7 +529,6 @@ public class PauseMenu implements KeyListener {
             imgLocStr.add(i + ").png");
         }
         blueBackground = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(standing.toString());
         imgLocStr.clear();
 
         // Builds image strip for standing facing right
@@ -542,7 +536,6 @@ public class PauseMenu implements KeyListener {
             imgLocStr.add(i + ").png");
         }
         redBackground = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(standing.toString());
         imgLocStr.clear();
     }
 
