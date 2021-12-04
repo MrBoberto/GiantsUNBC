@@ -576,7 +576,7 @@ public class ServerController extends Controller {
             playerInfo[i][6] = player.getPickedUpPowerUps();
         }
 
-        renderWinner(winnerNumber);
+        renderWinner(winnerNumber, playerInfo);
 
         System.out.println("The winner is " + winner.getPlayerName());
         System.out.println("Scores: ");

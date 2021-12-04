@@ -8,17 +8,18 @@ import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
 import power_ups.*;
-import weapons.aoe.Explosion;
 import utilities.BufferedImageLoader;
+import weapons.aoe.Explosion;
 import weapons.aoe.Slash;
 import weapons.guns.*;
 
 import java.awt.*;
 import java.io.IOException;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
 
 
@@ -336,7 +337,7 @@ public class ClientController extends Controller {
                 winner = thisPlayer;
             }
 
-            renderWinner(packet.getWinner());
+            renderWinner(packet.getWinner(), packet.playerInfo());
 
             System.out.println("The winner is " + winner.getPlayerName());
             System.out.println("Scores: ");
