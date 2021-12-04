@@ -15,7 +15,7 @@ public class GameOver {
     final JFrame gameOver;
 
 
-    public GameOver(Player winner, int HEIGHT, List<Player> players, int WIDTH){
+    public GameOver(Player loser, Player winner, int HEIGHT, List<Player> players, int WIDTH){
         this.gameOver = new JFrame("Game over Window");
         System.out.println("This is the height is "+ HEIGHT +" and the width is "+WIDTH );
 
@@ -97,9 +97,42 @@ public class GameOver {
                     }
                 }
                 g2.drawString("---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,360);
+
+                g2.drawString("                                  Scores:" + loser.getPlayerName(), Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,400);
+
+                g2.drawString(
+                        "Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
+                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,440);
+                g2.drawString(
+                        "                                               Shot         Hit     Distance     Power-ups",
+                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,480);
+
+                for (int i = 0; i < players.size(); i++) {
+                    //Save data to send to client
+                    Player player = players.get(i);
+
+                    //Determine format
+                    String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
+                            player.getKillCount(),
+                            player.getDeathCount(),
+                            player.getKdr(),
+                            player.getBulletCount(),
+                            player.getBulletHitCount(),
+                            player.getWalkingDistance(),
+                            player.getPickedUpPowerUps());
+
+                    if (i != 0) {
+                        g2.drawString(format,
+                                Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,520);
+                    }
+                }
+                g2.drawString("---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,560);
+
+
+
                 g2.setFont(font);
 
-                g2.drawString(text, Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 3/4);
+                g2.drawString(text, Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,640);
 
             }
 
