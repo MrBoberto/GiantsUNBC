@@ -457,10 +457,13 @@ public abstract class Controller extends Canvas implements Runnable {
         }
 
         Player winner;
+        Player loser;
         if (winnerNumber == thisPlayer.getPlayerNumber()) {
             winner = thisPlayer;
+            loser = otherPlayer;
         } else {
             winner = otherPlayer;
+            loser = thisPlayer;
         }
 
         Graphics2D g2D = (Graphics2D) bs.getDrawGraphics();
@@ -472,7 +475,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
         isRunning = false;
         gameWindow.frame.dispose();
-        World.setGameOver(new GameOver(winner,HEIGHT, players, WIDTH));
+        World.setGameOver(new GameOver(loser,winner,HEIGHT, players, WIDTH));
 
 
         g.dispose();
