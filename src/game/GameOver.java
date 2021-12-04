@@ -15,7 +15,7 @@ public class GameOver  {
     //public static MainMenu gameOverMenu;
     final JFrame gameOver;
 
-    public GameOver(Player loser, Player winner, int HEIGHT, List<Player> players, int WIDTH) {
+    public GameOver(Player loser, Player winner, List<Player> players) {
         this.gameOver = new JFrame("Game over Window");
 
         Image img;
@@ -94,25 +94,25 @@ public class GameOver  {
                 g2.setFont(MainFont);
                 String text = "         Game Ends  " +
                         "Hit enter to return to the main screen";
-                g2.drawString("                       Score Board:", Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 70);
+                g2.drawString("                   Score Board:", Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 70);
 
 
                 g2.setFont(fontResult);
                 g2.drawString("------------------------------------------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 600, 30);
-                g2.drawString("                                 The winner is  " + winner.getPlayerName(),
+                g2.drawString("                           The winner is  " + winner.getPlayerName(),
                         Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 130);
-                g2.drawString("                                         Scores:" + winner.getPlayerName(), Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 170);
+                g2.drawString("                                 Scores:" + winner.getPlayerName(), Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 170);
 
                 g2.drawString(
                         " Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 250);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-50, 250);
                 g2.drawString(
                         "                                             Shot         Hit     Distance     Power-ups",
-                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 300);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-50, 300);
 
                 for (int i = 0; i < players.size(); i++) {
                     //Save data to send to client
-                    Player player = players.get(i);
+
 
                     //Determine format
                     String format = String.format("%10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
@@ -126,24 +126,24 @@ public class GameOver  {
 
                     if (i != 0) {
                         g2.drawString(format,
-                                Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 330);
+                                Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-60, 330);
                     }
                 }
                 //g2.drawString(" -------------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 360);
                 g2.drawString("------------------------------------------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 600, 360);
 
-                g2.drawString("                                Scores:" + loser.getPlayerName(), Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 400);
+                g2.drawString("                                Scores:" + loser.getPlayerName(), Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-50, 400);
 
                 g2.drawString(
                         " Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 440);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-50, 440);
                 g2.drawString(
                         "                                             Shot         Hit     Distance     Power-ups",
-                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 480);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-50, 480);
 
                 for (int i = 0; i < players.size(); i++) {
                     //Save data to send to client
-                    Player player = players.get(i);
+
 
                     //Determine format
                     String format = String.format("%10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
@@ -157,7 +157,7 @@ public class GameOver  {
 
                     if (i != 0) {
                         g2.drawString(format,
-                                Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 520);
+                                Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-60, 520);
                     }
                 }
                 //g2.drawString(" -----------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 560);

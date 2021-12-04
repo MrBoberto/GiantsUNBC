@@ -452,24 +452,7 @@ public class SingleController extends Controller {
         renderWinner(winnerNumber);
 
 
-        System.out.println("The winner is " + winner.getPlayerName());
-        System.out.println("Scores: ");
-        String format1 = " %10d  %10d  %10f  %10d  %10d  %10d  %10s %n";
-        System.out.format("      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of%n");
-        System.out.format("                                           Shot         Hit    Distance    Power-ups%n");
-        System.out.format("------------------------------------------------------------------------------------%n");
-        for (Player player : players) {
-            //Save data to send to client
-            //Print
-            System.out.format(format1,
-                    player.getKillCount(),
-                    player.getDeathCount(),
-                    player.getKdr(),
-                    player.getBulletCount(),
-                    player.getBulletHitCount(),
-                    player.getWalkingDistance(),
-                    player.getPickedUpPowerUps());
-        }
+
 
         // Kill the music
         soundtrack.stop();
@@ -513,7 +496,7 @@ public class SingleController extends Controller {
 
         isRunning = false;
         gameWindow.frame.dispose();
-        World.setGameOver(new GameOver(loser,winner,HEIGHT, players, WIDTH));
+        World.setGameOver(new GameOver(loser,winner, players));
 
     }
 }

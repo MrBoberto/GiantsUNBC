@@ -8,7 +8,6 @@ import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
 import power_ups.*;
-import weapons.aoe.Explosion;
 import utilities.BufferedImageLoader;
 import weapons.aoe.Explosion;
 import weapons.aoe.Slash;
@@ -463,7 +462,7 @@ public class ClientController extends Controller {
 
         isRunning = false;
         gameWindow.frame.dispose();
-        World.setGameOver(new GameOver(loser, winner, HEIGHT, players, WIDTH));
+        World.setGameOver(new GameOver(loser, winner, players));
 
     }
 

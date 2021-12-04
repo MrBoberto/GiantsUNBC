@@ -606,7 +606,7 @@ public class ServerController extends Controller {
 
         isRunning = false;
         gameWindow.frame.dispose();
-        World.setGameOver(new GameOver(loser,winner,HEIGHT, players, WIDTH));
+        World.setGameOver(new GameOver(loser,winner, players));
 
     }
 }

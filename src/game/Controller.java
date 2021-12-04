@@ -436,7 +436,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
         isRunning = false;
         gameWindow.frame.dispose();
-        World.setGameOver(new GameOver(loser, winner, HEIGHT, players, WIDTH));
+        World.setGameOver(new GameOver(loser, winner, players));
 
     }
 
