@@ -359,6 +359,37 @@ public class ClientController extends Controller {
             otherPlayer.getArsenal().setInventory(packet.primary(),packet.secondary(),packet.selected(),packet.inventory());
         }
     }
+    public void renderWinner(int winnerNumber) {
+        gameWindow.frame.dispose();
+        try
+        {
+            soundtrack.stop();
+        }
+        catch (Exception ex)
+        {
+            System.out.println("Error with stopping sound.");
+            ex.printStackTrace();
+        }
+
+        System.out.println("renderWinner");
+
+
+        Player winner;
+        Player loser;
+        if (winnerNumber == Player.CLIENT_PLAYER) {
+            winner = thisPlayer;
+            loser = otherPlayer;
+        } else {
+            winner = otherPlayer;
+            loser = thisPlayer;
+        }
+
+
+        isRunning = false;
+        gameWindow.frame.dispose();
+        World.setGameOver(new GameOver(loser,winner,HEIGHT, players, WIDTH));
+
+    }
 
     @Override
     public void close() {

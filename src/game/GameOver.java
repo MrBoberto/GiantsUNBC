@@ -118,11 +118,11 @@ public class GameOver {
 
                     //Determine format
                     String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
-                            loser.getDeathCount(),
                             loser.getKillCount(),
+                            loser.getDeathCount(),
                             loser.getKdr(),
-                            loser.getBulletHitCount(),
                             loser.getBulletCount(),
+                            loser.getBulletHitCount(),
                             loser.getWalkingDistance(),
                             loser.getPickedUpPowerUps());
 

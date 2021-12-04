@@ -405,37 +405,7 @@ public abstract class Controller extends Canvas implements Runnable {
         bs.show();
     }
 
-    public void renderWinner(int winnerNumber) {
-        gameWindow.frame.dispose();
-        try
-        {
-            soundtrack.stop();
-        }
-        catch (Exception ex)
-        {
-            System.out.println("Error with stopping sound.");
-            ex.printStackTrace();
-        }
 
-        System.out.println("renderWinner");
-
-
-        Player winner;
-        Player loser;
-        if (winnerNumber == thisPlayer.getPlayerNumber()) {
-            winner = thisPlayer;
-            loser = otherPlayer;
-        } else {
-            winner = otherPlayer;
-            loser = thisPlayer;
-        }
-
-
-        isRunning = false;
-        gameWindow.frame.dispose();
-        World.setGameOver(new GameOver(loser,winner,HEIGHT, players, WIDTH));
-
-    }
 
     //Loading the level
     void loadLevel(BufferedImage image){
