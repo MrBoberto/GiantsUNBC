@@ -406,7 +406,7 @@ public abstract class Controller extends Canvas implements Runnable {
     }
 
     public void renderWinner(int winnerNumber) {
-
+        gameWindow.frame.dispose();
         try
         {
             soundtrack.stop();
@@ -419,44 +419,6 @@ public abstract class Controller extends Canvas implements Runnable {
 
         System.out.println("renderWinner");
 
-        BufferStrategy bs = this.getBufferStrategy();
-        if(bs == null){
-            this.createBufferStrategy(3);
-            return;
-        }
-
-        Graphics g = bs.getDrawGraphics();
-
-        // Update graphics in this section:
-        //////////////////////////////////////
-
-        g.drawImage(background,0,0,WIDTH,HEIGHT,this);
-
-        //Render eye candy
-        for (int i = 0; i < eyeCandy.size(); i++) {
-            if(eyeCandy.get(i) != null){
-                eyeCandy.get(i).render(g);
-            }
-        }
-
-        for (int i = 0; i < blocks.size(); i++) {
-            if (blocks.get(i) != null){
-                blocks.get(i).render(g);
-            }
-        }
-
-        for (int i = 0; i < movingAmmo.size(); i++) {
-            if(movingAmmo.get(i) != null)
-                movingAmmo.get(i).render(g);
-        }
-
-
-
-        for (int i = 0; i < players.size(); i++) {
-            if(players.get(i) != null) {
-                players.get(i).render(g);
-            }
-        }
 
         Player winner;
         Player loser;
@@ -468,22 +430,11 @@ public abstract class Controller extends Canvas implements Runnable {
             loser = thisPlayer;
         }
 
-        Graphics2D g2D = (Graphics2D) bs.getDrawGraphics();
-
-        g2D.setColor(Color.BLACK);
-        Font font = new Font("Arial", Font.BOLD, 25);
-        g2D.setFont(font);
-        g2D.getFontMetrics(font);
 
         isRunning = false;
         gameWindow.frame.dispose();
         World.setGameOver(new GameOver(loser,winner,HEIGHT, players, WIDTH));
 
-
-
-        g.dispose();
-        g2D.dispose();
-        bs.show();
     }
 
     //Loading the level
