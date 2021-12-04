@@ -87,6 +87,7 @@ public abstract class Player extends GameObject {
     protected long bulletsShot = 0;
     protected long bulletsHit = 0;
     protected long walkingDistance = 0;
+    protected long pickedUpPowerUps = 0;
 
     //Invincibility
     protected int invincibilityTimer = 0;
@@ -636,5 +637,13 @@ public abstract class Player extends GameObject {
 
     public void setDeathCount(int deathCount){
         this.deathCount = deathCount;
+    }
+
+    public long getPickedUpPowerUps() {
+        return pickedUpPowerUps;
+    }
+
+    public void increasePickedUpPowerUps() {
+        this.pickedUpPowerUps++;
     }
 }

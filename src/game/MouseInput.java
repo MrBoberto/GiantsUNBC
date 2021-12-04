@@ -22,6 +22,7 @@ public class MouseInput extends MouseAdapter {
                     && Controller.thisPlayer.getArsenal().getPrimary().getCurrentDelay() == 0) {
                 Controller.thisPlayer.getArsenal().getPrimary().shoot(e.getX(), e.getY());
                 Controller.thisPlayer.getArsenal().getPrimary().playAudio();
+                Controller.thisPlayer.incrementBulletCount();
 
                 Controller.thisPlayer.getArsenal().getPrimary().setCurrentDelay(
                         Controller.thisPlayer.getArsenal().getPrimary().getMAX_DELAY());
@@ -31,6 +32,7 @@ public class MouseInput extends MouseAdapter {
 
                 Controller.thisPlayer.getArsenal().getSecondary().shoot(e.getX(), e.getY());
                 Controller.thisPlayer.getArsenal().getSecondary().playAudio();
+                Controller.thisPlayer.incrementBulletCount();
 
                 Controller.thisPlayer.getArsenal().getSecondary().setCurrentDelay(
                         Controller.thisPlayer.getArsenal().getSecondary().getMAX_DELAY());

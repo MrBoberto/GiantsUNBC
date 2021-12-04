@@ -29,7 +29,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static final int WIDTH = 1280;
     public static final int HEIGHT = WIDTH / 16 * 9;
     public static final double FRICTION = 0.5; // Friction acting on objects
-    public static final int PLAYER_LIVES = 10;
+    public static final int PLAYER_LIVES = 2;
 
     //Mouse controllers
     public static boolean mouseInside;
@@ -168,37 +168,6 @@ public abstract class Controller extends Canvas implements Runnable {
         mouseInside = false;
         isWon = false;
         hasPauseMenu = false;
-
-        players.clear();
-
-        movingAmmo.clear();
-
-        explosions.clear();
-
-        slashes.clear();
-
-        blocks.clear();
-
-        eyeCandy.clear();
-
-        //All GameObjects
-        thisPlayer = null;
-        otherPlayer = null;
-        movingAmmo = Collections.synchronizedList(new ArrayList<>());
-        players = Collections.synchronizedList(new ArrayList<>());
-        blocks = Collections.synchronizedList(new ArrayList<>());
-        eyeCandy = Collections.synchronizedList(new ArrayList<>());
-        explosions = Collections.synchronizedList(new ArrayList<>());
-        slashes = Collections.synchronizedList(new ArrayList<>());
-        powerUps = Collections.synchronizedList(new ArrayList<>());
-        inventoryItems = Collections.synchronizedList(new ArrayList<>());
-        arsenals = Collections.synchronizedList(new ArrayList<>());
-
-        //Players spawn points
-        thisX = 0;
-        thisY = 0;
-        otherX = 0;
-        otherY = 0;
         try
         {
             soundtrack.stop();

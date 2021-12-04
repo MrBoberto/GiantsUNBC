@@ -24,7 +24,6 @@ import java.net.Socket;
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class ServerController extends Controller {
 
-
     private ServerSocket serverSocket;
     public final SFXPlayer clientWeaponAudio;
 
@@ -388,7 +387,7 @@ public class ServerController extends Controller {
 
                 killer.incrementKillCount();
                // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
-                if(victim.getDeathCount() >= 10){
+                if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
             }
@@ -440,7 +439,7 @@ public class ServerController extends Controller {
                 outputConnection.sendPacket(new DeathCountPacket(thisPlayer.getDeathCount(), otherPlayer.getDeathCount()));
                 killer.incrementKillCount();
                 // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
-                if(victim.getDeathCount() >= 10){
+                if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
             }
@@ -467,7 +466,7 @@ public class ServerController extends Controller {
 
                     if (otherPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
                         killer.incrementKillCount();
-                        if(otherPlayer.getDeathCount() >= 10){
+                        if(otherPlayer.getDeathCount() >= PLAYER_LIVES){
                             declareWinner(killer);
                         }
                     }
@@ -497,7 +496,7 @@ public class ServerController extends Controller {
 
                     if (thisPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
                         killer.incrementKillCount();
-                        if(thisPlayer.getDeathCount() >= 10){
+                        if(thisPlayer.getDeathCount() >= PLAYER_LIVES){
                             declareWinner(killer);
                         }
                     }
@@ -594,7 +593,7 @@ public class ServerController extends Controller {
                     player.getBulletCount(),
                     player.getBulletHitCount(),
                     player.getWalkingDistance(),
-                    "???");
+                    player.getPickedUpPowerUps());
         }
 
         //Send to client

@@ -37,6 +37,7 @@ public class SpeedDown extends PowerUp{
 
     @Override
     public void applyPowerUp(int playerNumber) {
+        super.applyPowerUp(playerNumber);
         int indexToRemove = Controller.powerUps.indexOf(this);
         Controller.powerUps.remove(indexToRemove);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController){

@@ -2,6 +2,7 @@ package power_ups;
 
 import game.Controller;
 import game.GameObject;
+import player.Player;
 
 import java.awt.*;
 
@@ -34,7 +35,13 @@ public abstract class PowerUp extends GameObject {
         return new Rectangle((int)x,(int)y, POWER_UP_DIMENSIONS.width,POWER_UP_DIMENSIONS.height);
     }
 
-    public abstract void applyPowerUp(int playerNumber);
+    public void applyPowerUp(int playerNumber){
+        if(playerNumber == Player.SERVER_PLAYER){
+            Controller.thisPlayer.increasePickedUpPowerUps();
+        } else {
+            Controller.otherPlayer.increasePickedUpPowerUps();
+        }
+    }
     protected abstract void updateClient(int playerNumber, int indexToRemove);
 
     public boolean isCosmetic() {

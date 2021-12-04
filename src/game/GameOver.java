@@ -89,7 +89,7 @@ public class GameOver {
                             player.getBulletCount(),
                             player.getBulletHitCount(),
                             player.getWalkingDistance(),
-                            "???");
+                            player.getPickedUpPowerUps());
 
                     if (i != 0) {
                         g2.drawString(format,
