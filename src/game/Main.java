@@ -85,30 +85,3 @@ public class Main {
         }
     }
 }
-
-
-/*
- try {
-            InetAddress correctAddress =InetAddress.getLocalHost();//to make java happy, should not need to be initialized
-            Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
-            boolean firstAddress = false;
-            while(Interfaces.hasMoreElements())
-            {
-                NetworkInterface Interface = Interfaces.nextElement();
-                Enumeration<InetAddress> Addresses = Interface.getInetAddresses();
-                while(Addresses.hasMoreElements())
-                {
-                    InetAddress Address = Addresses.nextElement();
-                    if (!Address.getHostAddress().contains("f") && !Address.getHostAddress().contains(":") && !Address.getHostAddress().contains("127.0.0.1") && !firstAddress && !Address.getHostAddress().contains("192.168.56.1"))
-                    {
-                        System.out.println("Your ip is:"+Address.getHostAddress());
-                        firstAddress = true;
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
- */
