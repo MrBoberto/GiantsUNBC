@@ -4,7 +4,6 @@ import audio.AudioPlayer;
 import inventory_items.InventoryItem;
 import inventory_items.LightningSwordItem;
 import mapObjects.Block;
-import packets.WinnerPacket;
 import player.Arsenal;
 import player.MainPlayer;
 import player.OtherPlayer;
@@ -479,7 +478,7 @@ public abstract class Controller extends Canvas implements Runnable {
         gameWindow.frame.dispose();
         World.setGameOver(new GameOver(loser,winner,HEIGHT, players, WIDTH));
 
-        outputConnection.sendPacket(new WinnerPacket(winnerNumber, playerInfo));
+
 
         g.dispose();
         g2D.dispose();

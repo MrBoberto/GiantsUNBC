@@ -576,6 +576,7 @@ public class ServerController extends Controller {
             playerInfo[i][6] = player.getPickedUpPowerUps();
         }
 
+        outputConnection.sendPacket(new WinnerPacket(winnerNumber, playerInfo));
         renderWinner(winnerNumber, playerInfo);
 
         System.out.println("The winner is " + winner.getPlayerName());
