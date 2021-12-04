@@ -57,21 +57,26 @@ public class GameOver {
             public void paintComponent(Graphics g){
                 Graphics2D g2 = (Graphics2D) g;
                 Font font = new Font("Bauhaus 93", Font.PLAIN, 30);
+                Font MainFont = new Font("Bauhaus 93", Font.PLAIN, 50);
 
                 Font fontResult = new Font("Apple Casual",Font.PLAIN,30);
                 FontMetrics fontMetrics = g2.getFontMetrics(font);
                 g2.setColor(Color.WHITE);
 
-                g2.setFont(fontResult);
+                g2.setFont(MainFont);
                 String text =        "           Game Ends  " +
                         "Click anywhere to return to the main screen";
-                g2.drawString("---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,30);
-                g2.drawString("                            The winner is  " + winner.getPlayerName(),
-                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,90);
-                g2.drawString("                                  Scores:" + winner.getPlayerName(), Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,150);
+                g2.drawString("                         Score Board:" , Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,60);
+
+
+                g2.setFont(fontResult);
+                g2.drawString("   ---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,30);
+                g2.drawString("                                   The winner is  " + winner.getPlayerName(),
+                        Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,130);
+                g2.drawString("                                         Scores:" + winner.getPlayerName(), Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,170);
 
                 g2.drawString(
-                        "Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
+                        "   Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
                         Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,250);
                 g2.drawString(
                         "                                               Shot         Hit     Distance     Power-ups",
@@ -96,12 +101,12 @@ public class GameOver {
                                 Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,330);
                     }
                 }
-                g2.drawString("---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,360);
+                g2.drawString("   ---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,360);
 
                 g2.drawString("                                  Scores:" + loser.getPlayerName(), Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,400);
 
                 g2.drawString(
-                        "Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
+                        "   Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
                         Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,440);
                 g2.drawString(
                         "                                               Shot         Hit     Distance     Power-ups",
@@ -113,11 +118,11 @@ public class GameOver {
 
                     //Determine format
                     String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
-                            player.getKillCount(),
                             player.getDeathCount(),
+                            player.getKillCount(),
                             player.getKdr(),
-                            player.getBulletCount(),
                             player.getBulletHitCount(),
+                            player.getBulletCount(),
                             player.getWalkingDistance(),
                             player.getPickedUpPowerUps());
 
@@ -126,7 +131,7 @@ public class GameOver {
                                 Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,520);
                     }
                 }
-                g2.drawString("---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,560);
+                g2.drawString("   ---------------------------------------------------------------------------------------------------",Controller.WIDTH/4 -200,560);
 
 
 
