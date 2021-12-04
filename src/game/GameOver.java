@@ -88,13 +88,13 @@ public class GameOver {
 
                     //Determine format
                     String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
-                            player.getKillCount(),
-                            player.getDeathCount(),
-                            player.getKdr(),
-                            player.getBulletCount(),
-                            player.getBulletHitCount(),
-                            player.getWalkingDistance(),
-                            player.getPickedUpPowerUps());
+                            winner.getKillCount(),
+                            winner.getDeathCount(),
+                            winner.getKdr(),
+                            winner.getBulletCount(),
+                            winner.getBulletHitCount(),
+                            winner.getWalkingDistance(),
+                            winner.getPickedUpPowerUps());
 
                     if (i != 0) {
                         g2.drawString(format,
@@ -118,13 +118,13 @@ public class GameOver {
 
                     //Determine format
                     String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
-                            player.getDeathCount(),
-                            player.getKillCount(),
-                            player.getKdr(),
-                            player.getBulletHitCount(),
-                            player.getBulletCount(),
-                            player.getWalkingDistance(),
-                            player.getPickedUpPowerUps());
+                            loser.getDeathCount(),
+                            loser.getKillCount(),
+                            loser.getKdr(),
+                            loser.getBulletHitCount(),
+                            loser.getBulletCount(),
+                            loser.getWalkingDistance(),
+                            loser.getPickedUpPowerUps());
 
                     if (i != 0) {
                         g2.drawString(format,
