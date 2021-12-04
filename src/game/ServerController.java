@@ -562,7 +562,7 @@ public class ServerController extends Controller {
             winnerNumber = Player.CLIENT_PLAYER;
         }
 
-        double[][] playerInfo = new double[2][6];
+        double[][] playerInfo = new double[2][7];
 
         for (int i = 0; i < players.size(); i++) {
             //Save data to send to client
