@@ -1,7 +1,7 @@
 package game;
 
-import inventory_items.InventoryItem;
 import audio.AudioPlayer;
+import inventory_items.InventoryItem;
 import inventory_items.LightningSwordItem;
 import mapObjects.Block;
 import player.Arsenal;
@@ -18,7 +18,8 @@ import weapons.guns.AssaultRifle;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
@@ -404,7 +405,7 @@ public abstract class Controller extends Canvas implements Runnable {
         bs.show();
     }
 
-    public void renderWinner(int winnerNumber) {
+    public void renderWinner(int winnerNumber, double[][] playerInfo) {
 
         try
         {
@@ -477,6 +478,7 @@ public abstract class Controller extends Canvas implements Runnable {
         isRunning = false;
         gameWindow.frame.dispose();
         World.setGameOver(new GameOver(loser,winner,HEIGHT, players, WIDTH));
+
 
 
         g.dispose();

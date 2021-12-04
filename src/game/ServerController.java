@@ -562,7 +562,7 @@ public class ServerController extends Controller {
             winnerNumber = Player.CLIENT_PLAYER;
         }
 
-        double[][] playerInfo = new double[2][6];
+        double[][] playerInfo = new double[2][7];
 
         for (int i = 0; i < players.size(); i++) {
             //Save data to send to client
@@ -576,7 +576,8 @@ public class ServerController extends Controller {
             playerInfo[i][6] = player.getPickedUpPowerUps();
         }
 
-        renderWinner(winnerNumber);
+        outputConnection.sendPacket(new WinnerPacket(winnerNumber, playerInfo));
+        renderWinner(winnerNumber, playerInfo);
 
         System.out.println("The winner is " + winner.getPlayerName());
         System.out.println("Scores: ");

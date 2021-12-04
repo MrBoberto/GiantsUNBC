@@ -435,7 +435,21 @@ public class SingleController extends Controller {
             winnerNumber = Player.CLIENT_PLAYER;
         }
 
-        renderWinner(winnerNumber);
+        double[][] playerInfo = new double[2][7];
+
+        for (int i = 0; i < players.size(); i++) {
+            //Save data to send to client
+            Player player = players.get(i);
+            playerInfo[i][0] = player.getKillCount();
+            playerInfo[i][1] = player.getDeathCount();
+            playerInfo[i][2] = player.getKdr();
+            playerInfo[i][3] = player.getBulletCount();
+            playerInfo[i][4] = player.getBulletHitCount();
+            playerInfo[i][5] = player.getWalkingDistance();
+            playerInfo[i][6] = player.getPickedUpPowerUps();
+        }
+
+        renderWinner(winnerNumber, playerInfo);
 
 
         System.out.println("The winner is " + winner.getPlayerName());
