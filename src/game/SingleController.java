@@ -78,7 +78,7 @@ public class SingleController extends Controller {
                 Bullet bullet = movingAmmo.get(j);
                 if (bullet.hasStopped()) {
                     movingAmmo.remove(bullet);
-                    if (bullet.getSERIAL() == 004 &&
+                    if (bullet.getSERIAL() == 4 &&
                             EntityCollision.getBulletVictim(bullet) != bullet.getPlayerIBelongToNumber()) {
                         //System.out.println("Rocket stopped moving!");
                         movingAmmo.remove(bullet);
@@ -246,7 +246,7 @@ public class SingleController extends Controller {
         }
 
         if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber() && !victim.isInvincible()) {
-            if (bullet.getSERIAL() == 004) {
+            if (bullet.getSERIAL() == 4) {
                 movingAmmo.remove(bullet);
                 bullet.setVelX(0);
                 bullet.setVelY(0);
@@ -255,7 +255,7 @@ public class SingleController extends Controller {
 
                 weaponAudio.setFile(-1);
                 weaponAudio.play();
-            } else if (bullet.getSERIAL() != 002) {
+            } else if (bullet.getSERIAL() != 2) {
                 movingAmmo.remove(bullet);
             }
 
