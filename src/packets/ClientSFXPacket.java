@@ -2,12 +2,7 @@ package packets;
 
 import java.io.Serializable;
 
-public class ClientSFXPacket implements Serializable {
-    int clientSFXInt;
-
-    public ClientSFXPacket(int clientSFXInt) {
-        this.clientSFXInt = clientSFXInt;
-    }
+public record ClientSFXPacket(int clientSFXInt) implements Serializable {
 
     public int getClientSFXInt() {
         return clientSFXInt;

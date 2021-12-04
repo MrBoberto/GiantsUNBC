@@ -31,6 +31,7 @@ public abstract class InventoryItem extends GameObject {
     }
 
     public abstract void giveItem(int playerNumber);
+    @SuppressWarnings("unused")
     protected abstract void updateClient(int playerNumber, int indexToRemove);
 
 }

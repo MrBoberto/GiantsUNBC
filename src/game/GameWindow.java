@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.Objects;
 
 public class GameWindow {
-    protected JFrame frame;
+    protected final JFrame frame;
     protected boolean canPause = true;
 
     public GameWindow(int width, int height, String windowName, Controller controller) {

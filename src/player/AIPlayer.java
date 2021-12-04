@@ -16,18 +16,17 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class AIPlayer extends OtherPlayer {
+    public static final double DESIRED_OFFSET = 40;
     //Main Player movement directions
     private boolean up = false, down = false,right = false,left = false;
     private boolean upStop = false, downStop = false,rightStop = false,leftStop = false;
-    private boolean attac = true;
-    private double desiredOffset = 40;  // Distance the AI wants to be from the player when attacking
-    private double shortRangeBound = 500;   // Distance determining whether to use short or long-range weapon
-    private int fear = 50;              // Max health advantage the player can have for the ai to want to attack them
+    private boolean attack = true;
+    private static final double shortRangeBound = 500;   // Distance determining whether to use short or long-range weapon
+    private static final int fear = 50;              // Max health advantage the player can have for the AI to want to attack them
     private int randAngleDuration = 0;
     private int randAngleDurationMax = 20;
     private int tryToGetCollectTimer = 0;
-    private final int TRY_TO_GET_WEAPON_TIMER_MAX = 60;
-    Point target;                       // May be a player, power up, or weapon; depends on Thanos' judgement
+    Point target;                       // It may be a player, power up, or weapon; depends on Thanos' judgement
     private Point closestInventoryItem;
     private Point closestPowerUp;
     private int targetType = 3;
@@ -62,23 +61,23 @@ public class AIPlayer extends OtherPlayer {
         // If there is anything in Thanos' path
         if (rightStop || downStop || leftStop || upStop || randAngleDuration > 0) {
             if (leftStop && randAngleDuration - 1 < randAngleDurationMax) {
-                angle = Math.PI * World.getSRandom().nextDouble();
-                randAngleDurationMax = 5 + World.getSRandom().nextInt(10);
+                angle = Math.PI * World.sRandom.nextDouble();
+                randAngleDurationMax = 5 + World.sRandom.nextInt(10);
                 randAngleDuration = randAngleDurationMax;
             }
             if (upStop && randAngleDuration - 1 < randAngleDurationMax) {
-                angle = Math.PI / 2 + Math.PI * World.getSRandom().nextDouble();
-                randAngleDurationMax = 5 + World.getSRandom().nextInt(10);
+                angle = Math.PI / 2 + Math.PI * World.sRandom.nextDouble();
+                randAngleDurationMax = 5 + World.sRandom.nextInt(10);
                 randAngleDuration = randAngleDurationMax;
             }
             if (rightStop && randAngleDuration - 1 < randAngleDurationMax) {
-                angle = Math.PI + Math.PI * World.getSRandom().nextDouble();
-                randAngleDurationMax = 5 + World.getSRandom().nextInt(10);
+                angle = Math.PI + Math.PI * World.sRandom.nextDouble();
+                randAngleDurationMax = 5 + World.sRandom.nextInt(10);
                 randAngleDuration = randAngleDurationMax;
             }
             if (downStop && randAngleDuration - 1 < randAngleDurationMax) {
-                angle = 3 * Math.PI / 2 + Math.PI * World.getSRandom().nextDouble();
-                randAngleDurationMax = 5 + World.getSRandom().nextInt(10);
+                angle = 3 * Math.PI / 2 + Math.PI * World.sRandom.nextDouble();
+                randAngleDurationMax = 5 + World.sRandom.nextInt(10);
                 randAngleDuration = randAngleDurationMax;
             }
 
@@ -163,33 +162,34 @@ public class AIPlayer extends OtherPlayer {
             }
 
             if (Controller.thisPlayer.getHealth() <= health + fear || targetType > 0) {
-                if (!attac) {
+                if (!attack) {
                     setDialogue("You should have gone for the head.");
                     dialogueCount = myDialogue.length() * 5;
                 }
-                attac = true;
-                if (target.y < y - desiredOffset) {
+                attack = true;
+                // Distance the AI wants to be from the player when attacking
+                if (target.y < y - DESIRED_OFFSET) {
                     avgY++;
                     up = true;
                 }
-                if (target.x > x + desiredOffset) {
+                if (target.x > x + DESIRED_OFFSET) {
                     avgX++;
                     right = true;
                 }
-                if (target.y > y + desiredOffset) {
+                if (target.y > y + DESIRED_OFFSET) {
                     avgY--;
                     down = true;
                 }
-                if (target.x < x - desiredOffset) {
+                if (target.x < x - DESIRED_OFFSET) {
                     avgX--;
                     left = true;
                 }
             } else {
-                if (attac) {
+                if (attack) {
                     setDialogue("Your optimism is misplaced, Asgardian.");
                     dialogueCount = myDialogue.length() * 5;
                 }
-                attac = false;
+                attack = false;
                 if (target.y < y) {
                     avgY--;
                     down = true;
@@ -208,50 +208,31 @@ public class AIPlayer extends OtherPlayer {
                 }
             }
 
-            if (avgX == 0 && avgY == 0) {
-                return;
-            } else if (avgX == 0) {
+            if (avgX == 0) {
                 if (avgY == 1) {
                     super.setAngle(0);
-                    return;
                 } else {
                     super.setAngle(Math.PI);
-                    return;
                 }
             } else if (avgY == 0) {
                 if (avgX == 1) {
                     super.setAngle(Math.PI / 2);
-                    return;
                 } else {
                     super.setAngle(-Math.PI / 2);
-                    return;
                 }
             } else if (avgX == 1) {
                 if (avgY == 1) {
                     super.setAngle(Math.PI / 4);
-                    return;
                 } else {
                     super.setAngle(3 * Math.PI / 4);
-                    return;
                 }
-            } else if (avgX == -1){
+            } else {
                 if (avgY == 1) {
                     super.setAngle(-Math.PI / 4);
-                    return;
                 } else {
                     super.setAngle(-3 * Math.PI / 4);
-                    return;
                 }
             }
-
-            double acuteAngle = Math.atan(avgY/avgX);
-//        System.out.println("player.Player 1 Acute super.getAngle(): " + Math.toDegrees(acuteAngle));
-
-            if (avgY < 0) {
-                acuteAngle += Math.PI;
-            }
-
-            super.setAngle(acuteAngle);
         }
     }
 
@@ -284,37 +265,17 @@ public class AIPlayer extends OtherPlayer {
         }
     }
 
-    public double getVelocity() {
-        return Math.sqrt(Math.pow(getVelX(), 2) + Math.pow(getVelY(), 2)) * Math.cos(super.getAngle());
-    }
-
     /**
      * Determines what speed to move at based on the controls being used and them translates the player
      * based on the horizontal and vertical velocities
      */
     public void move() {
         // Determine velocities
-        if (tIsHeld) {
-            if (superDashTimer <= 0) {
-                setVelocity(VELSUPERDASH);
-            } else {
-                isJumping = false;
-                superDashTimer -= 1;
-                if (up || right || down || left) {
-                    setVelocity(VELSNEAK / 2);
-                } else {
-                    setVelX(0);
-                }
-            }
-        } else if (dashTimer == DASH_TIMER_MAX) {
+        if (dashTimer == DASH_TIMER_MAX) {
             dashTimer--;
-            setVelocity(VELDASH);
-        } else if (shiftIsHeld && (up || right || down || left)) {
-            setVelocity(VELSNEAK);
+            setVelocity(DASH_VELOCITY);
         } else if ((up || right || down || left) && dashTimer <= 0) {
-            setVelocity(VELJOG);
-        } else if (shiftIsHeld) {
-            setVelX(0);
+            setVelocity(JOG_VELOCITY);
         }
 
         //Check collisions
@@ -412,18 +373,11 @@ public class AIPlayer extends OtherPlayer {
         } else if (super.getY() >= Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0) {
             super.setY(Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0);
             setVelY(0);
-            isFalling = false;
         }
 
         boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 4,
                 (int)this.y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
                 currentImage.getImage().getHeight() / 2);
-
-        collisionOn = false;
-//        double entityLeftWorldX = super.getX() + solidArea.x;
-//        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
-//        double entityTopWorldX = super.getY() + solidArea.y;
-//        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
 
 
         if (arsenal.getPrimary().getCurrentDelay() > 0) {
@@ -432,10 +386,6 @@ public class AIPlayer extends OtherPlayer {
         if (arsenal.getSecondary() != null && arsenal.getSecondary().getCurrentDelay() > 0) {
             arsenal.getSecondary().setCurrentDelay(arsenal.getSecondary().getCurrentDelay() - 1);
         }
-
-        solidArea = new Rectangle(((int)this.x - currentImage.getImage().getWidth() / 2) + 40,
-                ((int)this.y - currentImage.getImage().getHeight() / 2) + 40, currentImage.getImage().getWidth() - 85,
-                currentImage.getImage().getHeight() - 85);
     }
 
     private void checkBlockCollisions(){
@@ -555,10 +505,10 @@ public class AIPlayer extends OtherPlayer {
                 (int) y - 10 - currentImage.getImage().getHeight() / 4);
     }
 
-    @Override
     /**
      * Loads the image files into the image strips based upon their names
      */
+    @Override
     public void loadImageStrips() {
         ArrayList<String> imgLocStr = new ArrayList<>();
         String defLocStr;
@@ -613,14 +563,13 @@ public class AIPlayer extends OtherPlayer {
         }
         weaponTextures = new ArrayList<>();
         // Load weapon textures
-        for (int i = 0; i < imgLocStr.size(); i++) {
+        for (String s : imgLocStr) {
             try {
-                weaponTextures.add(ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/Textures/WEAPONS/" + imgLocStr.get(i)))));
+                weaponTextures.add(ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/Textures/WEAPONS/" + s))));
             } catch (IOException exc) {
                 System.out.println("Could not find image file: " + exc.getMessage());
             }
         }
-        imageLoaded = true;
     }
 
     public static void setDialogue(String dialogue) {

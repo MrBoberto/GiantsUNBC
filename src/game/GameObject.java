@@ -3,7 +3,6 @@ package game;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.*;
 
 public abstract class GameObject implements Serializable {

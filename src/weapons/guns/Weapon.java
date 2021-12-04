@@ -1,19 +1,13 @@
 package weapons.guns;
 
-import player.Player;
-
 import java.io.Serializable;
 
 public interface Weapon extends Serializable {
 
     void shoot(double mouseX, double mouseY);
 
-    Player getPlayerIBelongTo();
-
     // Measured in kg * pixels / sec
     double getSPEED();
-
-    double getINACCURACY();
 
     int getMAX_DELAY();
 
@@ -25,9 +19,6 @@ public interface Weapon extends Serializable {
 
     // Returns the name of the weapon
     String toString();
-
-    // Returns the damage each bullet does
-    double getDamage();
 
     void playAudio();
 }

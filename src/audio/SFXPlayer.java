@@ -3,16 +3,15 @@ package audio;
 import game.Main;
 
 import javax.sound.sampled.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 public class SFXPlayer {
     Clip clip;
     AudioInputStream audioInputStream;
-    protected static int volume = 100;
+    protected static final int volume = 100;
     static FloatControl gainControl;
-    static double gain = 1;
+    static final double gain = 1;
     protected static float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
 
     public void setFile(int fileInt) {
@@ -39,6 +38,7 @@ public class SFXPlayer {
         URL audioUrl = this.getClass().getResource(fileLocation);
 
         try {
+            assert audioUrl != null;
             audioInputStream = AudioSystem.getAudioInputStream(audioUrl);
             DataLine.Info info = new DataLine.Info(Clip.class, audioInputStream.getFormat());
             clip = (Clip) AudioSystem.getLine(info);

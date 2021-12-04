@@ -7,23 +7,12 @@ import java.awt.event.MouseEvent;
 
 public class MouseInput extends MouseAdapter {
 
-    protected Controller controller;
-
-    public MouseInput(Controller controller){
-        this.controller = controller;
+    public MouseInput(){
         /* empty */
     }
 
     public void mousePressed(MouseEvent e) {
         // Shoot at the selected point
-        /*
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            if (Controller.mouseInside) {
-                Controller.isMouse1Held = true;
-            }
-        }
-
-         */
         System.out.println(e.getPoint());
         if (e.getButton() == MouseEvent.BUTTON1) {
             Controller.thisPlayer.setButton1Held(true);

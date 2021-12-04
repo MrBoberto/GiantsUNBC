@@ -71,6 +71,7 @@ public class BlockShadow extends GameObject {
 
     }
 
+    @SuppressWarnings("unused")
     @Override
     public Rectangle getBounds() {
         return null;

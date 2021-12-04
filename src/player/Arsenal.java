@@ -7,11 +7,11 @@ import power_ups.*;
 import utilities.BufferedImageLoader;
 import weapons.guns.*;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 
 import static weapons.aoe.Explosion.buildImageStrip;
@@ -21,7 +21,7 @@ public class Arsenal extends GameObject {
     private Weapon primary;
     private Weapon secondary;
     private final Player playerIBelongTo;
-    private final ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+    private final ArrayList<Weapon> weapons = new ArrayList<>();
     protected ImageStrip swordAnimationStrip;
     protected ImageFrame swordFrame;
 
@@ -102,13 +102,13 @@ public class Arsenal extends GameObject {
                 g2d.drawImage(getWeaponTexture(weapons.get(i)), (int) x + 250 + i * 52, (int) y + 35, 55, 55, World.controller);
             }
 
-            //Powerups
+            //Power ups
             for(PowerUp powerUp: cosmeticPowerUps){
                 powerUp.render(g2d);
             }
             for (int i = 0; i < playerIBelongTo.getPowerUps().length; i++) {
-                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setX(x + 258 + i * 25);
-                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setY(y);
+                Objects.requireNonNull(getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i])).setX(x + 258 + i * 25);
+                Objects.requireNonNull(getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i])).setY(y);
             }
 
             for(PowerUp powerUp: getUnusedPowerUps()){
@@ -121,7 +121,7 @@ public class Arsenal extends GameObject {
             int offset = 5;
 
             //Inventory slots
-            g2d.drawImage(shadow, (int) 0, (int) y+15, shadow.getWidth(), shadow.getHeight(), World.controller);
+            g2d.drawImage(shadow, 0, (int) y+15, shadow.getWidth(), shadow.getHeight(), World.controller);
             g2d.drawImage(inventorySlots, (int) x - offset, (int) y, inventorySlots.getWidth(), inventorySlots.getHeight(), World.controller);
 
             //Player image
@@ -149,13 +149,13 @@ public class Arsenal extends GameObject {
                 g2d.drawImage(getWeaponTexture(weapons.get(i)), (int) x + i * 52, (int) y + 35, 55, 55, World.controller);
             }
 
-            //Powerups
+            //Power ups
             for(PowerUp powerUp: cosmeticPowerUps){
                 powerUp.render(g2d);
             }
             for (int i = 0; i < playerIBelongTo.getPowerUps().length; i++) {
-                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setX(x + 173 - i * 25);
-                getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i]).setY(y);
+                Objects.requireNonNull(getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i])).setX(x + 173 - i * 25);
+                Objects.requireNonNull(getPowerUpCosmetic(playerIBelongTo.getPowerUps()[i])).setY(y);
             }
 
             for(PowerUp powerUp: getUnusedPowerUps()){
@@ -261,42 +261,6 @@ public class Arsenal extends GameObject {
         }
     }
 
-    public Weapon remove(Weapon weapon) {
-        if (weapon.getSERIAL() == primary.getSERIAL()) {
-            return null;
-        } else if (weapon.getSERIAL() == secondary.getSERIAL()) {
-            return null;
-        } else {
-            for (int i = 0; i < weapons.size(); i++) {
-                if (weapons.get(i).getSERIAL() == weapon.getSERIAL()) {
-                    weapons.remove(i);
-                    return weapon;
-                }
-            }
-            return null;
-        }
-    }
-
-    public void setPrimary(Weapon weapon) {
-        if (weapon.getSERIAL() == primary.getSERIAL()) {
-            // Do nothing
-        } else if (weapon.getSERIAL() == secondary.getSERIAL()) {
-            // Switch primary and secondary
-            secondary = primary;
-            primary = weapon;
-            return;
-        } else {
-            for (int i = 0; i < weapons.size(); i++) {
-                if (weapons.get(i).getSERIAL() == weapon.getSERIAL()) {
-                    weapons.add(primary);
-                    primary = weapon;
-                    return;
-                }
-            }
-        }
-        System.out.println("weapons.guns.Weapon " + weapon.getSERIAL() + " not found.");
-    }
-
     public void setPrimary(int inventoryNum) {
         System.out.println("WEAPONS ARRAY: " + weapons);
         if (inventoryNum >= 1 && weapons.size() >= inventoryNum) {
@@ -309,7 +273,7 @@ public class Arsenal extends GameObject {
                 primary = weapons.get(inventoryNum - 1);
                 return;
             } else {
-                Weapon newWeaponsArray[] = new Weapon[weapons.size()];
+                Weapon[] newWeaponsArray = new Weapon[weapons.size()];
                 for (int i = 0; i < inventoryNum - 1; i++) {
                     newWeaponsArray[i] = weapons.get(i);
                 }
@@ -321,35 +285,13 @@ public class Arsenal extends GameObject {
                 }
 
                 weapons.clear();
-                for (int i = 0; i < newWeaponsArray.length; i++) {
-                    weapons.add(newWeaponsArray[i]);
-                }
+                Collections.addAll(weapons, newWeaponsArray);
 
                 return;
             }
         }
         System.out.println("Weapon inventory index " + inventoryNum + " DNE.");
 
-    }
-
-    public void setSecondary(Weapon weapon) {
-        if (weapon.getSERIAL() == secondary.getSERIAL()) {
-            // Do nothing
-        } else if (weapon.getSERIAL() == primary.getSERIAL()) {
-            // Switch primary and secondary
-            primary = secondary;
-            secondary = weapon;
-            return;
-        } else {
-            for (int i = 0; i < weapons.size(); i++) {
-                if (weapons.get(i).getSERIAL() == weapon.getSERIAL()) {
-                    weapons.add(secondary);
-                    secondary = weapon;
-                    return;
-                }
-            }
-        }
-        System.out.println("weapons.guns.Weapon " + weapon.getSERIAL() + " not found.");
     }
 
     public void setSecondary(int inventoryNum) {
@@ -364,7 +306,7 @@ public class Arsenal extends GameObject {
                 secondary = weapons.get(inventoryNum - 1);
                 return;
             } else {
-                Weapon newWeaponsArray[] = new Weapon[weapons.size()];
+                Weapon[] newWeaponsArray = new Weapon[weapons.size()];
                 for (int i = 0; i < inventoryNum - 1; i++) {
                     newWeaponsArray[i] = weapons.get(i);
                 }
@@ -376,9 +318,7 @@ public class Arsenal extends GameObject {
                 }
 
                 weapons.clear();
-                for (int i = 0; i < newWeaponsArray.length; i++) {
-                    weapons.add(newWeaponsArray[i]);
-                }
+                weapons.addAll(Arrays.asList(newWeaponsArray));
 
                 return;
             }
@@ -394,48 +334,32 @@ public class Arsenal extends GameObject {
         return secondary;
     }
 
-    public Weapon get(int index) {
-        return weapons.get(index);
-    }
-
-    public int size() {
-        return weapons.size();
-    }
-
-    public void clear() {
-        primary = null;
-        secondary = null;
-        for (int i = 0; i < weapons.size(); i++) {
-            weapons.remove(0);
-        }
-    }
-
-    public boolean hasWeapon(int SERIAL) {
+    public boolean lacksWeapon(int SERIAL) {
         if (primary.getSERIAL() == SERIAL || (secondary != null && secondary.getSERIAL() == SERIAL)) {
-            return true;
+            return false;
         } else {
-            for (int i = 0; i < weapons.size(); i++) {
-                if (weapons.get(i).getSERIAL() == SERIAL) {
-                    return true;
+            for (Weapon weapon : weapons) {
+                if (weapon.getSERIAL() == SERIAL) {
+                    return false;
                 }
             }
-            return false;
+            return true;
         }
     }
 
     @Override
     public String toString() {
-        String string = "Primary: " + primary + ", Secondary: " + secondary + ",\nInventory: {";
+        StringBuilder string = new StringBuilder("Primary: " + primary + ", Secondary: " + secondary + ",\nInventory: {");
         for (int i = 0; i < weapons.size(); i++) {
-            string += weapons.get(i);
+            string.append(weapons.get(i));
             if (i < weapons.size() - 1) {
-                string += ", ";
+                string.append(", ");
             }
             else {
-                string += "}";
+                string.append("}");
             }
         }
-        return string;
+        return string.toString();
 
     }
 

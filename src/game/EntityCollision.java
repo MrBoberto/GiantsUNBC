@@ -2,7 +2,6 @@ package game;
 
 import player.Player;
 import weapons.ammo.Bullet;
-import weapons.ammo.Projectile;
 import weapons.aoe.Explosion;
 import weapons.aoe.Slash;
 

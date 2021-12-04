@@ -25,7 +25,6 @@ public abstract class Controller extends Canvas implements Runnable {
 
     //Constants
     public static final int PORT = 55555;
-    public static final int PORT2 = 55556;
     public static final int WIDTH = 1280;
     public static final int HEIGHT = WIDTH / 16 * 9;
     public static final double FRICTION = 0.5; // Friction acting on objects
@@ -79,7 +78,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
     //Levels
     protected BufferedImage level;
-    protected BufferedImage background;
+    protected final BufferedImage background;
     public static final int GRID_SIZE = 58;
 
     protected Controller() {
@@ -115,7 +114,7 @@ public abstract class Controller extends Canvas implements Runnable {
         gameWindow = new GameWindow(WIDTH,HEIGHT,"THE BOYZ", this);
         World.setGameWindow(gameWindow);
         this.addKeyListener(new KeyInput(this));
-        this.addMouseListener(new MouseInput(this));
+        this.addMouseListener(new MouseInput());
 
         //Load background
         background = BufferedImageLoader.loadImage("/resources/Textures/BG/sci-fi_background.png");
@@ -139,7 +138,7 @@ public abstract class Controller extends Canvas implements Runnable {
         // Load soundtrack
         try
         {
-            int randomMusic = World.getSRandom().nextInt(10);
+            int randomMusic = World.sRandom.nextInt(10);
             if (randomMusic < 5) {
                 soundtrack = new AudioPlayer("/resources/Music/Trananozixa.wav");
             } else {
@@ -237,13 +236,6 @@ public abstract class Controller extends Canvas implements Runnable {
                 frames = 0;
             }
 
-            /*
-            if ((hasPauseMenu && this instanceof SingleController)) {
-                unlockWaiter();
-                waitForThread();
-            }
-
-             */
         }
         stop();
     }
@@ -266,8 +258,6 @@ public abstract class Controller extends Canvas implements Runnable {
         requestFocusInWindow();
         this.createBufferStrategy(3);
         hasPauseMenu = false;
-        //this.addMouseListener(new MouseInput(this));
-        //this.addKeyListener(new KeyInput(this));
     }
 
     public GameWindow getGameWindow() {
@@ -278,41 +268,41 @@ public abstract class Controller extends Canvas implements Runnable {
      * Game logic tick. Happens 60 times per second
      */
     public void tick(){
-        for (int i = 0; i < players.size(); i++) {
-            if(players.get(i) != null)
-            players.get(i).tick();
+        for (Player player : players) {
+            if (player != null)
+                player.tick();
         }
 
-        for (int i = 0; i < movingAmmo.size(); i++) {
-            if(movingAmmo.get(i) != null)
-                movingAmmo.get(i).tick();
+        for (Bullet bullet : movingAmmo) {
+            if (bullet != null)
+                bullet.tick();
         }
 
-        for (int i = 0; i < powerUps.size(); i++) {
-            if(powerUps.get(i) != null){
-                powerUps.get(i).tick();
+        for (PowerUp powerUp : powerUps) {
+            if (powerUp != null) {
+                powerUp.tick();
             }
         }
 
-        for (int i = 0; i < inventoryItems.size(); i++) {
-            if(inventoryItems.get(i) != null){
-                inventoryItems.get(i).tick();
+        for (InventoryItem inventoryItem : inventoryItems) {
+            if (inventoryItem != null) {
+                inventoryItem.tick();
             }
         }
 
-        for (int i = 0; i < explosions.size(); i++) {
-            if(explosions.get(i) != null)
-                explosions.get(i).tick();
+        for (Explosion item : explosions) {
+            if (item != null)
+                item.tick();
         }
 
-        for (int i = 0; i < slashes.size(); i++) {
-            if(slashes.get(i) != null)
-                slashes.get(i).tick();
+        for (Slash value : slashes) {
+            if (value != null)
+                value.tick();
         }
 
-        for (int i = 0; i < arsenals.size(); i++) {
-            if(arsenals.get(i) != null){
-                arsenals.get(i).tick();
+        for (Arsenal arsenal : arsenals) {
+            if (arsenal != null) {
+                arsenal.tick();
             }
         }
 
@@ -356,7 +346,7 @@ public abstract class Controller extends Canvas implements Runnable {
     }
 
     /**
-     * Graphics tick. Happens a whole bunch of times per second.
+     * Graphics tick. Happens a bunch of times per second.
      */
     public void render(){
 
@@ -386,55 +376,55 @@ public abstract class Controller extends Canvas implements Runnable {
         g.drawImage(background,0,0,WIDTH,HEIGHT,this);
 
         //Render eye candy
-        for (int i = 0; i < eyeCandy.size(); i++) {
-            if(eyeCandy.get(i) != null){
-                eyeCandy.get(i).render(g);
+        for (GameObject gameObject : eyeCandy) {
+            if (gameObject != null) {
+                gameObject.render(g);
             }
         }
 
-        for (int i = 0; i < blocks.size(); i++) {
-            if (blocks.get(i) != null){
-                blocks.get(i).render(g);
+        for (Block block : blocks) {
+            if (block != null) {
+                block.render(g);
             }
         }
 
-        for (int i = 0; i < powerUps.size(); i++) {
-            if(powerUps.get(i) != null){
-                powerUps.get(i).render(g);
+        for (PowerUp powerUp : powerUps) {
+            if (powerUp != null) {
+                powerUp.render(g);
             }
         }
 
-        for (int i = 0; i < inventoryItems.size(); i++) {
-            if(inventoryItems.get(i) != null){
-                inventoryItems.get(i).render(g);
+        for (InventoryItem inventoryItem : inventoryItems) {
+            if (inventoryItem != null) {
+                inventoryItem.render(g);
             }
         }
 
-        for (int i = 0; i < movingAmmo.size(); i++) {
-            if(movingAmmo.get(i) != null)
-                movingAmmo.get(i).render(g);
+        for (Bullet bullet : movingAmmo) {
+            if (bullet != null)
+                bullet.render(g);
         }
 
-        for (int i = 0; i < explosions.size(); i++) {
-            if(explosions.get(i) != null)
-                explosions.get(i).render(g);
+        for (Explosion explosion : explosions) {
+            if (explosion != null)
+                explosion.render(g);
         }
 
-        for (int i = 0; i < slashes.size(); i++) {
-            if(slashes.get(i) != null)
-                slashes.get(i).render(g);
+        for (Slash slash : slashes) {
+            if (slash != null)
+                slash.render(g);
         }
 
-        for (int i = 0; i < players.size(); i++) {
-            if(players.get(i) != null) {
-                players.get(i).render(g);
+        for (Player player : players) {
+            if (player != null) {
+                player.render(g);
             }
         }
 
         //Render in-game UI
-        for (int i = 0; i < arsenals.size(); i++) {
-            if(arsenals.get(i) != null){
-                arsenals.get(i).render(g);
+        for (Arsenal arsenal : arsenals) {
+            if (arsenal != null) {
+                arsenal.render(g);
             }
         }
 
@@ -443,7 +433,7 @@ public abstract class Controller extends Canvas implements Runnable {
         bs.show();
     }
 
-    public void renderWinner(int winnerNumber, double[][] playerInfo) {
+    public void renderWinner(int winnerNumber) {
 
         try
         {
@@ -471,28 +461,27 @@ public abstract class Controller extends Canvas implements Runnable {
         g.drawImage(background,0,0,WIDTH,HEIGHT,this);
 
         //Render eye candy
-        for (int i = 0; i < eyeCandy.size(); i++) {
-            if(eyeCandy.get(i) != null){
-                eyeCandy.get(i).render(g);
+        for (GameObject gameObject : eyeCandy) {
+            if (gameObject != null) {
+                gameObject.render(g);
             }
         }
 
-        for (int i = 0; i < blocks.size(); i++) {
-            if (blocks.get(i) != null){
-                blocks.get(i).render(g);
+        for (Block block : blocks) {
+            if (block != null) {
+                block.render(g);
             }
         }
 
-        for (int i = 0; i < movingAmmo.size(); i++) {
-            if(movingAmmo.get(i) != null)
-                movingAmmo.get(i).render(g);
+        for (Bullet bullet : movingAmmo) {
+            if (bullet != null)
+                bullet.render(g);
         }
 
 
-
-        for (int i = 0; i < players.size(); i++) {
-            if(players.get(i) != null) {
-                players.get(i).render(g);
+        for (Player player : players) {
+            if (player != null) {
+                player.render(g);
             }
         }
 
@@ -508,18 +497,13 @@ public abstract class Controller extends Canvas implements Runnable {
         g2D.setColor(Color.BLACK);
         Font font = new Font("Arial", Font.BOLD, 25);
         g2D.setFont(font);
-        FontMetrics stringSize = g2D.getFontMetrics(font);
+        g2D.getFontMetrics(font);
 
         isRunning = false;
         gameWindow.frame.dispose();
-        World.setGameOver(new GameOver(winner,HEIGHT,g2D,players, WIDTH,stringSize));
-        //gameOver.printGame(winner,HEIGHT,g2D,players, WIDTH,stringSize);
+        World.setGameOver(new GameOver(winner,HEIGHT, players, WIDTH));
 
 
-
-
-
-        //////////////////////////////////////
         g.dispose();
         g2D.dispose();
         bs.show();

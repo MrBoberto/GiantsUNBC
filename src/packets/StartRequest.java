@@ -1,16 +1,8 @@
 package packets;
 
-import player.Player;
-
 import java.io.Serializable;
 
-public class StartRequest implements Serializable {
-
-    private String clientName;
-
-    public StartRequest(String clientName) {
-        this.clientName = clientName;
-    }
+public record StartRequest(String clientName) implements Serializable {
 
     public String getClientName() {
         return clientName;

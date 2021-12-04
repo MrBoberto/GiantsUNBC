@@ -2,23 +2,20 @@ package weapons.ammo;
 
 import game.*;
 import player.Player;
+import utilities.BufferedImageLoader;
 import weapons.guns.Pistol;
-import weapons.guns.Shotgun;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.*;
-import java.io.*;
 
 public class PistolBullet extends Bullet {
 
-    private final int SERIAL = 002;
+    private static final int SERIAL = 002;
     private static final double INACCURACY = 0.01;
 
 
     public PistolBullet(int player, double aimX, double aimY, int damage) {
-        super(0,0,0,player);
+        super(player);
 
         // If initialized to 0, sometimes bullet is deleted before constructor finishes.
         setVelX(-1);
@@ -37,7 +34,7 @@ public class PistolBullet extends Bullet {
                     aimX - Controller.thisPlayer.getX(),
                     aimY - Controller.thisPlayer.getY(),
                     0
-            ) - INACCURACY / 2 + INACCURACY * World.getSRandom().nextDouble();
+            ) - INACCURACY / 2 + INACCURACY * World.sRandom.nextDouble();
 
         } else if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ClientController)
                 || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ServerController)
@@ -50,7 +47,7 @@ public class PistolBullet extends Bullet {
                     aimX - Controller.otherPlayer.getX(),
                     aimY - Controller.otherPlayer.getY(),
                     0
-            ) - INACCURACY / 2 + INACCURACY * World.getSRandom().nextDouble();
+            ) - INACCURACY / 2 + INACCURACY * World.sRandom.nextDouble();
 
         }
 
@@ -65,7 +62,7 @@ public class PistolBullet extends Bullet {
 
 
 //        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = Pistol.SPEED - (Pistol.SPEED / 10) * World.getSRandom().nextDouble();
+        double speed = Pistol.SPEED - (Pistol.SPEED / 10) * World.sRandom.nextDouble();
 
         if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
 //            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
@@ -77,19 +74,12 @@ public class PistolBullet extends Bullet {
             setVelY(World.cosAdj(speed, angle));
         }
 
-//        System.out.println(", velX = " + velX + ", velY = " + velY);
-
-        //pos = new Point((int) super.getX(), (int) super.getY());
     }
 
 
 
     public void loadImage() {
-        try {
-            texture = ImageIO.read(getClass().getResource("/resources/VFX/projectile/shot.png"));
-        } catch (IOException exc) {
-            System.out.println("Could not find image file: " + exc.getMessage());
-        }
+        texture = BufferedImageLoader.loadImage("/resources/VFX/projectile/shot.png");
     }
 
     @Override
@@ -107,11 +97,6 @@ public class PistolBullet extends Bullet {
 
             g2d.drawImage(texture, affTra, World.controller);
 
-        /*
-        g.setColor(new Color(50, 50, 100));
-        g.drawRect(pos.x - texture.getWidth() / 2, pos.y - texture.getHeight() / 2, texture.getWidth(),
-                texture.getHeight());
-         */
         }
 
     }
@@ -126,9 +111,5 @@ public class PistolBullet extends Bullet {
     @Override
     public double getAngle() {
         return angle;
-    }
-    @Override
-    public int getID() {
-        return ID;
     }
 }

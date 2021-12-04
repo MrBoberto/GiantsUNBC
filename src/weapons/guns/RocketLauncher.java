@@ -1,6 +1,5 @@
 package weapons.guns;
 
-import audio.AudioPlayer;
 import audio.SFXPlayer;
 import game.ServerController;
 import game.SingleController;
@@ -11,17 +10,10 @@ import packets.ServerSFXPacket;
 import player.Player;
 import weapons.ammo.*;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-
 public class RocketLauncher implements Weapon {
-    private Player playerIBelongTo;
+    private final Player playerIBelongTo;
     public static final double SPEED = 8;
-    public static final int ROUNDCOUNT = 1;
-    public static final double INACCURACY = 0;
+    public static final int ROUND_COUNT = 1;
     public static final int MAX_DELAY = 250;
     private int currentDelay = 0;
     // Identifies type of gun
@@ -54,17 +46,17 @@ public class RocketLauncher implements Weapon {
             World.controller.getOutputConnection().sendPacket(new ServerSFXPacket(SERIAL));
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             System.out.println("Rocket sound success.");
-            for (int i = 0; i < ROUNDCOUNT; i++) {
+            for (int i = 0; i < ROUND_COUNT; i++) {
                 new RocketLauncherBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             }
         } else if (World.controller instanceof SingleController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             if (playerIBelongTo.getPlayerNumber() == Player.SERVER_PLAYER) {
-                for (int i = 0; i < ROUNDCOUNT; i++) {
+                for (int i = 0; i < ROUND_COUNT; i++) {
                     new RocketLauncherBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
                 }
             } else {
-                for (int i = 0; i < ROUNDCOUNT; i++) {
+                for (int i = 0; i < ROUND_COUNT; i++) {
                     new RocketLauncherBullet(Player.CLIENT_PLAYER, mouseX, mouseY, DAMAGE);
                 }
             }
@@ -72,7 +64,7 @@ public class RocketLauncher implements Weapon {
             System.out.println("Client rocket sound...");
             World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(SERIAL));
             System.out.println("Rocket sound success.");
-            for (int i = 0; i < ROUNDCOUNT; i++) {
+            for (int i = 0; i < ROUND_COUNT; i++) {
                 System.out.println((i + 1) + "th Client Bullet Packet being sent");
                 World.controller.getOutputConnection().sendPacket(
                         new ClientBulletPacket(
@@ -88,18 +80,9 @@ public class RocketLauncher implements Weapon {
         }
     }
 
-    public Player getPlayerIBelongTo() {
-        return playerIBelongTo;
-    }
-
     @Override
     public double getSPEED() {
         return SPEED;
-    }
-
-    @Override
-    public double getINACCURACY() {
-        return INACCURACY;
     }
 
     @Override
@@ -128,17 +111,12 @@ public class RocketLauncher implements Weapon {
     }
 
     @Override
-    public double getDamage() {
-        return DAMAGE * playerIBelongTo.getDamageMultiplier();
-    }
-
-    @Override
     public void playAudio() {
         try {
             audio.setFile(SERIAL);
             audio.play();
         } catch(Exception e) {
-            System.out.println(e.getCause());
+            e.printStackTrace();
         }
     }
 }

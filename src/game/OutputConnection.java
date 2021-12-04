@@ -2,23 +2,19 @@ package game;
 
 import packets.ServerBulletPacket;
 import packets.ClientUpdatePacket;
-import packets.ServerExplosionPacket;
 import packets.ServerUpdatePacket;
 import weapons.ammo.Bullet;
-import weapons.aoe.Explosion;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Arrays;
 
 public class OutputConnection implements Runnable {
     private ObjectOutputStream outputStream;
 
     private boolean running;
-    private boolean gameRunning = true;
-    private Controller controller;
+    private final Controller controller;
 
     public OutputConnection(Controller controller, Socket socket) {
         this.controller = controller;
@@ -39,36 +35,35 @@ public class OutputConnection implements Runnable {
         while (running) {
 
             // Send current state of game to clients.
-            if (gameRunning) {
-                if (controller instanceof ServerController) {
+            if (controller instanceof ServerController) {
 
-                    int[] serverHealths = {Controller.thisPlayer.getHealth(), Controller.otherPlayer.getHealth()};
+                int[] serverHealths = {Controller.thisPlayer.getHealth(), Controller.otherPlayer.getHealth()};
 
-                    sendPacket(new ServerUpdatePacket(
-                            Controller.thisPlayer.getX(),
-                            Controller.thisPlayer.getY(),
-                            Controller.thisPlayer.getAngle(),
-                            serverHealths,
-                            Controller.thisPlayer.isWalking(),
-                            Controller.thisPlayer.getWeaponSerial(),
-                            new boolean[] {Controller.thisPlayer.isInvincible(), Controller.otherPlayer.isInvincible() }
-                    ));
+                sendPacket(new ServerUpdatePacket(
+                        Controller.thisPlayer.getX(),
+                        Controller.thisPlayer.getY(),
+                        Controller.thisPlayer.getAngle(),
+                        serverHealths,
+                        Controller.thisPlayer.isWalking(),
+                        Controller.thisPlayer.getWeaponSerial(),
+                        new boolean[] {Controller.thisPlayer.isInvincible(), Controller.otherPlayer.isInvincible() }
+                ));
 
-                    sendPacket(new ServerBulletPacket(Controller.movingAmmo.toArray(new Bullet[0])));
-                } else {
-                    if (controller.getPlayer() != null) {
-                        sendPacket(new ClientUpdatePacket(
-                                controller.getPlayer().getX(),
-                                controller.getPlayer().getY(),
-                                controller.getPlayer().getAngle(),
-                                controller.getPlayer().isWalking(),
-                                controller.getPlayer().getWeaponSerial()));
-                    }
-
+                sendPacket(new ServerBulletPacket(Controller.movingAmmo.toArray(new Bullet[0])));
+            } else {
+                if (controller.getPlayer() != null) {
+                    sendPacket(new ClientUpdatePacket(
+                            controller.getPlayer().getX(),
+                            controller.getPlayer().getY(),
+                            controller.getPlayer().getAngle(),
+                            controller.getPlayer().isWalking(),
+                            controller.getPlayer().getWeaponSerial()));
                 }
 
             }
+
             try {
+                //noinspection BusyWait
                 Thread.sleep(5);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -102,11 +97,4 @@ public class OutputConnection implements Runnable {
         }
     }
 
-    public boolean isGameRunning() {
-        return gameRunning;
-    }
-
-    public void setGameRunning(boolean gameRunning) {
-        this.gameRunning = gameRunning;
-    }
 }

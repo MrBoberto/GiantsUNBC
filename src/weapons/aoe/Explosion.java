@@ -2,7 +2,6 @@ package weapons.aoe;
 
 import animation.ImageFrame;
 import animation.ImageStrip;
-import game.Controller;
 import game.GameObject;
 import game.World;
 
@@ -13,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Explosion extends GameObject implements Serializable {
     protected static ImageStrip animation;
@@ -21,8 +21,8 @@ public class Explosion extends GameObject implements Serializable {
     public final int MAX_AGE = 28;
     protected boolean harmful = true;
     public static final int DAMAGE = 80;
-    Rectangle boundRect;
-    protected int playerIBelongToNumber;
+    final Rectangle boundRect;
+    protected final int playerIBelongToNumber;
 
     public Explosion(double x, double y, int playerIBelongToNumber) {
         super(x, y);
@@ -67,10 +67,6 @@ public class Explosion extends GameObject implements Serializable {
 
     public boolean isHarmful() {
         return harmful;
-    }
-
-    public void setHarmful() {
-        harmful = true;
     }
 
     public boolean hasDied() {
@@ -132,20 +128,20 @@ public class Explosion extends GameObject implements Serializable {
         // The ArrayList of image files to be put into the animation.ImageStrip
         ArrayList<BufferedImage> images = new ArrayList<>();
         // Used to track images that are loaded
-        String imageFileNames = "";
-        String imageFileSubstring = "";
-        for (int i = 0; i < imgLocStr.size(); i++) {
+        StringBuilder imageFileNames = new StringBuilder();
+        StringBuilder imageFileSubstring = new StringBuilder();
+        for (String s : imgLocStr) {
             try {
-                images.add(ImageIO.read(Explosion.class.getResource(defaultFileLocation + "" + imgLocStr.get(i))));
+                images.add(ImageIO.read(Objects.requireNonNull(Explosion.class.getResource(defaultFileLocation + "" + s))));
             } catch (IOException exc) {
                 System.out.println("Could not find image file: " + exc.getMessage());
             }
-            imageFileNames += defaultFileLocation + imgLocStr.get(i) + ", ";
+            imageFileNames.append(defaultFileLocation).append(s).append(", ");
         }
         // Used for the toString() method of this animation.ImageStrip
         for (int i = 0; i < imageFileNames.length() - 2; i++) {
-            imageFileSubstring += imageFileNames.charAt(i);
+            imageFileSubstring.append(imageFileNames.charAt(i));
         }
-        return new ImageStrip(images, imageFileSubstring);
+        return new ImageStrip(images, imageFileSubstring.toString());
     }
 }

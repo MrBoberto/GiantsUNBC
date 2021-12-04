@@ -8,11 +8,10 @@ import player.Player;
 import utilities.BufferedImageLoader;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class DeathMark extends GameObject {
 
-    int playerNumber;
+    final int playerNumber;
     public DeathMark(double x, double y, int playerNumber) {
         super(x, y);
 

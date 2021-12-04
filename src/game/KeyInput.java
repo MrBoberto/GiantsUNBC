@@ -4,7 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class KeyInput extends KeyAdapter {
-    protected Controller controller;
+    protected final Controller controller;
 
     public KeyInput(Controller controller){
         this.controller = controller;
@@ -99,16 +99,6 @@ public class KeyInput extends KeyAdapter {
                     case KeyEvent.VK_D -> Controller.thisPlayer.setRight(false);
                 }
 
-//                if (key == KeyEvent.VK_SHIFT) {
-//                    shiftIsHeld = true;
-//                    isSneaking = true;
-//                }
-//                if (key == KeyEvent.VK_CONTROL) {
-//                    ctrlIsHeld = true;
-//                }
-//                if (key == KeyEvent.VK_T) {
-//                    tIsHeld = true;
-//                }
             }
         }
     }

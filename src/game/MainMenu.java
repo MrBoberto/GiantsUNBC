@@ -11,7 +11,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -20,15 +19,15 @@ public class MainMenu {
 
     public static JFrame mainMenu;
     public static String playerName = "";
-    BufferedImage backgroundImage;
+    final BufferedImage backgroundImage;
     public static String ipaddress;
     public static int mapSelected = 1;
-    private static int SERVER = 0, SINGLEPLAYER = 1;
+    private static final int SERVER = 0;
+    private static final int SINGLEPLAYER = 1;
     public static AudioPlayer soundtrack;
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
     static SFXPlayer sfxPlayer;
-    GameOver gameOver;
 
     public MainMenu() {
             mainMenu = new JFrame("THE BOYZ Launcher");
@@ -63,7 +62,7 @@ public class MainMenu {
         sfxPlayer.setFile(-2);
 
         // to make window appear on the screen
-        // max size was incorrect on my multi-display monitor so I changed it - Noah
+        // max size was incorrect on my multi-display monitor, so I changed it - Noah
         System.out.println("Size" + mainMenu.getWidth()+"width"+ mainMenu.getHeight());
 
         backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
@@ -225,19 +224,8 @@ public class MainMenu {
         ArrayList<BufferedImage> maps = new ArrayList<>();
 
 
-        /*
-        for(File file: (Objects.requireNonNull((new File("src/resources/mapLayouts")).listFiles((dir, name) -> name.endsWith(".png"))))){
-            maps.add(BufferedImageLoader.loadImage("/resources/mapLayouts/"+ file.getName()));
-        }
-
-         */
-
         for (int i = 1; i <= 9; i++) {
-            try {
-                maps.add(ImageIO.read(getClass().getResource("/resources/mapLayouts/" + "Level" + i + ".png")));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
-            }
+            maps.add(BufferedImageLoader.loadImage("/resources/mapLayouts/" + "Level" + i + ".png"));
         }
 
 
@@ -371,29 +359,11 @@ public class MainMenu {
             settingsMenu.add(createNewVoidPanel(), c);
         }
 
-        MainMenuButton nameButton = new MainMenuButton(e -> {
-
-            playerName = JOptionPane.showInputDialog ("Please enter the desired name for your avatar:");
-
-        }, "Set Username");
+        MainMenuButton nameButton = new MainMenuButton(e -> playerName = JOptionPane.showInputDialog ("Please enter the desired name for your avatar:"), "Set Username");
         c.gridy = 7;
         settingsMenu.add(nameButton, c);
 
         MainMenuButton videoButton = new MainMenuButton(e -> {
-
-            /*
-            mainMenuPanel.remove(settingsMenu);
-            c.anchor = GridBagConstraints.CENTER;
-            c.fill = GridBagConstraints.BOTH;
-            c.gridy = 0;
-            c.gridx = 0;
-            c.weighty = 1.0;
-            c.weightx = 1.0;
-            mainMenuPanel.add(mapSelection(mainMenuPanel, SERVER), c);
-            mainMenuPanel.validate();
-            mainMenuPanel.repaint();
-
-             */
 
         }, "Video Settings");
         c.gridy = 8;
@@ -562,10 +532,6 @@ public class MainMenu {
         return multiplayerMenu;
     }
 
-    public  String getPlayerName() {
-        return playerName;
-    }
-
     private JPanel createNewVoidPanel(){
         JPanel voidPanel = new JPanel();
         voidPanel.setBackground(new Color(0,0,0,0));
@@ -574,9 +540,9 @@ public class MainMenu {
 
     static class MainMenuButton extends JComponent implements MouseListener {
         boolean mouseEntered = false;
-        BufferedImage unselectedTexture;
-        BufferedImage selectedTexture;
-        String text;
+        final BufferedImage unselectedTexture;
+        final BufferedImage selectedTexture;
+        final String text;
 
         private final ArrayList<ActionListener> listeners = new ArrayList<>();
 
@@ -657,44 +623,32 @@ public class MainMenu {
 
         private void notifyListeners(MouseEvent e)
         {
-            ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "", e.getWhen(), e.getModifiers());
+            ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "", e.getWhen(), e.getModifiersEx());
             synchronized(listeners)
             {
-                for (int i = 0; i < listeners.size(); i++)
-                {
-                    ActionListener tmp = listeners.get(i);
+                for (ActionListener tmp : listeners) {
                     tmp.actionPerformed(evt);
                 }
             }
         }
 
-        public void addActionListener(ActionListener listener)
-        {
-            listeners.add(listener);
-        }
     }
 
     static class MainMenuSlider extends JComponent implements ChangeListener {
-        String text;
-        JSlider jSlider;
-        BufferedImage unselectedTexture;
+        final String text;
+        final JSlider jSlider;
+        final BufferedImage unselectedTexture;
 
         public MainMenuSlider(String text, int min, int max) {
             super();
 
             // Default to 100
-            int init = 100;
-            switch (text) {
-                case "Master Volume":
-                    init = Main.getVolumeMaster();
-                    break;
-                case "Game Volume":
-                    init = Main.getVolumeSFXActual();
-                    break;
-                case "Music Volume":
-                    init = Main.getVolumeMusicActual();
-                    break;
-            }
+            int init = switch (text) {
+                case "Master Volume" -> Main.getVolumeMaster();
+                case "Game Volume" -> Main.getVolumeSFXActual();
+                case "Music Volume" -> Main.getVolumeMusicActual();
+                default -> 100;
+            };
             jSlider = new JSlider(min, max, init);
 
             unselectedTexture = BufferedImageLoader.loadImage("/resources/GUI/main_menu/unselected_option.png");
@@ -738,19 +692,19 @@ public class MainMenu {
         @Override
         public void stateChanged(ChangeEvent e) {
             switch (text) {
-                case "Master Volume":
+                case "Master Volume" -> {
                     Main.setVolumeMaster(jSlider.getValue());
                     AudioPlayer.setVolume();
                     sfxPlayer.setVolume();
-                    break;
-                case "Game Volume":
+                }
+                case "Game Volume" -> {
                     Main.setVolumeSFX(jSlider.getValue());
                     sfxPlayer.setVolume();
-                    break;
-                case "Music Volume":
+                }
+                case "Music Volume" -> {
                     Main.setVolumeMusic(jSlider.getValue());
                     AudioPlayer.setVolume();
-                    break;
+                }
             }
 
         }

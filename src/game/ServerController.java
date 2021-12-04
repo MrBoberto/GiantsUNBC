@@ -16,20 +16,16 @@ import weapons.ammo.*;
 import weapons.aoe.Explosion;
 import weapons.aoe.Slash;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class ServerController extends Controller {
 
 
     private ServerSocket serverSocket;
-    private Socket socket;
-    public SFXPlayer clientWeaponAudio;
+    public final SFXPlayer clientWeaponAudio;
 
     public ServerController() {
         super();
@@ -58,7 +54,7 @@ public class ServerController extends Controller {
         try {
             serverSocket = new ServerSocket(Controller.PORT);
             System.out.println("waiting for connection...");
-            socket = serverSocket.accept();
+            Socket socket = serverSocket.accept();
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socket);
@@ -94,7 +90,7 @@ public class ServerController extends Controller {
 
             outputConnection.sendPacket(new StartPacket(otherPlayer.getRespawnPointX(), otherPlayer.getRespawnPointY(), 0, MainMenu.playerName, MainMenu.mapSelected));
             System.out.println("Sent packet w/ playerName");
-            if (packet.getClientName() == null || packet.getClientName() == "") {
+            if (packet.getClientName() == null || packet.getClientName().equals("")) {
                 otherPlayer.setPlayerName("Guest");
             } else {
                 otherPlayer.setPlayerName(packet.getClientName());
@@ -136,16 +132,6 @@ public class ServerController extends Controller {
 
             otherPlayer.incrementBulletCount();
 
-        } else if (object instanceof ClientExplosionPacket packet) {
-
-            new Explosion(
-                    packet.getX(),
-                    packet.getY(),
-                    packet.getPlayerNumber()
-            );
-            clientWeaponAudio.setFile(-1);
-            clientWeaponAudio.play();
-
         } else if (object instanceof ClientSlashPacket packet) {
 
             new Slash(
@@ -153,8 +139,7 @@ public class ServerController extends Controller {
                     packet.getY(),
                     packet.getAngle(),
                     packet.isLeft(),
-                    Player.CLIENT_PLAYER,
-                    packet.getDamage()
+                    Player.CLIENT_PLAYER
             );
             otherPlayer.setSwordLeft(!packet.isLeft());
             clientWeaponAudio.setFile(5);
@@ -211,42 +196,40 @@ public class ServerController extends Controller {
             }
         }
 
-        for (int j = 0; j < explosions.size(); j++) {
-            if (explosions.get(j) != null) {
-                Explosion explosion = explosions.get(j);
-                checkVictims(explosion);
+        for (Explosion item : explosions) {
+            if (item != null) {
+                checkVictims(item);
             }
         }
 
-        for (int j = 0; j < slashes.size(); j++) {
-            if (slashes.get(j) != null) {
-                Slash slash = slashes.get(j);
-                checkVictims(slash);
+        for (Slash value : slashes) {
+            if (value != null) {
+                checkVictims(value);
             }
         }
 
-        for (int i = 0; i < powerUps.size(); i++) {
-            if(powerUps.get(i) != null){
-                checkPowerUpPickups(powerUps.get(i));
+        for (PowerUp powerUp : powerUps) {
+            if (powerUp != null) {
+                checkPowerUpPickups(powerUp);
             }
         }
 
-        for (int i = 0; i < inventoryItems.size(); i++) {
-            if(inventoryItems.get(i) != null){
-                checkInventoryItemPickups(inventoryItems.get(i));
+        for (InventoryItem inventoryItem : inventoryItems) {
+            if (inventoryItem != null) {
+                checkInventoryItemPickups(inventoryItem);
             }
         }
 
         //Every COOLDOWN_BETWEEN_POWER_UPS there is a 50% chance of a power up spawning.
-        if(powerUps.size() < 4 && currentPowerUpCooldown == 0 && World.getSRandom().nextBoolean()){
+        if(powerUps.size() < 4 && currentPowerUpCooldown == 0 && World.sRandom.nextBoolean()){
             currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
 
             boolean loop = true;
             int x = 0;
             int y = 0;
             while(loop) {
-                x = World.getSRandom().nextInt(WIDTH);
-                y = World.getSRandom().nextInt(HEIGHT);
+                x = World.sRandom.nextInt(WIDTH);
+                y = World.sRandom.nextInt(HEIGHT);
                 loop = false;
                 for (Block block : blocks) {
                     if ((new Rectangle(x, y, PowerUp.POWER_UP_DIMENSIONS.width, PowerUp.POWER_UP_DIMENSIONS.height)
@@ -255,7 +238,7 @@ public class ServerController extends Controller {
                     }
                 }
             }
-            switch (World.getSRandom().nextInt(PowerUp.PowerUpType.values().length)) {
+            switch (World.sRandom.nextInt(PowerUp.PowerUpType.values().length)) {
                 case 0 -> {
                     powerUps.add(new DamageUp(x, y, 2));
                     outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.DamageUp));
@@ -285,15 +268,15 @@ public class ServerController extends Controller {
         }
 
         //Every COOLDOWN_BETWEEN_INVENTORY_ITEMS there is a 50% chance of an inventory item spawning.
-        if(inventoryItems.size() < 7 && currentInventoryItemCooldown == 0 && World.getSRandom().nextBoolean()){
+        if(inventoryItems.size() < 7 && currentInventoryItemCooldown == 0 && World.sRandom.nextBoolean()){
             currentInventoryItemCooldown = COOLDOWN_BETWEEN_INVENTORY_ITEMS;
 
             boolean loop = true;
             int x = 0;
             int y = 0;
             while(loop) {
-                x = World.getSRandom().nextInt(WIDTH);
-                y = World.getSRandom().nextInt(HEIGHT);
+                x = World.sRandom.nextInt(WIDTH);
+                y = World.sRandom.nextInt(HEIGHT);
                 loop = false;
                 for (Block block : blocks) {
                     if ((new Rectangle(x, y, InventoryItem.INVENTORY_ITEM_DIMENSIONS.width, InventoryItem.INVENTORY_ITEM_DIMENSIONS.height)
@@ -302,7 +285,7 @@ public class ServerController extends Controller {
                     }
                 }
             }
-            switch (World.getSRandom().nextInt(InventoryItem.InventoryItemType.values().length)) {
+            switch (World.sRandom.nextInt(InventoryItem.InventoryItemType.values().length)) {
                 case 0 -> {
                     inventoryItems.add(new ShotgunItem(x, y));
                     outputConnection.sendPacket(new CreateInventoryItemPacket(x, y, InventoryItem.InventoryItemType.Shotgun));
@@ -377,9 +360,6 @@ public class ServerController extends Controller {
                 clientWeaponAudio.setFile(-1);
                 clientWeaponAudio.play();
             }
-    //        if (bullet.getSERIAL() != 002) {
-
-     //       }
 
             double damage = (-1 * bullet.getDamage() * killer.getDamageMultiplier());
             System.out.println(damage);
@@ -421,22 +401,15 @@ public class ServerController extends Controller {
         Player victim;
         if (explosion.getPlayerIBelongToNumber() == Player.SERVER_PLAYER) {
             killer = thisPlayer;
-            if (victimNumber == Player.CLIENT_PLAYER) {
-                victim = otherPlayer;
-            } else if (victimNumber == Player.SERVER_PLAYER) {
-                victim = thisPlayer;
-            } else {
-                victim = null;
-            }
         } else {
             killer = otherPlayer;
-            if (victimNumber == Player.CLIENT_PLAYER) {
-                victim = otherPlayer;
-            } else if (victimNumber == Player.SERVER_PLAYER) {
-                victim = thisPlayer;
-            } else {
-                victim = null;
-            }
+        }
+        if (victimNumber == Player.CLIENT_PLAYER) {
+            victim = otherPlayer;
+        } else if (victimNumber == Player.SERVER_PLAYER) {
+            victim = thisPlayer;
+        } else {
+            victim = null;
         }
 
         double damage =  -1 * Explosion.DAMAGE * killer.getDamageMultiplier();
@@ -546,9 +519,6 @@ public class ServerController extends Controller {
         }
 
         if (victimNumber != -1 && victimNumber != slash.getPlayerIBelongToNumber() && !victim.isInvincible()) {
-            //        if (bullet.getSERIAL() != 002) {
-
-            //       }
 
             double damage = (-1 * Slash.DAMAGE * killer.getDamageMultiplier());
             System.out.println(damage);
@@ -601,9 +571,7 @@ public class ServerController extends Controller {
             playerInfo[i][5] = player.getWalkingDistance();
         }
 
-        renderWinner(winnerNumber, playerInfo);
-
-        double[][] playerInfo1 = new double[2][6];
+        renderWinner(winnerNumber);
 
         System.out.println("The winner is " + winner.getPlayerName());
         System.out.println("Scores: ");
@@ -611,16 +579,8 @@ public class ServerController extends Controller {
         System.out.format("      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of%n");
         System.out.format("                                           Shot         Hit    Distance    Power-ups%n");
         System.out.format("------------------------------------------------------------------------------------%n");
-        for (int i = 0; i < players.size(); i++) {
+        for (Player player : players) {
             //Save data to send to client
-            Player player = players.get(i);
-            playerInfo1[i][0] = player.getKillCount();
-            playerInfo1[i][1] = player.getDeathCount();
-            playerInfo1[i][2] = player.getKdr();
-            playerInfo1[i][3] = player.getBulletCount();
-            playerInfo1[i][4] = player.getBulletHitCount();
-            playerInfo1[i][5] = player.getWalkingDistance();
-
             //Print
             System.out.format(format1,
                     player.getKillCount(),
@@ -636,14 +596,6 @@ public class ServerController extends Controller {
         outputConnection.sendPacket(new WinnerPacket(winnerNumber, playerInfo));
 
         // Kill the music
-        try {
-            soundtrack.stop();
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
+        soundtrack.stop();
     }
 }

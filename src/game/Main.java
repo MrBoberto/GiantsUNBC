@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 public class Main {
@@ -14,46 +13,6 @@ public class Main {
     private static int volumeMaster = 100;
     private static int volumeMusic = 100;
     private static int volumeSFX = 100;
-
-    public static void startGame()  {
-
-
-    }
-
-    public Main() throws UnknownHostException {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-        new MainMenu();
-
-        InetAddress correctAddress =InetAddress.getLocalHost(); //to make java happy, should not need to be initailzed
-        try {
-            Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
-            boolean firstAddress = false;
-            while(Interfaces.hasMoreElements())
-            {
-                NetworkInterface Interface = Interfaces.nextElement();
-                Enumeration<InetAddress> Addresses = Interface.getInetAddresses();
-                while(Addresses.hasMoreElements())
-                {
-                    InetAddress Address = Addresses.nextElement();
-                    if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1")&&!firstAddress&&!firstAddress&&!Address.getHostAddress().contains("192.168.56.1"))
-                    {
-                            System.out.println("Your ip is:"+Address.getHostAddress());
-                            firstAddress = true;
-                            correctAddress =Address;
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        SwingUtilities.invokeLater(Main::startGame);
-    }
 
     public static int getVolumeMaster() {
         return volumeMaster;
@@ -87,8 +46,35 @@ public class Main {
         return volumeSFX;
     }
 
-    public static void main(String[] args) throws UnknownHostException {
-        Main main = new Main();
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        new MainMenu();
+
+        try {
+            Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
+            boolean firstAddress = false;
+            while(Interfaces.hasMoreElements())
+            {
+                NetworkInterface Interface = Interfaces.nextElement();
+                Enumeration<InetAddress> Addresses = Interface.getInetAddresses();
+                while(Addresses.hasMoreElements())
+                {
+                    InetAddress Address = Addresses.nextElement();
+                    if (!Address.getHostAddress().contains("f") && !Address.getHostAddress().contains(":") && !Address.getHostAddress().contains("127.0.0.1") && !firstAddress && !Address.getHostAddress().contains("192.168.56.1"))
+                    {
+                        System.out.println("Your ip is:"+Address.getHostAddress());
+                        firstAddress = true;
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

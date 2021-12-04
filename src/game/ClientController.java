@@ -28,8 +28,7 @@ public class ClientController extends Controller {
     private String correctIp;
 
 
-    private int shotgunAudioCount = 10;
-    public SFXPlayer serverWeaponAudio;
+    public final SFXPlayer serverWeaponAudio;
 
     public ClientController()throws UnknownHostException {
         super();
@@ -47,7 +46,7 @@ public class ClientController extends Controller {
         thisPlayer.setArsenal(new Arsenal(816,620,thisPlayer ));
 
 
-        InetAddress correctAddress =InetAddress.getLocalHost();//to make java happy, should not need to be initailzed
+        InetAddress correctAddress =InetAddress.getLocalHost();//to make java happy, should not need to be initialized
         try {
             Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
             boolean firstAddress = false;
@@ -86,25 +85,24 @@ public class ClientController extends Controller {
             if(ipAddress.equals("")) {
                 for (int i = 1; i <= 254; i++) {
                     final int j = i;  // i as non-final variable cannot be referenced from inner class
-                    new Thread(new Runnable() {   // new thread for parallel execution
-                        public void run() {
+                    // new thread for parallel execution
+                    new Thread(() -> {
+                        try {
+                            ip[3] = (byte) j;
+                            InetAddress address = InetAddress.getByAddress(ip);
+                            String output = address.toString().substring(1);
                             try {
-                                ip[3] = (byte) j;
-                                InetAddress address = InetAddress.getByAddress(ip);
-                                String output = address.toString().substring(1);
-                                try {
-                                    socket = new Socket(output, game.Controller.PORT);
-                                    System.out.println("FOUND SERVER");
-                                    System.out.println(output + " is this the server");
-                                    correctIp = output;
-                                    //socket.close(); //needed if 2 connections tried
-                                } catch (Exception e) {//e.printStackTrace();}
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                socket = new Socket(output, Controller.PORT);
+                                System.out.println("FOUND SERVER");
+                                System.out.println(output + " is this the server");
+                                correctIp = output;
+                                //socket.close(); //needed if 2 connections tried
+                            } catch (Exception e) {//e.printStackTrace();}
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    }).start();     // dont forget to start the thread
+                    }).start();     // don't forget to start the thread
                 }
             }else socket = new Socket(ipAddress, Controller.PORT);
             TimeUnit.SECONDS.sleep(1);//
@@ -142,7 +140,7 @@ public class ClientController extends Controller {
 
             System.out.println("StartPacket received");
 
-            if (packet.getPlayerName() == null || packet.getPlayerName() == "") {
+            if (packet.getPlayerName() == null || packet.getPlayerName().equals("")) {
                 otherPlayer.setPlayerName("Host");
             } else {
                 otherPlayer.setPlayerName(packet.getPlayerName());
@@ -192,8 +190,7 @@ public class ClientController extends Controller {
                     packet.getY(),
                     packet.getAngle(),
                     packet.isLeft(),
-                    Player.SERVER_PLAYER,
-                    packet.getDamage()
+                    Player.SERVER_PLAYER
             );
             otherPlayer.setSwordLeft(!packet.isLeft());
             serverWeaponAudio.setFile(5);
@@ -260,37 +257,37 @@ public class ClientController extends Controller {
                     case Player.SERVER_PLAYER:
                         switch (packet.getSerial()) {
                             case 0:
-                                if (!Controller.otherPlayer.getArsenal().hasWeapon(0)) {
+                                if (Controller.otherPlayer.getArsenal().lacksWeapon(0)) {
                                     Controller.otherPlayer.getArsenal().add(new Shotgun(Controller.otherPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 1:
-                                if (!Controller.otherPlayer.getArsenal().hasWeapon(1)) {
+                                if (Controller.otherPlayer.getArsenal().lacksWeapon(1)) {
                                     Controller.otherPlayer.getArsenal().add(new SniperRifle(Controller.otherPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 2:
-                                if (!Controller.otherPlayer.getArsenal().hasWeapon(2)) {
+                                if (Controller.otherPlayer.getArsenal().lacksWeapon(2)) {
                                     Controller.otherPlayer.getArsenal().add(new Pistol(Controller.otherPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 3:
-                                if (!Controller.otherPlayer.getArsenal().hasWeapon(3)) {
+                                if (Controller.otherPlayer.getArsenal().lacksWeapon(3)) {
                                     Controller.otherPlayer.getArsenal().add(new AssaultRifle(Controller.otherPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 4:
-                                if (!Controller.otherPlayer.getArsenal().hasWeapon(4)) {
+                                if (Controller.otherPlayer.getArsenal().lacksWeapon(4)) {
                                     Controller.otherPlayer.getArsenal().add(new RocketLauncher(Controller.otherPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 5:
-                                if (!Controller.otherPlayer.getArsenal().hasWeapon(5)) {
+                                if (Controller.otherPlayer.getArsenal().lacksWeapon(5)) {
                                     Controller.otherPlayer.getArsenal().add(new LightningSword(Controller.otherPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
@@ -300,37 +297,37 @@ public class ClientController extends Controller {
                     case Player.CLIENT_PLAYER:
                         switch (packet.getSerial()) {
                             case 0:
-                                if (!Controller.thisPlayer.getArsenal().hasWeapon(0)) {
+                                if (Controller.thisPlayer.getArsenal().lacksWeapon(0)) {
                                     Controller.thisPlayer.getArsenal().add(new Shotgun(Controller.thisPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 1:
-                                if (!Controller.thisPlayer.getArsenal().hasWeapon(1)) {
+                                if (Controller.thisPlayer.getArsenal().lacksWeapon(1)) {
                                     Controller.thisPlayer.getArsenal().add(new SniperRifle(Controller.thisPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 2:
-                                if (!Controller.thisPlayer.getArsenal().hasWeapon(2)) {
+                                if (Controller.thisPlayer.getArsenal().lacksWeapon(2)) {
                                     Controller.thisPlayer.getArsenal().add(new Pistol(Controller.thisPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 3:
-                                if (!Controller.thisPlayer.getArsenal().hasWeapon(3)) {
+                                if (Controller.thisPlayer.getArsenal().lacksWeapon(3)) {
                                     Controller.thisPlayer.getArsenal().add(new AssaultRifle(Controller.thisPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 4:
-                                if (!Controller.thisPlayer.getArsenal().hasWeapon(4)) {
+                                if (Controller.thisPlayer.getArsenal().lacksWeapon(4)) {
                                     Controller.thisPlayer.getArsenal().add(new RocketLauncher(Controller.thisPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
                                 break;
                             case 5:
-                                if (!Controller.thisPlayer.getArsenal().hasWeapon(5)) {
+                                if (Controller.thisPlayer.getArsenal().lacksWeapon(5)) {
                                     Controller.thisPlayer.getArsenal().add(new LightningSword(Controller.thisPlayer));
                                     inventoryItems.remove(packet.getIndexToRemove());
                                 }
@@ -360,7 +357,7 @@ public class ClientController extends Controller {
                 winner = thisPlayer;
             }
 
-            renderWinner(packet.getWinner(), packet.getPlayerInfo());
+            renderWinner(packet.getWinner());
 
             System.out.println("The winner is " + winner.getPlayerName());
             System.out.println("Scores: ");

@@ -1,26 +1,21 @@
 package game;
 
 
-import audio.AudioPlayer;
 import audio.SFXPlayer;
 import player.Player;
-import utilities.BufferedImageLoader;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Objects;
 
 public class GameOver {
     //public static MainMenu gameOverMenu;
-    JFrame gameOver;
-    public int move = 0;
+    final JFrame gameOver;
 
 
-    public GameOver(Player winner, int HEIGHT, Graphics2D g2D, List<Player> players, int WIDTH, FontMetrics stringSize){
+    public GameOver(Player winner, int HEIGHT, List<Player> players, int WIDTH){
         this.gameOver = new JFrame("Game over Window");
         System.out.println("This is the height is "+ HEIGHT +" and the width is "+WIDTH );
 
@@ -49,10 +44,8 @@ public class GameOver {
         sfxPlayer.setFile(-2);
 
         // to make window appear on the screen
-        // max size was incorrect on my multi-display monitor so I changed it - Noah
+        // max size was incorrect on my multi-display monitor, so I changed it - Noah
         System.out.println("Size" + gameOver.getWidth()+"width"+ gameOver.getHeight());
-
-        BufferedImage backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
 
         JPanel mainMenuPanel = new JPanel(new GridBagLayout());
 
@@ -98,10 +91,7 @@ public class GameOver {
                             player.getWalkingDistance(),
                             "???");
 
-                    if (i == 0) {
-//                        g2.drawString(format,
-//                                Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,200);
-                    } else {
+                    if (i != 0) {
                         g2.drawString(format,
                                 Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,330);
                     }
@@ -110,23 +100,6 @@ public class GameOver {
                 g2.setFont(font);
 
                 g2.drawString(text, Controller.WIDTH/2 - fontMetrics.stringWidth(text)/2,Controller.HEIGHT * 3/4);
-
-//                while(move < 1000){
-//                    try {
-//                        TimeUnit.MILLISECONDS.sleep(5);
-//
-                       // g2.drawRect(300,100,50,50);
-//                        move++;
-//                        if(move == 1000){
-//                            move =0;
-//                        }
-//                        repaint();
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//
-//                }
 
             }
 
@@ -148,11 +121,7 @@ public class GameOver {
         startButton.addActionListener(f -> {
             mainMenuPanel.remove(startButton);
             gameOver.dispose();
-            try {
-                var main = new Main();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
+            new MainMenu();
 
 
         });
@@ -160,68 +129,12 @@ public class GameOver {
         gameOver.setVisible(true);
 
         // Things get wild
-        /*
-        try
-        {
-            AudioPlayer soundtrack = new AudioPlayer("/resources/Music/The_Number_J.wav");
-            }
-        catch (Exception ex)
-        {
-            System.out.println("Error with playing sound.");
-            ex.printStackTrace();
-
-        }
-
-         */
 
 
-
-        System.out.println("I am in the gameover Window");
+        System.out.println("I am in the game over Window");
 
         // gameOverMenu = new MainMenu();
     }
 
 
-
-
-    public void printGame(Player winner, int HEIGHT, Graphics2D g2D, List<Player> players, int WIDTH, FontMetrics stringSize) {
-        g2D.drawString("           The winner is  %n wow this prints" + winner.getPlayerName(),
-                WIDTH / 2 - (stringSize.stringWidth("The winner is ")), HEIGHT / 10);
-        g2D.drawString("Scores:" + winner.getPlayerName(), WIDTH / 2 - (stringSize.stringWidth("Scores:")),
-                HEIGHT / 5);
-        g2D.drawString("The winner is " + winner.getPlayerName(),
-                WIDTH / 2 - (stringSize.stringWidth("The winner is ")), 3 * HEIGHT / 10);
-        g2D.drawString(
-                "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                WIDTH / 2 - (stringSize.stringWidth(
-                        "      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of")),
-                2 * HEIGHT / 5);
-        g2D.drawString(
-                "                                           Shot         Hit    Distance    Power-ups",
-                WIDTH / 2 - (stringSize.stringWidth(
-                        "                                           Shot         Hit    Distance    Power-ups")), HEIGHT / 2);
-
-        for (int i = 0; i < players.size(); i++) {
-            //Save data to send to client
-            Player player = players.get(i);
-
-            //Determine format
-            String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
-                    player.getKillCount(),
-                    player.getDeathCount(),
-                    player.getKdr(),
-                    player.getBulletCount(),
-                    player.getBulletHitCount(),
-                    player.getWalkingDistance(),
-                    "???");
-
-            if (i == 0) {
-                g2D.drawString(format,
-                        WIDTH / 2 - (stringSize.stringWidth(format)), 3 * HEIGHT / 5);
-            } else {
-                g2D.drawString(format,
-                        WIDTH / 2 - (stringSize.stringWidth(format)), 7 * HEIGHT / 10);
-            }
-        }
-    }
 }

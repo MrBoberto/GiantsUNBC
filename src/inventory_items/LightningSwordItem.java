@@ -8,8 +8,6 @@ import game.SingleController;
 import game.World;
 import packets.InventoryItemPacket;
 import player.Player;
-import utilities.BufferedImageLoader;
-import weapons.guns.AssaultRifle;
 import weapons.guns.LightningSword;
 
 import java.awt.*;
@@ -20,17 +18,15 @@ import static weapons.aoe.Slash.buildImageStrip;
 public class LightningSwordItem extends InventoryItem {
 
     //Graphics
-    private final int SECONDARY_TEXTURE_MAX_TIMER = 10;
+    private static final int SECONDARY_TEXTURE_MAX_TIMER = 10;
     private int secondaryTextureTimer = 0;
     private int secondaryTextureState = 1;
-    private final int FLOAT_EFFECT_MAX_TIMER = 3;
+    private static final int FLOAT_EFFECT_MAX_TIMER = 3;
     private int floatTimer = 0;
     private int floatState = 2;
     private boolean floatDirection = true;
-    private int textureFrameCount;
-    private int TEXTURE_FRAME_MAX;
     protected static ImageStrip swordAnimationStrip;
-    protected ImageFrame currentFrame;
+    protected final ImageFrame currentFrame;
 
     public LightningSwordItem(double x, double y) {
         super(x, y);
@@ -44,12 +40,12 @@ public class LightningSwordItem extends InventoryItem {
         int indexToRemove = Controller.inventoryItems.indexOf(this);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController) {
             if(playerNumber == Player.SERVER_PLAYER) {
-                if (!Controller.thisPlayer.getArsenal().hasWeapon(LightningSword.SERIAL)) {
+                if (Controller.thisPlayer.getArsenal().lacksWeapon(LightningSword.SERIAL)) {
                     Controller.inventoryItems.remove(indexToRemove);
                     Controller.thisPlayer.getArsenal().add(new LightningSword(Controller.thisPlayer));
                 }
             } else {
-                if (!Controller.otherPlayer.getArsenal().hasWeapon(LightningSword.SERIAL)) {
+                if (Controller.otherPlayer.getArsenal().lacksWeapon(LightningSword.SERIAL)) {
                     Controller.inventoryItems.remove(indexToRemove);
                     Controller.otherPlayer.getArsenal().add(new LightningSword(Controller.otherPlayer));
                 }

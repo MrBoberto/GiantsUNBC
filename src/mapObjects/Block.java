@@ -14,7 +14,6 @@ import java.util.Random;
 
 public class Block extends GameObject {
 
-    BlockShadow shadow;
     public Block(double x, double y) {
         super(x, y);
 
@@ -27,7 +26,7 @@ public class Block extends GameObject {
             e.printStackTrace();
         }
 
-        shadow = new BlockShadow(x,y);
+        new BlockShadow(x,y);
     }
 
     @Override

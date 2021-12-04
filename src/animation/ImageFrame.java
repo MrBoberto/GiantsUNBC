@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 public class ImageFrame {
     private ImageFrame next;
-    private BufferedImage image;
+    private final BufferedImage image;
 
     public ImageFrame(BufferedImage image) {
         this.image = image;

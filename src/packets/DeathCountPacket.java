@@ -2,14 +2,7 @@ package packets;
 
 import java.io.Serializable;
 
-public class DeathCountPacket implements Serializable {
-    int serverDeaths;
-    int clientDeaths;
-
-    public DeathCountPacket(int serverDeaths, int clientDeaths) {
-        this.serverDeaths = serverDeaths;
-        this.clientDeaths = clientDeaths;
-    }
+public record DeathCountPacket(int serverDeaths, int clientDeaths) implements Serializable {
 
     public int getServerDeaths() {
         return serverDeaths;

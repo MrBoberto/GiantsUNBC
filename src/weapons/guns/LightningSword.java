@@ -2,26 +2,21 @@ package weapons.guns;
 
 import audio.SFXPlayer;
 import game.*;
-import packets.ClientBulletPacket;
 import packets.ClientSFXPacket;
 import packets.ClientSlashPacket;
-import packets.ServerSFXPacket;
 import player.Player;
-import weapons.ammo.Projectile;
-import weapons.ammo.ShotgunBullet;
 import weapons.aoe.Slash;
 
 public class LightningSword implements Weapon {
     private final Player playerIBelongTo;
     public static final double SPEED = 0;
-    public static final int ROUNDCOUNT = 5;
-    public static final double INACCURACY = 0.1;
+    public static final int ROUND_COUNT = 5;
     public static final int MAX_DELAY = 4;
     private int currentDelay = 0;
     // Identifies type of gun
     public static final int SERIAL = 005;
-    public static int DAMAGE = 55;
-    public static int HALF_LENGTH = 60;         // The length of half of one side
+    public static final int DAMAGE = 55;
+    public static final int HALF_LENGTH = 60;         // The length of half of one side
     public SFXPlayer audio;
 
     public LightningSword(Player playerIBelongTo) {
@@ -46,9 +41,9 @@ public class LightningSword implements Weapon {
     @Override
     public void shoot(double mouseX, double mouseY) {
 
-        double angle = 0;
-        double x = 0;
-        double y = 0;
+        double angle;
+        double x;
+        double y;
 
         angle = World.atan(
                 mouseX - playerIBelongTo.getX(),
@@ -91,9 +86,9 @@ public class LightningSword implements Weapon {
 
         if (World.controller instanceof ServerController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
-            new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.SERVER_PLAYER, DAMAGE);
+            new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.SERVER_PLAYER);
             World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(SERIAL));
-            for (int i = 0; i < ROUNDCOUNT; i++) {
+            for (int i = 0; i < ROUND_COUNT; i++) {
                 World.controller.getOutputConnection().sendPacket(
                         new ClientSlashPacket(x, y, angle, playerIBelongTo.isSwordLeft(), DAMAGE)
                 );
@@ -101,38 +96,24 @@ public class LightningSword implements Weapon {
         } else if (World.controller instanceof SingleController) {
             // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             if (playerIBelongTo.getPlayerNumber() == 0) {
-                new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.SERVER_PLAYER, DAMAGE);
+                new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.SERVER_PLAYER);
             } else {
-                new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.CLIENT_PLAYER, DAMAGE);
+                new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.CLIENT_PLAYER);
             }
         } else {
-            new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), playerIBelongTo.getPlayerNumber(), DAMAGE);
-            for (int i = 0; i < ROUNDCOUNT; i++) {
+            new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), playerIBelongTo.getPlayerNumber());
+            for (int i = 0; i < ROUND_COUNT; i++) {
                 World.controller.getOutputConnection().sendPacket(
                         new ClientSlashPacket(x, y, angle, playerIBelongTo.isSwordLeft(), DAMAGE)
                 );
             }
         }
-        if (playerIBelongTo.isSwordLeft()) {
-            playerIBelongTo.setSwordLeft(false);
-        } else {
-            playerIBelongTo.setSwordLeft(true);
-        }
-    }
-
-    @Override
-    public Player getPlayerIBelongTo() {
-        return playerIBelongTo;
+        playerIBelongTo.setSwordLeft(!playerIBelongTo.isSwordLeft());
     }
 
     @Override
     public double getSPEED() {
         return SPEED;
-    }
-
-    @Override
-    public double getINACCURACY() {
-        return INACCURACY;
     }
 
     @Override
@@ -161,17 +142,12 @@ public class LightningSword implements Weapon {
     }
 
     @Override
-    public double getDamage() {
-        return DAMAGE * playerIBelongTo.getDamageMultiplier();
-    }
-
-    @Override
     public void playAudio() {
         try {
             audio.setFile(SERIAL);
             audio.play();
         } catch(Exception e) {
-            System.out.println(e.getCause());
+            e.printStackTrace();
         }
     }
 }

@@ -1,13 +1,12 @@
 package player;
 
-import game.MainMenu;
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
 import power_ups.PowerUp;
 import packets.ClientDashPacket;
 import packets.ServerDashPacket;
-import weapons.guns.*;
+import utilities.BufferedImageLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -23,22 +22,15 @@ public abstract class Player extends GameObject {
     // The integer representation of the player's current position
 //    protected Point pos;
     public static final int SERVER_PLAYER = 0, CLIENT_PLAYER = 1;
-    // Preset velocities of player actions
-    protected final double VELJUMP = -12;
-    protected final double VELSNEAK = 2.2;
-    protected final double VELJOG = 5.2;
-    protected final double VELDASH = 16;
-    protected final double VELSUPERDASH = 30;
-    protected final int LANDINGTIMERMAX = 27;
-    protected final int SUPERDASHTIMERMAX = 67;
+    protected final double JOG_VELOCITY = 5.2;
+    protected final double DASH_VELOCITY = 16;
 
-    public MainMenu mainMenu;
     // The texture of the player being used in the current frame
     protected ImageFrame currentImage;
     protected Rectangle boundRect;
     protected int health = 100;
     protected int healTimer = 120;
-    protected final int HEALTIMERMAX = 120;
+    protected final int HEAL_TIMER_MAX = 120;
     protected int killCount = 0;
     protected int deathCount = 0;
     protected double kdr = -1;
@@ -59,28 +51,18 @@ public abstract class Player extends GameObject {
     protected int ricochetTimer = 0;
 
     //Player characteristics
-    protected int playerNumber;
+    protected final int playerNumber;
     protected String playerName;
     protected Color playerColour;
 
     // Determines what the player did last frame to help determine what animation to play.
     protected int lastAction = 1;
-    protected int landingTimer = LANDINGTIMERMAX;
-    protected int superDashTimer = SUPERDASHTIMERMAX;
     protected int dashTimer = 0;
     protected int dashAnimationTimer = 0;
     public final int DASH_TIMER_MAX = 20;
-    protected int jumpTimer = 0;
-    // Animation strips for player. Action number is next to each.
-    protected boolean imageLoaded = false;
     protected ImageStrip standing;   // 1
     protected ImageStrip jogging;    // 2
-    protected ImageStrip crouching;  // 3
-    protected ImageStrip sneaking;   // 4
-    protected ImageStrip jumping;    // 5
-    protected ImageStrip jumped;     // 5 Animation loop at end of jump
     protected ImageStrip dashing;    // 6
-    protected ImageStrip landing;    // 7
     protected ArrayList<BufferedImage> weaponTextures;
     protected ImageStrip leftwardSwordTextures;
     protected ImageStrip rightwardSwordTextures;
@@ -89,18 +71,8 @@ public abstract class Player extends GameObject {
     protected int swordTextureCount = 0;
     protected final int SWORD_TEXTURE_MAX = 3;
     protected int swordAnimationCount = 0;
-    protected int SWORD_ANIMATION_MAX = 3;
-    protected boolean shiftIsHeld = false;
-    protected boolean spaceIsHeld = false;
-    protected boolean ctrlIsHeld = false;
-    protected boolean tIsHeld = false;
-    protected boolean mouseInside = true;
-    protected boolean isFalling = true;
-    protected boolean isJumping = false;
-    protected boolean isSneaking = false;
+    protected final int SWORD_ANIMATION_MAX = 3;
     protected boolean isWalking = false;
-    // Prevents dash from being held
-    protected boolean canDash = true;
 
     //Arsenals
     protected Arsenal arsenal;
@@ -108,17 +80,13 @@ public abstract class Player extends GameObject {
     protected int weaponSerial = -1;
 
     //Respawn point
-    protected double respawnPointX = 0;
-    protected double respawnPointY = 0;
+    protected double respawnPointX;
+    protected double respawnPointY;
 
     //Stats
     protected long bulletsShot = 0;
     protected long bulletsHit = 0;
     protected long walkingDistance = 0;
-
-    //Collisions
-    public Rectangle solidArea;
-    public boolean collisionOn =false;
 
     //Invincibility
     protected int invincibilityTimer = 0;
@@ -263,22 +231,6 @@ public abstract class Player extends GameObject {
         }
     }
 
-    public boolean isFalling() {
-        return isFalling;
-    }
-
-    public void setFalling(boolean falling) {
-        isFalling = falling;
-    }
-
-    public boolean isJumping() {
-        return isJumping;
-    }
-
-    public void setJumping(boolean jumping) {
-        isJumping = jumping;
-    }
-
     public void setHealth(int health) {
         this.health = health;
     }
@@ -295,7 +247,7 @@ public abstract class Player extends GameObject {
     }
 
     public void resetHealTimer() {
-        healTimer = HEALTIMERMAX;
+        healTimer = HEAL_TIMER_MAX;
     }
 
     /**
@@ -350,7 +302,7 @@ public abstract class Player extends GameObject {
             imgLocStr.add("jog (" + i + ").png");
         }
         jogging = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(jogging.toString());
+
         imgLocStr.clear();
 
         // Builds image strip for dashing
@@ -365,8 +317,7 @@ public abstract class Player extends GameObject {
         for (int i = 1; i <= 8; i++) {
             imgLocStr.add("jump (" + i + ").png");
         }
-        jumping = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(jumping.toString());
+
         imgLocStr.clear();
 
         for (int i = 0; i <= 4; i++) {
@@ -374,9 +325,9 @@ public abstract class Player extends GameObject {
         }
         weaponTextures = new ArrayList<>();
         // Load weapon textures
-        for (int i = 0; i < imgLocStr.size(); i++) {
+        for (String s : imgLocStr) {
             try {
-                weaponTextures.add(ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/Textures/WEAPONS/" + imgLocStr.get(i)))));
+                weaponTextures.add(ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/Textures/WEAPONS/" + s))));
             } catch (IOException exc) {
                 System.out.println("Could not find image file: " + exc.getMessage());
             }
@@ -405,7 +356,6 @@ public abstract class Player extends GameObject {
 //        System.out.println(jumping.toString());
         imgLocStr.clear();
 
-        imageLoaded = true;
     }
 
     @Override
@@ -450,7 +400,7 @@ public abstract class Player extends GameObject {
         Graphics2D g2 = (Graphics2D) g;
         //Render shadow
         g2.setColor(new Color(0, 0, 0, 64));
-        g2.rotate(+Math.PI * 5/4, x,y);
+        g2.rotate(Math.PI * 5/4, x,y);
         g2.fillOval(
                 (int) x - Controller.GRID_SIZE / 4,
                 (int) y - Controller.GRID_SIZE / 4,
@@ -485,21 +435,17 @@ public abstract class Player extends GameObject {
         // The ArrayList of image files to be put into the animation.ImageStrip
         ArrayList<BufferedImage> images = new ArrayList<>();
         // Used to track images that are loaded
-        String imageFileNames = "";
-        String imageFileSubstring = "";
-        for (int i = 0; i < imgLocStr.size(); i++) {
-            try {
-                images.add(ImageIO.read(getClass().getResource(defaultFileLocation + "" + imgLocStr.get(i))));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
-            }
-            imageFileNames += defaultFileLocation + imgLocStr.get(i) + ", ";
+        StringBuilder imageFileNames = new StringBuilder();
+        StringBuilder imageFileSubstring = new StringBuilder();
+        for (String s : imgLocStr) {
+            images.add(BufferedImageLoader.loadImage(defaultFileLocation + "" + s));
+            imageFileNames.append(defaultFileLocation).append(s).append(", ");
         }
         // Used for the toString() method of this animation.ImageStrip
         for (int i = 0; i < imageFileNames.length() - 2; i++) {
-            imageFileSubstring += imageFileNames.charAt(i);
+            imageFileSubstring.append(imageFileNames.charAt(i));
         }
-        return new ImageStrip(images, imageFileSubstring);
+        return new ImageStrip(images, imageFileSubstring.toString());
     }
 
     public void revive(){
@@ -572,10 +518,6 @@ public abstract class Player extends GameObject {
     //Client use only
     public void setInvincible(boolean invincible) {
         isInvincible = invincible;
-    }
-
-    public void setInvincible(int time){
-        invincibilityTimer = time;
     }
 
     public boolean isTimeForNextFrame(){
@@ -656,10 +598,6 @@ public abstract class Player extends GameObject {
                 World.controller.getOutputConnection().sendPacket(new ClientDashPacket());
             }
         }
-    }
-
-    public int getDashTimer() {
-        return dashTimer;
     }
 
     public void setArsenal(Arsenal arsenal) {

@@ -5,7 +5,6 @@ import animation.ImageStrip;
 import audio.AudioPlayer;
 import audio.SFXPlayer;
 import utilities.BufferedImageLoader;
-import weapons.aoe.Slash;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,15 +15,13 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static weapons.aoe.Slash.buildImageStrip;
+import java.util.Objects;
 
 public class PauseMenu implements KeyListener {
 
-    JPanel pauseMenuPanel;
-    JFrame frame;
-    Controller controller;
-    KeyInput keyInput;
+    final JPanel pauseMenuPanel;
+    final JFrame frame;
+    final Controller controller;
     static SFXPlayer sfxPlayer;
     static ImageStrip blueBackground;
     static ImageStrip redBackground;
@@ -42,16 +39,16 @@ public class PauseMenu implements KeyListener {
         if (controller instanceof ClientController) {
             thisBackground = redBackground;
             try {
-                backgroundImage = ImageIO.read(PauseMenu.class.getResource("/resources/GUI/pause_menu/pause_back (10).png"));
-            } catch (IOException ioException) {
+                backgroundImage = ImageIO.read(Objects.requireNonNull(PauseMenu.class.getResource("/resources/GUI/pause_menu/pause_back (10).png")));
+            } catch (IOException ignored) {
 
             }
 
         } else {
             thisBackground = blueBackground;
             try {
-                backgroundImage = ImageIO.read(PauseMenu.class.getResource("/resources/GUI/pause_menu/pause_back (5).png"));
-            } catch (IOException ioException) {
+                backgroundImage = ImageIO.read(Objects.requireNonNull(PauseMenu.class.getResource("/resources/GUI/pause_menu/pause_back (5).png")));
+            } catch (IOException ignored) {
 
             }
         }
@@ -142,14 +139,19 @@ public class PauseMenu implements KeyListener {
         c.gridy = 8;
         buttonsPanel.add(settingsButton, c);
 
-        PauseMenuButton controlsButton = new PauseMenuButton(e -> {
-            JOptionPane.showMessageDialog(buttonsPanel, "W -> Forward\nA -> Left\n" +
-                            "S -> Back\nD -> Right\nSHIFT -> Dash\n" +
-                            "1 -> Swap with Slot 1\n2 -> Swap with Slot 2\n3 -> Swap with Slot 3\n4 -> Swap with Slot 4\n" +
-                            "LEFT MOUSE BUTTON -> Shoot\nRIGHT MOUSE BUTTON -> Swap between Primary and Secondary weapon",
-                    "Controls:", JOptionPane.INFORMATION_MESSAGE);
-
-        }, "Controls");
+        PauseMenuButton controlsButton = new PauseMenuButton(e -> JOptionPane.showMessageDialog(buttonsPanel, """
+                        W -> Forward
+                        A -> Left
+                        S -> Back
+                        D -> Right
+                        SHIFT -> Dash
+                        1 -> Swap with Slot 1
+                        2 -> Swap with Slot 2
+                        3 -> Swap with Slot 3
+                        4 -> Swap with Slot 4
+                        LEFT MOUSE BUTTON -> Shoot
+                        RIGHT MOUSE BUTTON -> Swap between Primary and Secondary weapon""",
+                "Controls:", JOptionPane.INFORMATION_MESSAGE), "Controls");
         c.gridy = 9;
         buttonsPanel.add(controlsButton, c);
 
@@ -208,20 +210,6 @@ public class PauseMenu implements KeyListener {
         settingsMenu.add(backButton ,c);
 
         MainMenu.MainMenuButton videoButton = new MainMenu.MainMenuButton(e -> {
-
-            /*
-            mainMenuPanel.remove(settingsMenu);
-            c.anchor = GridBagConstraints.CENTER;
-            c.fill = GridBagConstraints.BOTH;
-            c.gridy = 0;
-            c.gridx = 0;
-            c.weighty = 1.0;
-            c.weightx = 1.0;
-            mainMenuPanel.add(mapSelection(mainMenuPanel, SERVER), c);
-            mainMenuPanel.validate();
-            mainMenuPanel.repaint();
-
-             */
 
         }, "Video Settings");
         c.gridy = 9;
@@ -331,9 +319,9 @@ public class PauseMenu implements KeyListener {
 
     static class PauseMenuButton extends JComponent implements MouseListener {
         boolean mouseEntered = false;
-        BufferedImage unselectedTexture;
-        BufferedImage selectedTexture;
-        String text;
+        final BufferedImage unselectedTexture;
+        final BufferedImage selectedTexture;
+        final String text;
 
         private final ArrayList<ActionListener> listeners = new ArrayList<>();
 
@@ -413,44 +401,32 @@ public class PauseMenu implements KeyListener {
 
         private void notifyListeners(MouseEvent e)
         {
-            ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "", e.getWhen(), e.getModifiers());
+            ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "", e.getWhen(), e.getModifiersEx());
             synchronized(listeners)
             {
-                for (int i = 0; i < listeners.size(); i++)
-                {
-                    ActionListener tmp = listeners.get(i);
+                for (ActionListener tmp : listeners) {
                     tmp.actionPerformed(evt);
                 }
             }
         }
 
-        public void addActionListener(ActionListener listener)
-        {
-            listeners.add(listener);
-        }
     }
 
     static class PauseMenuSlider extends JComponent implements ChangeListener {
-        String text;
-        JSlider jSlider;
-        BufferedImage unselectedTexture;
+        final String text;
+        final JSlider jSlider;
+        final BufferedImage unselectedTexture;
 
         public PauseMenuSlider(String text, int min, int max) {
             super();
 
             // Default to 100
-            int init = 100;
-            switch (text) {
-                case "Master Volume":
-                    init = Main.getVolumeMaster();
-                    break;
-                case "Game Volume":
-                    init = Main.getVolumeSFXActual();
-                    break;
-                case "Music Volume":
-                    init = Main.getVolumeMusicActual();
-                    break;
-            }
+            int init = switch (text) {
+                case "Master Volume" -> Main.getVolumeMaster();
+                case "Game Volume" -> Main.getVolumeSFXActual();
+                case "Music Volume" -> Main.getVolumeMusicActual();
+                default -> 100;
+            };
             jSlider = new JSlider(min, max, init);
 
             unselectedTexture = BufferedImageLoader.loadImage("/resources/GUI/main_menu/unselected_option.png");
@@ -494,19 +470,19 @@ public class PauseMenu implements KeyListener {
         @Override
         public void stateChanged(ChangeEvent e) {
             switch (text) {
-                case "Master Volume":
+                case "Master Volume" -> {
                     Main.setVolumeMaster(jSlider.getValue());
                     AudioPlayer.setVolume();
                     sfxPlayer.setVolume();
-                    break;
-                case "Game Volume":
+                }
+                case "Game Volume" -> {
                     Main.setVolumeSFX(jSlider.getValue());
                     sfxPlayer.setVolume();
-                    break;
-                case "Music Volume":
+                }
+                case "Music Volume" -> {
                     Main.setVolumeMusic(jSlider.getValue());
                     AudioPlayer.setVolume();
-                    break;
+                }
             }
 
         }
@@ -547,20 +523,16 @@ public class PauseMenu implements KeyListener {
         // The ArrayList of image files to be put into the animation.ImageStrip
         ArrayList<BufferedImage> images = new ArrayList<>();
         // Used to track images that are loaded
-        String imageFileNames = "";
-        String imageFileSubstring = "";
-        for (int i = 0; i < imgLocStr.size(); i++) {
-            try {
-                images.add(ImageIO.read(PauseMenu.class.getResource(defaultFileLocation + "" + imgLocStr.get(i))));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
-            }
-            imageFileNames += defaultFileLocation + imgLocStr.get(i) + ", ";
+        StringBuilder imageFileNames = new StringBuilder();
+        StringBuilder imageFileSubstring = new StringBuilder();
+        for (String s : imgLocStr) {
+            images.add(BufferedImageLoader.loadImage(defaultFileLocation + "" + s));
+            imageFileNames.append(defaultFileLocation).append(s).append(", ");
         }
         // Used for the toString() method of this animation.ImageStrip
         for (int i = 0; i < imageFileNames.length() - 2; i++) {
-            imageFileSubstring += imageFileNames.charAt(i);
+            imageFileSubstring.append(imageFileNames.charAt(i));
         }
-        return new ImageStrip(images, imageFileSubstring);
+        return new ImageStrip(images, imageFileSubstring.toString());
     }
 }

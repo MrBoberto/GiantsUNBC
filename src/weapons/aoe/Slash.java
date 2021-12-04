@@ -4,12 +4,11 @@ import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
 import player.Player;
+import utilities.BufferedImageLoader;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -17,17 +16,17 @@ public class Slash extends GameObject implements Serializable {
     protected static ImageStrip animation_blue;
     protected static ImageStrip animation_red;
     protected static ImageStrip animation_thanos;
-    protected ImageStrip animation;
+    protected final ImageStrip animation;
     protected ImageFrame currentFrame;
     private int age = 0;
     public final int MAX_AGE = 5;
     protected boolean harmful = true;
     public static final int DAMAGE = 55;
-    Rectangle boundRect;
-    protected int playerIBelongToNumber;
+    final Rectangle boundRect;
+    protected final int playerIBelongToNumber;
     public final boolean isLeft;
 
-    public Slash(double x, double y, double angle, boolean isLeft, int playerIBelongToNumber, int damage) {
+    public Slash(double x, double y, double angle, boolean isLeft, int playerIBelongToNumber) {
         super(x, y);
 
         this.isLeft = isLeft;
@@ -82,14 +81,6 @@ public class Slash extends GameObject implements Serializable {
         if (age > 0 && boundRect != null) {
             harmful = false;
         }
-    }
-
-    public boolean isHarmful() {
-        return harmful;
-    }
-
-    public void setHarmful() {
-        harmful = true;
     }
 
     public boolean hasDied() {
@@ -177,20 +168,16 @@ public class Slash extends GameObject implements Serializable {
         // The ArrayList of image files to be put into the animation.ImageStrip
         ArrayList<BufferedImage> images = new ArrayList<>();
         // Used to track images that are loaded
-        String imageFileNames = "";
-        String imageFileSubstring = "";
-        for (int i = 0; i < imgLocStr.size(); i++) {
-            try {
-                images.add(ImageIO.read(Slash.class.getResource(defaultFileLocation + "" + imgLocStr.get(i))));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
-            }
-            imageFileNames += defaultFileLocation + imgLocStr.get(i) + ", ";
+        StringBuilder imageFileNames = new StringBuilder();
+        StringBuilder imageFileSubstring = new StringBuilder();
+        for (String s : imgLocStr) {
+            images.add(BufferedImageLoader.loadImage(defaultFileLocation + "" + s));
+            imageFileNames.append(defaultFileLocation).append(s).append(", ");
         }
         // Used for the toString() method of this animation.ImageStrip
         for (int i = 0; i < imageFileNames.length() - 2; i++) {
-            imageFileSubstring += imageFileNames.charAt(i);
+            imageFileSubstring.append(imageFileNames.charAt(i));
         }
-        return new ImageStrip(images, imageFileSubstring);
+        return new ImageStrip(images, imageFileSubstring.toString());
     }
 }

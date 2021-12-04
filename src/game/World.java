@@ -1,14 +1,11 @@
 package game;
 
-import javax.swing.*;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
 
-import static java.lang.Integer.parseInt;
-
 public class World {
     public static Controller controller;
-    public static SecureRandom sRandom = new SecureRandom();
+    public static final SecureRandom sRandom = new SecureRandom();
     protected static GameWindow gameWindow;
     protected static GameOver gameOver;                       // Should be null except at the end
 
@@ -28,10 +25,6 @@ public class World {
 
     public static double pythHyp(double a, double b) {
         return Math.sqrt((Math.pow(a, 2)) + (Math.pow(b, 2)));
-    }
-
-    public static double pythSide(double c, double a) {
-        return Math.sqrt((Math.pow(c, 2)) - (Math.pow(a, 2)));
     }
 
     public static GameWindow getGameWindow() {
@@ -102,9 +95,5 @@ public class World {
         } else {
             return -hyp * Math.sin(angle + Math.PI);
         }
-    }
-
-    public static SecureRandom getSRandom() {
-        return sRandom;
     }
 }

@@ -10,21 +10,20 @@ import static java.lang.Math.*;
 
 public abstract class Bullet extends GameObject implements Projectile {
     // The precise position of the object, for use with physics
-    protected int ID;
+    protected final int ID;
     private static int nextID = 0;
-    protected int playerIBelongToNumber;
+    protected final int playerIBelongToNumber;
     Rectangle boundRect;
 
     int bouncesLeft = 0;
-    boolean upBounce = true, downBounce = true, leftBounce = true, rightBounce = true;
     int boxCooldown = 0;
-    int lastBox = 0;
+    final int lastBox = 0;
 
     protected ProjectileType ProjectileTYPE = null;
     protected int damage;
 
-    protected Bullet(double x, double y, double angle, int playerIBelongToNumber) {
-        super(x, y, angle);
+    protected Bullet(int playerIBelongToNumber) {
+        super(0, 0, 0);
         this.playerIBelongToNumber = playerIBelongToNumber;
         ID = nextID++;
         getBouncesLeft();
@@ -94,20 +93,7 @@ public abstract class Bullet extends GameObject implements Projectile {
     protected boolean checkBlockCollision() {
         if(texture == null ) return false;
 
-        boolean bounced = false;
         if(bouncesLeft > 0){
-
-            int playerX;
-            int playerY;
-
-            if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
-            || playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController){
-                playerX = (int) Controller.thisPlayer.getX();
-                playerY = (int) Controller.thisPlayer.getY();
-            } else {
-                playerX = (int) Controller.otherPlayer.getX();
-                playerY = (int) Controller.otherPlayer.getY();
-            }
 
             for (int i = 0; i < Controller.blocks.size(); i++) {
                 Block block = Controller.blocks.get(i);
@@ -116,7 +102,7 @@ public abstract class Bullet extends GameObject implements Projectile {
                     continue;
                 }
 
-                boolean up = false, down = false, left = false, right = false;
+                boolean up, down, left, right;
                 int xx = (int) x;
                 int yy = (int) y;
                 while (xx != (int) (x + getVelX())) {
@@ -129,9 +115,9 @@ public abstract class Bullet extends GameObject implements Projectile {
                         down = ((new Rectangle(xx, yy+offset, 1, 1)).intersects(block.getBounds())
                                 && (angle < 1/2.0 * PI|| angle > -1/2.0 * PI) && getVelY()>0);
                         right =((new Rectangle(xx+offset, yy, 1, 1)).intersects(block.getBounds())
-                                && (angle < 1/1.0 * PI|| angle > -0/1.0 * PI) && getVelX()>0);
+                                && (angle < PI || angle > -0 * PI) && getVelX()>0);
                         left  = ((new Rectangle(xx-offset, yy, 1, 1)).intersects(block.getBounds())
-                                && (angle > -1/1.0 * PI|| angle < 0/1.0 * PI) && getVelX()<0);
+                                && (angle > -1 * PI|| angle < 0 * PI) && getVelX()<0);
 
                         if(up && !down && !right && !left){
                             angle = Math.PI - angle;
@@ -212,28 +198,6 @@ public abstract class Bullet extends GameObject implements Projectile {
                         xx--;
                     }
                 }
-
-//                if ((Math.abs(up) < Math.abs(down) || down == 0) && (Math.abs(up) < Math.abs(left) || left == 0)
-//                        && (Math.abs(up) < Math.abs(right) || right ==0) && up != 0) {
-//                    angle = Math.PI - angle;
-//                    bouncesLeft--;
-//                    bounced = true;
-//                } else if ((Math.abs(down) < Math.abs(left) || left == 0) && (Math.abs(down) < Math.abs(up) || up ==0)
-//                        && (Math.abs(down) < Math.abs(right)|| right==0) && down != 0) {
-//                    angle = Math.PI - angle;
-//                    bouncesLeft--;
-//                    bounced = true;
-//                } else if ((Math.abs(left) < Math.abs(down)|| down==0) && (Math.abs(left) < Math.abs(up)||up==0)
-//                        && (Math.abs(left) < Math.abs(right)||right==0) && left != 0) {
-//                    angle = -angle;
-//                    bouncesLeft--;
-//                    bounced = true;
-//                } else if ((Math.abs(right) < Math.abs(left)||left == 0) && (Math.abs(right) < Math.abs(up)||up==0)
-//                        && (Math.abs(right) < Math.abs(down)||down==0) && right != 0) {
-//                    angle = -angle;
-//                    bouncesLeft--;
-//                    bounced = true;
-//                }
 
 
             }
@@ -428,13 +392,9 @@ public abstract class Bullet extends GameObject implements Projectile {
                 return false;
             }
         }
-        return bounced;
+        return false;
     }
 
-
-    public int getID() {
-        return ID;
-    }
 
     public boolean hasStopped() {
         return (getVelX() == 0 && getVelY() == 0);
@@ -442,10 +402,6 @@ public abstract class Bullet extends GameObject implements Projectile {
 
     public int getPlayerIBelongToNumber() {
         return playerIBelongToNumber;
-    }
-
-    public ProjectileType getTYPE() {
-        return ProjectileTYPE;
     }
 
     @Override

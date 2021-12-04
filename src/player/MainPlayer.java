@@ -1,16 +1,13 @@
 package player;
 
-import game.ClientController;
 import game.Controller;
-import game.ServerController;
 import game.World;
 import mapObjects.Block;
+import utilities.BufferedImageLoader;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainPlayer extends Player {
@@ -18,7 +15,6 @@ public class MainPlayer extends Player {
     //Main Player movement directions
     private boolean up = false, down = false,right = false,left = false;
     private boolean upStop = false, downStop = false,rightStop = false,leftStop = false;
-    private boolean dash = false;
     protected ArrayList<BufferedImage> slotTextures;
     protected boolean button1Held = false;
 
@@ -51,22 +47,20 @@ public class MainPlayer extends Player {
         } else if (avgX == 0) {
             if (avgY == 1) {
                 super.setAngle(0);
-                return;
             } else {
                 super.setAngle(Math.PI);
-                return;
             }
+            return;
         } else if (avgY == 0) {
             if (avgX == 1) {
                 super.setAngle(Math.PI / 2);
-                return;
             } else {
                 super.setAngle(-Math.PI / 2);
-                return;
             }
+            return;
         }
 
-        double acuteAngle = Math.atan(avgY/avgX);
+        double acuteAngle = Math.atan((double)avgY/avgX);
 //        System.out.println("player.Player 1 Acute super.getAngle(): " + Math.toDegrees(acuteAngle));
 
         if (avgY < 0) {
@@ -105,37 +99,17 @@ public class MainPlayer extends Player {
         }
     }
 
-    public double getVelocity() {
-        return Math.sqrt(Math.pow(getVelX(), 2) + Math.pow(getVelY(), 2)) * Math.cos(super.getAngle());
-    }
-
     /**
      * Determines what speed to move at based on the controls being used and them translates the player
      * based on the horizontal and vertical velocities
      */
     public void move() {
         // Determine velocities
-        if (tIsHeld) {
-            if (superDashTimer <= 0) {
-                setVelocity(VELSUPERDASH);
-            } else {
-                isJumping = false;
-                superDashTimer -= 1;
-                if (up || right || down || left) {
-                    setVelocity(VELSNEAK / 2);
-                } else {
-                    setVelX(0);
-                }
-            }
-        } else if (dashTimer == DASH_TIMER_MAX) {
+        if (dashTimer == DASH_TIMER_MAX) {
             dashTimer--;
-            setVelocity(VELDASH);
-        } else if (shiftIsHeld && (up || right || down || left)) {
-            setVelocity(VELSNEAK);
+            setVelocity(DASH_VELOCITY);
         } else if ((up || right || down || left) && dashTimer <= 0) {
-            setVelocity(VELJOG);
-        } else if (shiftIsHeld) {
-            setVelX(0);
+            setVelocity(JOG_VELOCITY);
         }
 
         //Check collisions
@@ -254,33 +228,17 @@ public class MainPlayer extends Player {
         } else if (super.getY() >= Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0) {
             super.setY(Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0);
             setVelY(0);
-            isFalling = false;
         }
 
         boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 4,
                 (int)this.y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
                 currentImage.getImage().getHeight() / 2);
 
-        collisionOn = false;
-//        double entityLeftWorldX = super.getX() + solidArea.x;
-//        double entityRightWorldX = super.getX() + solidArea.x + solidArea.width;
-//        double entityTopWorldX = super.getY() + solidArea.y;
-//        double entityBottomWorldY = super.getY() + solidArea.y + solidArea.height;
-
         if (arsenal.getPrimary().getCurrentDelay() > 0) {
             arsenal.getPrimary().setCurrentDelay(arsenal.getPrimary().getCurrentDelay() - 1);
         }
         if (arsenal.getSecondary() != null && arsenal.getSecondary().getCurrentDelay() > 0) {
             arsenal.getSecondary().setCurrentDelay(arsenal.getSecondary().getCurrentDelay() - 1);
-        }
-
-        solidArea = new Rectangle(((int)this.x - currentImage.getImage().getWidth() / 2) + 40,
-                ((int)this.y - currentImage.getImage().getHeight() / 2) + 40, currentImage.getImage().getWidth() - 85,
-                currentImage.getImage().getHeight() - 85);
-
-
-        if (selectedWeapon >= 0 && selectedWeapon < 5) {
-
         }
     }
 
@@ -342,132 +300,20 @@ public class MainPlayer extends Player {
                 (int) y - 10 - currentImage.getImage().getHeight() / 4);
     }
 
-    private void displayInventory(Graphics2D g2d) {
-        if (selectedWeapon == 0) {
-            // If primary is selected, this is primary slot
-            AffineTransform affTraPP = AffineTransform.getTranslateInstance(Controller.WIDTH - 240, 0);
-            // If primary is selected, this is secondary slot
-            AffineTransform affTraPS = AffineTransform.getTranslateInstance(Controller.WIDTH - 90, 30);
-            affTraPS.scale(0.5, 0.5);
-            if (arsenal.getPrimary() != null) {
-                g2d.drawImage(slotTextures.get(arsenal.getPrimary().getSERIAL() + 1), affTraPP, World.controller);
-                if (arsenal.getSecondary() != null) {
-                    g2d.drawImage(slotTextures.get(arsenal.getSecondary().getSERIAL() + 1), affTraPS, World.controller);
-                    AffineTransform affTraI = AffineTransform.getTranslateInstance((Controller.WIDTH) - (arsenal.size() * 70), 120);
-                    affTraI.scale(0.5, 0.5);
-                    int j = 240;
-                    for (int i = 0; i < arsenal.size(); i++) {
-                        affTraI.translate(i * j, 0);
-                        g2d.drawImage(slotTextures.get(arsenal.get(i).getSERIAL() + 1), affTraI, World.controller);
-                        j /= 2;
-                    }
-                } else {
-                    // The empty texture is a placeholder in case a background is made for inventory slots
-                    g2d.drawImage(slotTextures.get(0), affTraPS, World.controller);
-                }
-            } else {
-                // The empty texture is a placeholder in case a background is made for inventory slots
-                g2d.drawImage(slotTextures.get(0), affTraPP, World.controller);
-            }
-        } else {
-            // If secondary is selected, this is primary slot
-            AffineTransform affTraSP = AffineTransform.getTranslateInstance(Controller.WIDTH - 210, 30);
-            // If secondary is selected, this is secondary slot
-            AffineTransform affTraSS = AffineTransform.getTranslateInstance(Controller.WIDTH - 120, 0);
-            affTraSP.scale(0.5, 0.5);
-            if (arsenal.getPrimary() != null) {
-                g2d.drawImage(slotTextures.get(arsenal.getPrimary().getSERIAL() + 1), affTraSP, World.controller);
-                if (arsenal.getSecondary() != null) {
-                    g2d.drawImage(slotTextures.get(arsenal.getSecondary().getSERIAL() + 1), affTraSS, World.controller);
-                    AffineTransform affTraI = AffineTransform.getTranslateInstance((Controller.WIDTH) - (arsenal.size() * 70), 120);
-                    affTraI.scale(0.5, 0.5);
-                    int j = 240;
-                    for (int i = 0; i < arsenal.size(); i++) {
-                        affTraI.translate(i * j, 0);
-                        g2d.drawImage(slotTextures.get(arsenal.get(i).getSERIAL() + 1), affTraI, World.controller);
-                        j /= 2;
-                    }
-                } else {
-                    // The empty texture is a placeholder in case a background is made for inventory slots
-                    g2d.drawImage(slotTextures.get(0), affTraSS, World.controller);
-                }
-            } else {
-                // The empty texture is a placeholder in case a background is made for inventory slots
-                g2d.drawImage(slotTextures.get(0), affTraSP, World.controller);
-            }
-        }
-    }
-
-    public boolean isUp() {
-        return up;
-    }
-
     public void setUp(boolean up) {
         this.up = up;
-    }
-
-    public boolean isDown() {
-        return down;
     }
 
     public void setDown(boolean down) {
         this.down = down;
     }
 
-    public boolean isRight() {
-        return right;
-    }
-
     public void setRight(boolean right) {
         this.right = right;
     }
 
-    public boolean isLeft() {
-        return left;
-    }
-
     public void setLeft(boolean left) {
         this.left = left;
-    }
-
-    public boolean isShiftIsHeld() {
-        return shiftIsHeld;
-    }
-
-    public void setShiftIsHeld(boolean shiftIsHeld) {
-        this.shiftIsHeld = shiftIsHeld;
-    }
-
-    public boolean isSpaceIsHeld() {
-        return spaceIsHeld;
-    }
-
-    public void setSpaceIsHeld(boolean spaceIsHeld) {
-        this.spaceIsHeld = spaceIsHeld;
-    }
-
-    public boolean isCtrlIsHeld() {
-        return ctrlIsHeld;
-    }
-
-    public void setCtrlIsHeld(boolean ctrlIsHeld) {
-        this.ctrlIsHeld = ctrlIsHeld;
-    }
-
-    public boolean istIsHeld() {
-        return tIsHeld;
-    }
-
-    public void settIsHeld(boolean tIsHeld) {
-        this.tIsHeld = tIsHeld;
-    }
-
-    public boolean isMouseInside() {
-        return mouseInside;
-    }
-
-    public void setMouseInside(boolean mouseInside) {
-        this.mouseInside = mouseInside;
     }
 
     public boolean isButton1Held() {
@@ -489,13 +335,8 @@ public class MainPlayer extends Player {
         }
         slotTextures = new ArrayList<>();
         // Load weapon textures
-        for (int i = 0; i < imgLocStr.size(); i++) {
-            try {
-                slotTextures.add(ImageIO.read(getClass().getResource("/resources/GUI/arsenal_slot/" + imgLocStr.get(i))));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
-            }
+        for (String s : imgLocStr) {
+            slotTextures.add(BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/" + s));
         }
-        imageLoaded = true;
     }
 }

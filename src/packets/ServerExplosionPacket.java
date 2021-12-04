@@ -1,19 +1,10 @@
 package packets;
 
-import weapons.ammo.Projectile;
-
 import java.io.Serializable;
 
-public class ServerExplosionPacket implements Serializable {
-    double x;
-    double y;
-    int playerNumber;
-
-    public ServerExplosionPacket(double x, double y, int playerNumber) {
+public record ServerExplosionPacket(double x, double y, int playerNumber) implements Serializable {
+    public ServerExplosionPacket {
         System.out.println("Client Explosion Packet created.");
-        this.x = x;
-        this.y = y;
-        this.playerNumber = playerNumber;
     }
 
     public double getX() {

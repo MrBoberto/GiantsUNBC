@@ -1,13 +1,9 @@
 package player;
 
-import game.ClientController;
-import game.ServerController;
-import game.SingleController;
 import game.World;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
 
 public class OtherPlayer extends Player {
     public OtherPlayer(double x, double y, int playerNumber, Color color) {

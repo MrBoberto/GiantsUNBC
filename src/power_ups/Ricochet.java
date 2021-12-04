@@ -17,7 +17,7 @@ public class Ricochet extends PowerUp{
 
 
     //Graphics
-    private final int FLOAT_EFFECT_MAX_TIMER = 3;
+    private static final int FLOAT_EFFECT_MAX_TIMER = 3;
     private int floatTimer = 0;
     private int floatState = 2;
     private boolean floatDirection = true;

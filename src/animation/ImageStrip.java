@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class ImageStrip {
-    private ImageFrame head;
-    private int length;
-    private String imageFileNames;
+    private final ImageFrame head;
+    private final int length;
+    private final String imageFileNames;
 
     public ImageStrip(ArrayList<BufferedImage> images, String imageFileNames) {
         this.length = images.size();

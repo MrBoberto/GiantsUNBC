@@ -4,8 +4,6 @@ import audio.SFXPlayer;
 import eye_candy.DeathMark;
 import inventory_items.*;
 import mapObjects.Block;
-import packets.EyeCandyPacket;
-import packets.RespawnPacket;
 import player.*;
 import power_ups.*;
 import utilities.BufferedImageLoader;
@@ -16,15 +14,14 @@ import weapons.guns.LightningSword;
 import weapons.guns.RocketLauncher;
 import weapons.guns.Weapon;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class SingleController extends Controller {
 
-    public SFXPlayer weaponAudio;
+    public final SFXPlayer weaponAudio;
 
     public SingleController() {
         super();
@@ -45,11 +42,10 @@ public class SingleController extends Controller {
 
         if (MainMenu.playerName.equals("")) {
             thisPlayer.setPlayerName("Player");
-            otherPlayer.setPlayerName("Thanos");
         } else {
             thisPlayer.setPlayerName(MainMenu.playerName);
-            otherPlayer.setPlayerName("Thanos");
         }
+        otherPlayer.setPlayerName("Thanos");
 
         System.out.println("Controller built.");
         start();
@@ -98,42 +94,40 @@ public class SingleController extends Controller {
             }
         }
 
-        for (int j = 0; j < explosions.size(); j++) {
-            if (explosions.get(j) != null) {
-                Explosion explosion = explosions.get(j);
-                checkVictims(explosion);
+        for (Explosion item : explosions) {
+            if (item != null) {
+                checkVictims(item);
             }
         }
 
-        for (int j = 0; j < slashes.size(); j++) {
-            if (slashes.get(j) != null) {
-                Slash slash = slashes.get(j);
-                checkVictims(slash);
+        for (Slash value : slashes) {
+            if (value != null) {
+                checkVictims(value);
             }
         }
 
-        for (int i = 0; i < powerUps.size(); i++) {
-            if(powerUps.get(i) != null){
-                checkPowerUpPickups(powerUps.get(i));
+        for (PowerUp powerUp : powerUps) {
+            if (powerUp != null) {
+                checkPowerUpPickups(powerUp);
             }
         }
 
-        for (int i = 0; i < inventoryItems.size(); i++) {
-            if(inventoryItems.get(i) != null){
-                checkInventoryItemPickups(inventoryItems.get(i));
+        for (InventoryItem inventoryItem : inventoryItems) {
+            if (inventoryItem != null) {
+                checkInventoryItemPickups(inventoryItem);
             }
         }
 
         //Every COOLDOWN_BETWEEN_POWER_UPS there is a 50% chance of a power up spawning.
-        if(powerUps.size() < 4 && currentPowerUpCooldown == 0 && World.getSRandom().nextBoolean()){
+        if(powerUps.size() < 4 && currentPowerUpCooldown == 0 && World.sRandom.nextBoolean()){
             currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
 
             boolean loop = true;
             int x = 0;
             int y = 0;
             while(loop) {
-                x = World.getSRandom().nextInt(WIDTH);
-                y = World.getSRandom().nextInt(HEIGHT);
+                x = World.sRandom.nextInt(WIDTH);
+                y = World.sRandom.nextInt(HEIGHT);
                 loop = false;
                 for (Block block : blocks) {
                     if ((new Rectangle(x, y, PowerUp.POWER_UP_DIMENSIONS.width, PowerUp.POWER_UP_DIMENSIONS.height)
@@ -142,22 +136,12 @@ public class SingleController extends Controller {
                     }
                 }
             }
-            switch (World.getSRandom().nextInt(PowerUp.PowerUpType.values().length)) {
-                case 0 -> {
-                    powerUps.add(new DamageUp(x, y, 2));
-                }
-                case 1 -> {
-                    powerUps.add(new DamageDown(x, y, 0.5F));
-                }
-                case 2 -> {
-                    powerUps.add(new SpeedUp(x, y, 1.5F));
-                }
-                case 3->{
-                    powerUps.add(new SpeedDown(x, y, 0.25F));
-                }
-                case 4->{
-                    powerUps.add(new Ricochet(x, y, 2));
-                }
+            switch (World.sRandom.nextInt(PowerUp.PowerUpType.values().length)) {
+                case 0 -> powerUps.add(new DamageUp(x, y, 2));
+                case 1 -> powerUps.add(new DamageDown(x, y, 0.5F));
+                case 2 -> powerUps.add(new SpeedUp(x, y, 1.5F));
+                case 3-> powerUps.add(new SpeedDown(x, y, 0.25F));
+                case 4-> powerUps.add(new Ricochet(x, y, 2));
             }
 
         } else if (currentPowerUpCooldown == 0) {
@@ -167,15 +151,15 @@ public class SingleController extends Controller {
         }
 
         //Every COOLDOWN_BETWEEN_INVENTORY_ITEMS there is a 50% chance of an inventory item spawning.
-        if(inventoryItems.size() < 5 && currentInventoryItemCooldown == 0 && World.getSRandom().nextBoolean()){
+        if(inventoryItems.size() < 5 && currentInventoryItemCooldown == 0 && World.sRandom.nextBoolean()){
             currentInventoryItemCooldown = COOLDOWN_BETWEEN_INVENTORY_ITEMS;
 
             boolean loop = true;
             int x = 0;
             int y = 0;
             while(loop) {
-                x = World.getSRandom().nextInt(WIDTH);
-                y = World.getSRandom().nextInt(HEIGHT);
+                x = World.sRandom.nextInt(WIDTH);
+                y = World.sRandom.nextInt(HEIGHT);
                 loop = false;
                 for (Block block : blocks) {
                     if ((new Rectangle(x, y, InventoryItem.INVENTORY_ITEM_DIMENSIONS.width, InventoryItem.INVENTORY_ITEM_DIMENSIONS.height)
@@ -184,22 +168,12 @@ public class SingleController extends Controller {
                     }
                 }
             }
-            switch (World.getSRandom().nextInt(InventoryItem.InventoryItemType.values().length)) {
-                case 0 -> {
-                    inventoryItems.add(new ShotgunItem(x, y));
-                }
-                case 1 -> {
-                    inventoryItems.add(new SniperRifleItem(x, y));
-                }
-                case 2 -> {
-                    inventoryItems.add(new AssaultRifleItem(x, y));
-                }
-                case 4->{
-                    inventoryItems.add(new RocketLauncherItem(x, y));
-                }
-                case 5->{
-                    inventoryItems.add(new LightningSwordItem(x, y));
-                }
+            switch (World.sRandom.nextInt(InventoryItem.InventoryItemType.values().length)) {
+                case 0 -> inventoryItems.add(new ShotgunItem(x, y));
+                case 1 -> inventoryItems.add(new SniperRifleItem(x, y));
+                case 2 -> inventoryItems.add(new AssaultRifleItem(x, y));
+                case 4-> inventoryItems.add(new RocketLauncherItem(x, y));
+                case 5-> inventoryItems.add(new LightningSwordItem(x, y));
             }
 
         } else if (currentInventoryItemCooldown == 0){
@@ -320,25 +294,18 @@ public class SingleController extends Controller {
         Player victim;
         if (explosion.getPlayerIBelongToNumber() == Player.SERVER_PLAYER) {
             killer = thisPlayer;
-            if (victimNumber == Player.CLIENT_PLAYER) {
-                victim = otherPlayer;
-            } else if (victimNumber == Player.SERVER_PLAYER) {
-                victim = thisPlayer;
-            } else {
-                victim = null;
-            }
         } else {
             killer = otherPlayer;
-            if (victimNumber == Player.CLIENT_PLAYER) {
-                victim = otherPlayer;
-            } else if (victimNumber == Player.SERVER_PLAYER) {
-                victim = thisPlayer;
-            } else {
-                victim = null;
-            }
+        }
+        if (victimNumber == Player.CLIENT_PLAYER) {
+            victim = otherPlayer;
+        } else if (victimNumber == Player.SERVER_PLAYER) {
+            victim = thisPlayer;
+        } else {
+            victim = null;
         }
 
-        if (victimNumber >= 0 && explosion.isHarmful() && !victim.isInvincible()) {
+        if (victimNumber >= 0 && explosion.isHarmful() && !Objects.requireNonNull(victim).isInvincible()) {
 
             killer.incrementBulletHitCount();
             victim.modifyHealth(-1 * Explosion.DAMAGE);
@@ -354,8 +321,6 @@ public class SingleController extends Controller {
                 victim.revive();
 
                 killer.incrementKillCount();
-                //System.out.println("Individual kill: " + victim.getPlayerName() + " was memed by " + killer.getPlayerName() + " using the " + RocketLauncherBullet.getIteration() + "th explosion.");
-                // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
                 if(victim.getDeathCount() >= 10){
                     declareWinner(killer);
                 }
@@ -435,9 +400,6 @@ public class SingleController extends Controller {
         }
 
         if (victimNumber != -1 && victimNumber != slash.getPlayerIBelongToNumber() && !victim.isInvincible()) {
-            //        if (bullet.getSERIAL() != 002) {
-
-            //       }
 
             double damage = (-1 * Slash.DAMAGE * killer.getDamageMultiplier());
             System.out.println(damage);
@@ -472,22 +434,8 @@ public class SingleController extends Controller {
             winnerNumber = Player.CLIENT_PLAYER;
         }
 
-        double[][] playerInfo = new double[2][6];
+        renderWinner(winnerNumber);
 
-        for (int i = 0; i < players.size(); i++) {
-            //Save data to send to client
-            Player player = players.get(i);
-            playerInfo[i][0] = player.getKillCount();
-            playerInfo[i][1] = player.getDeathCount();
-            playerInfo[i][2] = player.getKdr();
-            playerInfo[i][3] = player.getBulletCount();
-            playerInfo[i][4] = player.getBulletHitCount();
-            playerInfo[i][5] = player.getWalkingDistance();
-        }
-
-        renderWinner(winnerNumber, playerInfo);
-
-        double[][] playerInfo1 = new double[2][6];
 
         System.out.println("The winner is " + winner.getPlayerName());
         System.out.println("Scores: ");
@@ -495,16 +443,8 @@ public class SingleController extends Controller {
         System.out.format("      Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of%n");
         System.out.format("                                           Shot         Hit    Distance    Power-ups%n");
         System.out.format("------------------------------------------------------------------------------------%n");
-        for (int i = 0; i < players.size(); i++) {
+        for (Player player : players) {
             //Save data to send to client
-            Player player = players.get(i);
-            playerInfo1[i][0] = player.getKillCount();
-            playerInfo1[i][1] = player.getDeathCount();
-            playerInfo1[i][2] = player.getKdr();
-            playerInfo1[i][3] = player.getBulletCount();
-            playerInfo1[i][4] = player.getBulletHitCount();
-            playerInfo1[i][5] = player.getWalkingDistance();
-
             //Print
             System.out.format(format1,
                     player.getKillCount(),
@@ -517,15 +457,7 @@ public class SingleController extends Controller {
         }
 
         // Kill the music
-        try {
-            soundtrack.stop();
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
+        soundtrack.stop();
 
         isRunning = false;
     }

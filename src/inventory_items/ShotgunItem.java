@@ -14,10 +14,10 @@ import java.awt.*;
 public class ShotgunItem extends InventoryItem {
 
     //Graphics
-    private final int SECONDARY_TEXTURE_MAX_TIMER = 10;
+    private static final int SECONDARY_TEXTURE_MAX_TIMER = 10;
     private int secondaryTextureTimer = 0;
     private int secondaryTextureState = 1;
-    private final int FLOAT_EFFECT_MAX_TIMER = 3;
+    private static final int FLOAT_EFFECT_MAX_TIMER = 3;
     private int floatTimer = 0;
     private int floatState = 2;
     private boolean floatDirection = true;
@@ -33,12 +33,12 @@ public class ShotgunItem extends InventoryItem {
         int indexToRemove = Controller.inventoryItems.indexOf(this);
         if(World.controller instanceof ServerController || World.controller instanceof SingleController) {
             if(playerNumber == Player.SERVER_PLAYER) {
-                if (!Controller.thisPlayer.getArsenal().hasWeapon(0)) {
+                if (Controller.thisPlayer.getArsenal().lacksWeapon(0)) {
                     Controller.inventoryItems.remove(indexToRemove);
                     Controller.thisPlayer.getArsenal().add(new Shotgun(Controller.thisPlayer));
                 }
             } else {
-                if (!Controller.otherPlayer.getArsenal().hasWeapon(0)) {
+                if (Controller.otherPlayer.getArsenal().lacksWeapon(0)) {
                     Controller.inventoryItems.remove(indexToRemove);
                     Controller.otherPlayer.getArsenal().add(new Shotgun(Controller.otherPlayer));
                 }

@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="EntryPointsManager">
+    <pattern value="game.GameObject" method="getBounds" />
+    <pattern value="power_ups.PowerUp" method="updateClient" />
+    <pattern value="weapons.ammo.Projectile" method="getDamage" />
+    <pattern value="weapons.guns.Weapon" method="getDamage" />
+    <pattern value="player.Arsenal" method="getBounds" />
+    <pattern value="weapons.ammo.AssaultRifleBullet" method="render" />
+    <pattern value="inventory_items.AssaultRifleItem" method="render" />
+    <pattern value="game.GameObject" method="tick" />
+    <pattern value="mapObjects.Block" method="tick" />
+    <pattern value="eye_candy.BlockShadow" method="tick" />
+    <pattern value="eye_candy.DeathMark" method="getBounds" />
+    <pattern value="eye_candy.DeathMark" />
+    <pattern value="eye_candy.DeathMark" method="tick" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_16" default="true" project-jdk-name="16 (2)" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out/production/GiantsUNBC" />
   </component>

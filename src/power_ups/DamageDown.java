@@ -18,10 +18,10 @@ public class DamageDown extends PowerUp{
     private final BufferedImage secondary_texture;
 
     //Graphics
-    private final int SECONDARY_TEXTURE_MAX_TIMER = 10;
+    private static final int SECONDARY_TEXTURE_MAX_TIMER = 10;
     private int secondaryTextureTimer = 0;
     private int secondaryTextureState = -1;
-    private final int FLOAT_EFFECT_MAX_TIMER = 3;
+    private static final int FLOAT_EFFECT_MAX_TIMER = 3;
     private int floatTimer = 0;
     private int floatState = 2;
     private boolean floatDirection = true;

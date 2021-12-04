@@ -2,20 +2,18 @@ package weapons.ammo;
 
 import game.*;
 import player.Player;
+import utilities.BufferedImageLoader;
 import weapons.guns.SniperRifle;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.*;
-import java.io.*;
 
 public class SniperRifleBullet extends Bullet {
 
-    private final int SERIAL = 001;
+    private static final int SERIAL = 001;
 
     public SniperRifleBullet(int player, double aimX, double aimY, int damage) {
-        super(0,0,0,player);
+        super(player);
 
         // If initialized to 0, sometimes bullet is deleted before constructor finishes.
         setVelX(-1);
@@ -85,21 +83,12 @@ public class SniperRifleBullet extends Bullet {
 
             g2d.drawImage(texture, affTra, World.controller);
 
-        /*
-        g.setColor(new Color(50, 50, 100));
-        g.drawRect(pos.x - texture.getWidth() / 2, pos.y - texture.getHeight() / 2, texture.getWidth(),
-                texture.getHeight());
-         */
         }
 
     }
 
     public void loadImage() {
-        try {
-            texture = ImageIO.read(getClass().getResource("/resources/VFX/projectile/nato.png"));
-        } catch (IOException exc) {
-            System.out.println("Could not find image file: " + exc.getMessage());
-        }
+        texture = BufferedImageLoader.loadImage("/resources/VFX/projectile/nato.png");
     }
 
     @Override
