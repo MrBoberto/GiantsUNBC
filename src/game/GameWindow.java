@@ -2,10 +2,8 @@ package game;
 
 import utilities.BufferedImageLoader;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 public class GameWindow {
     protected final JFrame frame;
