@@ -26,6 +26,9 @@ public class GameOver  {
             System.out.println(e.getMessage());
         }
 
+
+
+
         Dimension size = new Dimension(Controller.WIDTH, Controller.HEIGHT);
         gameOver.setSize(size);
         gameOver.setPreferredSize(size);
@@ -71,7 +74,16 @@ public class GameOver  {
         JButton button = new JButton() {
             @Override
             public void paintComponent(Graphics g) {
+                Image image = null;
+                try {
+                    image = BufferedImageLoader.loadImage("/resources/Textures/BG/stone_background.png");
+
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+
                 Graphics2D g2 = (Graphics2D) g;
+                g2.drawImage(image,0,0, gameOver.getWidth(), gameOver.getHeight(),null);
                 Font font = new Font("Bauhaus 93", Font.PLAIN, 30);
                 Font MainFont = new Font("Bauhaus 93", Font.PLAIN, 50);
 
@@ -80,22 +92,22 @@ public class GameOver  {
                 g2.setColor(Color.WHITE);
 
                 g2.setFont(MainFont);
-                String text = "           Game Ends  " +
+                String text = "         Game Ends  " +
                         "Hit enter to return to the main screen";
-                g2.drawString("                         Score Board:", Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 60);
+                g2.drawString("                       Score Board:", Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 70);
 
 
                 g2.setFont(fontResult);
-                g2.drawString("   ---------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 30);
-                g2.drawString("                                   The winner is  " + winner.getPlayerName(),
+                g2.drawString("------------------------------------------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 600, 30);
+                g2.drawString("                                 The winner is  " + winner.getPlayerName(),
                         Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 130);
                 g2.drawString("                                         Scores:" + winner.getPlayerName(), Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 170);
 
                 g2.drawString(
-                        "   Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
+                        " Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
                         Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 250);
                 g2.drawString(
-                        "                                               Shot         Hit     Distance     Power-ups",
+                        "                                             Shot         Hit     Distance     Power-ups",
                         Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 300);
 
                 for (int i = 0; i < players.size(); i++) {
@@ -103,7 +115,7 @@ public class GameOver  {
                     Player player = players.get(i);
 
                     //Determine format
-                    String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
+                    String format = String.format("%10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
                             winner.getKillCount(),
                             winner.getDeathCount(),
                             winner.getKdr(),
@@ -117,15 +129,16 @@ public class GameOver  {
                                 Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 330);
                     }
                 }
-                g2.drawString("   ---------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 360);
+                //g2.drawString(" -------------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 360);
+                g2.drawString("------------------------------------------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 600, 360);
 
-                g2.drawString("                                  Scores:" + loser.getPlayerName(), Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 400);
+                g2.drawString("                                Scores:" + loser.getPlayerName(), Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 400);
 
                 g2.drawString(
-                        "   Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
+                        " Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
                         Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 440);
                 g2.drawString(
-                        "                                               Shot         Hit     Distance     Power-ups",
+                        "                                             Shot         Hit     Distance     Power-ups",
                         Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 480);
 
                 for (int i = 0; i < players.size(); i++) {
@@ -133,7 +146,7 @@ public class GameOver  {
                     Player player = players.get(i);
 
                     //Determine format
-                    String format = String.format(" %10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
+                    String format = String.format("%10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
                             loser.getKillCount(),
                             loser.getDeathCount(),
                             loser.getKdr(),
@@ -147,7 +160,8 @@ public class GameOver  {
                                 Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 520);
                     }
                 }
-                g2.drawString("   ---------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 560);
+                //g2.drawString(" -----------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 560);
+                g2.drawString("------------------------------------------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 600, 560);
 
 
                 g2.setFont(font);
