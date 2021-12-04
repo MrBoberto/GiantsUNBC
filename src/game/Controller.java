@@ -118,7 +118,7 @@ public abstract class Controller extends Canvas implements Runnable {
         this.addMouseListener(new MouseInput());
 
         //Load background
-        background = BufferedImageLoader.loadImage("/resources/Textures/BG/wood_background.png");
+        background = BufferedImageLoader.loadImage("/resources/Textures/BG/sci-fi_background.png");
 
         // Load static ImageStrips
         Explosion.loadImageStrips();
