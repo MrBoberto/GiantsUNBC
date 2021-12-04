@@ -31,6 +31,8 @@ public class PauseMenu implements KeyListener {
 
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
+    enum PanelType{ButtonsMenu, SettingsMenu, AudioMenu};
+    public PanelType panelType = PanelType.ButtonsMenu;
 
     public PauseMenu(JFrame frame, Controller controller) {
         this.frame = frame;
@@ -55,11 +57,10 @@ public class PauseMenu implements KeyListener {
 
         currentBackground = thisBackground.getHead();
 
-
         sfxPlayer = new SFXPlayer();
         sfxPlayer.setFile(-2);
 
-        pauseMenuPanel = new PauseButtonPanel(new GridBagLayout()) {
+        pauseMenuPanel = new JPanel(new GridBagLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -93,11 +94,12 @@ public class PauseMenu implements KeyListener {
         System.out.println(controller.getGameWindow().canPause());
     }
 
-    public boolean requestFocus() {
+    public boolean requestFocusInWindow() {
         return pauseMenuPanel.requestFocusInWindow();
     }
 
     private JPanel buttonsMenu() {
+        panelType = PanelType.ButtonsMenu;
         JPanel buttonsPanel = new JPanel(new GridBagLayout());
         buttonsPanel.setOpaque(false);
         pauseMenuPanel.add(buttonsPanel);
@@ -177,6 +179,7 @@ public class PauseMenu implements KeyListener {
     }
 
     private JPanel settingsMenu() {
+        panelType = PanelType.SettingsMenu;
         GridBagConstraints c = new GridBagConstraints();
         JPanel settingsMenu = new JPanel(new GridBagLayout());
         settingsMenu.setOpaque(false);
@@ -237,6 +240,7 @@ public class PauseMenu implements KeyListener {
     }
 
     private JPanel audioMenu() {
+        panelType = PanelType.AudioMenu;
         GridBagConstraints c = new GridBagConstraints();
         JPanel audioMenu = new JPanel(new GridBagLayout());
         audioMenu.setOpaque(false);
@@ -286,25 +290,44 @@ public class PauseMenu implements KeyListener {
         return audioMenu;
     }
 
-    public JPanel getJPanel() {
-        return pauseMenuPanel;
-    }
-
-    private JPanel createNewVoidPanel(){
-        JPanel voidPanel = new JPanel();
-        voidPanel.setBackground(new Color(0,0,0,0));
-        return voidPanel;
-    }
-
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            System.out.println("ESCAPE DETECTED");
-            if (controller.getGameWindow().canPause) {
-                frame.remove(pauseMenuPanel);
-                controller.closePauseMenu();
-                controller.getGameWindow().setCanPause(false);
+            if (panelType == PanelType.ButtonsMenu) {
+                if (controller.getGameWindow().canPause) {
+                    frame.remove(pauseMenuPanel);
+                    controller.closePauseMenu();
+                    controller.getGameWindow().setCanPause(false);
+                }
+            } else if (panelType == PanelType.SettingsMenu) {
+                pauseMenuPanel.remove(0);
+
+                JPanel bottomPanel = buttonsMenu();
+
+                GridBagConstraints c = new GridBagConstraints();
+                c.fill = GridBagConstraints.CENTER;
+                c.weighty = 0.2;
+                c.weightx = 1.0;
+                c.insets = new Insets(5,5,10,10);
+                pauseMenuPanel.add(bottomPanel, c);
+                pauseMenuPanel.validate();
+                pauseMenuPanel.repaint();
+                controller.isPauseMenuScreen = true;
+            } else {
+                pauseMenuPanel.remove(0);
+
+                GridBagConstraints c = new GridBagConstraints();
+                c.anchor = GridBagConstraints.CENTER;
+                c.fill = GridBagConstraints.BOTH;
+                c.gridy = 0;
+                c.gridx = 0;
+                c.weighty = 1.0;
+                c.weightx = 1.0;
+                pauseMenuPanel.add(settingsMenu(), c);
+                pauseMenuPanel.validate();
+                pauseMenuPanel.repaint();
             }
+
         }
     }
 
@@ -318,32 +341,14 @@ public class PauseMenu implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) controller.getGameWindow().setCanPause(true);
     }
 
-    class PauseButtonPanel extends JPanel implements KeyListener{
-        public PauseButtonPanel(LayoutManager layout) {
-            super(layout, true);
-        }
+    public JPanel getJPanel() {
+        return pauseMenuPanel;
+    }
 
-        @Override
-        public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                System.out.println("ESCAPE DETECTED");
-                if (controller.getGameWindow().canPause) {
-                    frame.remove(pauseMenuPanel);
-                    controller.closePauseMenu();
-                    controller.getGameWindow().setCanPause(false);
-                }
-            }
-        }
-
-        @Override
-        public void keyTyped(KeyEvent e) {
-
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) controller.getGameWindow().setCanPause(true);
-        }
+    private JPanel createNewVoidPanel(){
+        JPanel voidPanel = new JPanel();
+        voidPanel.setBackground(new Color(0,0,0,0));
+        return voidPanel;
     }
 
     static class PauseMenuButton extends JComponent implements MouseListener {

@@ -15,7 +15,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class MainMenu {
+public class MainMenu implements KeyListener {
 
     public static JFrame mainMenu;
     public static String playerName = "";
@@ -28,6 +28,9 @@ public class MainMenu {
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
     static SFXPlayer sfxPlayer;
+    static enum PanelType{MainMenu, ButtonsMenu, MapSelection, SettingsMenu, AudioMenu, MultiplayerMenu};
+    public static PanelType panelType = PanelType.MainMenu;
+    public static JPanel mainMenuPanel;
 
     public MainMenu() {
             mainMenu = new JFrame("THE BOYZ Launcher");
@@ -67,7 +70,7 @@ public class MainMenu {
 
         backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
 
-        JPanel mainMenuPanel = new JPanel(new GridBagLayout()){
+        mainMenuPanel = new JPanel(new GridBagLayout()){
 
             @Override
 
@@ -80,6 +83,7 @@ public class MainMenu {
 
         }};
 
+        mainMenuPanel.setFocusable(true);
         mainMenuPanel.setOpaque(false);
         mainMenu.add(mainMenuPanel);
 
@@ -117,6 +121,8 @@ public class MainMenu {
             c.weightx = 1.0;
             c.insets = new Insets(5,5,10,10);
             mainMenuPanel.add(bottomPanel, c);
+            mainMenuPanel.requestFocusInWindow();
+            mainMenuPanel.addKeyListener(this);
             mainMenuPanel.validate();
             mainMenuPanel.repaint();
         });
@@ -137,6 +143,8 @@ public class MainMenu {
     }
 
     public JPanel buttonsPanel(JPanel mainMenuPanel) {
+        panelType = PanelType.ButtonsMenu;
+
         GridBagConstraints c = new GridBagConstraints();
         JPanel buttonsPanel = new JPanel(new GridBagLayout());
         buttonsPanel.setOpaque(false);
@@ -217,7 +225,7 @@ public class MainMenu {
     }
 
     private JPanel mapSelection(JPanel mainMenuPanel, int gameType) {
-
+        panelType = PanelType.MapSelection;
         JPanel mapSelectionPanel = new JPanel(new GridBagLayout());
         mapSelectionPanel.setMinimumSize(new Dimension(Controller.WIDTH,Controller.HEIGHT));
         mapSelectionPanel.setOpaque(false);
@@ -227,7 +235,6 @@ public class MainMenu {
         for (int i = 1; i <= 9; i++) {
             maps.add(BufferedImageLoader.loadImage("/resources/mapLayouts/" + "Level" + i + ".png"));
         }
-
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
@@ -343,6 +350,7 @@ public class MainMenu {
     }
 
     private JPanel settingsMenu(JPanel mainMenuPanel) {
+        panelType = PanelType.SettingsMenu;
         GridBagConstraints c = new GridBagConstraints();
         JPanel settingsMenu = new JPanel(new GridBagLayout());
         settingsMenu.setOpaque(false);
@@ -406,6 +414,7 @@ public class MainMenu {
     }
 
     private JPanel audioMenu(JPanel mainMenuPanel) {
+        panelType = PanelType.AudioMenu;
         GridBagConstraints c = new GridBagConstraints();
         JPanel audioMenu = new JPanel(new GridBagLayout());
         audioMenu.setOpaque(false);
@@ -456,6 +465,7 @@ public class MainMenu {
     }
 
     private JPanel multiplayerMenu(JPanel mainMenuPanel) {
+        panelType = PanelType.MultiplayerMenu;
         GridBagConstraints c = new GridBagConstraints();
         JPanel multiplayerMenu = new JPanel(new GridBagLayout());
         multiplayerMenu.setOpaque(false);
@@ -528,7 +538,6 @@ public class MainMenu {
         }, "Back");
         c.gridy = 9;
         multiplayerMenu.add(backButton, c);
-
         return multiplayerMenu;
     }
 
@@ -536,6 +545,63 @@ public class MainMenu {
         JPanel voidPanel = new JPanel();
         voidPanel.setBackground(new Color(0,0,0,0));
         return voidPanel;
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            if (panelType == PanelType.MainMenu || panelType == PanelType.ButtonsMenu) {
+                // Do nothing
+            } else if (panelType == PanelType.MapSelection) {
+                mainMenuPanel.remove(0);
+
+                JPanel bottomPanel = buttonsPanel(mainMenuPanel);
+
+                GridBagConstraints c = new GridBagConstraints();
+                c.fill = GridBagConstraints.CENTER;
+                c.weighty = 0.2;
+                c.weightx = 1.0;
+                c.insets = new Insets(5, 5, 10, 10);
+                mainMenuPanel.add(bottomPanel, c);
+                mainMenuPanel.validate();
+                mainMenuPanel.repaint();
+            } else if (panelType == PanelType.SettingsMenu || panelType == PanelType.MultiplayerMenu) {
+                mainMenuPanel.remove(0);
+
+                JPanel bottomPanel = buttonsPanel(mainMenuPanel);
+
+                GridBagConstraints c = new GridBagConstraints();
+                c.fill = GridBagConstraints.CENTER;
+                c.weighty = 0.2;
+                c.weightx = 1.0;
+                c.insets = new Insets(5, 5, 10, 10);
+                mainMenuPanel.add(bottomPanel, c);
+                mainMenuPanel.validate();
+                mainMenuPanel.repaint();
+            } else if (panelType == PanelType.AudioMenu) {
+                mainMenuPanel.remove(0);
+                GridBagConstraints c = new GridBagConstraints();
+                c.anchor = GridBagConstraints.CENTER;
+                c.fill = GridBagConstraints.BOTH;
+                c.gridy = 0;
+                c.gridx = 0;
+                c.weighty = 1.0;
+                c.weightx = 1.0;
+                mainMenuPanel.add(settingsMenu(mainMenuPanel), c);
+                mainMenuPanel.validate();
+                mainMenuPanel.repaint();
+            }
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 
     static class MainMenuButton extends JComponent implements MouseListener {
