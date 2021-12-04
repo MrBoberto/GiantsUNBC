@@ -45,11 +45,14 @@ public class KeyInput extends KeyAdapter {
             } else {
                 Controller.thisPlayer.getArsenal().setSecondary(1);
             }
-            World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
-                    Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
-                    Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
-                    Controller.thisPlayer.getSelectedWeapon(),
-                    Controller.thisPlayer.getArsenal().getInventory()));
+            if (!(World.controller instanceof SingleController)) {
+                World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
+                        Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
+                        Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
+                        Controller.thisPlayer.getSelectedWeapon(),
+                        Controller.thisPlayer.getArsenal().getInventory()));
+            }
+
         }
         if (e.getKeyCode() == KeyEvent.VK_2 || e.getKeyCode() == KeyEvent.VK_NUMPAD2) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
@@ -57,11 +60,14 @@ public class KeyInput extends KeyAdapter {
             } else {
                 Controller.thisPlayer.getArsenal().setSecondary(2);
             }
-            World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
-                    Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
-                    Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
-                    Controller.thisPlayer.getSelectedWeapon(),
-                    Controller.thisPlayer.getArsenal().getInventory()));
+            if (!(World.controller instanceof SingleController)) {
+                World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
+                        Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
+                        Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
+                        Controller.thisPlayer.getSelectedWeapon(),
+                        Controller.thisPlayer.getArsenal().getInventory()));
+            }
+
         }
         if (e.getKeyCode() == KeyEvent.VK_3 || e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
@@ -69,11 +75,13 @@ public class KeyInput extends KeyAdapter {
             } else {
                 Controller.thisPlayer.getArsenal().setSecondary(3);
             }
-            World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
-                    Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
-                    Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
-                    Controller.thisPlayer.getSelectedWeapon(),
-                    Controller.thisPlayer.getArsenal().getInventory()));
+            if (!(World.controller instanceof SingleController)) {
+                World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
+                        Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
+                        Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
+                        Controller.thisPlayer.getSelectedWeapon(),
+                        Controller.thisPlayer.getArsenal().getInventory()));
+            }
         }
         if (e.getKeyCode() == KeyEvent.VK_4 || e.getKeyCode() == KeyEvent.VK_NUMPAD4) {
             if (Controller.thisPlayer.getSelectedWeapon() == 0) {
@@ -81,11 +89,13 @@ public class KeyInput extends KeyAdapter {
             } else {
                 Controller.thisPlayer.getArsenal().setSecondary(4);
             }
-            World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
-                    Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
-                    Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
-                    Controller.thisPlayer.getSelectedWeapon(),
-                    Controller.thisPlayer.getArsenal().getInventory()));
+            if (!(World.controller instanceof SingleController)) {
+                World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
+                        Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
+                        Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
+                        Controller.thisPlayer.getSelectedWeapon(),
+                        Controller.thisPlayer.getArsenal().getInventory()));
+            }
         }
     }
 

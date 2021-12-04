@@ -32,11 +32,13 @@ public abstract class Bullet extends GameObject implements Projectile {
 
     private void getBouncesLeft() {
         if ((((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
+                || (playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof SingleController)
                 || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController))
                 && Controller.thisPlayer.isRicochetEnabled())){
             bouncesLeft = Controller.thisPlayer.getNumberOfBulletBounces();
 
         } else if (((playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ServerController)
+                || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof SingleController)
                 || (playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ClientController))
                 && Controller.otherPlayer.isRicochetEnabled()) {
             bouncesLeft = Controller.otherPlayer.getNumberOfBulletBounces();

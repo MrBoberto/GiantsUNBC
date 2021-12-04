@@ -223,7 +223,6 @@ public class ClientController extends Controller {
 
                     if(packet.getRicochetBounces() != -1){
                         otherPlayer.setRicochet(packet.getRicochetBounces(), packet.getTime());
-
                     }
                 }
                 /* here goes other property changes */
