@@ -577,7 +577,7 @@ public class ServerController extends Controller {
         }
 
         outputConnection.sendPacket(new WinnerPacket(winnerNumber, playerInfo));
-        renderWinner(winnerNumber, playerInfo);
+        renderWinner(winnerNumber);
 
         System.out.println("The winner is " + winner.getPlayerName());
         System.out.println("Scores: ");
@@ -598,10 +598,39 @@ public class ServerController extends Controller {
                     player.getPickedUpPowerUps());
         }
 
-        //Send to client
-        outputConnection.sendPacket(new WinnerPacket(winnerNumber, playerInfo));
-
         // Kill the music
         soundtrack.stop();
+    }
+
+    public void renderWinner(int winnerNumber) {
+        gameWindow.frame.dispose();
+        try
+        {
+            soundtrack.stop();
+        }
+        catch (Exception ex)
+        {
+            System.out.println("Error with stopping sound.");
+            ex.printStackTrace();
+        }
+
+        System.out.println("renderWinner");
+
+
+        Player winner;
+        Player loser;
+        if (winnerNumber == Player.SERVER_PLAYER) {
+            winner = thisPlayer;
+            loser = otherPlayer;
+        } else {
+            winner = otherPlayer;
+            loser = thisPlayer;
+        }
+
+
+        isRunning = false;
+        gameWindow.frame.dispose();
+        World.setGameOver(new GameOver(loser,winner,HEIGHT, players, WIDTH));
+
     }
 }

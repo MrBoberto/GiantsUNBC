@@ -646,4 +646,24 @@ public abstract class Player extends GameObject {
     public void increasePickedUpPowerUps() {
         this.pickedUpPowerUps++;
     }
+
+    public void setKillCount(int killCount) {
+        this.killCount = killCount;
+    }
+
+    public void setBulletsShot(long bulletsShot) {
+        this.bulletsShot = bulletsShot;
+    }
+
+    public void setBulletsHit(long bulletsHit) {
+        this.bulletsHit = bulletsHit;
+    }
+
+    public void setWalkingDistance(long walkingDistance) {
+        this.walkingDistance = walkingDistance;
+    }
+
+    public void setPickedUpPowerUps(long pickedUpPowerUps) {
+        this.pickedUpPowerUps = pickedUpPowerUps;
+    }
 }
