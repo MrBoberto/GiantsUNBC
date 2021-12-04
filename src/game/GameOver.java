@@ -7,9 +7,11 @@ import utilities.BufferedImageLoader;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
-public class GameOver {
+public class GameOver  {
     //public static MainMenu gameOverMenu;
     final JFrame gameOver;
 
@@ -48,6 +50,8 @@ public class GameOver {
         mainMenuPanel.setOpaque(false);
         gameOver.add(mainMenuPanel);
 
+
+
         JButton screen = createScreenButton(loser, winner, players, mainMenuPanel);
 
         c.anchor = GridBagConstraints.CENTER;
@@ -57,6 +61,8 @@ public class GameOver {
         c.weighty = 1.0;
         c.weightx = 1.0;
         mainMenuPanel.add(screen, c);
+
+
 
         gameOver.setVisible(true);
     }
@@ -75,7 +81,7 @@ public class GameOver {
 
                 g2.setFont(MainFont);
                 String text = "           Game Ends  " +
-                        "Click anywhere to return to the main screen";
+                        "Hit enter to return to the main screen";
                 g2.drawString("                         Score Board:", Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2, 60);
 
 
@@ -156,10 +162,16 @@ public class GameOver {
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
 
-        button.addActionListener(f -> {
-            mainMenuPanel.remove(button);
-            gameOver.dispose();
-            new MainMenu();
+
+        button.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    mainMenuPanel.remove(button);
+                    gameOver.dispose();
+                    new MainMenu();
+                }
+            }
         });
         return button;
     }
