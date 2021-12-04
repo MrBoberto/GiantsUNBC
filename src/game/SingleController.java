@@ -279,7 +279,7 @@ public class SingleController extends Controller {
                 if (killer instanceof AIPlayer) {
                     AIPlayer.setDialogue("I am inevitable.");
                 }
-                if(victim.getDeathCount() >= 10){
+                if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
             }
@@ -322,7 +322,7 @@ public class SingleController extends Controller {
                 victim.revive();
 
                 killer.incrementKillCount();
-                if(victim.getDeathCount() >= 10){
+                if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
             }
@@ -346,7 +346,7 @@ public class SingleController extends Controller {
 
                     if (otherPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
                         killer.incrementKillCount();
-                        if(otherPlayer.getDeathCount() >= 10){
+                        if(otherPlayer.getDeathCount() >=PLAYER_LIVES){
                             declareWinner(killer);
                         }
                     }
@@ -374,7 +374,7 @@ public class SingleController extends Controller {
 
                     if (thisPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
                         killer.incrementKillCount();
-                        if(thisPlayer.getDeathCount() >= 10){
+                        if(thisPlayer.getDeathCount() >=PLAYER_LIVES){
                             declareWinner(killer);
                         }
                     }
@@ -419,7 +419,7 @@ public class SingleController extends Controller {
 
                 killer.incrementKillCount();
                 // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
-                if(victim.getDeathCount() >= 10){
+                if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
             }

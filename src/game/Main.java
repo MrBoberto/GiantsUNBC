@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 public class Main {
@@ -13,6 +14,10 @@ public class Main {
     private static int volumeMaster = 100;
     private static int volumeMusic = 100;
     private static int volumeSFX = 100;
+    private static InetAddress correctAddress;//to make java happy, should not need to be initialized
+
+    public Main() {
+    }
 
     public static int getVolumeMaster() {
         return volumeMaster;
@@ -46,7 +51,11 @@ public class Main {
         return volumeSFX;
     }
 
-    public static void main(String[] args) {
+    public static InetAddress getAddress(){
+        return correctAddress;
+    }
+
+    public static void main(String[] args) throws UnknownHostException {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
@@ -55,6 +64,32 @@ public class Main {
         new MainMenu();
 
         try {
+            Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
+            boolean firstAddress = false;
+            while(Interfaces.hasMoreElements())
+            {
+                NetworkInterface Interface = Interfaces.nextElement();
+                Enumeration<InetAddress> Addresses = Interface.getInetAddresses();
+                while(Addresses.hasMoreElements())
+                {
+                    InetAddress Address = Addresses.nextElement();
+                    if (!Address.getHostAddress().contains("f")&&!Address.getHostAddress().contains(":")&&!Address.getHostAddress().contains("127.0.0.1")&&!firstAddress&&!Address.getHostAddress().contains("192.168.56.1"))
+                    {
+                        firstAddress = true;
+                        correctAddress =Address;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+/*
+ try {
+            InetAddress correctAddress =InetAddress.getLocalHost();//to make java happy, should not need to be initialized
             Enumeration<NetworkInterface> Interfaces = NetworkInterface.getNetworkInterfaces();
             boolean firstAddress = false;
             while(Interfaces.hasMoreElements())
@@ -75,7 +110,5 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-}
 
-
+ */
