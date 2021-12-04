@@ -375,7 +375,7 @@ public class ClientController extends Controller {
                         (int) packet.getPlayerInfo()[i][3],
                         (int) packet.getPlayerInfo()[i][4],
                         (int) packet.getPlayerInfo()[i][5],
-                        "???");
+                        (int) packet.getPlayerInfo()[i][6]);
             }
             isRunning = false;
         } else if(object instanceof ArsenalPacket packet){
