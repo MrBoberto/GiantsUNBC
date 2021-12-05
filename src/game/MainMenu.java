@@ -758,5 +758,9 @@ public class MainMenu implements KeyListener {
             mainMenuPanel.requestFocusInWindow();
         }
     }
+
+    static class Timer {
+
+    }
 }
 
