@@ -4,7 +4,7 @@ package game;
  * This file is part of a solution to
  *		CPSC300 Term Project Fall 2021
  *
- * The controller from the client perspective
+ * The main game controller from the client perspective
  *
  * @author The Boyz
  * @version 1
@@ -115,8 +115,11 @@ public class ClientController extends Controller {
         thisPlayer = new MainPlayer(Controller.otherX, Controller.otherY, Player.CLIENT_PLAYER, Color.RED);
         otherPlayer = new OtherPlayer(Controller.thisX, Controller.thisY, Player.SERVER_PLAYER, Color.BLUE);
 
-        otherPlayer.setArsenal(new Arsenal(0, 620, otherPlayer));
-        thisPlayer.setArsenal(new Arsenal(816, 620, thisPlayer));
+        int positionInScreenY = 620;
+        int positionInScreenXOtherPlayer = 0;
+        int positionInScreenXThisPlayer = 816;
+        otherPlayer.setArsenal(new Arsenal(positionInScreenXOtherPlayer, positionInScreenY, otherPlayer));
+        thisPlayer.setArsenal(new Arsenal(positionInScreenXThisPlayer, positionInScreenY, thisPlayer));
 
         if (MainMenu.playerName.equals("")) {
             thisPlayer.setPlayerName("Guest");
@@ -125,6 +128,10 @@ public class ClientController extends Controller {
         }
     }
 
+    /**
+     * What to do when client receives a packet from server
+     * @param object the packet received
+     */
     @Override
     public void packetReceived(Object object) {
         if (object instanceof StartPacket packet) {

@@ -120,7 +120,6 @@ public class Explosion extends GameObject implements Serializable {
             imgLocStr.add("explosion (" + i + ").png");
         }
         animation = buildImageStrip(imgLocStr, defLocStr);
-//        (standing.toString());
         imgLocStr.clear();
     }
 

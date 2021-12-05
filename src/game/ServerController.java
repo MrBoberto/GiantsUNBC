@@ -13,7 +13,7 @@ package game;
 import inventory_items.*;
 import audio.SFXPlayer;
 import eye_candy.DeathMark;
-import mapObjects.Block;
+import map_objects.Block;
 import packets.*;
 import player.Arsenal;
 import player.MainPlayer;
@@ -71,83 +71,115 @@ public class ServerController extends Controller {
 
     }
 
+    /**
+     * What to do when server receives a packet from client
+     * @param object the packet received
+     */
     @Override
     public void packetReceived(Object object) {
         if (object instanceof ClientUpdatePacket packet) {
 
-            otherPlayer.setWalking(packet.isWalking());
-            if (packet.isWalking()) otherPlayer.incrementWalkingDistance();
-
-            otherPlayer.setX(packet.x());
-            otherPlayer.setY(packet.y());
-            otherPlayer.setAngle(packet.angle());
-            otherPlayer.setWeaponSerial(packet.weaponSerial());
+            loadClientUpdatePacket(packet);
 
         } else if (object instanceof ClientDashPacket) {
+
             otherPlayer.startDashTimer();
+
         } else if (object instanceof StartRequest packet) {
 
-            outputConnection.sendPacket(new StartPacket(otherPlayer.getRespawnPointX(), otherPlayer.getRespawnPointY(), 0, MainMenu.playerName, MainMenu.mapSelected));
-            if (packet.clientName() == null || packet.clientName().equals("")) {
-                otherPlayer.setPlayerName("Guest");
-            } else {
-                otherPlayer.setPlayerName(packet.clientName());
-            }
-        } else if (object instanceof ClientBulletPacket packet) {
-            switch (packet.projectileType()) {
-                case ShotgunBullet -> new ShotgunBullet(
-                        Player.CLIENT_PLAYER,
-                        packet.mouseXLocation(),
-                        packet.mouseYLocation(),
-                        packet.damage()
-                );
-                case SniperRifleBullet -> new SniperRifleBullet(
-                        Player.CLIENT_PLAYER,
-                        packet.mouseXLocation(),
-                        packet.mouseYLocation(),
-                        packet.damage()
-                );
-                case PistolBullet -> new PistolBullet(
-                        Player.CLIENT_PLAYER,
-                        packet.mouseXLocation(),
-                        packet.mouseYLocation(),
-                        packet.damage()
-                );
-                case AssaultRifleBullet -> new AssaultRifleBullet(
-                        Player.CLIENT_PLAYER,
-                        packet.mouseXLocation(),
-                        packet.mouseYLocation(),
-                        packet.damage()
-                );
-                case RocketLauncherBullet -> new RocketLauncherBullet(
-                        Player.CLIENT_PLAYER,
-                        packet.mouseXLocation(),
-                        packet.mouseYLocation(),
-                        packet.damage()
-                );
-            }
+            loadStartRequestPacket(packet);
 
-            otherPlayer.incrementBulletCount();
+        } else if (object instanceof ClientBulletPacket packet) {
+
+            loadClientBulletPacket(packet);
 
         } else if (object instanceof ClientSlashPacket packet) {
 
-            new Slash(
-                    packet.x(),
-                    packet.y(),
-                    packet.angle(),
-                    packet.isLeft(),
-                    Player.CLIENT_PLAYER
-            );
-            otherPlayer.setSwordLeft(!packet.isLeft());
-            clientWeaponAudio.setFile(5);
-            clientWeaponAudio.play();
+            loadClientSlashPacket(packet);
 
         } else if (object instanceof ClientSFXPacket packet) {
-            clientWeaponAudio.setFile(packet.clientSFXInt());
-            clientWeaponAudio.play();
+
+            loadClientSFXPacket(packet);
+
         } else if(object instanceof ArsenalPacket packet){
+
             otherPlayer.getArsenal().setInventory(packet.primary(),packet.secondary(),packet.selected(),packet.inventory());
+
         }
+    }
+
+    private void loadClientSFXPacket(ClientSFXPacket packet) {
+        clientWeaponAudio.setFile(packet.clientSFXInt());
+        clientWeaponAudio.play();
+    }
+
+    private void loadClientSlashPacket(ClientSlashPacket packet) {
+        new Slash(
+                packet.x(),
+                packet.y(),
+                packet.angle(),
+                packet.isLeft(),
+                Player.CLIENT_PLAYER
+        );
+        otherPlayer.setSwordLeft(!packet.isLeft());
+        clientWeaponAudio.setFile(5);
+        clientWeaponAudio.play();
+    }
+
+    private void loadClientBulletPacket(ClientBulletPacket packet) {
+        switch (packet.projectileType()) {
+            case ShotgunBullet -> new ShotgunBullet(
+                    Player.CLIENT_PLAYER,
+                    packet.mouseXLocation(),
+                    packet.mouseYLocation(),
+                    packet.damage()
+            );
+            case SniperRifleBullet -> new SniperRifleBullet(
+                    Player.CLIENT_PLAYER,
+                    packet.mouseXLocation(),
+                    packet.mouseYLocation(),
+                    packet.damage()
+            );
+            case PistolBullet -> new PistolBullet(
+                    Player.CLIENT_PLAYER,
+                    packet.mouseXLocation(),
+                    packet.mouseYLocation(),
+                    packet.damage()
+            );
+            case AssaultRifleBullet -> new AssaultRifleBullet(
+                    Player.CLIENT_PLAYER,
+                    packet.mouseXLocation(),
+                    packet.mouseYLocation(),
+                    packet.damage()
+            );
+            case RocketLauncherBullet -> new RocketLauncherBullet(
+                    Player.CLIENT_PLAYER,
+                    packet.mouseXLocation(),
+                    packet.mouseYLocation(),
+                    packet.damage()
+            );
+        }
+
+        otherPlayer.incrementBulletCount();
+    }
+
+    private void loadStartRequestPacket(StartRequest packet) {
+        outputConnection.sendPacket(new StartPacket(otherPlayer.getRespawnPointX(), otherPlayer.getRespawnPointY(), 0, MainMenu.playerName, MainMenu.mapSelected));
+        if (packet.clientName() == null || packet.clientName().equals("")) {
+            otherPlayer.setPlayerName("Guest");
+        } else {
+            otherPlayer.setPlayerName(packet.clientName());
+        }
+    }
+
+    private void loadClientUpdatePacket(ClientUpdatePacket packet) {
+        otherPlayer.setWalking(packet.isWalking());
+        if (packet.isWalking()) otherPlayer.incrementWalkingDistance();
+
+        otherPlayer.setX(packet.x());
+        otherPlayer.setY(packet.y());
+        otherPlayer.setAngle(packet.angle());
+        otherPlayer.setWeaponSerial(packet.weaponSerial());
     }
 
     @Override
@@ -220,53 +252,11 @@ public class ServerController extends Controller {
             }
         }
 
-        //Every COOLDOWN_BETWEEN_POWER_UPS there is a 50% chance of a power up spawning.
-        if(powerUps.size() < 4 && currentPowerUpCooldown == 0 && World.sRandom.nextBoolean()){
-            currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
+        spawnPowerUps();
+        spawnGuns();
+    }
 
-            boolean loop = true;
-            int x = 0;
-            int y = 0;
-            while(loop) {
-                x = World.sRandom.nextInt(WIDTH);
-                y = World.sRandom.nextInt(HEIGHT);
-                loop = false;
-                for (Block block : blocks) {
-                    if ((new Rectangle(x, y, PowerUp.POWER_UP_DIMENSIONS.width, PowerUp.POWER_UP_DIMENSIONS.height)
-                            .intersects(block.getBounds()))) {
-                        loop = true;
-                    }
-                }
-            }
-            switch (World.sRandom.nextInt(PowerUp.PowerUpType.values().length)) {
-                case 0 -> {
-                    powerUps.add(new DamageUp(x, y, 2));
-                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.DamageUp));
-                }
-                case 1 -> {
-                    powerUps.add(new DamageDown(x, y, 0.5F));
-                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.DamageDown));
-                }
-                case 2 -> {
-                    powerUps.add(new SpeedUp(x, y, 1.5F));
-                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.SpeedUp));
-                }
-                case 3->{
-                    powerUps.add(new SpeedDown(x, y, 0.25F));
-                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.SpeedDown));
-                }
-                case 4->{
-                    powerUps.add(new Ricochet(x, y, 2));
-                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.Ricochet));
-                }
-            }
-
-        } else if (currentPowerUpCooldown == 0) {
-            currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
-        } else {
-            currentPowerUpCooldown--;
-        }
-
+    private void spawnGuns() {
         //Every COOLDOWN_BETWEEN_INVENTORY_ITEMS there is a 50% chance of an inventory item spawning.
         if(inventoryItems.size() < 7 && currentInventoryItemCooldown == 0 && World.sRandom.nextBoolean()){
             currentInventoryItemCooldown = COOLDOWN_BETWEEN_INVENTORY_ITEMS;
@@ -312,6 +302,55 @@ public class ServerController extends Controller {
             currentInventoryItemCooldown = COOLDOWN_BETWEEN_INVENTORY_ITEMS;
         } else {
             currentInventoryItemCooldown--;
+        }
+    }
+
+    private void spawnPowerUps() {
+        //Every COOLDOWN_BETWEEN_POWER_UPS there is a 50% chance of a power up spawning.
+        if(powerUps.size() < 4 && currentPowerUpCooldown == 0 && World.sRandom.nextBoolean()){
+            currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
+
+            boolean loop = true;
+            int x = 0;
+            int y = 0;
+            while(loop) {
+                x = World.sRandom.nextInt(WIDTH);
+                y = World.sRandom.nextInt(HEIGHT);
+                loop = false;
+                for (Block block : blocks) {
+                    if ((new Rectangle(x, y, PowerUp.POWER_UP_DIMENSIONS.width, PowerUp.POWER_UP_DIMENSIONS.height)
+                            .intersects(block.getBounds()))) {
+                        loop = true;
+                    }
+                }
+            }
+            switch (World.sRandom.nextInt(PowerUp.PowerUpType.values().length)) {
+                case 0 -> {
+                    powerUps.add(new DamageUp(x, y, 2));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.DamageUp));
+                }
+                case 1 -> {
+                    powerUps.add(new DamageDown(x, y, 0.5F));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.DamageDown));
+                }
+                case 2 -> {
+                    powerUps.add(new SpeedUp(x, y, 1.5F));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.SpeedUp));
+                }
+                case 3->{
+                    powerUps.add(new SpeedDown(x, y, 0.25F));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.SpeedDown));
+                }
+                case 4->{
+                    powerUps.add(new Ricochet(x, y, 2));
+                    outputConnection.sendPacket(new CreatePowerUpPacket(x, y, PowerUp.PowerUpType.Ricochet));
+                }
+            }
+
+        } else if (currentPowerUpCooldown == 0) {
+            currentPowerUpCooldown = COOLDOWN_BETWEEN_POWER_UPS;
+        } else {
+            currentPowerUpCooldown--;
         }
     }
 

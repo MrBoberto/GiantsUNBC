@@ -12,7 +12,7 @@ package player;
 
 import game.Controller;
 import game.World;
-import mapObjects.Block;
+import map_objects.Block;
 import utilities.BufferedImageLoader;
 
 import java.awt.*;
@@ -203,6 +203,47 @@ public class MainPlayer extends Player {
 
         move();
 
+        applyFriction();
+
+        keepPlayersInsideOfBounds();
+
+        updateBounds();
+
+        updateWeaponsDelay();
+    }
+
+    private void updateWeaponsDelay() {
+        if (arsenal.getPrimary().getCurrentDelay() > 0) {
+            arsenal.getPrimary().setCurrentDelay(arsenal.getPrimary().getCurrentDelay() - 1);
+        }
+        if (arsenal.getSecondary() != null && arsenal.getSecondary().getCurrentDelay() > 0) {
+            arsenal.getSecondary().setCurrentDelay(arsenal.getSecondary().getCurrentDelay() - 1);
+        }
+    }
+
+    private void updateBounds() {
+        boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 4,
+                (int)this.y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
+                currentImage.getImage().getHeight() / 2);
+    }
+
+    private void keepPlayersInsideOfBounds() {
+        //Keep player inside game area
+        if (super.getX() <= currentImage.getImage().getWidth() / 2.0) {
+            super.setX(currentImage.getImage().getWidth() / 2.0);
+        } else if (super.getX() >= Controller.WIDTH - currentImage.getImage().getWidth() / 2.0) {
+            super.setX(Controller.WIDTH - currentImage.getImage().getWidth() / 2.0);
+        }
+        if (super.getY() <= currentImage.getImage().getHeight() / 2.0) {
+            super.setY(currentImage.getImage().getHeight() / 2.0);
+            setVelY(1);
+        } else if (super.getY() >= Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0) {
+            super.setY(Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0);
+            setVelY(0);
+        }
+    }
+
+    private void applyFriction() {
         // Apply vertical friction
         if (getVelY() > Controller.FRICTION) {
             setVelY(getVelY() - Controller.FRICTION);
@@ -219,32 +260,6 @@ public class MainPlayer extends Player {
         } else if (getVelX() != 0) {
             setVelX(0);
         }
-
-        //Keep player inside game area
-        if (super.getX() <= currentImage.getImage().getWidth() / 2.0) {
-            super.setX(currentImage.getImage().getWidth() / 2.0);
-        } else if (super.getX() >= Controller.WIDTH - currentImage.getImage().getWidth() / 2.0) {
-            super.setX(Controller.WIDTH - currentImage.getImage().getWidth() / 2.0);
-        }
-
-        if (super.getY() <= currentImage.getImage().getHeight() / 2.0) {
-            super.setY(currentImage.getImage().getHeight() / 2.0);
-            setVelY(1);
-        } else if (super.getY() >= Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0) {
-            super.setY(Controller.HEIGHT - currentImage.getImage().getHeight() / 2.0);
-            setVelY(0);
-        }
-
-        boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 4,
-                (int)this.y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
-                currentImage.getImage().getHeight() / 2);
-
-        if (arsenal.getPrimary().getCurrentDelay() > 0) {
-            arsenal.getPrimary().setCurrentDelay(arsenal.getPrimary().getCurrentDelay() - 1);
-        }
-        if (arsenal.getSecondary() != null && arsenal.getSecondary().getCurrentDelay() > 0) {
-            arsenal.getSecondary().setCurrentDelay(arsenal.getSecondary().getCurrentDelay() - 1);
-        }
     }
 
     @Override
@@ -260,6 +275,28 @@ public class MainPlayer extends Player {
         }
 
         if(currentImage == null) return;
+
+        drawImages(g2d);
+
+        drawNameAndHealthBar(g2d);
+    }
+
+    private void drawNameAndHealthBar(Graphics2D g2d) {
+        g2d.setColor(playerColour);
+        Font font = new Font("Arial", Font.BOLD, 15);
+        g2d.setFont(font);
+        FontMetrics stringSize = g2d.getFontMetrics(font);
+
+        g2d.fillRect((int) x - currentImage.getImage().getWidth() / 4,
+                (int) y - currentImage.getImage().getHeight() / 4 - 5,
+                (currentImage.getImage().getWidth() * health / 200),
+                5);
+
+        g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,
+                (int) y - 10 - currentImage.getImage().getHeight() / 4);
+    }
+
+    private void drawImages(Graphics2D g2d) {
         // Sets up the axis of rotation
         AffineTransform affTra = AffineTransform.getTranslateInstance(
                 x - currentImage.getImage().getWidth() / 2.0,
@@ -267,7 +304,6 @@ public class MainPlayer extends Player {
         // Rotates the frame
         affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2.0,
                 currentImage.getImage().getHeight() / 2.0);
-
         // Draws the rotated image
         if(skipFrame) {
             skipFrame = false;
@@ -280,21 +316,6 @@ public class MainPlayer extends Player {
         } else if (weaponSerial == 5) {
             g2d.drawImage(currentSwordFrame.getImage(), affTra, World.controller);
         }
-
-        // Draws the player's hitbox
-        g.setColor(playerColour);
-
-        Font font = new Font("Arial", Font.BOLD, 15);
-        g2d.setFont(font);
-        FontMetrics stringSize = g2d.getFontMetrics(font);
-
-        g2d.fillRect((int) x - currentImage.getImage().getWidth() / 4,
-                (int) y - currentImage.getImage().getHeight() / 4 - 5,
-                (currentImage.getImage().getWidth() * health / 200),
-                5);
-
-        g2d.drawString(playerName, (int) x - (stringSize.stringWidth(playerName)) / 2,
-                (int) y - 10 - currentImage.getImage().getHeight() / 4);
     }
 
     public void setUp(boolean up) {

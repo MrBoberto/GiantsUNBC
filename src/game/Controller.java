@@ -4,9 +4,9 @@ package game;
  * This file is part of a solution to
  *		CPSC300 Term Project Fall 2021
  *
- * The abstract Controller class, containing basic functions to be used by all Controllers. The Controller is a Canvas
- * which is added to the GameWindow so that it may draw each frame. The controller also has the tick() method for
- * game logic
+ * The abstract Controller class, containing basic functions to be used by all Controllers. Acts as the main game loop by
+ * having the tick() method for game logic and a render() method for graphics.
+ * The Controller is also a Canvas which is added to the GameWindow so that it may draw each frame.
  *
  * @author The Boyz
  * @version 1
@@ -15,7 +15,7 @@ package game;
 import audio.AudioPlayer;
 import inventory_items.InventoryItem;
 import inventory_items.LightningSwordItem;
-import mapObjects.Block;
+import map_objects.Block;
 import player.Arsenal;
 import player.MainPlayer;
 import player.OtherPlayer;
@@ -48,7 +48,7 @@ public abstract class Controller extends Canvas implements Runnable {
     public static boolean mouseInside;
     public static boolean isWon;
     public boolean hasPauseMenu;
-    public boolean isPauseMenuScreen = true;        // Only false in pause menu submenus
+    public boolean isPauseMenuScreen = true; // Only false in pause menu submenus
     public PauseMenu pauseMenu;
 
     //Multiplayer
@@ -196,6 +196,9 @@ public abstract class Controller extends Canvas implements Runnable {
 
     }
 
+    /**
+     * Main game loop
+     */
     public void run() {
         this.requestFocus();
         long lastTime = System.nanoTime();

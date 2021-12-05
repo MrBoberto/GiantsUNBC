@@ -54,12 +54,10 @@ public class SniperRifle implements Weapon {
     public void shoot(double mouseX, double mouseY) {
         if (World.controller instanceof ServerController) {
             World.controller.getOutputConnection().sendPacket(new ServerSFXPacket(SERIAL));
-            // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             for (int i = 0; i < ROUND_COUNT; i++) {
                 new SniperRifleBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             }
         } else if (World.controller instanceof SingleController) {
-            // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             if (playerIBelongTo.getPlayerNumber() == 0) {
                 for (int i = 0; i < ROUND_COUNT; i++) {
                     new SniperRifleBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);

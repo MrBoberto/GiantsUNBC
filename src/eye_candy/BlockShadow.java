@@ -1,3 +1,12 @@
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * Renders the shadows of the blocks of the map, making sure to not overlap and cause weird graphic artifacts.
+ *
+ * @author The Boyz
+ * @version 1
+ */
 package eye_candy;
 
 import game.Controller;

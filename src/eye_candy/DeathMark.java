@@ -1,3 +1,13 @@
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * Decorative mark on the ground that shows where a previous player had died.
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 package eye_candy;
 
 import game.Controller;

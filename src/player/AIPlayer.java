@@ -14,7 +14,7 @@ import game.Controller;
 import game.SingleController;
 import game.World;
 import inventory_items.InventoryItem;
-import mapObjects.Block;
+import map_objects.Block;
 import power_ups.PowerUp;
 import weapons.guns.*;
 

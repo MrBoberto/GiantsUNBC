@@ -5,7 +5,7 @@ package power_ups;
  *		CPSC300 Term Project Fall 2021
  *
  * A power up that spawns in zones not obstructed by blocks and causes the bullets fired by the player who collects it
- * to ricochet off obstacles
+ * to ricochet off obstacles up to two times.
  *
  * @author The Boyz
  * @version 1

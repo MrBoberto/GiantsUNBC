@@ -13,7 +13,7 @@ package game;
 import audio.SFXPlayer;
 import eye_candy.DeathMark;
 import inventory_items.*;
-import mapObjects.Block;
+import map_objects.Block;
 import player.*;
 import power_ups.*;
 import utilities.BufferedImageLoader;

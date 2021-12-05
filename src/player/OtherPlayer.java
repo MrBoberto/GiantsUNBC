@@ -26,7 +26,13 @@ public class OtherPlayer extends Player {
 
     public void tick() {
         super.tick();
+
         dashTimer--;
+
+        updateBounds();
+    }
+
+    private void updateBounds() {
         boundRect = new Rectangle((int)this.x - currentImage.getImage().getWidth() / 4,
                 (int)this.y - currentImage.getImage().getHeight() / 4, currentImage.getImage().getWidth() / 2,
                 currentImage.getImage().getHeight() / 2);
@@ -41,6 +47,13 @@ public class OtherPlayer extends Player {
             resetAnimationTimer();
         }
 
+        Graphics2D g2d = (Graphics2D) g;
+
+        drawImages(g2d);
+        drawNameAndHealthBar(g2d);
+    }
+
+    private void drawImages(Graphics2D g2d) {
         // Sets up the axis of rotation
         AffineTransform affTra = AffineTransform.getTranslateInstance(
                 x - currentImage.getImage().getWidth() / 2.0,
@@ -48,8 +61,6 @@ public class OtherPlayer extends Player {
         // Rotates the frame
         affTra.rotate(super.getAngle(), currentImage.getImage().getWidth() / 2.0,
                 currentImage.getImage().getHeight() / 2.0);
-        Graphics2D g2d = (Graphics2D) g;
-
         // Draws the rotated image
         if(skipFrame) {
             skipFrame = false;
@@ -62,9 +73,10 @@ public class OtherPlayer extends Player {
         } else if (weaponSerial == 5) {
             g2d.drawImage(currentSwordFrame.getImage(), affTra, World.controller);
         }
+    }
 
-        // Draws the player's hitbox
-        g.setColor(playerColour);
+    private void drawNameAndHealthBar(Graphics2D g2d) {
+        g2d.setColor(playerColour);
 
         Font font = new Font("Arial", Font.BOLD, 15);
         g2d.setFont(font);

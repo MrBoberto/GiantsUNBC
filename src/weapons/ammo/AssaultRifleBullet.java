@@ -32,6 +32,29 @@ public class AssaultRifleBullet extends Bullet {
 
         ProjectileTYPE = ProjectileType.AssaultRifleBullet;
 
+        setPosAndAngle(aimX, aimY);
+
+        if (angle <= -Math.PI) {
+            angle += 2 * Math.PI;
+        } else if (angle > Math.PI) {
+            angle -= 2 * Math.PI;
+        }
+
+        this.damage = damage;
+        loadImage();
+
+        double speed = AssaultRifle.SPEED - (AssaultRifle.SPEED / 3) * World.sRandom.nextDouble();
+        if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
+            setVelX(World.cosAdj(speed, angle));
+            setVelY(World.sinOpp(speed, angle));
+        } else {
+            setVelX(World.sinOpp(speed, angle));
+            setVelY(World.cosAdj(speed, angle));
+        }
+
+    }
+
+    private void setPosAndAngle(double aimX, double aimY) {
         if((playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof ServerController)
                 || (playerIBelongToNumber == Player.CLIENT_PLAYER && World.controller instanceof ClientController)
                 || (playerIBelongToNumber == Player.SERVER_PLAYER && World.controller instanceof SingleController)) {
@@ -59,32 +82,7 @@ public class AssaultRifleBullet extends Bullet {
             ) - INACCURACY / 2 + INACCURACY * World.sRandom.nextDouble();
 
         }
-
-        if (angle <= -Math.PI) {
-            angle += 2 * Math.PI;
-        } else if (angle > Math.PI) {
-            angle -= 2 * Math.PI;
-        }
-
-        this.damage = damage;
-        loadImage();
-
-
-//        System.out.print("angle = " + Math.toDegrees(angle) + ", momentum = " + weapon.getMOMENTUM() + ", MASS = " + MASS);
-        double speed = AssaultRifle.SPEED - (AssaultRifle.SPEED / 3) * World.sRandom.nextDouble();
-
-        if (angle >= Math.PI / 2 || (angle < 0 && angle >= -Math.PI / 2)) {
-//            System.out.print(", Negative, speed = " + weapon.getMOMENTUM() / MASS);
-            setVelX(World.cosAdj(speed, angle));
-            setVelY(World.sinOpp(speed, angle));
-        } else {
-//            System.out.print(", Positive, speed = " + weapon.getMOMENTUM() / MASS);
-            setVelX(World.sinOpp(speed, angle));
-            setVelY(World.cosAdj(speed, angle));
-        }
-
     }
-
 
 
     public void loadImage() {

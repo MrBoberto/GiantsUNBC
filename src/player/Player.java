@@ -26,35 +26,35 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public abstract class Player extends GameObject {
-    // Can be 0 = primary or 1 = secondary
+    //Weapons
     public static final int PRIMARY_WEAPON = 0, SECONDARY_WEAPON = 1;
-    // The integer representation of the player's current position
-//    protected Point pos;
+    
+    //If player is hosting the game or not.
     public static final int SERVER_PLAYER = 0, CLIENT_PLAYER = 1;
+    
+    //Velocities
     protected final double JOG_VELOCITY = 5.2;
     protected final double DASH_VELOCITY = 16;
 
     // The texture of the player being used in the current frame
     protected ImageFrame currentImage;
     protected Rectangle boundRect;
+    
+    //Health variables
     protected int health = 100;
-    protected int healTimer = 120;
-    protected final int HEAL_TIMER_MAX = 120;
-    protected int killCount = 0;
-    protected int deathCount = 0;
-    protected double kdr = -1;
-    protected double tdo = 0;
+    protected int regenerationTimer = 120;
+    protected final int REGENERATION_TIMER_MAX = 120;
 
     // Power Ups variables
-
+        //Damage modifiers
     public static final float DEFAULT_DAMAGE_MULTIPLIER = 1;
     protected float damageMultiplier = DEFAULT_DAMAGE_MULTIPLIER;
     protected int damageMultiplierTimer = 0;
-
+        //Speed modifiers
     public static final float DEFAULT_SPEED_MULTIPLIER = 1;
     protected float speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
     protected int speedMultiplierTimer = 0;
-
+        //Ricochet
     public static final int DEFAULT_NUMBER_OF_BOUNCES = 1;
     protected int numberOfBulletBounces = DEFAULT_NUMBER_OF_BOUNCES;
     protected int ricochetTimer = 0;
@@ -68,10 +68,12 @@ public abstract class Player extends GameObject {
     protected int lastAction = 1;
     protected int dashTimer = 0;
     protected int dashAnimationTimer = 0;
+
+    //Animations and graphics
     public final int DASH_TIMER_MAX = 20;
-    protected ImageStrip standing;   // 1
-    protected ImageStrip jogging;    // 2
-    protected ImageStrip dashing;    // 6
+    protected ImageStrip standing;   
+    protected ImageStrip jogging;    
+    protected ImageStrip dashing;    
     protected ArrayList<BufferedImage> weaponTextures;
     protected ImageStrip leftwardSwordTextures;
     protected ImageStrip rightwardSwordTextures;
@@ -82,6 +84,10 @@ public abstract class Player extends GameObject {
     protected int swordAnimationCount = 0;
     protected final int SWORD_ANIMATION_MAX = 3;
     protected boolean isWalking = false;
+
+    //Animation timers
+    protected int animationTimer = 0;
+    public static final int ANIMATION_DELAY = 1;
 
     //Arsenals
     protected Arsenal arsenal;
@@ -97,6 +103,10 @@ public abstract class Player extends GameObject {
     protected long bulletsHit = 0;
     protected long walkingDistance = 0;
     protected long pickedUpPowerUps = 0;
+    protected int killCount = 0;
+    protected int deathCount = 0;
+    protected double kdr = -1;
+    protected double tdo = 0;
 
     //Invincibility
     protected int invincibilityTimer = 0;
@@ -105,12 +115,7 @@ public abstract class Player extends GameObject {
     public static final int INVINCIBILITY_GRAPHIC_TIME = 15;
     protected boolean skipFrame = false;
     protected boolean isInvincible = false;
-
-    //Animation timers
-    protected int animationTimer = 0;
-    public static final int ANIMATION_DELAY = 1;
-
-
+    
     public Player(double x, double y, int playerNumber, Color playerColour) {
         super(x, y);
 
@@ -120,60 +125,93 @@ public abstract class Player extends GameObject {
         respawnPointY = y;
 
         this.playerColour = playerColour;
-
-
+        
         Controller.players.add(this);
     }
 
-    public String getPlayerName() {
-        return playerName;
+    @Override
+    public void render(Graphics g){
+        Graphics2D g2 = (Graphics2D) g;
+        //Render shadow
+        renderShadow(g2);
+
+        renderInvincibility();
     }
 
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
-    }
+    @Override
+    public void tick(){
+        handleRegeneration();
+        handleInvincibility();
 
-    public int getPlayerNumber() {
-        return playerNumber;
-    }
+        animationTimer++;
 
-    public int getKillCount() {
-        return killCount;
-    }
-
-    /**
-     * Increases killCount by 1 and updates kdr if there are more than 0 deaths
-     */
-    public void incrementKillCount() {
-        this.killCount++;
-        // kdr stays at -1 as long as there are no deaths so that it is easy to identify
-        if (deathCount != 0) {
-            kdr = (float)killCount / (float)deathCount;
+        if (selectedWeapon == 0) {
+            weaponSerial = arsenal.getPrimary().getSERIAL();
         } else {
-            kdr = -1;
+            weaponSerial = arsenal.getSecondary().getSERIAL();
+        }
+
+        increasePowerUpsTimers();
+    }
+
+    private void handleInvincibility() {
+        if (invincibilityTimer > 0) {
+            invincibilityTimer--;
         }
     }
 
-    public int getDeathCount() {
-        return deathCount;
-    }
-
-    /**
-     * Increases deathCount by 1 and updates kdr
-     */
-    public void incrementDeathCount() {
-        this.deathCount++;
-        double kills = killCount;
-        double deaths = deathCount;
-        kdr = kills / deaths;
-    }
-
-    public double getKdr() {
-        if (deathCount == 0) {
-            return killCount;
+    private void handleRegeneration() {
+        if (regenerationTimer > 0) {
+            regenerationTimer--;
+        } else if (regenerationTimer == 0 && health < 100) {
+            health++;
+            regenerationTimer += 4;
         }
-        else {
-            return (double) killCount / (double) deathCount;
+    }
+
+    private void increasePowerUpsTimers() {
+        //Increase timer in powerUps if present.
+        //Damage
+        if(damageMultiplierTimer > 0){
+            damageMultiplierTimer--;
+        } else {
+            damageMultiplier = DEFAULT_DAMAGE_MULTIPLIER;
+        }
+
+        //Speed
+        if(speedMultiplierTimer > 0){
+            speedMultiplierTimer--;
+        } else {
+            speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
+        }
+        //Ricochet
+        if(ricochetTimer > 0){
+            ricochetTimer--;
+        }
+    }
+
+
+
+    private void renderShadow(Graphics2D g2) {
+        g2.setColor(new Color(0, 0, 0, 64));
+        g2.rotate(Math.PI * 5/4, x,y);
+        g2.fillOval(
+                (int) x - Controller.GRID_SIZE / 4,
+                (int) y - Controller.GRID_SIZE / 4,
+                Controller.GRID_SIZE / 2,
+                Controller.GRID_SIZE* 7/8);
+        g2.rotate(-Math.PI * 5/4 , x,y);
+    }
+
+    private void renderInvincibility() {
+        if(isInvincible()) {
+            invincibilityGraphicTimer ++;
+            if(invincibilityGraphicTimer > INVINCIBILITY_GRAPHIC_TIME){
+                skipFrame = true;
+                if(invincibilityGraphicTimer > 2*INVINCIBILITY_GRAPHIC_TIME) {
+                    invincibilityGraphicTimer = 0;
+                }
+            }
         }
     }
 
@@ -239,38 +277,6 @@ public abstract class Player extends GameObject {
         }
     }
 
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void modifyHealth(double healthMod) {
-        this.health += healthMod;
-        if (health < 0) {
-            health = 0;
-        }
-    }
-
-    public void resetHealTimer() {
-        healTimer = HEAL_TIMER_MAX;
-    }
-
-    /**
-     * Increase total damage output of the player
-     *
-     * @param tdoMod Damage value to add
-     */
-    public void addTDO(double tdoMod) {
-            this.tdo += tdoMod;
-    }
-
-    public double getDamageMultiplier() {
-        return damageMultiplier;
-    }
-
     public void setDamageMultiplier(float damageMultiplier, int time) {
         if(damageMultiplier != -1) {
             this.damageMultiplier = damageMultiplier;
@@ -293,48 +299,20 @@ public abstract class Player extends GameObject {
                 defLocStr = "/resources/Textures/PLAYER_TWO/";
             }
 
-        // Builds image strip for standing facing right
-        for (int i = 1; i <= 4; i++) {
-            imgLocStr.add("stand (" + i + ").png");
-        }
-        standing = buildImageStrip(imgLocStr, defLocStr);
-        imgLocStr.clear();
+        buildStandingStrip(imgLocStr, defLocStr);
 
-        // Builds image strip for jogging
-        for (int i = 1; i <= 20; i++) {
-            imgLocStr.add("jog (" + i + ").png");
-        }
-        jogging = buildImageStrip(imgLocStr, defLocStr);
+        buildJoggingStrip(imgLocStr, defLocStr);
 
-        imgLocStr.clear();
+        buildDashingStrip(imgLocStr, defLocStr);
 
-        // Builds image strip for dashing
-        for (int i = 1; i <= 8; i++) {
-            imgLocStr.add("dash (" + i + ").png");
-        }
-        dashing = buildImageStrip(imgLocStr, defLocStr);
-        imgLocStr.clear();
+        buildWeaponsImages(imgLocStr);
 
-        // Builds image strip for jumping
-        for (int i = 1; i <= 8; i++) {
-            imgLocStr.add("jump (" + i + ").png");
-        }
+        buildSwordImage(imgLocStr);
 
-        imgLocStr.clear();
+    }
 
-        for (int i = 0; i <= 4; i++) {
-            imgLocStr.add("weapon (" + i + ").png");
-        }
-        weaponTextures = new ArrayList<>();
-        // Load weapon textures
-        for (String s : imgLocStr) {
-            try {
-                weaponTextures.add(ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/Textures/WEAPONS/" + s))));
-            } catch (IOException ignored) {
-            }
-        }
-        imgLocStr.clear();
-
+    private void buildSwordImage(ArrayList<String> imgLocStr) {
+        String defLocStr;
         if (playerNumber == 0) {
             defLocStr = "/resources/Textures/WEAPONS/sword_blue (";
         } else {
@@ -354,68 +332,49 @@ public abstract class Player extends GameObject {
         }
         rightwardSwordTextures = buildImageStrip(imgLocStr, defLocStr);
         imgLocStr.clear();
-
     }
 
-    @Override
-    public void tick(){
-        if (healTimer > 0) {
-            healTimer--;
-        } else if (healTimer == 0 && health < 100) {
-            health++;
-            healTimer += 4;
+    private void buildWeaponsImages(ArrayList<String> imgLocStr) {
+        for (int i = 0; i <= 4; i++) {
+            imgLocStr.add("weapon (" + i + ").png");
         }
-        if (invincibilityTimer > 0) {
-            invincibilityTimer--;
-        }
-        animationTimer++;
-
-        if (selectedWeapon == 0) {
-            weaponSerial = arsenal.getPrimary().getSERIAL();
-        } else {
-            weaponSerial = arsenal.getSecondary().getSERIAL();
-        }
-
-        //Increase timer in powerUps if present.
-        if(damageMultiplierTimer > 0){
-            damageMultiplierTimer--;
-        } else {
-            damageMultiplier = DEFAULT_DAMAGE_MULTIPLIER;
-        }
-
-        if(speedMultiplierTimer > 0){
-            speedMultiplierTimer--;
-        } else {
-            speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
-        }
-
-        if(ricochetTimer > 0){
-            ricochetTimer--;
-        }
-    }
-
-    @Override
-    public void render(Graphics g){
-        Graphics2D g2 = (Graphics2D) g;
-        //Render shadow
-        g2.setColor(new Color(0, 0, 0, 64));
-        g2.rotate(Math.PI * 5/4, x,y);
-        g2.fillOval(
-                (int) x - Controller.GRID_SIZE / 4,
-                (int) y - Controller.GRID_SIZE / 4,
-                Controller.GRID_SIZE / 2,
-                Controller.GRID_SIZE* 7/8);
-        g2.rotate(-Math.PI * 5/4 , x,y);
-
-        if(isInvincible()) {
-            invincibilityGraphicTimer ++;
-            if(invincibilityGraphicTimer > INVINCIBILITY_GRAPHIC_TIME){
-                skipFrame = true;
-                if(invincibilityGraphicTimer > 2*INVINCIBILITY_GRAPHIC_TIME) {
-                    invincibilityGraphicTimer = 0;
-                }
+        weaponTextures = new ArrayList<>();
+        // Load weapon textures
+        for (String s : imgLocStr) {
+            try {
+                weaponTextures.add(ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/Textures/WEAPONS/" + s))));
+            } catch (IOException ignored) {
             }
         }
+        imgLocStr.clear();
+    }
+
+    private void buildDashingStrip(ArrayList<String> imgLocStr, String defLocStr) {
+        // Builds image strip for dashing
+        for (int i = 1; i <= 8; i++) {
+            imgLocStr.add("dash (" + i + ").png");
+        }
+        dashing = buildImageStrip(imgLocStr, defLocStr);
+        imgLocStr.clear();
+    }
+
+    private void buildJoggingStrip(ArrayList<String> imgLocStr, String defLocStr) {
+        // Builds image strip for jogging
+        for (int i = 1; i <= 20; i++) {
+            imgLocStr.add("jog (" + i + ").png");
+        }
+        jogging = buildImageStrip(imgLocStr, defLocStr);
+
+        imgLocStr.clear();
+    }
+
+    private void buildStandingStrip(ArrayList<String> imgLocStr, String defLocStr) {
+        // Builds image strip for standing facing right
+        for (int i = 1; i <= 4; i++) {
+            imgLocStr.add("stand (" + i + ").png");
+        }
+        standing = buildImageStrip(imgLocStr, defLocStr);
+        imgLocStr.clear();
     }
 
     @Override
@@ -454,6 +413,43 @@ public abstract class Player extends GameObject {
         invincibilityTimer = RESPAWN_INVINCIBILITY_TIME;
     }
 
+
+    /**
+     * Increases killCount by 1 and updates kdr if there are more than 0 deaths
+     */
+    public void incrementKillCount() {
+        this.killCount++;
+        // kdr stays at -1 as long as there are no deaths so that it is easy to identify
+        if (deathCount != 0) {
+            kdr = (float)killCount / (float)deathCount;
+        } else {
+            kdr = -1;
+        }
+    }
+
+    public int getDeathCount() {
+        return deathCount;
+    }
+
+    /**
+     * Increases deathCount by 1 and updates kdr
+     */
+    public void incrementDeathCount() {
+        this.deathCount++;
+        double kills = killCount;
+        double deaths = deathCount;
+        kdr = kills / deaths;
+    }
+
+    public double getKdr() {
+        if (deathCount == 0) {
+            return killCount;
+        }
+        else {
+            return (double) killCount / (double) deathCount;
+        }
+    }
+
     public int getSelectedWeapon() {
         return selectedWeapon;
     }
@@ -481,7 +477,6 @@ public abstract class Player extends GameObject {
     public void setWalking(boolean walking) {
         isWalking = walking;
     }
-
 
     public void incrementBulletCount(){
         bulletsShot++;
@@ -660,5 +655,53 @@ public abstract class Player extends GameObject {
 
     public void setPickedUpPowerUps(long pickedUpPowerUps) {
         this.pickedUpPowerUps = pickedUpPowerUps;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
+    }
+
+    public int getKillCount() {
+        return killCount;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void modifyHealth(double healthMod) {
+        this.health += healthMod;
+        if (health < 0) {
+            health = 0;
+        }
+    }
+
+    public void resetHealTimer() {
+        regenerationTimer = REGENERATION_TIMER_MAX;
+    }
+
+    /**
+     * Increase total damage output of the player
+     *
+     * @param tdoMod Damage value to add
+     */
+    public void addTDO(double tdoMod) {
+        this.tdo += tdoMod;
+    }
+
+    public double getDamageMultiplier() {
+        return damageMultiplier;
     }
 }

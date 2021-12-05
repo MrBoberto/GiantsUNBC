@@ -30,6 +30,10 @@ public class LightningSword implements Weapon {
     public static final int HALF_LENGTH = 60;         // The length of half of one side
     public SFXPlayer audio;
 
+    private double angle;
+    private double x;
+    private double y;
+
     public LightningSword(Player playerIBelongTo) {
         this.playerIBelongTo = playerIBelongTo;
 
@@ -51,10 +55,34 @@ public class LightningSword implements Weapon {
     @Override
     public void shoot(double mouseX, double mouseY) {
 
-        double angle;
-        double x;
-        double y;
+        setPosAndAngle(mouseX, mouseY);
 
+        if (World.controller instanceof ServerController) {
+            new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.SERVER_PLAYER);
+            World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(SERIAL));
+            for (int i = 0; i < ROUND_COUNT; i++) {
+                World.controller.getOutputConnection().sendPacket(
+                        new ClientSlashPacket(x, y, angle, playerIBelongTo.isSwordLeft(), DAMAGE)
+                );
+            }
+        } else if (World.controller instanceof SingleController) {
+            if (playerIBelongTo.getPlayerNumber() == 0) {
+                new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.SERVER_PLAYER);
+            } else {
+                new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.CLIENT_PLAYER);
+            }
+        } else {
+            new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), playerIBelongTo.getPlayerNumber());
+            for (int i = 0; i < ROUND_COUNT; i++) {
+                World.controller.getOutputConnection().sendPacket(
+                        new ClientSlashPacket(x, y, angle, playerIBelongTo.isSwordLeft(), DAMAGE)
+                );
+            }
+        }
+        playerIBelongTo.setSwordLeft(!playerIBelongTo.isSwordLeft());
+    }
+
+    private void setPosAndAngle(double mouseX, double mouseY) {
         angle = World.atan(
                 mouseX - playerIBelongTo.getX(),
                 mouseY - playerIBelongTo.getY(),
@@ -93,32 +121,6 @@ public class LightningSword implements Weapon {
             y = playerIBelongTo.getY() - HALF_LENGTH;
             x = playerIBelongTo.getX() + HALF_LENGTH * Math.tan(-angle);
         }
-
-        if (World.controller instanceof ServerController) {
-            // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
-            new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.SERVER_PLAYER);
-            World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(SERIAL));
-            for (int i = 0; i < ROUND_COUNT; i++) {
-                World.controller.getOutputConnection().sendPacket(
-                        new ClientSlashPacket(x, y, angle, playerIBelongTo.isSwordLeft(), DAMAGE)
-                );
-            }
-        } else if (World.controller instanceof SingleController) {
-            // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
-            if (playerIBelongTo.getPlayerNumber() == 0) {
-                new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.SERVER_PLAYER);
-            } else {
-                new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), Player.CLIENT_PLAYER);
-            }
-        } else {
-            new Slash(x, y, angle, playerIBelongTo.isSwordLeft(), playerIBelongTo.getPlayerNumber());
-            for (int i = 0; i < ROUND_COUNT; i++) {
-                World.controller.getOutputConnection().sendPacket(
-                        new ClientSlashPacket(x, y, angle, playerIBelongTo.isSwordLeft(), DAMAGE)
-                );
-            }
-        }
-        playerIBelongTo.setSwordLeft(!playerIBelongTo.isSwordLeft());
     }
 
     @Override
