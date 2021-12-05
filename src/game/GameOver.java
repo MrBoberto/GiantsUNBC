@@ -143,7 +143,7 @@ public class GameOver  {
 
                 for (int i = 0; i < players.size(); i++) {
                     //Save data to send to client
-
+//
 
                     //Determine format
                     String format = String.format("%10d  %10d  %10f  %10d  %10d  %10d  %10s %n",
