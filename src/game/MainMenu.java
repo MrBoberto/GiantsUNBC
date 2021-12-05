@@ -34,9 +34,10 @@ public class MainMenu implements KeyListener {
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
     static SFXPlayer sfxPlayer;
-    enum PanelType{MainMenu, ButtonsMenu, MapSelection, SettingsMenu, AudioMenu, MultiplayerMenu}
+    enum PanelType{MainMenu, ButtonsMenu, MapSelection, SettingsMenu, AudioMenu, MultiplayerMenu, Credits}
     public static PanelType panelType = PanelType.MainMenu;
     public static JPanel mainMenuPanel;
+    public static Credits credits;
 
     public MainMenu() {
         mainMenu = new JFrame("THE BOYZ Launcher");
@@ -360,8 +361,11 @@ public class MainMenu implements KeyListener {
         settingsMenu.add(nameButton, c);
 
         MainMenuButton videoButton = new MainMenuButton(e -> {
-
-        }, "Video Settings");
+            panelType = PanelType.Credits;
+            credits = new Credits();
+            mainMenuPanel.remove(settingsMenu);
+            mainMenuPanel.add(credits);
+        }, "Credits");
         c.gridy = 8;
         settingsMenu.add(videoButton, c);
 
@@ -750,6 +754,45 @@ public class MainMenu implements KeyListener {
                 }
             }
             mainMenuPanel.requestFocusInWindow();
+        }
+    }
+
+    class Credits extends JPanel implements ActionListener {
+        // delay between each frame
+        public final int FRAMEDELAY = 20;
+        public final int WIDTH = 1280;
+        public final int HEIGHT = WIDTH / 16 * 9;
+        public final BufferedImage texture;
+
+
+        private Timer timer;
+
+        public Credits() {
+            timer = new Timer(FRAMEDELAY, this);
+            timer.start();
+            texture = BufferedImageLoader.loadImage("/resources/GUI/main_menu/credits.png");
+        }
+
+
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            repaint();
+        }
+
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            drawBackground(g);
+
+            Graphics2D g2 = (Graphics2D) g;
+
+            Toolkit.getDefaultToolkit().sync();
+        }
+
+        private void drawBackground(Graphics g) {
+            setBackground(Color.BLACK);
         }
     }
 }

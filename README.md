@@ -53,11 +53,15 @@ The main menu, along with the in-game GUI, is done using JAVA graphics libraries
 The original soundtrack plays when the game window opens, and sound effect packets are passed between players when weapons fire, having unique sounds for each weapon. These sound effects are original as well. The soundtracks were made from Musescore compositions exported as audio files, and the sound effects were recorded manually and edited using Audacity.
 
 ### Back-End
-As described in Section 1.1, the game now runs in a main loop that separates the front-end and back-end, so that the game can run more smoothly. The game logic is checked 60 times per second, while the graphics are as many times per second.
+
+The game runs in a main loop that separates the front-end and back-end, so that the game can run more smoothly. The game logic is checked 60 times per second, while the graphics are checked as many times per second.
+
+All game objects possess a tick and a render method that are used for progressing the games logic and displaying the graphics, respectively. The main loop runs these methods for all game objects.
 
 All game objects contain Rectangles that are used to determine their hitboxes. Bullets are removed from the Controller once their vertical and horizontal velocities both drop to 0. Each player has a primary and secondary weapon slot and can organize newly acquired weapons as they choose.
 
 Multiplayer is achieved by establishing a connection between two devices connected to the same network with a socket. Then, the game acting as the server will send packets with the information of what is happening in the world to the game acting as the client, while the client game will send the current actions of their own player. When either game receives a packet, they update their information and, consequently, their display.
+
 
 
 ## Methodology
