@@ -287,7 +287,22 @@ public class SingleController extends Controller {
 
                 killer.incrementKillCount();
                 if (killer instanceof AIPlayer) {
-                    AIPlayer.setDialogue("I am inevitable.");
+                    if (otherPlayer.getKillCount() == thisPlayer.getKillCount()) {
+                        AIPlayer.setDialogue("Perfectly balanced, as all things should be.");
+                    } else if (otherPlayer.getKillCount() >= PLAYER_LIVES - 1) {
+                        AIPlayer.setDialogue("I know what it's like to lose.");
+                    } else if (otherPlayer.getKillCount() - 4 > thisPlayer.getKillCount()) {
+                        AIPlayer.setDialogue("This... does put a smile on my face.");
+                    } else {
+                        AIPlayer.setDialogue("I am inevitable.");
+                    }
+                } else {
+                    if (otherPlayer.getKillCount() == thisPlayer.getKillCount()) {
+                        AIPlayer.setDialogue("Perfectly balanced, as all things should be.");
+                    } else {
+                        AIPlayer.setDialogue("You could not live with your own failure, and where did that bring you? "
+                                + "Back to me.");
+                    }
                 }
                 if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
