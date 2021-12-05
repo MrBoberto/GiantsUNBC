@@ -11,7 +11,6 @@ package game;
  * @version 1
  */
 
-import java.net.UnknownHostException;
 import java.security.SecureRandom;
 
 public class World {

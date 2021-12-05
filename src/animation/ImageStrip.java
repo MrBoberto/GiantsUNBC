@@ -4,7 +4,7 @@ package animation;
  * This file is part of a solution to
  *		CPSC300 Term Project Fall 2021
  *
- * An strip of frames for animation
+ * A strip of frames for animation
  *
  * @author The Boyz
  * @version 1

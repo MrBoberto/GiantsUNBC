@@ -20,6 +20,7 @@
     <pattern value="eye_candy.DeathMark" />
     <pattern value="eye_candy.DeathMark" method="tick" />
     <pattern value="game.Controller" method="renderWinner" />
+    <pattern value="map_objects.Block" method="tick" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_16" default="true" project-jdk-name="16 (2)" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out/production/GiantsUNBC" />
