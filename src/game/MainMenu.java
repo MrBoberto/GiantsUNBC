@@ -78,7 +78,7 @@ public class MainMenu implements KeyListener {
 
     private void setClickableScreen() {
         GridBagConstraints c = new GridBagConstraints();
-        JPanel mainMenuPanel = new JPanel(new GridBagLayout()) {
+        mainMenuPanel = new JPanel(new GridBagLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
 
@@ -755,7 +755,7 @@ public class MainMenu implements KeyListener {
                     AudioPlayer.setVolume();
                 }
             }
-
+            mainMenuPanel.requestFocusInWindow();
         }
     }
 }

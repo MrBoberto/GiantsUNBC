@@ -73,11 +73,13 @@ public class MouseInput extends MouseAdapter {
                     }
                 }
 
-                World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
-                        Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
-                        Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
-                        Controller.thisPlayer.getSelectedWeapon(),
-                        Controller.thisPlayer.getArsenal().getInventory()));
+                if (World.controller instanceof SingleController) {
+                    World.controller.getOutputConnection().sendPacket(new ArsenalPacket(
+                            Controller.thisPlayer.getArsenal().getPrimary().getWeaponType(),
+                            Controller.thisPlayer.getArsenal().getSecondary().getWeaponType(),
+                            Controller.thisPlayer.getSelectedWeapon(),
+                            Controller.thisPlayer.getArsenal().getInventory()));
+                }
             }
         }
     }

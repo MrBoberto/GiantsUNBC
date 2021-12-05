@@ -237,6 +237,7 @@ public abstract class Controller extends Canvas implements Runnable {
         gameWindow.getFrame().remove(this);
         gameWindow.getFrame().add(pauseMenu.getJPanel());
         gameWindow.getFrame().revalidate();
+        pauseMenu.requestFocusInWindow();
     }
 
     public void closePauseMenu() {

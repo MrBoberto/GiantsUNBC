@@ -85,6 +85,10 @@ public class PauseMenu implements KeyListener {
         controller.getGameWindow().setCanPause(true);
     }
 
+    public void requestFocusInWindow() {
+        pauseMenuPanel.requestFocusInWindow();
+    }
+
     private void setBackground(Controller controller) {
         if (controller instanceof ClientController) {
             thisBackground = redBackground;
@@ -288,6 +292,7 @@ public class PauseMenu implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        System.out.println("Key Press Detected");
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             if (panelType == PanelType.ButtonsMenu) {
                 if (controller.getGameWindow().canPause) {
