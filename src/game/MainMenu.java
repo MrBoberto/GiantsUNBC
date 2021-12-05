@@ -158,8 +158,6 @@ public class MainMenu implements KeyListener {
         c.fill = GridBagConstraints.CENTER;
         c.weightx = 1.0;
         c.insets = new Insets(5, 5, 10, 10);
-
-
         c.weighty = 1.0 / 10.0;
         c.gridx = 0;
 
@@ -267,7 +265,6 @@ public class MainMenu implements KeyListener {
         c.ipady = 15;
         c.fill = GridBagConstraints.HORIZONTAL;
         mapSelectionPanel.add(instructions, c);
-
 
         JPanel mapsPanel = new JPanel(new GridLayout(2, maps.size() / 2, 10, 10));
         mapsPanel.setOpaque(false);
@@ -413,7 +410,6 @@ public class MainMenu implements KeyListener {
         c.weightx = 1.0;
         c.insets = new Insets(5, 5, 10, 10);
 
-
         c.weighty = 1.0 / 9.0;
         c.gridx = 0;
 
@@ -464,7 +460,6 @@ public class MainMenu implements KeyListener {
         c.weightx = 1.0;
         c.insets = new Insets(5, 5, 10, 10);
 
-
         c.weighty = 1.0 / 9.0;
         c.gridx = 0;
 
@@ -472,7 +467,6 @@ public class MainMenu implements KeyListener {
             c.gridy = i;
             multiplayerMenu.add(createNewVoidPanel(), c);
         }
-
 
         MainMenuButton serverButton = new MainMenuButton(e -> {
 
@@ -580,12 +574,12 @@ public class MainMenu implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-
+        /*empty*/
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        /*empty*/
     }
 
     static class MainMenuButton extends JComponent implements MouseListener {
@@ -643,6 +637,7 @@ public class MainMenu implements KeyListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            /*empty*/
         }
 
         @Override
@@ -680,7 +675,6 @@ public class MainMenu implements KeyListener {
                 }
             }
         }
-
     }
 
     static class MainMenuSlider extends JComponent implements ChangeListener {

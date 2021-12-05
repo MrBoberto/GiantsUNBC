@@ -15,6 +15,7 @@ import eye_candy.BlockShadow;
 import game.Controller;
 import game.GameObject;
 import game.World;
+import utilities.BufferedImageLoader;
 
 
 import javax.imageio.ImageIO;
@@ -30,13 +31,7 @@ public class Block extends GameObject {
 
         Random random = new Random();
         String path = "/resources/Textures/blocks/sci-fi_texture (" + (random.nextInt(5)+1) + ").png";
-
-        try {
-            texture =  ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        texture = BufferedImageLoader.loadImage(path);
         new BlockShadow(x,y);
     }
 

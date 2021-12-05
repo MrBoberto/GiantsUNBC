@@ -2,8 +2,8 @@ package game;
 
 /**
  * This file is part of a solution to
- *		CPSC300 Term Project Fall 2021
- *
+ * CPSC300 Term Project Fall 2021
+ * <p>
  * The window that displays the scoreboard for both players at the end of a match
  *
  * @author The Boyz
@@ -20,8 +20,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public class GameOver  {
-    //public static MainMenu gameOverMenu;
+public class GameOver {
     final JFrame gameOver;
 
     public GameOver(Player loser, Player winner, List<Player> players) {
@@ -32,7 +31,7 @@ public class GameOver  {
             img = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_blue.png");
             gameOver.setIconImage(img);
         } catch (Exception e) {
-e.printStackTrace();
+            e.printStackTrace();
         }
 
         Dimension size = new Dimension(Controller.WIDTH, Controller.HEIGHT);
@@ -81,7 +80,7 @@ e.printStackTrace();
                 }
 
                 Graphics2D g2 = (Graphics2D) g;
-                g2.drawImage(image,0,0, gameOver.getWidth(), gameOver.getHeight(),null);
+                g2.drawImage(image, 0, 0, gameOver.getWidth(), gameOver.getHeight(), null);
                 Font font = new Font("Bauhaus 93", Font.PLAIN, 30);
                 Font MainFont = new Font("Bauhaus 93", Font.PLAIN, 50);
 
@@ -103,10 +102,10 @@ e.printStackTrace();
 
                 g2.drawString(
                         " Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-50, 250);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2 - 50, 250);
                 g2.drawString(
                         "                                             Shot         Hit     Distance     Power-ups",
-                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-50, 300);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2 - 50, 300);
 
                 for (int i = 0; i < players.size(); i++) {
                     //Save data to send to client
@@ -124,20 +123,20 @@ e.printStackTrace();
 
                     if (i != 0) {
                         g2.drawString(format,
-                                Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-60, 330);
+                                Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2 - 60, 330);
                     }
                 }
                 //g2.drawString(" -------------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 360);
                 g2.drawString("------------------------------------------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 600, 360);
 
-                g2.drawString("                                Scores:" + loser.getPlayerName(), Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-50, 400);
+                g2.drawString("                                Scores:" + loser.getPlayerName(), Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2 - 50, 400);
 
                 g2.drawString(
                         " Kills      Deaths         K/D     Bullets     Bullets     Walking    Number of",
-                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-50, 440);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2 - 50, 440);
                 g2.drawString(
                         "                                             Shot         Hit     Distance     Power-ups",
-                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-50, 480);
+                        Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2 - 50, 480);
 
                 for (int i = 0; i < players.size(); i++) {
                     //Save data to send to client
@@ -155,7 +154,7 @@ e.printStackTrace();
 
                     if (i != 0) {
                         g2.drawString(format,
-                                Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2-60, 520);
+                                Controller.WIDTH / 2 - fontMetrics.stringWidth(text) / 2 - 60, 520);
                     }
                 }
                 //g2.drawString(" -----------------------------------------------------------------------------------------------------------------------------------------", Controller.WIDTH / 4 - 200, 560);
