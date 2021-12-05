@@ -1,5 +1,16 @@
 package weapons.aoe;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * An explosion caused by the detonation of a rocket (occurs when the rocket's velocities both reach 0). Can damage
+ * either player.
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.GameObject;

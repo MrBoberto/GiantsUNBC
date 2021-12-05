@@ -1,5 +1,16 @@
 package power_ups;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * A power up that spawns in zones not obstructed by blocks and has an effect that is inflicted upon the player who
+ * collects it
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import game.Controller;
 import game.GameObject;
 import player.Player;

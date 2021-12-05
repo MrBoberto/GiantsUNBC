@@ -267,7 +267,7 @@ public abstract class Player extends GameObject {
      */
     public void addTDO(double tdoMod) {
         if (this.tdo > 1.6 * Math.pow(10, 308) || this.tdo < -1.6 * Math.pow(10, 308)) {
-            System.out.println("ERROR: TDO overflow");
+
         } else {
             this.tdo += tdoMod;
         }

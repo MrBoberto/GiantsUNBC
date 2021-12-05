@@ -1,5 +1,15 @@
 package weapons.guns;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * A lightning sword owned by a player that can be used to inflict damage upon their opponent using slash aoe attacks
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import audio.SFXPlayer;
 import game.*;
 import packets.ClientSFXPacket;

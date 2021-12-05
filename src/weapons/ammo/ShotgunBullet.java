@@ -1,5 +1,15 @@
 package weapons.ammo;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * A shot spawned from a player's shotgun that can inflict damage upon the opponent
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import game.*;
 import player.Player;
 import utilities.BufferedImageLoader;
