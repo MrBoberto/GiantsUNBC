@@ -753,24 +753,40 @@ public class MainMenu implements KeyListener {
         }
     }
 
-    static class Clock {
-        private static int time =0;
+    class Credits extends JPanel implements ActionListener {
+        // delay between each frame
+        public final int FRAMEDELAY = 20;
+        public final int WIDTH = 1280;
+        public final int HEIGHT = WIDTH / 16 * 9;
+        public final BufferedImage texture;
 
-        private Clock(){}//Empty
 
-        /**
-         * This is incrementing everyclock cycle
-         */
-        public static void advanceClock(){
-            time++;
+        private Timer timer;
+
+        public Credits() {
+            timer = new Timer(FRAMEDELAY, this);
+            timer.start();
+            texture = BufferedImageLoader.loadImage("/resources/GUI/main_menu/credits.png");
         }
 
-        /**
-         * provides  us the current clock time
-         * @return the time variable whenever called
-         */
-        public static int getCurrentClockTime(){
-            return time;
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            repaint();
+        }
+
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            drawBackground(g);
+
+            Graphics2D g2 = (Graphics2D) g;
+
+            Toolkit.getDefaultToolkit().sync();
+        }
+
+        private void drawBackground(Graphics g) {
+            setBackground(Color.BLACK);
         }
     }
 }

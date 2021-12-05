@@ -447,7 +447,7 @@ public class PauseMenu implements KeyListener {
 
     }
 
-    static class PauseMenuSlider extends JComponent implements ChangeListener {
+    class PauseMenuSlider extends JComponent implements ChangeListener {
         final String text;
         final JSlider jSlider;
         final BufferedImage unselectedTexture;
@@ -520,6 +520,7 @@ public class PauseMenu implements KeyListener {
                 }
             }
 
+            pauseMenuPanel.requestFocusInWindow();
         }
     }
 
