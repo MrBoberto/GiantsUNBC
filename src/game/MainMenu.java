@@ -19,6 +19,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -93,6 +94,7 @@ public class MainMenu implements KeyListener {
 
         mainMenuPanel.setOpaque(false);
         mainMenu.add(mainMenuPanel);
+        mainMenu.setFocusable(true);
 
         JButton startButton = new JButton() {
             @Override
@@ -128,8 +130,8 @@ public class MainMenu implements KeyListener {
             c.weightx = 1.0;
             c.insets = new Insets(5, 5, 10, 10);
             mainMenuPanel.add(bottomPanel, c);
-            mainMenuPanel.requestFocusInWindow();
-            mainMenuPanel.addKeyListener(this);
+            mainMenu.requestFocusInWindow();
+            mainMenu.addKeyListener(this);
             mainMenuPanel.validate();
             mainMenuPanel.repaint();
         });
@@ -362,9 +364,11 @@ public class MainMenu implements KeyListener {
 
         MainMenuButton videoButton = new MainMenuButton(e -> {
             panelType = PanelType.Credits;
-            credits = new Credits();
+            credits = new Credits(this);
             mainMenuPanel.remove(settingsMenu);
-            mainMenuPanel.add(credits);
+            mainMenu.remove(mainMenuPanel);
+            mainMenu.add(credits);
+            mainMenu.revalidate();
         }, "Credits");
         c.gridy = 8;
         settingsMenu.add(videoButton, c);
@@ -572,6 +576,30 @@ public class MainMenu implements KeyListener {
                 mainMenuPanel.add(settingsMenu(mainMenuPanel), c);
                 mainMenuPanel.validate();
                 mainMenuPanel.repaint();
+            } else if (panelType == PanelType.Credits) {
+                credits.timer.stop();
+                soundtrack.stop();
+                mainMenu.dispose();
+                new MainMenu();
+                /*
+                panelType = PanelType.SettingsMenu;
+                mainMenu.remove(credits);
+                mainMenu.add(mainMenuPanel);
+                setClickableScreen();
+                mainMenu.revalidate();
+                mainMenu.requestFocusInWindow();
+
+                GridBagConstraints c = new GridBagConstraints();
+                c.anchor = GridBagConstraints.CENTER;
+                c.fill = GridBagConstraints.BOTH;
+                c.gridy = 0;
+                c.gridx = 0;
+                c.weighty = 1.0;
+                c.weightx = 1.0;
+                mainMenuPanel.add(settingsMenu(mainMenuPanel), c);
+                mainMenuPanel.revalidate();
+                mainMenuPanel.repaint();
+                 */
             }
         }
     }
@@ -753,31 +781,42 @@ public class MainMenu implements KeyListener {
                     AudioPlayer.setVolume();
                 }
             }
-            mainMenuPanel.requestFocusInWindow();
+            mainMenu.requestFocusInWindow();
         }
     }
 
     class Credits extends JPanel implements ActionListener {
         // delay between each frame
-        public final int FRAMEDELAY = 20;
+        public final int FRAMEDELAY = 15;           // 15 milliseconds
         public final int WIDTH = 1280;
         public final int HEIGHT = WIDTH / 16 * 9;
         public final BufferedImage texture;
+        public int displacement = 720;
+        MainMenu mainMenuObj;
 
 
-        private Timer timer;
+        public Timer timer;
 
-        public Credits() {
+        public Credits(MainMenu mainMenuObj) {
+            this.mainMenuObj = mainMenuObj;
             timer = new Timer(FRAMEDELAY, this);
             timer.start();
             texture = BufferedImageLoader.loadImage("/resources/GUI/main_menu/credits.png");
         }
 
-
-
         @Override
         public void actionPerformed(ActionEvent e) {
-            repaint();
+            displacement--;
+
+            if (displacement < -960) {
+                timer.stop();
+                soundtrack.stop();
+                credits.timer.stop();
+                mainMenu.dispose();
+                new MainMenu();
+            } else {
+                repaint();
+            }
         }
 
         @Override
@@ -787,6 +826,10 @@ public class MainMenu implements KeyListener {
             drawBackground(g);
 
             Graphics2D g2 = (Graphics2D) g;
+
+            AffineTransform affTra = AffineTransform.getTranslateInstance(0, displacement);
+
+            g2.drawImage(texture, affTra, this);
 
             Toolkit.getDefaultToolkit().sync();
         }
