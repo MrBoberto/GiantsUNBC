@@ -18,7 +18,6 @@ import player.MainPlayer;
 import player.OtherPlayer;
 import player.Player;
 import power_ups.*;
-import weapons.aoe.Explosion;
 import utilities.BufferedImageLoader;
 import weapons.aoe.Explosion;
 import weapons.aoe.Slash;
@@ -66,8 +65,7 @@ public class ClientController extends Controller {
         } catch (Exception e) {
             return true;
         }
-
-        String ipAddress = MainMenu.ipaddress;
+        String ipAddress = JOptionPane.showInputDialog("Please enter the server's ip address, or leave blank to search automatically:");
         try {
             while (socket == null) {
                 try {
@@ -103,8 +101,8 @@ public class ClientController extends Controller {
                     new MainMenu();
                     break;
                 }
-                TimeUnit.SECONDS.sleep(1);//
-                if (socket == null) {
+                TimeUnit.SECONDS.sleep(1);
+                if (socket == null){
                     ipAddress = JOptionPane.showInputDialog("Could not find ip/invalid address please enter server's ip: ");
                 }
             }
@@ -114,11 +112,6 @@ public class ClientController extends Controller {
                 System.out.println("THE SERVER AND CLIENT ARE ON THE SAME COMPUTER");
             }
             System.out.println("waiting for connection...");
-
-            if (socket == null) {
-                socket = new Socket(ipAddress, Controller.PORT);
-            }
-            System.out.println("THE INPUTTED IP IS:" + ipAddress);
             System.out.println("connection accepted");
 
             outputConnection = new OutputConnection(this, socket);
@@ -473,7 +466,7 @@ public class ClientController extends Controller {
 
         isRunning = false;
         gameWindow.frame.dispose();
-        World.setGameOver(new GameOver(loser, winner, HEIGHT, players, WIDTH));
+        World.setGameOver(new GameOver(loser, winner, players));
 
     }
 

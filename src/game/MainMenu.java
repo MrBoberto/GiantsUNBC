@@ -28,7 +28,6 @@ public class MainMenu implements KeyListener {
     public static JFrame mainMenu;
     public static String playerName = "";
     final BufferedImage backgroundImage;
-    public static String ipaddress;
     public static int mapSelected = 1;
     private static final int SERVER = 0;
     private static final int SINGLEPLAYER = 1;
@@ -505,7 +504,6 @@ public class MainMenu implements KeyListener {
         multiplayerMenu.add(serverButton, c);
 
         MainMenuButton clientButton = new MainMenuButton(e -> {
-            ipaddress = JOptionPane.showInputDialog("Please enter the server's ip address, or leave blank to search automatically:");
             try {
                 soundtrack.stop();
             } catch (Exception ex) {

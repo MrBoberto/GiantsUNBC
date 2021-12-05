@@ -172,7 +172,7 @@ public abstract class Player extends GameObject {
 
     public double getKdr() {
         if (deathCount == 0) {
-            return kdr;
+            return killCount;
         }
         else {
             return (double) killCount / (double) deathCount;
