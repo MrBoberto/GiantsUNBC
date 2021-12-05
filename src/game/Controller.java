@@ -1,5 +1,17 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * The abstract Controller class, containing basic functions to be used by all Controllers. The Controller is a Canvas
+ * which is added to the GameWindow so that it may draw each frame. The controller also has the tick() method for
+ * game logic
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import audio.AudioPlayer;
 import inventory_items.InventoryItem;
 import inventory_items.LightningSwordItem;
@@ -203,7 +215,11 @@ public abstract class Controller extends Canvas implements Runnable {
                 delta--;
             }
             render();
-            frames++;
+
+            // If paused in single player, do not count frames
+            if (!(this instanceof SingleController && hasPauseMenu)) {
+                frames++;
+            }
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
@@ -243,6 +259,11 @@ public abstract class Controller extends Canvas implements Runnable {
      * Game logic tick. Happens 60 times per second
      */
     public void tick() {
+        // In single player mode, the ticks do not occur while the pause menu is active
+        if (this instanceof SingleController && hasPauseMenu) {
+            return;
+        }
+
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i) != null)
                 players.get(i).tick();
@@ -308,6 +329,7 @@ public abstract class Controller extends Canvas implements Runnable {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
             Point mouseRelativeToGame = new Point(mouseRelativeToScreen.x - getLocationOnScreen().x,
                     mouseRelativeToScreen.y - getLocationOnScreen().y);
+            thisPlayer.getArsenal().getPrimary().playAudio();
             thisPlayer.getArsenal().getPrimary().shoot(mouseRelativeToGame.x, mouseRelativeToGame.y);
 
             Controller.thisPlayer.getArsenal().getPrimary().setCurrentDelay(
@@ -317,6 +339,7 @@ public abstract class Controller extends Canvas implements Runnable {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
             Point mouseRelativeToGame = new Point(mouseRelativeToScreen.x - getLocationOnScreen().x,
                     mouseRelativeToScreen.y - getLocationOnScreen().y);
+            thisPlayer.getArsenal().getPrimary().playAudio();
             thisPlayer.getArsenal().getSecondary().shoot(mouseRelativeToGame.x, mouseRelativeToGame.y);
 
             Controller.thisPlayer.getArsenal().getSecondary().setCurrentDelay(

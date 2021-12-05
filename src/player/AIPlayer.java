@@ -1,5 +1,15 @@
 package player;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * The computer-programmed user "Thanos" who does his best to kill the player in singleplayer mode
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import game.Controller;
 import game.SingleController;
 import game.World;

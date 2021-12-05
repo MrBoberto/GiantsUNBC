@@ -1,5 +1,15 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * This is the main menu class for the game
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import audio.AudioPlayer;
 import audio.SFXPlayer;
 import utilities.BufferedImageLoader;

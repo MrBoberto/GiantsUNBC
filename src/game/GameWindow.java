@@ -1,5 +1,16 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * Contains the JFrame in which the game is run. Contents swap between a Canvas and JPanel when the pause menu is
+ * triggered.
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import utilities.BufferedImageLoader;
 
 import javax.swing.*;

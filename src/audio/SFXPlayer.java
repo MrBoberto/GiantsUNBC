@@ -1,5 +1,15 @@
 package audio;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * Plays a sound effect file based upon the received integer value
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import game.Main;
 
 import javax.sound.sampled.*;

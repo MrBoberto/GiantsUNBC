@@ -1,5 +1,16 @@
 package mapObjects;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * A block that interrupts movement of players and causes bullets to despawn or detonate by setting their velocities
+ * to 0
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import eye_candy.BlockShadow;
 import game.Controller;
 import game.GameObject;

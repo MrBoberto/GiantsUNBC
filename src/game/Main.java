@@ -1,5 +1,14 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * Records the user volume settings
+ *
+ * @author The Boyz
+ * @version 1
+ */
 
 import javax.swing.*;
 import java.io.IOException;

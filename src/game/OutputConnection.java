@@ -1,5 +1,15 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * In a multiplayer matchup, sends packets to the other player
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import packets.ServerBulletPacket;
 import packets.ClientUpdatePacket;
 import packets.ServerUpdatePacket;

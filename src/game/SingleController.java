@@ -1,5 +1,15 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * The controller for the singleplayer game mode
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import audio.SFXPlayer;
 import eye_candy.DeathMark;
 import inventory_items.*;

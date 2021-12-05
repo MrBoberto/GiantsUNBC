@@ -1,5 +1,16 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * This class initializes the controller based on what game mode the player is using. It also contains some
+ * trigonometric functions to be used by other classes to help with calculating directions of movement
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
 

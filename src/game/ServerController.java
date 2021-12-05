@@ -1,5 +1,14 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * The controller from the server perspective
+ *
+ * @author The Boyz
+ * @version 1
+ */
 
 import inventory_items.*;
 import audio.SFXPlayer;

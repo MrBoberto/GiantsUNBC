@@ -1,5 +1,14 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * The window that displays the scoreboard for both players at the end of a match
+ *
+ * @author The Boyz
+ * @version 1
+ */
 
 import audio.SFXPlayer;
 import player.Player;

@@ -1,5 +1,15 @@
 package animation;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * A frame (or node) in an animation strip
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import java.awt.image.BufferedImage;
 
 public class ImageFrame {

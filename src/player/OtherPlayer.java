@@ -1,5 +1,15 @@
 package player;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * The player which is not controlled by the user
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import game.World;
 
 import java.awt.*;

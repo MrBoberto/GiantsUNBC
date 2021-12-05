@@ -1,5 +1,15 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * The controller from the client perspective
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import audio.SFXPlayer;
 import inventory_items.*;
 import packets.*;
