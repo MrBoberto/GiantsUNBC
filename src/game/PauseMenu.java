@@ -210,14 +210,8 @@ public class PauseMenu implements KeyListener {
             pauseMenuPanel.repaint();
             controller.isPauseMenuScreen = true;
         }, "Back");
-        c.gridy = 8;
-        settingsMenu.add(backButton ,c);
-
-        MainMenu.MainMenuButton videoButton = new MainMenu.MainMenuButton(e -> {
-
-        }, "Video Settings");
         c.gridy = 9;
-        settingsMenu.add(videoButton, c);
+        settingsMenu.add(backButton ,c);
 
         MainMenu.MainMenuButton audioButton = new MainMenu.MainMenuButton(e -> {
 
