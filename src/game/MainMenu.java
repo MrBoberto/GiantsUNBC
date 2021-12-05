@@ -34,9 +34,10 @@ public class MainMenu implements KeyListener {
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
     static SFXPlayer sfxPlayer;
-    enum PanelType{MainMenu, ButtonsMenu, MapSelection, SettingsMenu, AudioMenu, MultiplayerMenu}
+    enum PanelType{MainMenu, ButtonsMenu, MapSelection, SettingsMenu, AudioMenu, MultiplayerMenu, Credits}
     public static PanelType panelType = PanelType.MainMenu;
     public static JPanel mainMenuPanel;
+    public static Credits credits;
 
     public MainMenu() {
         mainMenu = new JFrame("THE BOYZ Launcher");
@@ -360,8 +361,11 @@ public class MainMenu implements KeyListener {
         settingsMenu.add(nameButton, c);
 
         MainMenuButton videoButton = new MainMenuButton(e -> {
-
-        }, "Video Settings");
+            panelType = PanelType.Credits;
+            credits = new Credits();
+            mainMenuPanel.remove(settingsMenu);
+            mainMenuPanel.add(credits);
+        }, "Credits");
         c.gridy = 8;
         settingsMenu.add(videoButton, c);
 
@@ -768,6 +772,8 @@ public class MainMenu implements KeyListener {
             timer.start();
             texture = BufferedImageLoader.loadImage("/resources/GUI/main_menu/credits.png");
         }
+
+
 
         @Override
         public void actionPerformed(ActionEvent e) {
