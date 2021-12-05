@@ -14,7 +14,7 @@ public class LightningSword implements Weapon {
     public static final int MAX_DELAY = 4;
     private int currentDelay = 0;
     // Identifies type of gun
-    public static final int SERIAL = 005;
+    public static final int SERIAL = 5;
     public static final WeaponType WEAPON_TYPE = WeaponType.LightningSword;
     public static final int DAMAGE = 55;
     public static final int HALF_LENGTH = 60;         // The length of half of one side
@@ -29,7 +29,6 @@ public class LightningSword implements Weapon {
         }
         catch (Exception ex)
         {
-            System.out.println("Error with playing lightning sword sound.");
             ex.printStackTrace();
         }
     }

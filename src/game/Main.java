@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 public class Main {
@@ -51,7 +50,7 @@ public class Main {
         return correctAddress;
     }
 
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) {
         setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
         new MainMenu();

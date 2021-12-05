@@ -35,12 +35,6 @@ public class ImageStrip {
         this.imageFileNames = imageFileNames;
     }
 
-    /**
-     * Returns the animation.ImageFrame after the given one. If no animation.ImageFrame is given, returns head.
-     *
-     * @param current animation.ImageFrame
-     * @return
-     */
     public ImageFrame getNext(ImageFrame current) {
         if (current != null) {
             return current.getNext();

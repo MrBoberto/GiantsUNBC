@@ -10,7 +10,7 @@ import java.awt.geom.AffineTransform;
 
 public class SniperRifleBullet extends Bullet {
 
-    private static final int SERIAL = 001;
+    private static final int SERIAL = 1;
 
     public SniperRifleBullet(int player, double aimX, double aimY, int damage) {
         super(player);

@@ -10,7 +10,7 @@ import java.awt.geom.AffineTransform;
 
 public class PistolBullet extends Bullet {
 
-    private static final int SERIAL = 002;
+    private static final int SERIAL = 2;
     private static final double INACCURACY = 0.01;
 
 

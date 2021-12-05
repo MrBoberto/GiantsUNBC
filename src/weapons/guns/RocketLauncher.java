@@ -17,7 +17,7 @@ public class RocketLauncher implements Weapon {
     public static final int MAX_DELAY = 250;
     private int currentDelay = 0;
     // Identifies type of gun
-    public static final int SERIAL = 004;
+    public static final int SERIAL = 4;
     public static final WeaponType WEAPON_TYPE = WeaponType.RocketLauncher;
     public static final int DAMAGE = 40;
     public SFXPlayer audio;
@@ -30,7 +30,6 @@ public class RocketLauncher implements Weapon {
         }
         catch (Exception ex)
         {
-            System.out.println("Error with playing rocket launcher sound.");
             ex.printStackTrace();
         }
     }
@@ -43,15 +42,11 @@ public class RocketLauncher implements Weapon {
     @Override
     public void shoot(double mouseX, double mouseY) {
         if (World.controller instanceof ServerController) {
-            System.out.println("Server rocket sound...");
             World.controller.getOutputConnection().sendPacket(new ServerSFXPacket(SERIAL));
-            // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
-            System.out.println("Rocket sound success.");
             for (int i = 0; i < ROUND_COUNT; i++) {
                 new RocketLauncherBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             }
         } else if (World.controller instanceof SingleController) {
-            // new ShotgunBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
             if (playerIBelongTo.getPlayerNumber() == Player.SERVER_PLAYER) {
                 for (int i = 0; i < ROUND_COUNT; i++) {
                     new RocketLauncherBullet(Player.SERVER_PLAYER, mouseX, mouseY, DAMAGE);
@@ -62,11 +57,8 @@ public class RocketLauncher implements Weapon {
                 }
             }
         } else {
-            System.out.println("Client rocket sound...");
             World.controller.getOutputConnection().sendPacket(new ClientSFXPacket(SERIAL));
-            System.out.println("Rocket sound success.");
             for (int i = 0; i < ROUND_COUNT; i++) {
-                System.out.println((i + 1) + "th Client Bullet Packet being sent");
                 World.controller.getOutputConnection().sendPacket(
                         new ClientBulletPacket(
                                 playerIBelongTo.getX(),

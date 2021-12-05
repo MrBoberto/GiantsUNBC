@@ -22,7 +22,7 @@ public class GameWindow {
             img = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_blue.png");
             frame.setIconImage(img);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
 
         frame.add(controller);
@@ -34,10 +34,6 @@ public class GameWindow {
 
     public JFrame getFrame() {
         return frame;
-    }
-
-    public boolean canPause() {
-        return canPause;
     }
 
     public void setCanPause(boolean canPause) {

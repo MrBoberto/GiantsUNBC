@@ -30,13 +30,9 @@ public class Explosion extends GameObject implements Serializable {
 
         this.playerIBelongToNumber = playerIBelongToNumber;
 
-        System.out.println("EXPLOSION");
-
         boundRect = new Rectangle((int)this.x - currentFrame.getImage().getWidth() / 3,
                 (int)this.y - currentFrame.getImage().getHeight() / 3, 2 * currentFrame.getImage().getWidth() / 3,
                 2 * currentFrame.getImage().getHeight() / 3);
-
-        System.out.println("boundRect created.");
     }
 
     /**
@@ -113,7 +109,7 @@ public class Explosion extends GameObject implements Serializable {
             imgLocStr.add("explosion (" + i + ").png");
         }
         animation = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(standing.toString());
+//        (standing.toString());
         imgLocStr.clear();
     }
 
@@ -133,8 +129,7 @@ public class Explosion extends GameObject implements Serializable {
         for (String s : imgLocStr) {
             try {
                 images.add(ImageIO.read(Objects.requireNonNull(Explosion.class.getResource(defaultFileLocation + "" + s))));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
+            } catch (IOException ignored) {
             }
             imageFileNames.append(defaultFileLocation).append(s).append(", ");
         }

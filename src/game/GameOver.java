@@ -23,11 +23,8 @@ public class GameOver  {
             img = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_blue.png");
             gameOver.setIconImage(img);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+e.printStackTrace();
         }
-
-
-
 
         Dimension size = new Dimension(Controller.WIDTH, Controller.HEIGHT);
         gameOver.setSize(size);
@@ -44,16 +41,10 @@ public class GameOver  {
         SFXPlayer sfxPlayer = new SFXPlayer();
         sfxPlayer.setFile(-2);
 
-        // to make window appear on the screen
-        // max size was incorrect on my multi-display monitor, so I changed it - Noah
-        System.out.println("Size" + gameOver.getWidth() + "width" + gameOver.getHeight());
-
         JPanel mainMenuPanel = new JPanel(new GridBagLayout());
 
         mainMenuPanel.setOpaque(false);
         gameOver.add(mainMenuPanel);
-
-
 
         JButton screen = createScreenButton(loser, winner, players, mainMenuPanel);
 
@@ -64,8 +55,6 @@ public class GameOver  {
         c.weighty = 1.0;
         c.weightx = 1.0;
         mainMenuPanel.add(screen, c);
-
-
 
         gameOver.setVisible(true);
     }
@@ -79,7 +68,7 @@ public class GameOver  {
                     image = BufferedImageLoader.loadImage("/resources/Textures/BG/stone_background.png");
 
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    e.printStackTrace();
                 }
 
                 Graphics2D g2 = (Graphics2D) g;

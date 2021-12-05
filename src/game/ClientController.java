@@ -18,7 +18,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -28,12 +27,11 @@ public class ClientController extends Controller {
 
     // Multiplayer
     private Socket socket;
-    private String correctIp;
 
     // Audio
     public final SFXPlayer serverWeaponAudio;
 
-    public ClientController() throws UnknownHostException {
+    public ClientController() {
         super();
 
         serverWeaponAudio = new SFXPlayer();
@@ -70,9 +68,6 @@ public class ClientController extends Controller {
                                     String output = address.toString().substring(1);
                                     try {
                                         socket = new Socket(output, Controller.PORT);
-                                        System.out.println("FOUND SERVER");
-                                        System.out.println(output + " is this the server");
-                                        correctIp = output;
                                         //socket.close(); //needed if 2 connections tried
                                     } catch (Exception e) {//e.printStackTrace();}
                                     }
@@ -86,7 +81,6 @@ public class ClientController extends Controller {
                     } catch (Exception ignored) {
                     }
                 } catch (Exception e) {
-                    System.out.println("USER CLICKED CANCEL");
                     gameWindow.getFrame().dispose();
                     new MainMenu();
                     break;
@@ -97,24 +91,13 @@ public class ClientController extends Controller {
                 }
             }
 
-            System.out.println("The client:" + correctAddress.getHostAddress() + "\nThe server" + correctIp);
-            if (correctAddress.getHostAddress().equals(correctIp)) {
-                System.out.println("THE SERVER AND CLIENT ARE ON THE SAME COMPUTER");
-            }
-            System.out.println("waiting for connection...");
-            System.out.println("connection accepted");
-
             outputConnection = new OutputConnection(this, socket);
-            System.out.println("output connection complete");
             outputConnection.sendPacket(new StartRequest(thisPlayer.getPlayerName()));
             inputConnection = new InputConnection(this, socket);
-            System.out.println("input connection complete");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        System.out.println("server + client connected.");
         return false;
     }
 
@@ -219,100 +202,100 @@ public class ClientController extends Controller {
         otherPlayer.setPickedUpPowerUps((int) packet.playerInfo()[0][6]);
 
 
-        renderWinner(packet.getWinner());
+        renderWinner(packet.winner());
         isRunning = false;
     }
 
     private void loadCreateInventoryItemPacket(CreateInventoryItemPacket packet) {
-        switch (packet.getPowerUpType()) {
-            case Shotgun -> inventoryItems.add(new ShotgunItem(packet.getX(), packet.getY()));
-            case SniperRifle -> inventoryItems.add(new SniperRifleItem(packet.getX(), packet.getY()));
-            case Pistol -> inventoryItems.add(new PistolItem(packet.getX(), packet.getY()));
-            case AssaultRifle -> inventoryItems.add(new AssaultRifleItem(packet.getX(), packet.getY()));
-            case RocketLauncher -> inventoryItems.add(new RocketLauncherItem(packet.getX(), packet.getY()));
-            case LightningSword -> inventoryItems.add(new LightningSwordItem(packet.getX(), packet.getY()));
+        switch (packet.inventoryItemType()) {
+            case Shotgun -> inventoryItems.add(new ShotgunItem(packet.x(), packet.y()));
+            case SniperRifle -> inventoryItems.add(new SniperRifleItem(packet.x(), packet.y()));
+            case Pistol -> inventoryItems.add(new PistolItem(packet.x(), packet.y()));
+            case AssaultRifle -> inventoryItems.add(new AssaultRifleItem(packet.x(), packet.y()));
+            case RocketLauncher -> inventoryItems.add(new RocketLauncherItem(packet.x(), packet.y()));
+            case LightningSword -> inventoryItems.add(new LightningSwordItem(packet.x(), packet.y()));
         }
     }
 
     private void loadInventoryItemPacket(InventoryItemPacket packet) {
-        if (packet.getIndexToRemove() >= 0) {
-            switch (packet.getPlayerToBeAffected()) {
+        if (packet.indexToRemove() >= 0) {
+            switch (packet.playerToBeAffected()) {
                 case Player.SERVER_PLAYER:
-                    switch (packet.getSerial()) {
+                    switch (packet.serial()) {
                         case 0:
                             if (Controller.otherPlayer.getArsenal().lacksWeapon(0)) {
                                 Controller.otherPlayer.getArsenal().add(new Shotgun(Controller.otherPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                         case 1:
                             if (Controller.otherPlayer.getArsenal().lacksWeapon(1)) {
                                 Controller.otherPlayer.getArsenal().add(new SniperRifle(Controller.otherPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                         case 2:
                             if (Controller.otherPlayer.getArsenal().lacksWeapon(2)) {
                                 Controller.otherPlayer.getArsenal().add(new Pistol(Controller.otherPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                         case 3:
                             if (Controller.otherPlayer.getArsenal().lacksWeapon(3)) {
                                 Controller.otherPlayer.getArsenal().add(new AssaultRifle(Controller.otherPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                         case 4:
                             if (Controller.otherPlayer.getArsenal().lacksWeapon(4)) {
                                 Controller.otherPlayer.getArsenal().add(new RocketLauncher(Controller.otherPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                         case 5:
                             if (Controller.otherPlayer.getArsenal().lacksWeapon(5)) {
                                 Controller.otherPlayer.getArsenal().add(new LightningSword(Controller.otherPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                     }
                     break;
                 case Player.CLIENT_PLAYER:
-                    switch (packet.getSerial()) {
+                    switch (packet.serial()) {
                         case 0:
                             if (Controller.thisPlayer.getArsenal().lacksWeapon(0)) {
                                 Controller.thisPlayer.getArsenal().add(new Shotgun(Controller.thisPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                         case 1:
                             if (Controller.thisPlayer.getArsenal().lacksWeapon(1)) {
                                 Controller.thisPlayer.getArsenal().add(new SniperRifle(Controller.thisPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                         case 2:
                             if (Controller.thisPlayer.getArsenal().lacksWeapon(2)) {
                                 Controller.thisPlayer.getArsenal().add(new Pistol(Controller.thisPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                         case 3:
                             if (Controller.thisPlayer.getArsenal().lacksWeapon(3)) {
                                 Controller.thisPlayer.getArsenal().add(new AssaultRifle(Controller.thisPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                         case 4:
                             if (Controller.thisPlayer.getArsenal().lacksWeapon(4)) {
                                 Controller.thisPlayer.getArsenal().add(new RocketLauncher(Controller.thisPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                         case 5:
                             if (Controller.thisPlayer.getArsenal().lacksWeapon(5)) {
                                 Controller.thisPlayer.getArsenal().add(new LightningSword(Controller.thisPlayer));
-                                inventoryItems.remove(packet.getIndexToRemove());
+                                inventoryItems.remove(packet.indexToRemove());
                             }
                             break;
                     }
@@ -323,12 +306,12 @@ public class ClientController extends Controller {
 
     private void loadCreatePowerUpPacket(CreatePowerUpPacket packet) {
         //Use default properties since server is the one that controls effects and collisions.
-        switch (packet.getPowerUpType()) {
-            case DamageUp -> powerUps.add(new DamageUp(packet.getX(), packet.getY(), Player.DEFAULT_DAMAGE_MULTIPLIER));
-            case DamageDown -> powerUps.add(new DamageDown(packet.getX(), packet.getY(), Player.DEFAULT_DAMAGE_MULTIPLIER));
-            case SpeedUp -> powerUps.add(new SpeedUp(packet.getX(), packet.getY(), Player.DEFAULT_SPEED_MULTIPLIER));
-            case SpeedDown -> powerUps.add(new SpeedDown(packet.getX(), packet.getY(), Player.DEFAULT_SPEED_MULTIPLIER));
-            case Ricochet -> powerUps.add(new Ricochet(packet.getX(), packet.getY(), Player.DEFAULT_NUMBER_OF_BOUNCES));
+        switch (packet.powerUpType()) {
+            case DamageUp -> powerUps.add(new DamageUp(packet.x(), packet.y(), Player.DEFAULT_DAMAGE_MULTIPLIER));
+            case DamageDown -> powerUps.add(new DamageDown(packet.x(), packet.y(), Player.DEFAULT_DAMAGE_MULTIPLIER));
+            case SpeedUp -> powerUps.add(new SpeedUp(packet.x(), packet.y(), Player.DEFAULT_SPEED_MULTIPLIER));
+            case SpeedDown -> powerUps.add(new SpeedDown(packet.x(), packet.y(), Player.DEFAULT_SPEED_MULTIPLIER));
+            case Ricochet -> powerUps.add(new Ricochet(packet.x(), packet.y(), Player.DEFAULT_NUMBER_OF_BOUNCES));
         }
     }
 
@@ -361,26 +344,25 @@ public class ClientController extends Controller {
 
                 if (packet.getRicochetBounces() != -1) {
                     thisPlayer.setRicochet(packet.getRicochetBounces(), packet.getTime());
-                    System.out.println(packet.getRicochetBounces());
                 }
             }
         }
     }
 
     private void loadEyeCandyPacket(EyeCandyPacket packet) {
-        eyeCandy = new ArrayList<>(Arrays.asList(packet.getEyeCandy()));
+        eyeCandy = new ArrayList<>(Arrays.asList(packet.eyeCandy()));
     }
 
     private void loadServerSFXPacket(ServerSFXPacket packet) {
-        serverWeaponAudio.setFile(packet.getServerSFXInt());
+        serverWeaponAudio.setFile(packet.serverSFXInt());
         serverWeaponAudio.play();
     }
 
     private void loadClientSlashPacket(ClientSlashPacket packet) {
         new Slash(
-                packet.getX(),
-                packet.getY(),
-                packet.getAngle(),
+                packet.x(),
+                packet.y(),
+                packet.angle(),
                 packet.isLeft(),
                 Player.SERVER_PLAYER
         );
@@ -390,45 +372,45 @@ public class ClientController extends Controller {
     }
 
     private void loadDeathCountPacket(DeathCountPacket packet) {
-        thisPlayer.setDeathCount(packet.getClientDeaths());
-        otherPlayer.setDeathCount(packet.getServerDeaths());
+        thisPlayer.setDeathCount(packet.clientDeaths());
+        otherPlayer.setDeathCount(packet.serverDeaths());
     }
 
     private void loadServerExplosionPacket(ServerExplosionPacket packet) {
-        explosions.add(new Explosion(packet.getX(), packet.getY(), packet.getPlayerNumber()));
+        explosions.add(new Explosion(packet.x(), packet.y(), packet.playerNumber()));
         serverWeaponAudio.setFile(-1);
         serverWeaponAudio.play();
     }
 
     private void loadServerBulletPacket(ServerBulletPacket packet) {
-        movingAmmo = new ArrayList<>(Arrays.asList(packet.getAmmo()));
+        movingAmmo = new ArrayList<>(Arrays.asList(packet.bullets()));
     }
 
     private void loadServerUpdatePacket(ServerUpdatePacket packet) {
         otherPlayer.setWalking(packet.isWalking());
-        otherPlayer.setX(packet.getX());
-        otherPlayer.setY(packet.getY());
-        otherPlayer.setAngle(packet.getAngle());
-        otherPlayer.setHealth(packet.getHealth()[0]);
-        otherPlayer.setWeaponSerial(packet.getWeaponSerial());
+        otherPlayer.setX(packet.x());
+        otherPlayer.setY(packet.y());
+        otherPlayer.setAngle(packet.angle());
+        otherPlayer.setHealth(packet.health()[0]);
+        otherPlayer.setWeaponSerial(packet.weaponSerial());
         otherPlayer.setInvincible(packet.isInvincible()[0]);
 
-        thisPlayer.setHealth(packet.getHealth()[1]);
+        thisPlayer.setHealth(packet.health()[1]);
         thisPlayer.setInvincible(packet.isInvincible()[1]);
     }
 
     private void loadStartPacket(StartPacket packet) {
-        if (packet.getPlayerName() == null || packet.getPlayerName().equals("")) {
+        if (packet.playerName() == null || packet.playerName().equals("")) {
             otherPlayer.setPlayerName("Host");
         } else {
-            otherPlayer.setPlayerName(packet.getPlayerName());
+            otherPlayer.setPlayerName(packet.playerName());
         }
 
-        loadLevel(BufferedImageLoader.loadImage("/resources/mapLayouts/Level" + packet.getMapSelected() + ".png"));
+        loadLevel(BufferedImageLoader.loadImage("/resources/mapLayouts/Level" + packet.mapSelected() + ".png"));
 
-        thisPlayer.setRespawnPoint(packet.getX(), packet.getY());
-        thisPlayer.setX(packet.getX());
-        thisPlayer.setY(packet.getY());
+        thisPlayer.setRespawnPoint(packet.x(), packet.y());
+        thisPlayer.setX(packet.x());
+        thisPlayer.setY(packet.y());
     }
 
     public void renderWinner(int winnerNumber) {
@@ -436,12 +418,8 @@ public class ClientController extends Controller {
         try {
             soundtrack.stop();
         } catch (Exception ex) {
-            System.out.println("Error with stopping sound.");
             ex.printStackTrace();
         }
-
-        System.out.println("renderWinner");
-
 
         Player winner;
         Player loser;

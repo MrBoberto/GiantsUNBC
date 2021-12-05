@@ -80,7 +80,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
     //Levels
     protected BufferedImage level;
-    protected BufferedImage background;
+    protected final BufferedImage background;
     public static final int GRID_SIZE = 58;
 
     protected Controller() {
@@ -159,7 +159,6 @@ public abstract class Controller extends Canvas implements Runnable {
             }
             soundtrack.play();
         } catch (Exception ex) {
-            System.out.println("Error with playing sound.");
             ex.printStackTrace();
 
         }
@@ -178,7 +177,6 @@ public abstract class Controller extends Canvas implements Runnable {
         try {
             soundtrack.stop();
         } catch (Exception ex) {
-            System.out.println("Error with stopping sound.");
             ex.printStackTrace();
 
         }
@@ -219,7 +217,6 @@ public abstract class Controller extends Canvas implements Runnable {
         pauseMenu = new PauseMenu(gameWindow.getFrame(), this);
         gameWindow.getFrame().remove(this);
         gameWindow.getFrame().add(pauseMenu.getJPanel());
-        System.out.println(pauseMenu.requestFocusInWindow());
         gameWindow.getFrame().revalidate();
     }
 
@@ -303,7 +300,7 @@ public abstract class Controller extends Canvas implements Runnable {
     }
 
     private void handleAssaultRifle() {
-        if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 0 && thisPlayer.getWeaponSerial() == 003
+        if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 0 && thisPlayer.getWeaponSerial() == 3
                 && thisPlayer.getArsenal().getPrimary().getCurrentDelay() == 0) {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
             Point mouseRelativeToGame = new Point(mouseRelativeToScreen.x - getLocationOnScreen().x,
@@ -312,7 +309,7 @@ public abstract class Controller extends Canvas implements Runnable {
 
             Controller.thisPlayer.getArsenal().getPrimary().setCurrentDelay(
                     AssaultRifle.MAX_DELAY);
-        } else if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 1 && thisPlayer.getWeaponSerial() == 003
+        } else if (thisPlayer.isButton1Held() && thisPlayer.getSelectedWeapon() == 1 && thisPlayer.getWeaponSerial() == 3
                 && thisPlayer.getArsenal().getSecondary() != null && thisPlayer.getArsenal().getSecondary().getCurrentDelay() == 0) {
             Point mouseRelativeToScreen = MouseInfo.getPointerInfo().getLocation();
             Point mouseRelativeToGame = new Point(mouseRelativeToScreen.x - getLocationOnScreen().x,
@@ -416,12 +413,8 @@ public abstract class Controller extends Canvas implements Runnable {
         try {
             soundtrack.stop();
         } catch (Exception ex) {
-            System.out.println("Error with stopping sound.");
             ex.printStackTrace();
         }
-
-        System.out.println("renderWinner");
-
 
         Player winner;
         Player loser;

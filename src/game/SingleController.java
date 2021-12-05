@@ -47,8 +47,6 @@ public class SingleController extends Controller {
             thisPlayer.setPlayerName(MainMenu.playerName);
         }
         otherPlayer.setPlayerName("Thanos");
-
-        System.out.println("Controller built.");
         start();
 
     }
@@ -80,7 +78,7 @@ public class SingleController extends Controller {
                     movingAmmo.remove(bullet);
                     if (bullet.getSERIAL() == 4 &&
                             EntityCollision.getBulletVictim(bullet) != bullet.getPlayerIBelongToNumber()) {
-                        //System.out.println("Rocket stopped moving!");
+                        //("Rocket stopped moving!");
                         movingAmmo.remove(bullet);
                         bullet.setVelX(0);
                         bullet.setVelY(0);
@@ -250,7 +248,7 @@ public class SingleController extends Controller {
                 movingAmmo.remove(bullet);
                 bullet.setVelX(0);
                 bullet.setVelY(0);
-                //System.out.println("Rocket launcher victor: " + bullet.getPlayerIBelongToNumber() + "; Rocket launcher loser: " + victimNumber);
+                //("Rocket launcher victor: " + bullet.getPlayerIBelongToNumber() + "; Rocket launcher loser: " + victimNumber);
                 explosions.add(new Explosion(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
 
                 weaponAudio.setFile(-1);
@@ -271,9 +269,6 @@ public class SingleController extends Controller {
 
                 victim.incrementDeathCount();
                 victim.revive();
-
-                System.out.println("Individual kill: " + victim.getPlayerName() + " was memed by "
-                        + killer.getPlayerName() + "'s " + bullet.getSERIAL());
 
                 killer.incrementKillCount();
                 if (killer instanceof AIPlayer) {
@@ -350,9 +345,6 @@ public class SingleController extends Controller {
                             declareWinner(killer);
                         }
                     }
-
-                    System.out.println("Double kill: " + thisPlayer.getPlayerName() + " was memed by " + killer.getPlayerName());
-
                 }
             }
             if (!thisPlayer.isInvincible()) {
@@ -378,7 +370,7 @@ public class SingleController extends Controller {
                             declareWinner(killer);
                         }
                     }
-                    // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
+                    // (victim.getPlayerName() + " was memed by " + killer.getPlayerName());
                 }
             }
         }
@@ -403,7 +395,6 @@ public class SingleController extends Controller {
         if (victimNumber != -1 && victimNumber != slash.getPlayerIBelongToNumber() && !victim.isInvincible()) {
 
             double damage = (-1 * Slash.DAMAGE * killer.getDamageMultiplier());
-            System.out.println(damage);
             killer.incrementBulletHitCount();
             victim.modifyHealth(damage);
             victim.resetHealTimer();
@@ -418,7 +409,7 @@ public class SingleController extends Controller {
                 victim.revive();
 
                 killer.incrementKillCount();
-                // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
+                // (victim.getPlayerName() + " was memed by " + killer.getPlayerName());
                 if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
@@ -434,29 +425,9 @@ public class SingleController extends Controller {
         } else {
             winnerNumber = Player.CLIENT_PLAYER;
         }
-
-        double[][] playerInfo = new double[2][7];
-
-        for (int i = 0; i < players.size(); i++) {
-            //Save data to send to client
-            Player player = players.get(i);
-            playerInfo[i][0] = player.getKillCount();
-            playerInfo[i][1] = player.getDeathCount();
-            playerInfo[i][2] = player.getKdr();
-            playerInfo[i][3] = player.getBulletCount();
-            playerInfo[i][4] = player.getBulletHitCount();
-            playerInfo[i][5] = player.getWalkingDistance();
-            playerInfo[i][6] = player.getPickedUpPowerUps();
-        }
-
         renderWinner(winnerNumber);
-
-
-
-
         // Kill the music
         soundtrack.stop();
-
         isRunning = false;
     }
 
@@ -476,12 +447,8 @@ public class SingleController extends Controller {
         }
         catch (Exception ex)
         {
-            System.out.println("Error with stopping sound.");
             ex.printStackTrace();
         }
-
-        System.out.println("renderWinner");
-
 
         Player winner;
         Player loser;

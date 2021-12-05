@@ -5,17 +5,4 @@ import inventory_items.InventoryItem;
 import java.io.Serializable;
 
 public record CreateInventoryItemPacket(int x, int y,
-                                        InventoryItem.InventoryItemType inventoryItemType) implements Serializable {
-
-    public InventoryItem.InventoryItemType getPowerUpType() {
-        return inventoryItemType;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-}
+                                        InventoryItem.InventoryItemType inventoryItemType) implements Serializable {}

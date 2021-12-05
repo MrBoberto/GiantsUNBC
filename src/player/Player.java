@@ -110,8 +110,6 @@ public abstract class Player extends GameObject {
         respawnPointX = x;
         respawnPointY = y;
 
-        System.out.println(x + " " + y);
-
         this.playerColour = playerColour;
 
 
@@ -257,11 +255,7 @@ public abstract class Player extends GameObject {
      * @param tdoMod Damage value to add
      */
     public void addTDO(double tdoMod) {
-        if (this.tdo > 1.6 * Math.pow(10, 308) || this.tdo < -1.6 * Math.pow(10, 308)) {
-            System.out.println("ERROR: TDO overflow");
-        } else {
             this.tdo += tdoMod;
-        }
     }
 
     public double getDamageMultiplier() {
@@ -295,7 +289,7 @@ public abstract class Player extends GameObject {
             imgLocStr.add("stand (" + i + ").png");
         }
         standing = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(standing.toString());
+//        (standing.toString());
         imgLocStr.clear();
 
         // Builds image strip for jogging
@@ -311,7 +305,7 @@ public abstract class Player extends GameObject {
             imgLocStr.add("dash (" + i + ").png");
         }
         dashing = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(dashing.toString());
+//        (dashing.toString());
         imgLocStr.clear();
 
         // Builds image strip for jumping
@@ -329,8 +323,7 @@ public abstract class Player extends GameObject {
         for (String s : imgLocStr) {
             try {
                 weaponTextures.add(ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/Textures/WEAPONS/" + s))));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
+            } catch (IOException ignored) {
             }
         }
         imgLocStr.clear();
@@ -346,7 +339,7 @@ public abstract class Player extends GameObject {
             imgLocStr.add(i + ").png");
         }
         leftwardSwordTextures = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(jumping.toString());
+//        (jumping.toString());
         imgLocStr.clear();
 
         // Builds image strip for jumping
@@ -354,7 +347,7 @@ public abstract class Player extends GameObject {
             imgLocStr.add(i + ").png");
         }
         rightwardSwordTextures = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(jumping.toString());
+//        (jumping.toString());
         imgLocStr.clear();
 
     }

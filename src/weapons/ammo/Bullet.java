@@ -48,7 +48,7 @@ public abstract class Bullet extends GameObject implements Projectile {
     @Override
     public void tick() {
         boxCooldown--;
-        if (texture != null && getSERIAL() != 01 && getSERIAL() != 04) {
+        if (texture != null && getSERIAL() != 1 && getSERIAL() != 4) {
             boundRect = new Rectangle((int) x - texture.getWidth() / 2,
                     (int) y - texture.getHeight() / 2, texture.getWidth(),
                     texture.getHeight());
@@ -317,7 +317,7 @@ public abstract class Bullet extends GameObject implements Projectile {
 //                                2
 //                        )).intersects(block.getBounds()) && getVelX() < 0) {
 //
-//                            System.out.println(left);
+//                            (left);
 //                            if ((left == -1) || left < xx * yy) {
 //                                y1 = yy ;
 //
@@ -382,7 +382,7 @@ public abstract class Bullet extends GameObject implements Projectile {
 //                    bouncesLeft--;
 //
 //                }
-//                System.out.println(up + " " + down + " " + left + " "+ right);
+//                (up + " " + down + " " + left + " "+ right);
               //  bounced = true;
 //            }
 

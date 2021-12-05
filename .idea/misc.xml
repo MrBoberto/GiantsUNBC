@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
+    <entry_points version="2.0">
+      <entry_point TYPE="field" FQNAME="game.MainMenu mainMenuPanel" />
+      <entry_point TYPE="field" FQNAME="player.Player kdr" />
+      <entry_point TYPE="field" FQNAME="player.Player tdo" />
+    </entry_points>
     <pattern value="game.GameObject" method="getBounds" />
     <pattern value="power_ups.PowerUp" method="updateClient" />
     <pattern value="weapons.ammo.Projectile" method="getDamage" />
@@ -14,6 +19,7 @@
     <pattern value="eye_candy.DeathMark" method="getBounds" />
     <pattern value="eye_candy.DeathMark" />
     <pattern value="eye_candy.DeathMark" method="tick" />
+    <pattern value="game.Controller" method="renderWinner" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_16" default="true" project-jdk-name="16 (2)" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out/production/GiantsUNBC" />

@@ -4,9 +4,4 @@ import game.GameObject;
 
 import java.io.Serializable;
 
-public record EyeCandyPacket(GameObject[] eyeCandy) implements Serializable {
-
-    public GameObject[] getEyeCandy() {
-        return eyeCandy;
-    }
-}
+public record EyeCandyPacket(GameObject[] eyeCandy) implements Serializable {}

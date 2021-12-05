@@ -21,9 +21,7 @@ public class MainPlayer extends Player {
     public MainPlayer(double x, double y, int playerNumber, Color color) {
         super(x, y, playerNumber, color);
 
-
         // Graphics-related
-
         loadImageStrips();
         currentImage = standing.getHead();
     }
@@ -33,7 +31,6 @@ public class MainPlayer extends Player {
      * Determines the angle in which the player is facing
      */
     public void setAngle() {
-//        System.out.println("player.Player 1 Prev super.getAngle(): " + Math.toDegrees(super.getAngle()));
         int avgX = 0;
         int avgY = 0;
 
@@ -61,7 +58,6 @@ public class MainPlayer extends Player {
         }
 
         double acuteAngle = Math.atan((double)avgY/avgX);
-//        System.out.println("player.Player 1 Acute super.getAngle(): " + Math.toDegrees(acuteAngle));
 
         if (avgY < 0) {
             acuteAngle += Math.PI;
@@ -90,7 +86,6 @@ public class MainPlayer extends Player {
         } else {
             setVelX(speed * Math.cos(super.getAngle()));
             setVelY(-speed * Math.sin(super.getAngle()));
-//            System.out.println("player.Player 1 Current super.getAngle(): " + super.getAngle());
             if ((super.getAngle() > (Math.PI / 2) && super.getAngle() < Math.PI)
                     || (super.getAngle() < 0 && super.getAngle() > -Math.PI / 2)) {
                 setVelX(getVelX() * -1);
@@ -242,19 +237,11 @@ public class MainPlayer extends Player {
         }
     }
 
-    /**
-     * Gets the current frame from loadImage() and rotates it based on the player's angle
-     *
-     * @param g
-     */
     @Override
     public void render(Graphics g) {
         super.render(g);
 
         Graphics2D g2d = (Graphics2D) g;
-
-
-        // displayInventory(g2d);
 
         isWalking = (up || left || down || right);
         if(isTimeForNextFrame()){

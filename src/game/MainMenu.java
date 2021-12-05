@@ -10,7 +10,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class MainMenu implements KeyListener {
@@ -25,7 +24,7 @@ public class MainMenu implements KeyListener {
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
     static SFXPlayer sfxPlayer;
-    static enum PanelType{MainMenu, ButtonsMenu, MapSelection, SettingsMenu, AudioMenu, MultiplayerMenu};
+    enum PanelType{MainMenu, ButtonsMenu, MapSelection, SettingsMenu, AudioMenu, MultiplayerMenu}
     public static PanelType panelType = PanelType.MainMenu;
     public static JPanel mainMenuPanel;
 
@@ -39,7 +38,7 @@ public class MainMenu implements KeyListener {
 
         setIcon();
         createSFXPlayer();
-        backgroundImage = BufferedImageLoader.loadImage("/resources/imageRes/textBack.png");
+        backgroundImage = BufferedImageLoader.loadImage("/resources/GUI/main_menu/main_menu_background.png");
 
         Dimension size = new Dimension(Controller.WIDTH, Controller.HEIGHT);
         mainMenu.setSize(size);
@@ -63,7 +62,6 @@ public class MainMenu implements KeyListener {
             soundtrack = new AudioPlayer("/resources/Music/The_Number_J.wav");
             soundtrack.play();
         } catch (Exception ex) {
-            System.out.println("Error with playing sound.");
             ex.printStackTrace();
         }
     }
@@ -137,7 +135,7 @@ public class MainMenu implements KeyListener {
             img = BufferedImageLoader.loadImage("/resources/GUI/character_closeups/character_closeup_blue.png");
             mainMenu.setIconImage(img);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+           e.printStackTrace();
         }
     }
 
@@ -210,7 +208,6 @@ public class MainMenu implements KeyListener {
             try {
                 soundtrack.stop();
             } catch (Exception ex) {
-                System.out.println("Error with playing sound.");
                 ex.printStackTrace();
             }
             mainMenu.dispose();
@@ -298,23 +295,14 @@ public class MainMenu implements KeyListener {
             try {
                 soundtrack.stop();
             } catch (Exception ex) {
-                System.out.println("Error with stopping sound.");
                 ex.printStackTrace();
 
             }
             mainMenu.dispose();
             if (gameType == SERVER) {
-                try {
-                    World.world(1);
-                } catch (UnknownHostException ex) {
-                    ex.printStackTrace();
-                }
+                World.world(1);
             } else {
-                try {
-                    World.world(3);
-                } catch (UnknownHostException ex) {
-                    ex.printStackTrace();
-                }
+                World.world(3);
             }
 
 
@@ -497,17 +485,12 @@ public class MainMenu implements KeyListener {
             try {
                 soundtrack.stop();
             } catch (Exception ex) {
-                System.out.println("Error with stopping soundtrack.");
                 ex.printStackTrace();
 
             }
             mainMenu.dispose();
 
-            try {
-                World.world(2);
-            } catch (UnknownHostException ex) {
-                ex.printStackTrace();
-            }
+            World.world(2);
 
         }, "Client");
         c.gridy = 8;
@@ -537,11 +520,12 @@ public class MainMenu implements KeyListener {
         return voidPanel;
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             if (panelType == PanelType.MainMenu || panelType == PanelType.ButtonsMenu) {
-                // Do nothing
+                /* do nothing */
             } else if (panelType == PanelType.MapSelection) {
                 mainMenuPanel.remove(0);
 

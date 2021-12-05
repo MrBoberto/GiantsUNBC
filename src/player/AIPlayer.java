@@ -52,7 +52,7 @@ public class AIPlayer extends OtherPlayer {
      * Determines the angle in which the player is facing
      */
     public void setAngle() {
-//        System.out.println("player.Player 1 Prev super.getAngle(): " + Math.toDegrees(super.getAngle()));
+//        ("player.Player 1 Prev super.getAngle(): " + Math.toDegrees(super.getAngle()));
         int avgX = 0;
         int avgY = 0;
 
@@ -98,7 +98,6 @@ public class AIPlayer extends OtherPlayer {
             left = false;
 
             if (this.x - 15 < target.x && this.x + 15 > target.x && this.y - 15 < target.y && this.y + 15 > target.y && targetType > 0) {
-                System.out.println("Collected " + targetType);
                 tryToGetCollectTimer = 0;
                 closestInventoryItem = null;
                 closestPowerUp = null;
@@ -149,11 +148,8 @@ public class AIPlayer extends OtherPlayer {
                         targetType = 0;
                     }
                 }
-
-                System.out.println("Target x = " + tempTarget.x + ", y = " + tempTarget.y);
                 target = tempTarget;
                 tryToGetCollectTimer = (int) World.pythHyp(tempTarget.x - x, tempTarget.y - y) / 3 - 1;
-                System.out.println("tryToGetCollectTimer = " + tryToGetCollectTimer);
             } else {
                 tryToGetCollectTimer--;
                 if (targetType == 0) {
@@ -256,7 +252,7 @@ public class AIPlayer extends OtherPlayer {
         } else {
             setVelX(speed * Math.cos(super.getAngle()));
             setVelY(-speed * Math.sin(super.getAngle()));
-//            System.out.println("player.Player 1 Current super.getAngle(): " + super.getAngle());
+//            ("player.Player 1 Current super.getAngle(): " + super.getAngle());
             if ((super.getAngle() > (Math.PI / 2) && super.getAngle() < Math.PI)
                     || (super.getAngle() < 0 && super.getAngle() > -Math.PI / 2)) {
                 setVelX(getVelX() * -1);
@@ -431,11 +427,6 @@ public class AIPlayer extends OtherPlayer {
         }
     }
 
-    /**
-     * Gets the current frame from loadImage() and rotates it based on the player's angle
-     *
-     * @param g
-     */
     @Override
     public void render(Graphics g) {
         super.render(g);
@@ -521,7 +512,7 @@ public class AIPlayer extends OtherPlayer {
             imgLocStr.add("stand (" + i + ").png");
         }
         standing = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(standing.toString());
+//        (standing.toString());
         imgLocStr.clear();
 
         // Builds image strip for jogging
@@ -529,7 +520,7 @@ public class AIPlayer extends OtherPlayer {
             imgLocStr.add("jog (" + i + ").png");
         }
         jogging = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(jogging.toString());
+//        (jogging.toString());
         imgLocStr.clear();
 
         // Builds image strip for dashing
@@ -537,7 +528,7 @@ public class AIPlayer extends OtherPlayer {
             imgLocStr.add("dash (" + i + ").png");
         }
         dashing = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(dashing.toString());
+//        (dashing.toString());
         imgLocStr.clear();
 
         defLocStr = "/resources/Textures/WEAPONS/";
@@ -547,7 +538,7 @@ public class AIPlayer extends OtherPlayer {
             imgLocStr.add("sword_thanos (" + i + ").png");
         }
         leftwardSwordTextures = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(jumping.toString());
+//        (jumping.toString());
         imgLocStr.clear();
 
         // Builds image strip for jumping
@@ -555,7 +546,7 @@ public class AIPlayer extends OtherPlayer {
             imgLocStr.add("sword_thanos (" + i + ").png");
         }
         rightwardSwordTextures = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(jumping.toString());
+//        (jumping.toString());
         imgLocStr.clear();
 
         for (int i = 0; i <= 4; i++) {
@@ -566,8 +557,7 @@ public class AIPlayer extends OtherPlayer {
         for (String s : imgLocStr) {
             try {
                 weaponTextures.add(ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/Textures/WEAPONS/" + s))));
-            } catch (IOException exc) {
-                System.out.println("Could not find image file: " + exc.getMessage());
+            } catch (IOException ignored) {
             }
         }
     }

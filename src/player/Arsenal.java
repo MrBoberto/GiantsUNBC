@@ -167,7 +167,6 @@ public class Arsenal extends GameObject {
     }
 
     private void loadGunTextures() {
-        //weaponTextures = new BufferedImage[Objects.requireNonNull(new File("src/resources/GUI/arsenal_slot").list()).length];
         weaponTextures = new BufferedImage[6];
         for (int i = 0; i < weaponTextures.length; i++) {
             weaponTextures[i] = BufferedImageLoader.loadImage("/resources/GUI/arsenal_slot/arsenal (" + (i-1) + ").png");
@@ -262,17 +261,15 @@ public class Arsenal extends GameObject {
         }
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     public void setPrimary(int inventoryNum) {
-        System.out.println("WEAPONS ARRAY: " + weapons);
         if (inventoryNum >= 1 && weapons.size() >= inventoryNum) {
             if (weapons.get(inventoryNum - 1).getSERIAL() == primary.getSERIAL()) {
-                // Do nothing
-                return;
+                /* do nothing */
             } else if (weapons.get(inventoryNum - 1).getSERIAL() == secondary.getSERIAL()) {
                 // Switch primary and secondary
                 secondary = primary;
                 primary = weapons.get(inventoryNum - 1);
-                return;
             } else {
                 Weapon[] newWeaponsArray = new Weapon[weapons.size()];
                 for (int i = 0; i < inventoryNum - 1; i++) {
@@ -288,24 +285,20 @@ public class Arsenal extends GameObject {
                 weapons.clear();
                 Collections.addAll(weapons, newWeaponsArray);
 
-                return;
             }
         }
-        System.out.println("Weapon inventory index " + inventoryNum + " DNE.");
 
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     public void setSecondary(int inventoryNum) {
-        System.out.println("setSecondary");
         if (inventoryNum >= 1 && weapons.size() >= inventoryNum) {
             if (weapons.get(inventoryNum - 1).getSERIAL() == secondary.getSERIAL()) {
-                // Do nothing
-                return;
+                /* do thing */
             } else if (weapons.get(inventoryNum - 1).getSERIAL() == primary.getSERIAL()) {
                 // Switch primary and secondary
                 primary = secondary;
                 secondary = weapons.get(inventoryNum - 1);
-                return;
             } else {
                 Weapon[] newWeaponsArray = new Weapon[weapons.size()];
                 for (int i = 0; i < inventoryNum - 1; i++) {
@@ -321,10 +314,8 @@ public class Arsenal extends GameObject {
                 weapons.clear();
                 weapons.addAll(Arrays.asList(newWeaponsArray));
 
-                return;
             }
         }
-        System.out.println("Weapon inventory index " + inventoryNum + " DNE.");
     }
 
     public Weapon getPrimary() {
@@ -382,7 +373,7 @@ public class Arsenal extends GameObject {
             imgLocStr.add(i + ").png");
         }
         swordAnimationStrip = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(standing.toString());
+//        (standing.toString());
         imgLocStr.clear();
     }
 

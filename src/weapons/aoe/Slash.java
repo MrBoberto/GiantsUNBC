@@ -137,7 +137,7 @@ public class Slash extends GameObject implements Serializable {
             imgLocStr.add("blue/slash (" + i + ").png");
         }
         animation_blue = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(standing.toString());
+//        (standing.toString());
         imgLocStr.clear();
 
         // Builds image strip for red slash animation
@@ -145,7 +145,7 @@ public class Slash extends GameObject implements Serializable {
             imgLocStr.add("red/slash (" + i + ").png");
         }
         animation_red = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(standing.toString());
+//        (standing.toString());
         imgLocStr.clear();
 
         // Builds image strip for explosion animation
@@ -153,7 +153,7 @@ public class Slash extends GameObject implements Serializable {
             imgLocStr.add("thanos/slash (" + i + ").png");
         }
         animation_thanos = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(standing.toString());
+//        (standing.toString());
         imgLocStr.clear();
     }
 

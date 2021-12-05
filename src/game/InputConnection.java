@@ -29,7 +29,6 @@ public class InputConnection implements Runnable {
     @Override
     public void run() {
         running = true;
-        System.out.println("hello from input thread");
         while (running) {
             try {
                 Object object = inputStream.readObject();
@@ -41,7 +40,6 @@ public class InputConnection implements Runnable {
             }
 
         }
-        System.out.println("ERROR");
     }
 
     public void close() throws IOException {

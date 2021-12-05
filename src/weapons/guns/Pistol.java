@@ -19,7 +19,7 @@ public class Pistol implements Weapon {
     public static final int MAX_DELAY = 25;
     private int currentDelay = 0;
     // Identifies type of gun
-    public static final int SERIAL = 002;
+    public static final int SERIAL = 2;
     public static final WeaponType WEAPON_TYPE = WeaponType.Pistol;
     public static final int DAMAGE = 25;
     public SFXPlayer audio;
@@ -32,7 +32,6 @@ public class Pistol implements Weapon {
         }
         catch (Exception ex)
         {
-            System.out.println("Error with playing pistol sound.");
             ex.printStackTrace();
         }
     }

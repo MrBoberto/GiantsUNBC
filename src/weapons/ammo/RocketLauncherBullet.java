@@ -10,7 +10,7 @@ import java.awt.geom.AffineTransform;
 
 public class RocketLauncherBullet extends Bullet {
 
-    private static final int SERIAL = 004;
+    private static final int SERIAL = 4;
     //private static int iteration = 0;
 
     public RocketLauncherBullet(int player, double aimX, double aimY, int damage) {
@@ -18,7 +18,7 @@ public class RocketLauncherBullet extends Bullet {
         ProjectileTYPE = ProjectileType.RocketLauncherBullet;
 
         //iteration++;
-        //System.out.println("Rocket " + iteration + "Created.");
+        //("Rocket " + iteration + "Created.");
 
         // If initialized to 0, sometimes bullet is deleted before constructor finishes.
         setVelX(-1);
@@ -71,7 +71,7 @@ public class RocketLauncherBullet extends Bullet {
         }
 
 
-        //System.out.println(iteration + " velX = " + getVelX() + ", velY = " + getVelY());
+        //(iteration + " velX = " + getVelX() + ", velY = " + getVelY());
     }
 
     @Override

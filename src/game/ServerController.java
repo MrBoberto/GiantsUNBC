@@ -52,21 +52,12 @@ public class ServerController extends Controller {
 
         try {
             serverSocket = new ServerSocket(Controller.PORT);
-            System.out.println("waiting for connection...");
             Socket socket = serverSocket.accept();
-            System.out.println("connection accepted");
-
             outputConnection = new OutputConnection(this, socket);
-            System.out.println("output connection complete");
             inputConnection = new InputConnection(this, socket);
-            System.out.println("input connection complete");
-
-            //          outputConnection.setGameRunning(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        System.out.println("server + client connected.");
         start();
 
     }
@@ -78,54 +69,52 @@ public class ServerController extends Controller {
             otherPlayer.setWalking(packet.isWalking());
             if (packet.isWalking()) otherPlayer.incrementWalkingDistance();
 
-            otherPlayer.setX(packet.getX());
-            otherPlayer.setY(packet.getY());
-            otherPlayer.setAngle(packet.getAngle());
-            otherPlayer.setWeaponSerial(packet.getWeaponSerial());
+            otherPlayer.setX(packet.x());
+            otherPlayer.setY(packet.y());
+            otherPlayer.setAngle(packet.angle());
+            otherPlayer.setWeaponSerial(packet.weaponSerial());
 
         } else if (object instanceof ClientDashPacket) {
             otherPlayer.startDashTimer();
         } else if (object instanceof StartRequest packet) {
 
             outputConnection.sendPacket(new StartPacket(otherPlayer.getRespawnPointX(), otherPlayer.getRespawnPointY(), 0, MainMenu.playerName, MainMenu.mapSelected));
-            System.out.println("Sent packet w/ playerName");
-            if (packet.getClientName() == null || packet.getClientName().equals("")) {
+            if (packet.clientName() == null || packet.clientName().equals("")) {
                 otherPlayer.setPlayerName("Guest");
             } else {
-                otherPlayer.setPlayerName(packet.getClientName());
+                otherPlayer.setPlayerName(packet.clientName());
             }
-            System.out.println("Start request received and resent.");
         } else if (object instanceof ClientBulletPacket packet) {
-            switch (packet.getType()) {
+            switch (packet.projectileType()) {
                 case ShotgunBullet -> new ShotgunBullet(
                         Player.CLIENT_PLAYER,
-                        packet.getMouseXLocation(),
-                        packet.getMouseYLocation(),
-                        packet.getDamage()
+                        packet.mouseXLocation(),
+                        packet.mouseYLocation(),
+                        packet.damage()
                 );
                 case SniperRifleBullet -> new SniperRifleBullet(
                         Player.CLIENT_PLAYER,
-                        packet.getMouseXLocation(),
-                        packet.getMouseYLocation(),
-                        packet.getDamage()
+                        packet.mouseXLocation(),
+                        packet.mouseYLocation(),
+                        packet.damage()
                 );
                 case PistolBullet -> new PistolBullet(
                         Player.CLIENT_PLAYER,
-                        packet.getMouseXLocation(),
-                        packet.getMouseYLocation(),
-                        packet.getDamage()
+                        packet.mouseXLocation(),
+                        packet.mouseYLocation(),
+                        packet.damage()
                 );
                 case AssaultRifleBullet -> new AssaultRifleBullet(
                         Player.CLIENT_PLAYER,
-                        packet.getMouseXLocation(),
-                        packet.getMouseYLocation(),
-                        packet.getDamage()
+                        packet.mouseXLocation(),
+                        packet.mouseYLocation(),
+                        packet.damage()
                 );
                 case RocketLauncherBullet -> new RocketLauncherBullet(
                         Player.CLIENT_PLAYER,
-                        packet.getMouseXLocation(),
-                        packet.getMouseYLocation(),
-                        packet.getDamage()
+                        packet.mouseXLocation(),
+                        packet.mouseYLocation(),
+                        packet.damage()
                 );
             }
 
@@ -134,9 +123,9 @@ public class ServerController extends Controller {
         } else if (object instanceof ClientSlashPacket packet) {
 
             new Slash(
-                    packet.getX(),
-                    packet.getY(),
-                    packet.getAngle(),
+                    packet.x(),
+                    packet.y(),
+                    packet.angle(),
                     packet.isLeft(),
                     Player.CLIENT_PLAYER
             );
@@ -145,7 +134,7 @@ public class ServerController extends Controller {
             clientWeaponAudio.play();
 
         } else if (object instanceof ClientSFXPacket packet) {
-            clientWeaponAudio.setFile(packet.getClientSFXInt());
+            clientWeaponAudio.setFile(packet.clientSFXInt());
             clientWeaponAudio.play();
         } else if(object instanceof ArsenalPacket packet){
             otherPlayer.getArsenal().setInventory(packet.primary(),packet.secondary(),packet.selected(),packet.inventory());
@@ -181,9 +170,8 @@ public class ServerController extends Controller {
                 Bullet bullet = movingAmmo.get(j);
                 if (bullet.hasStopped()) {
                     movingAmmo.remove(bullet);
-                    if (bullet.getSERIAL() == 004 &&
+                    if (bullet.getSERIAL() == 4 &&
                             EntityCollision.getBulletVictim(bullet) != bullet.getPlayerIBelongToNumber()) {
-                        System.out.println("Explosive triggered");
                         explosions.add(new Explosion(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
                         outputConnection.sendPacket(new ServerExplosionPacket(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
 
@@ -353,8 +341,7 @@ public class ServerController extends Controller {
         if (victimNumber != -1 && victimNumber != bullet.getPlayerIBelongToNumber() && !victim.isInvincible()) {
             movingAmmo.remove(bullet);
 
-            if (bullet.getSERIAL() == 004) {
-                System.out.println("Rocket launcher victor: " + bullet.getPlayerIBelongToNumber());
+            if (bullet.getSERIAL() == 4) {
                 explosions.add(new Explosion(bullet.x, bullet.y, bullet.getPlayerIBelongToNumber()));
                 outputConnection.sendPacket(new ServerExplosionPacket(bullet.x, bullet.y,
                         bullet.getPlayerIBelongToNumber()));
@@ -365,7 +352,6 @@ public class ServerController extends Controller {
             }
 
             double damage = (-1 * bullet.getDamage() * killer.getDamageMultiplier());
-            System.out.println(damage);
             killer.incrementBulletHitCount();
             victim.modifyHealth(damage);
             victim.resetHealTimer();
@@ -385,7 +371,7 @@ public class ServerController extends Controller {
                 }
 
                 killer.incrementKillCount();
-               // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
+               // (victim.getPlayerName() + " was memed by " + killer.getPlayerName());
                 if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
@@ -396,8 +382,6 @@ public class ServerController extends Controller {
     private void checkVictims(Explosion explosion) {
         // Player who was hit (-1 if no one was hit)
         int victimNumber = EntityCollision.getExplosionVictim(explosion);
-
-        System.out.println("victimNumber = " + victimNumber + ", killerNumber = " + explosion.getPlayerIBelongToNumber());
 
         // Player
         Player killer;
@@ -418,7 +402,6 @@ public class ServerController extends Controller {
         double damage =  -1 * Explosion.DAMAGE * killer.getDamageMultiplier();
 
         if (victim != null && explosion.isHarmful() && !victim.isInvincible()) {
-            System.out.println(damage);
             killer.incrementBulletHitCount();
             victim.modifyHealth(damage);
             victim.resetHealTimer();
@@ -437,7 +420,7 @@ public class ServerController extends Controller {
                 }
                 outputConnection.sendPacket(new DeathCountPacket(thisPlayer.getDeathCount(), otherPlayer.getDeathCount()));
                 killer.incrementKillCount();
-                // System.out.println(victim.getPlayerName() + " was memed by " + killer.getPlayerName());
+                // (victim.getPlayerName() + " was memed by " + killer.getPlayerName());
                 if(victim.getDeathCount() >= PLAYER_LIVES){
                     declareWinner(killer);
                 }
@@ -474,7 +457,6 @@ public class ServerController extends Controller {
             if (!thisPlayer.isInvincible()) {
                 thisPlayer.modifyHealth(damage);
                 thisPlayer.resetHealTimer();
-                System.out.println("I got memed");
 
                 if (thisPlayer.getPlayerNumber() != killer.getPlayerNumber()) {
                     killer.addTDO(damage);
@@ -496,7 +478,6 @@ public class ServerController extends Controller {
                             declareWinner(killer);
                         }
                     }
-                    System.out.println(thisPlayer.getPlayerName() + " was memed by " + killer.getPlayerName());
                 }
             }
         }
@@ -521,7 +502,6 @@ public class ServerController extends Controller {
         if (victimNumber != -1 && victimNumber != slash.getPlayerIBelongToNumber() && !victim.isInvincible()) {
 
             double damage = (-1 * Slash.DAMAGE * killer.getDamageMultiplier());
-            System.out.println(damage);
             killer.incrementBulletHitCount();
             victim.modifyHealth(damage);
             victim.resetHealTimer();
@@ -586,12 +566,8 @@ public class ServerController extends Controller {
         }
         catch (Exception ex)
         {
-            System.out.println("Error with stopping sound.");
             ex.printStackTrace();
         }
-
-        System.out.println("renderWinner");
-
 
         Player winner;
         Player loser;

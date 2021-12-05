@@ -1,6 +1,5 @@
 package game;
 
-import java.net.UnknownHostException;
 import java.security.SecureRandom;
 
 public class World {
@@ -9,17 +8,14 @@ public class World {
     protected static GameWindow gameWindow;
     protected static GameOver gameOver;                       // Should be null except at the end
 
-    public static void world(int choice) throws UnknownHostException {
+    public static void world(int choice) {
 
         if(choice==1){
             controller = new ServerController();
-            System.out.println("IM SERVER");
         } else if(choice == 2){
             controller = new ClientController();
-            System.out.println("IM CLIENT");
         } else if (choice == 3) {
             controller = new SingleController();
-            System.out.println("Loading singleplayer mode");
         }
     }
 

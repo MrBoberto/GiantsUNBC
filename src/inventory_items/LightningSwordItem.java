@@ -113,7 +113,7 @@ public class LightningSwordItem extends InventoryItem {
             imgLocStr.add(i + ").png");
         }
         swordAnimationStrip = buildImageStrip(imgLocStr, defLocStr);
-//        System.out.println(standing.toString());
+//        (standing.toString());
         imgLocStr.clear();
     }
 }

@@ -18,7 +18,7 @@ public class Shotgun implements Weapon {
     public static final int MAX_DELAY = 55;
     private int currentDelay = 0;
     // Identifies type of gun
-    public static final int SERIAL = 000;
+    public static final int SERIAL = 0;
     public static final WeaponType WEAPON_TYPE = WeaponType.Shotgun;
     public static final int DAMAGE = 20;
     public SFXPlayer audio;
@@ -32,7 +32,6 @@ public class Shotgun implements Weapon {
         }
         catch (Exception ex)
         {
-            System.out.println("Error with playing shotgun sound.");
             ex.printStackTrace();
         }
     }

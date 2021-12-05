@@ -6,16 +6,13 @@ import audio.AudioPlayer;
 import audio.SFXPlayer;
 import utilities.BufferedImageLoader;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class PauseMenu implements KeyListener {
 
@@ -31,7 +28,7 @@ public class PauseMenu implements KeyListener {
 
     public static final int VOL_MAX = 100;
     public static final int VOL_MIN = 0;
-    enum PanelType{ButtonsMenu, SettingsMenu, AudioMenu};
+    enum PanelType{ButtonsMenu, SettingsMenu, AudioMenu}
     public PanelType panelType = PanelType.ButtonsMenu;
 
     public PauseMenu(JFrame frame, Controller controller) {
@@ -39,7 +36,6 @@ public class PauseMenu implements KeyListener {
         this.controller = controller;
 
         setBackground(controller);
-
         currentBackground = thisBackground.getHead();
 
         sfxPlayer = new SFXPlayer();
@@ -76,7 +72,6 @@ public class PauseMenu implements KeyListener {
         pauseMenuPanel.add(buttonsMenu(), c);
 
         controller.getGameWindow().setCanPause(true);
-        System.out.println(controller.getGameWindow().canPause());
     }
 
     private void setBackground(Controller controller) {
@@ -87,10 +82,6 @@ public class PauseMenu implements KeyListener {
             thisBackground = blueBackground;
             backgroundImage = BufferedImageLoader.loadImage("/resources/GUI/pause_menu/pause_back (5).png");
         }
-    }
-
-    public boolean requestFocusInWindow() {
-        return pauseMenuPanel.requestFocusInWindow();
     }
 
     private JPanel buttonsMenu() {
@@ -160,7 +151,6 @@ public class PauseMenu implements KeyListener {
             }
             catch (Exception ex)
             {
-                System.out.println("Error with stopping soundtrack.");
                 ex.printStackTrace();
             }
             controller.isRunning = false;
