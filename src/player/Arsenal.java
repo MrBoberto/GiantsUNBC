@@ -1,5 +1,15 @@
 package player;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * The weapons inventory of the main player
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;

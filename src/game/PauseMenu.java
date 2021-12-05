@@ -1,5 +1,16 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * This is the pause menu class for the game. In single player, the pause menu causes controller ticks to return before
+ * any changes are made
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import animation.ImageFrame;
 import animation.ImageStrip;
 import audio.AudioPlayer;

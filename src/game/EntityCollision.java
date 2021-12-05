@@ -1,5 +1,15 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * A class dedicated to finding out which player(s) have collided with hazardous entities
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import player.Player;
 import weapons.ammo.Bullet;
 import weapons.aoe.Explosion;

@@ -1,5 +1,15 @@
 package player;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * The player which the user can control
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import game.Controller;
 import game.World;
 import mapObjects.Block;

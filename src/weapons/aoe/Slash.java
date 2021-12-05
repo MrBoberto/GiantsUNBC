@@ -1,5 +1,16 @@
 package weapons.aoe;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * A slash area of effect attack from a player's lightning sword that can inflict damage upon their opponent. Has
+ * colour corresponding to player using the lightning sword
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;

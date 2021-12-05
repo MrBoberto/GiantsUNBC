@@ -1,5 +1,15 @@
 package inventory_items;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * A lightning sword that spawns in zones not obstructed by blocks and can be picked up and used by a player
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.Controller;

@@ -1,5 +1,17 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * All entities in the game extend GameObject. GameObject keeps track of x and y coordinates, angle the entity is
+ * facing, the horizontal and vertical velocities of the entity, and, in some cases, the current frame being displayed
+ * by the entity.
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,5 +1,15 @@
 package game;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * Detects and responds to key activity from the main player
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import packets.ArsenalPacket;
 
 import java.awt.event.KeyAdapter;

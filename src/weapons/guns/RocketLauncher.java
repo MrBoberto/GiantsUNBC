@@ -1,5 +1,16 @@
 package weapons.guns;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * A rocket launcher owned by a player that can be used to inflict damage upon their opponent. Fires rounds that can
+ * detonate and spawn explosions
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import audio.SFXPlayer;
 import game.ServerController;
 import game.SingleController;

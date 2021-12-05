@@ -1,6 +1,14 @@
 package audio;
-// Java program to play an Audio
-// file using Clip Object
+
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * Plays music files
+ *
+ * @author The Boyz
+ * @version 1
+ */
 
 import game.Main;
 
@@ -12,9 +20,6 @@ import javax.sound.sampled.*;
 public class AudioPlayer {
 
     static Clip clip;
-
-    // current status of clip
-    static String status;
 
     static AudioInputStream audioInputStream;
     protected static final int volume = 100;
@@ -63,8 +68,6 @@ public class AudioPlayer {
     public void play() {
         //start the clip
         clip.start();
-
-        status = "play";
     }
 
     /**
@@ -73,10 +76,5 @@ public class AudioPlayer {
     public void stop() {
         clip.stop();
         clip.close();
-    }
-
-    @Override
-    public String toString() {
-        return status;
     }
 }

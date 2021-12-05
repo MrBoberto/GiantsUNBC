@@ -1,5 +1,15 @@
 package player;
 
+/**
+ * This file is part of a solution to
+ *		CPSC300 Term Project Fall 2021
+ *
+ * The abstract Player class, containing the player's name, number, statistics, and ticks
+ *
+ * @author The Boyz
+ * @version 1
+ */
+
 import animation.ImageFrame;
 import animation.ImageStrip;
 import game.*;
@@ -14,7 +24,6 @@ import java.awt.image.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
-
 
 public abstract class Player extends GameObject {
     // Can be 0 = primary or 1 = secondary
@@ -289,7 +298,6 @@ public abstract class Player extends GameObject {
             imgLocStr.add("stand (" + i + ").png");
         }
         standing = buildImageStrip(imgLocStr, defLocStr);
-//        (standing.toString());
         imgLocStr.clear();
 
         // Builds image strip for jogging
@@ -305,7 +313,6 @@ public abstract class Player extends GameObject {
             imgLocStr.add("dash (" + i + ").png");
         }
         dashing = buildImageStrip(imgLocStr, defLocStr);
-//        (dashing.toString());
         imgLocStr.clear();
 
         // Builds image strip for jumping
@@ -339,7 +346,6 @@ public abstract class Player extends GameObject {
             imgLocStr.add(i + ").png");
         }
         leftwardSwordTextures = buildImageStrip(imgLocStr, defLocStr);
-//        (jumping.toString());
         imgLocStr.clear();
 
         // Builds image strip for jumping
@@ -347,7 +353,6 @@ public abstract class Player extends GameObject {
             imgLocStr.add(i + ").png");
         }
         rightwardSwordTextures = buildImageStrip(imgLocStr, defLocStr);
-//        (jumping.toString());
         imgLocStr.clear();
 
     }
