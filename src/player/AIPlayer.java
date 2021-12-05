@@ -483,8 +483,8 @@ public class AIPlayer extends OtherPlayer {
             g2d.setColor(Color.WHITE);
             g2d.fillPolygon(new int[] {(int) x - 2, (int) x, (int) x + 2}, new int[] { (int) y - 60, (int) y - 50, (int) y - 60}, 3);
             g2d.setColor(Color.BLACK);
-            g2d.drawLine((int) x - 2, (int) y - 40, (int) x, (int) y - 50);
-            g2d.drawLine((int) x + 2, (int) y - 40, (int) x, (int) y - 50);
+            g2d.drawLine((int) x - 2, (int) y - 60, (int) x, (int) y - 50);
+            g2d.drawLine((int) x + 2, (int) y - 60, (int) x, (int) y - 50);
 
             g2d.drawString(myDialogue, (int) x - (stringSize1.stringWidth(myDialogue)) / 2,
                     (int) y - 40 - currentImage.getImage().getHeight() / 4);
