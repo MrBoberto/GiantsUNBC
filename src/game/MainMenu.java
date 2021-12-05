@@ -487,7 +487,7 @@ public class MainMenu implements KeyListener {
             mainMenuPanel.validate();
             mainMenuPanel.repaint();
 
-        }, "Server");
+        }, "Host a server");
         c.gridy = 7;
         multiplayerMenu.add(serverButton, c);
 
@@ -502,7 +502,7 @@ public class MainMenu implements KeyListener {
 
             World.world(2);
 
-        }, "Client");
+        }, "Find/connect to a server");
         c.gridy = 8;
         multiplayerMenu.add(clientButton, c);
 
